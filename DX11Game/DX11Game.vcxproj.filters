@@ -114,6 +114,12 @@
     <ClCompile Include="EnemyRange.cpp">
       <Filter>ソース ファイル\Enemy</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\..\Desktop\2年度HEW\217HEW\RastTest\DX11Game\life.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\Desktop\2年度HEW\217HEW\RastTest\DX11Game\timer.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="input.h">
@@ -211,6 +217,12 @@
     </ClInclude>
     <ClInclude Include="EnemyRange.h">
       <Filter>ヘッダー ファイル\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\Desktop\2年度HEW\217HEW\RastTest\DX11Game\life.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\Desktop\2年度HEW\217HEW\RastTest\DX11Game\timer.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

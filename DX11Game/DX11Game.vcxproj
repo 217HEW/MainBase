@@ -160,6 +160,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\Desktop\2年度HEW\217HEW\RastTest\DX11Game\life.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\2年度HEW\217HEW\RastTest\DX11Game\timer.cpp" />
     <ClCompile Include="AssimpModel.cpp" />
     <ClCompile Include="bg.cpp" />
     <ClCompile Include="bullet.cpp" />
@@ -191,6 +193,8 @@
     <ClCompile Include="Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\Desktop\2年度HEW\217HEW\RastTest\DX11Game\life.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\2年度HEW\217HEW\RastTest\DX11Game\timer.h" />
     <ClInclude Include="AssimpModel.h" />
     <ClInclude Include="bg.h" />
     <ClInclude Include="bullet.h" />
