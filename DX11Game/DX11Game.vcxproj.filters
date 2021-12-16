@@ -114,10 +114,13 @@
     <ClCompile Include="EnemyRange.cpp">
       <Filter>ソース ファイル\Enemy</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\Desktop\2年度HEW\217HEW\RastTest\DX11Game\life.cpp">
+    <ClCompile Include="life.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\Desktop\2年度HEW\217HEW\RastTest\DX11Game\timer.cpp">
+    <ClCompile Include="timer.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="number.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -218,10 +221,13 @@
     <ClInclude Include="EnemyRange.h">
       <Filter>ヘッダー ファイル\Enemy</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\Desktop\2年度HEW\217HEW\RastTest\DX11Game\life.h">
+    <ClInclude Include="life.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\Desktop\2年度HEW\217HEW\RastTest\DX11Game\timer.h">
+    <ClInclude Include="timer.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="number.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

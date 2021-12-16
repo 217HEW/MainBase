@@ -8,6 +8,8 @@
 //--------------------------------------------------------------
 //	開発履歴
 //	2021/12/06	小嶋悟君のプログラムを元に作成	
+//	2021/12/17	TimerとLifeを前回のDX作品をもとに制作
+//				描画にまだ問題あり
 //
 //**************************************************************
 
@@ -31,6 +33,8 @@
 #include "meshwall.h"
 #include "polyline.h"
 #include "Sound.h"
+#include "timer.h"
+#include "life.h"
 
 //**************************************************************
 // マクロ定義
@@ -79,6 +83,24 @@ HRESULT InitGame()
 	hr = InitShadow();
 	if (FAILED(hr))
 		return hr;
+
+
+	//*12/17澤村瑠人追加
+	// タイマー表示初期化
+	hr = InitTimer();
+	if (FAILED(hr))
+	{
+		MessageBox(GetMainWnd(), _T("タイマー表示初期化失敗"), NULL, MB_OK | MB_ICONSTOP);
+		return hr;
+	}
+
+	// ライフ表示初期化
+	hr = InitLife();
+	if (FAILED(hr))
+	{
+		MessageBox(GetMainWnd(), _T("ライフ表示初期化失敗"), NULL, MB_OK | MB_ICONSTOP);
+		return hr;
+	}
 
 	// 自機初期化
 	hr = InitPlayer();
@@ -250,6 +272,10 @@ void UpdateGame()
 	// フィールド更新
 	UpdateMeshField();
 
+	//*12/17澤村瑠人追加
+	// タイマー更新
+	UpdateTimer();
+
 	// 丸影更新
 	UpdateShadow();
 
@@ -325,6 +351,12 @@ void DrawGame()
 
 	// Zバッファ無効(Zチェック無&Z更新無)
 	SetZBuffer(false);
+
+	//*12/17澤村瑠人追加
+	// タイマー表示
+	DrawTimer();
+	// ライフ表示
+	DrawLife();
 
 	// デバッグ文字列表示
 	SetBlendState(BS_ALPHABLEND);

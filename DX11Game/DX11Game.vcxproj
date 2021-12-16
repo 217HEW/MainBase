@@ -160,8 +160,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\Desktop\2年度HEW\217HEW\RastTest\DX11Game\life.cpp" />
-    <ClCompile Include="..\..\..\..\..\Desktop\2年度HEW\217HEW\RastTest\DX11Game\timer.cpp" />
     <ClCompile Include="AssimpModel.cpp" />
     <ClCompile Include="bg.cpp" />
     <ClCompile Include="bullet.cpp" />
@@ -175,11 +173,13 @@
     <ClCompile Include="explosion.cpp" />
     <ClCompile Include="Fade.cpp" />
     <ClCompile Include="input.cpp" />
+    <ClCompile Include="life.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mesh.cpp" />
     <ClCompile Include="meshfield.cpp" />
     <ClCompile Include="meshwall.cpp" />
+    <ClCompile Include="number.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="polygon.cpp" />
     <ClCompile Include="polyline.cpp" />
@@ -191,10 +191,9 @@
     <ClCompile Include="smoke.cpp" />
     <ClCompile Include="Sound.cpp" />
     <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="timer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\..\Desktop\2年度HEW\217HEW\RastTest\DX11Game\life.h" />
-    <ClInclude Include="..\..\..\..\..\Desktop\2年度HEW\217HEW\RastTest\DX11Game\timer.h" />
     <ClInclude Include="AssimpModel.h" />
     <ClInclude Include="bg.h" />
     <ClInclude Include="bullet.h" />
@@ -208,11 +207,13 @@
     <ClInclude Include="explosion.h" />
     <ClInclude Include="Fade.h" />
     <ClInclude Include="input.h" />
+    <ClInclude Include="life.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="mesh.h" />
     <ClInclude Include="meshfield.h" />
     <ClInclude Include="meshwall.h" />
+    <ClInclude Include="number.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="polygon.h" />
     <ClInclude Include="polyline.h" />
@@ -227,6 +228,7 @@
     <ClInclude Include="SoundData.h" />
     <ClInclude Include="SoundData.hpp" />
     <ClInclude Include="Texture.h" />
+    <ClInclude Include="timer.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="AssimpPixel.hlsl">
