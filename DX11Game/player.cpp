@@ -182,7 +182,7 @@ void UpdatePlayer(void)
 		g_rotModel.y += 360.0f;
 	}
 
-	/// 位置移動
+	// 位置移動
 	g_posModel.x += g_moveModel.x;
 	g_posModel.y += g_moveModel.y;
 	g_posModel.z += g_moveModel.z;
@@ -210,7 +210,7 @@ void UpdatePlayer(void)
 	if (g_posModel.y > 150.0f) {
 		g_posModel.y = 150.0f;
 	}
-
+	
 	if (GetKeyPress(VK_RETURN)) {
 		// リセット
 		g_posModel = XMFLOAT3(0.0f, 40.0f, 0.0f);
@@ -266,21 +266,21 @@ void UpdatePlayer(void)
 			BULLETTYPE_PLAYER);
 	}
 
-	//PrintDebugProc("[ﾋｺｳｷ ｲﾁ : (%f : %f : %f)]\n", g_posModel.x, g_posModel.y, g_posModel.z);
-	//PrintDebugProc("[ﾋｺｳｷ ﾑｷ : (%f) < ﾓｸﾃｷ ｲﾁ:(%f) >]\n", g_rotModel.y, g_rotDestModel.y);
-	//PrintDebugProc("\n");
-
-	//PrintDebugProc("*** ﾋｺｳｷ ｿｳｻ ***\n");
-	//PrintDebugProc("ﾏｴ   ｲﾄﾞｳ : \x1e\n");//↑
-	//PrintDebugProc("ｳｼﾛ  ｲﾄﾞｳ : \x1f\n");//↓
-	//PrintDebugProc("ﾋﾀﾞﾘ ｲﾄﾞｳ : \x1d\n");//←
-	//PrintDebugProc("ﾐｷﾞ  ｲﾄﾞｳ : \x1c\n");//→
-	//PrintDebugProc("ｼﾞｮｳｼｮｳ   : I\n");
-	//PrintDebugProc("ｶｺｳ       : K\n");
-	//PrintDebugProc("ﾋﾀﾞﾘ ｾﾝｶｲ : J\n");
-	//PrintDebugProc("ﾐｷﾞ  ｾﾝｶｲ : L\n");
-	//PrintDebugProc("ﾀﾏ   ﾊｯｼｬ : Space\n");
-	//PrintDebugProc("\n");
+	// PrintDebugProc("[ﾋｺｳｷ ｲﾁ : (%f : %f : %f)]\n", g_posModel.x, g_posModel.y, g_posModel.z);
+	// PrintDebugProc("[ﾋｺｳｷ ﾑｷ : (%f) < ﾓｸﾃｷ ｲﾁ:(%f) >]\n", g_rotModel.y, g_rotDestModel.y);
+	// PrintDebugProc("\n");
+	   
+	// PrintDebugProc("*** ﾋｺｳｷ ｿｳｻ ***\n");
+	// PrintDebugProc("ﾏｴ   ｲﾄﾞｳ : \x1e\n");//↑
+	// PrintDebugProc("ｳｼﾛ  ｲﾄﾞｳ : \x1f\n");//↓
+	// PrintDebugProc("ﾋﾀﾞﾘ ｲﾄﾞｳ : \x1d\n");//←
+	// PrintDebugProc("ﾐｷﾞ  ｲﾄﾞｳ : \x1c\n");//→
+	// PrintDebugProc("ｼﾞｮｳｼｮｳ   : I\n");
+	// PrintDebugProc("ｶｺｳ       : K\n");
+	// PrintDebugProc("ﾋﾀﾞﾘ ｾﾝｶｲ : J\n");
+	// PrintDebugProc("ﾐｷﾞ  ｾﾝｶｲ : L\n");
+	// PrintDebugProc("ﾀﾏ   ﾊｯｼｬ : Space\n");
+	// PrintDebugProc("\n");
 }
 
 //=============================================================================
@@ -326,5 +326,6 @@ bool CollisionPlayer(XMFLOAT3 pos, float radius, float damage)
 		}
 		SetExplosionColor(nExp, XMFLOAT4(1.0f, 0.7f, 0.7f, 1.0f));
 	}
+
 	return hit;
 }
