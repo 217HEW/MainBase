@@ -9,7 +9,8 @@
 //	開発履歴
 //	2021/12/06	小嶋悟君のプログラムを元に作成	
 //	2021/12/17	TimerとLifeを前回のDX作品をもとに制作
-//				描画にまだ問題あり。
+//				描画にまだ問題あり
+//	2021/12/19	描画完了
 //
 //**************************************************************
 
@@ -35,6 +36,7 @@
 #include "Sound.h"
 #include "timer.h"
 #include "life.h"
+#include "number.h"
 
 //**************************************************************
 // マクロ定義
@@ -84,6 +86,11 @@ HRESULT InitGame()
 	if (FAILED(hr))
 		return hr;
 
+	// №初期化
+	hr = InitNumber();
+	if (FAILED(hr))
+		return hr;
+
 
 	//*12/17澤村瑠人追加
 	// タイマー表示初期化
@@ -124,11 +131,6 @@ HRESULT InitGame()
 
 	// 爆発初期化
 	hr = InitExplosion();
-	if (FAILED(hr))
-		return hr;
-
-	// エフェクト初期化
-	hr = InitEffect();
 	if (FAILED(hr))
 		return hr;
 
@@ -226,6 +228,15 @@ void UninitGame()
 
 	// 丸影終了処理
 	UninitShadow();
+
+	//ナンバー終了処理
+	UninitNumber();
+
+	//ライフ終了処理
+	UninitLife();
+
+	//タイマー
+	UninitTimer();
 
 	// メッシュ終了処理
 	UninitMesh();
@@ -352,14 +363,12 @@ void DrawGame()
 	// Zバッファ無効(Zチェック無&Z更新無)
 	SetZBuffer(false);
 
-	//*12/17澤村瑠人追加
+	// デバッグ文字列表示(透過)
+	SetBlendState(BS_ALPHABLEND);
 	// タイマー表示
 	DrawTimer();
-	// ライフ表示
+	// ライフ表示(完了)
 	DrawLife();
-
-	// デバッグ文字列表示
-	SetBlendState(BS_ALPHABLEND);
 	DrawDebugProc();
 	SetBlendState(BS_NONE);
 }
