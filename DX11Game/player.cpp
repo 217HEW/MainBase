@@ -267,19 +267,6 @@ void UpdatePlayer(void)
 			BULLETTYPE_PLAYER);
 	}
 
-	//lifeの減算加算確認
-	//0キー入力でlifeが減る
-	//毎フレームとられているからか、Triggerだと連打しないとlifeが消えない
-	if (GetKeyTrigger(VK_0))
-	{
-		DelLife();
-	}
-	//9キー入力でlifeが増える
-	if (GetKeyTrigger(VK_9))
-	{
-		AddLife();
-	}
-
 	// PrintDebugProc("[ﾋｺｳｷ ｲﾁ : (%f : %f : %f)]\n", g_posModel.x, g_posModel.y, g_posModel.z);
 	// PrintDebugProc("[ﾋｺｳｷ ﾑｷ : (%f) < ﾓｸﾃｷ ｲﾁ:(%f) >]\n", g_rotModel.y, g_rotDestModel.y);
 	// PrintDebugProc("\n");
