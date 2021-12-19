@@ -278,11 +278,18 @@ void UpdatePlayer(void)
 		FireBullet(g_posModel, XMFLOAT3(-g_mtxWorld._31, -g_mtxWorld._32, -g_mtxWorld._33),
 			BULLETTYPE_PLAYER);
 	}
-	// 弾発射
+	// ダメージテスト
 	if (GetKeyRepeat(VK_D))
 	{
 		DelLife();
 		g_nDamage = DAMAGE_TIMER;
+
+	}
+	// 回復テスト
+	if (GetKeyRepeat(VK_H))
+	{
+		AddLife();
+		//g_nDamage = DAMAGE_TIMER;
 
 	}
 	//} while (0);
