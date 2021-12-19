@@ -14,13 +14,13 @@
 //*****************************************************************************
 namespace {
 	const float CAM_POS_P_X = 0.0f;					// カメラの視点初期位置(X座標)
-	const float CAM_POS_P_Y = 50.0f;				// カメラの視点初期位置(Y座標)
+	const float CAM_POS_P_Y = 100.0f;				// カメラの視点初期位置(Y座標)
 	const float CAM_POS_P_Z = -400.0f;				// カメラの視点初期位置(Z座標)
 	const float CAM_POS_R_X = 0.0f;					// カメラの注視点初期位置(X座標)
-	const float CAM_POS_R_Y = 50.0f;				// カメラの注視点初期位置(Y座標)
+	const float CAM_POS_R_Y = 50.0f;					// カメラの注視点初期位置(Y座標)
 	const float CAM_POS_R_Z = 0.0f;					// カメラの注視点初期位置(Z座標)
 	const float VIEW_ANGLE = 45.0f;					// ビュー平面の視野角
-	const float VIEW_ASPECT = (float)SCREEN_WIDTH / SCREEN_HEIGHT;	// ビュー平面のアスペクト比
+	const float VIEW_ASPECT = (float)(SCREEN_WIDTH / SCREEN_HEIGHT);	// ビュー平面のアスペクト比
 	const float VIEW_NEAR_Z = 10.0f;				// ビュー平面のNearZ値
 	const float VIEW_FAR_Z = 5000.0f;				// ビュー平面のFarZ値
 	const float VALUE_MOVE_CAMERA = 2.0f;			// カメラの移動量
@@ -34,7 +34,6 @@ namespace {
 	const float CHASE_HEIGHT_P = 100.0f;			// 追跡時の視点の高さ
 	const float CHASE_HEIGHT_R = 10.0f;				// 追跡時の注視点の高さ
 
-	XMFLOAT3 CameraArea = XMFLOAT3(0.0f, 0.0f, 0.0f);	// 追いかける為の当り判定
 	CCamera g_camera;								// カメラ インスタンス
 }
 

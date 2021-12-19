@@ -25,6 +25,7 @@ enum EDrawPart {
 HRESULT InitMeshWall(void);
 HRESULT SetMeshWall(XMFLOAT3 pos, XMFLOAT3 rot, XMFLOAT4 col,
 	int nNumBlockX, int nNumBlockY, XMFLOAT2 sizeBlock);
+HRESULT SetMeshBlock(XMFLOAT3 pos);		// î†ê∂ê¨
 void UninitMeshWall(void);
 void UpdateMeshWall(void);
 void DrawMeshWall(EDrawPart dp = DRAWPART_ALL);

@@ -78,7 +78,11 @@ void DrawScene()
 		break;
 	// 追加シーンの描画
 	}
+
+	SetBlendState(BS_ALPHABLEND);
 	DrawFade();				// フェード描画
+	SetBlendState(BS_NONE);
+
 }
 
 
