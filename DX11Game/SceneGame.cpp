@@ -18,6 +18,8 @@
 // インクルード部
 //**************************************************************
 #include "SceneGame.h"
+#include "SceneManager.h"
+#include "Fade.h"
 #include "AssimpModel.h"
 #include "input.h"
 #include "polygon.h"
@@ -148,11 +150,22 @@ HRESULT InitGame()
 	 hr = InitMeshWall();
 	 if (FAILED(hr))
 	 	return hr;
-	 SetMeshWall(XMFLOAT3(0.0f, 0.0f, 640.0f), XMFLOAT3(0.0f, 30.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), 16, 2, XMFLOAT2(80.0f, 80.0f));
-	 SetMeshWall(XMFLOAT3(-640.0f, 0.0f, 0.0f), XMFLOAT3(0.0f, -90.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), 16, 2, XMFLOAT2(80.0f, 80.0f));
-	 SetMeshWall(XMFLOAT3(640.0f, 0.0f, 0.0f), XMFLOAT3(0.0f, 90.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), 16, 2, XMFLOAT2(80.0f, 80.0f));
-	 SetMeshWall(XMFLOAT3(0.0f, 0.0f, -640.0f), XMFLOAT3(0.0f, 180.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), 16, 2, XMFLOAT2(80.0f, 80.0f));
+	// SetMeshWall(XMFLOAT3(0.0f, 0.0f, 640.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), 16, 2, XMFLOAT2(40.0f, 40.0f));
+	// SetMeshWall(XMFLOAT3(-640.0f, 0.0f, 0.0f), XMFLOAT3(0.0f, -90.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), 16, 2, XMFLOAT2(80.0f, 80.0f));
+	// SetMeshWall(XMFLOAT3(640.0f, 0.0f, 0.0f), XMFLOAT3(0.0f, 90.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), 16, 2, XMFLOAT2(80.0f, 80.0f));
+	// SetMeshWall(XMFLOAT3(0.0f, 0.0f, -640.0f), XMFLOAT3(0.0f, 180.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), 16, 2, XMFLOAT2(80.0f, 80.0f));
+
+	 // メッシュ箱座標セット
+	 SetMeshBlock(XMFLOAT3(-60.0f, 30.0f, 0.0f));
+	 // SetMeshBlock(XMFLOAT3(-60.0f, 90.0f, 0.0f));
+	 // SetMeshBlock(XMFLOAT3(-60.0f, 150.0f, 0.0f));
+	 // SetMeshBlock(XMFLOAT3(-60.0f, 210.0f, 0.0f));
+	 // SetMeshBlock(XMFLOAT3(-30.0f, 210.0f, 0.0f));
 	 
+	 
+	 
+	 
+
 
 	// ボリライン初期化
 	// hr = InitPolyline();
@@ -259,6 +272,15 @@ void UninitGame()
 //**************************************************************
 void UpdateGame()
 {
+	if (GetKeyRelease(VK_1))
+	{
+		StartFadeOut(SCENE_GAME);
+	}
+	else if(GetKeyRelease(VK_2))
+	{
+		StartFadeOut(SCENE_TITLE);
+	}
+
 	// 入力処理更新
 	UpdateInput();	// 必ずUpdate関数の先頭で実行.
 
@@ -359,7 +381,7 @@ void DrawGame()
 
 	// 壁描画 (半透明部分)
 	 DrawMeshWall(DRAWPART_TRANSLUCENT);
-
+	 
 	// Zバッファ無効(Zチェック無&Z更新無)
 	SetZBuffer(false);
 

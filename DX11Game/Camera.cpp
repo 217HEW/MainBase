@@ -14,13 +14,13 @@
 //*****************************************************************************
 namespace {
 	const float CAM_POS_P_X = 0.0f;					// カメラの視点初期位置(X座標)
-	const float CAM_POS_P_Y = 50.0f;				// カメラの視点初期位置(Y座標)
+	const float CAM_POS_P_Y = 100.0f;				// カメラの視点初期位置(Y座標)
 	const float CAM_POS_P_Z = -400.0f;				// カメラの視点初期位置(Z座標)
 	const float CAM_POS_R_X = 0.0f;					// カメラの注視点初期位置(X座標)
-	const float CAM_POS_R_Y = 50.0f;				// カメラの注視点初期位置(Y座標)
+	const float CAM_POS_R_Y = 50.0f;					// カメラの注視点初期位置(Y座標)
 	const float CAM_POS_R_Z = 0.0f;					// カメラの注視点初期位置(Z座標)
 	const float VIEW_ANGLE = 45.0f;					// ビュー平面の視野角
-	const float VIEW_ASPECT = (float)SCREEN_WIDTH/SCREEN_HEIGHT;	// ビュー平面のアスペクト比
+	const float VIEW_ASPECT = (float)(SCREEN_WIDTH / SCREEN_HEIGHT);	// ビュー平面のアスペクト比
 	const float VIEW_NEAR_Z = 10.0f;				// ビュー平面のNearZ値
 	const float VIEW_FAR_Z = 5000.0f;				// ビュー平面のFarZ値
 	const float VALUE_MOVE_CAMERA = 2.0f;			// カメラの移動量
@@ -112,25 +112,24 @@ void CCamera::Update()
 	m_vSrcPos.z = -CosDeg(m_vAngle.y) * m_fLengthInterval;
 
 	// 追跡カメラ
-	
 	XMFLOAT3& vModelPos = GetPlayerPos();	// 自機座標
-	
+
 	// 視点座標移動先を算出
-	m_vDestPos.x = m_vSrcPos.x + vModelPos.x;
-	m_vDestPos.y = m_vSrcPos.y + vModelPos.y;
-	m_vDestPos.z = m_vSrcPos.z + vModelPos.z;
-	// 注視点座標移動先を算出
-	m_vDestTarget.x = CAM_POS_R_X + vModelPos.x;
-	m_vDestTarget.y = CAM_POS_R_Y + vModelPos.y;
-	m_vDestTarget.z = CAM_POS_R_Z + vModelPos.z;
-	// 視点を徐々に移動先に近づける
-	m_vPos.x = m_vPos.x * 0.9f + m_vDestPos.x * 0.1f;
-	m_vPos.y = m_vPos.y * 0.9f + m_vDestPos.y * 0.1f;
-	m_vPos.z = m_vPos.z * 0.9f + m_vDestPos.z * 0.1f;
-	// 注視点を徐々に移動先に近づける
-	m_vTarget.x = m_vTarget.x * 0.9f + m_vDestTarget.x * 0.1f;
-	m_vTarget.y = m_vTarget.y * 0.9f + m_vDestTarget.y * 0.1f;
-	m_vTarget.z = m_vTarget.z * 0.9f + m_vDestTarget.z * 0.1f;
+	 m_vDestPos.x = m_vSrcPos.x + vModelPos.x;
+	 m_vDestPos.y = m_vSrcPos.y + vModelPos.y;
+	 m_vDestPos.z = m_vSrcPos.z + vModelPos.z;
+	 // 注視点座標移動先を算出
+	 m_vDestTarget.x = CAM_POS_R_X + vModelPos.x;
+	 m_vDestTarget.y = CAM_POS_R_Y + vModelPos.y;
+	 m_vDestTarget.z = CAM_POS_R_Z + vModelPos.z;
+	 // 視点を徐々に移動先に近づける
+	 m_vPos.x = m_vPos.x * 0.9f + m_vDestPos.x * 0.1f;
+	 m_vPos.y = m_vPos.y * 0.9f + m_vDestPos.y * 0.1f;
+	 m_vPos.z = m_vPos.z * 0.9f + m_vDestPos.z * 0.1f;
+	 // 注視点を徐々に移動先に近づける
+	 m_vTarget.x = m_vTarget.x * 0.9f + m_vDestTarget.x * 0.1f;
+	 m_vTarget.y = m_vTarget.y * 0.9f + m_vDestTarget.y * 0.1f;
+	 m_vTarget.z = m_vTarget.z * 0.9f + m_vDestTarget.z * 0.1f;
 
 	if (GetKeyTrigger(VK_HOME)) {
 		// リセット

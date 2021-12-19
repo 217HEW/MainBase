@@ -1,4 +1,5 @@
 // ‰æ–Ê‘JˆÚ [life.h]
+// 
 #pragma once
 #include "main.h"
 

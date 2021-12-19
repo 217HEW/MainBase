@@ -82,6 +82,9 @@ void UpdateFade()
 
 			// シーン切替
 			SetScene(g_eNext);
+			// SetBlendState(BS_NONE);
+			// SetZWrite(false);
+		
 		}
 		// ボリュームもフェードアウト
 		CSound::SetVolume(1.0f - g_fAlpha);
@@ -96,6 +99,8 @@ void UpdateFade()
 			// フェードイン終了
 			g_fAlpha = 0.0f;
 			g_eState = FADE_NONE;
+			// SetBlendState(BS_ALPHABLEND);
+			// SetZBuffer(true);
 		}
 		// ボリュームもフェードイン
 		CSound::SetVolume(1.0f - g_fAlpha);
@@ -109,20 +114,20 @@ void UpdateFade()
 //**************************************************************
 void DrawFade()
 {
-//	// 画面全体に半透明の矩形を描画
-//	ID3D11DeviceContext* pDC = GetDeviceContext();
-//	SetPolygonPos(0.0f, 0.0f);				// 座標
-//	SetPolygonSize(SCREEN_WIDTH, SCREEN_HEIGHT);	// 額縁サイズ
-//	SetPolygonUV(0.0f, 0.0f);				// テクスチャ座標
-//	SetPolygonFrameSize(1.0f, 1.0f);		// テクスチャサイズ
-//	SetPolygonTexture(nullptr);				// テクスチャ情報
-//	SetPolygonColor(g_fRed, g_fGreen, g_fBlue);		// 色情報
-//	SetPolygonAlpha(g_fAlpha);				// 透明度
-//	DrawPolygon(pDC);
-//	
-//	// 元に戻す
-//	SetPolygonColor(1.0f, 1.0f, 1.0f);
-//	SetPolygonAlpha(1.0f);
+	// 画面全体に半透明の矩形を描画
+	 ID3D11DeviceContext* pDC = GetDeviceContext();
+	 SetPolygonPos(0.0f, 0.0f);				// 座標
+	 SetPolygonSize(SCREEN_WIDTH, SCREEN_HEIGHT);	// 額縁サイズ
+	 SetPolygonUV(0.0f, 0.0f);				// テクスチャ座標
+	 SetPolygonFrameSize(1.0f, 1.0f);		// テクスチャサイズ
+	 SetPolygonTexture(nullptr);				// テクスチャ情報
+	 SetPolygonColor(g_fRed, g_fGreen, g_fBlue);		// 色情報
+	 SetPolygonAlpha(g_fAlpha);				// 透明度
+	 DrawPolygon(pDC);
+	 
+	 // 元に戻す
+	 SetPolygonColor(1.0f, 1.0f, 1.0f);
+	 SetPolygonAlpha(1.0f);
 
 }
 

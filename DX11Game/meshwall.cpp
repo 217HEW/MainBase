@@ -1,9 +1,10 @@
 //=============================================================================
 //
 // メッシュ壁の処理 [meshwall.cpp]
-// 制作
+// 制作:上月大地
 //
-//更新履歴
+//	更新履歴
+//	2021/12/18	メッシュで四角ポリゴン風のハリボテを作成する関数を制作
 //
 //=============================================================================
 #include "meshwall.h"
@@ -14,7 +15,9 @@
 // マクロ定義
 //*****************************************************************************
 #define	TEXTURE_FILENAME	L"data/texture/wall000.jpg"	// テクスチャファイル名
-#define	MAX_MESHWALL		(32)						// 壁の総数
+#define WALL_SIZE			(50.0f)		// 壁の縦横サイズ
+#define	MAX_MESHWALL		(2055)		// 板の総数
+
 
 //*****************************************************************************
 // グローバル変数
@@ -22,6 +25,8 @@
 static ID3D11ShaderResourceView*	g_pTexture;	// テクスチャ読み込み場所
 static MESH			g_meshWall[MAX_MESHWALL];	// メッシュ壁ワーク
 static int			g_nNumMeshWall = 0;			// メッシュ壁の数
+static XMFLOAT4 g_meshWallCol = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);	// カラー
+static	XMFLOAT2 Wallsize = XMFLOAT2(WALL_SIZE, WALL_SIZE);		// 縦横サイズ
 
 //=============================================================================
 // 初期化処理
@@ -29,7 +34,7 @@ static int			g_nNumMeshWall = 0;			// メッシュ壁の数
 HRESULT InitMeshWall(void)
 {
 	ID3D11Device* pDevice = GetDevice();
-
+	
 	// テクスチャの読み込み
 	HRESULT hr = CreateTextureFromFile(pDevice,				// デバイス ポインタ
 									   TEXTURE_FILENAME,	// ファイル名
@@ -204,4 +209,28 @@ void DrawMeshWall(EDrawPart dp)
 	}
 	SetBlendState(BS_NONE);
 	SetZBuffer(true);
+}
+
+//*******************************
+//
+//	箱壁配置処理
+//	
+//	引数:
+//		置きたい座標
+//
+//	戻り値
+//		無し
+//
+//*******************************
+HRESULT SetMeshBlock(XMFLOAT3 pos)
+{
+	ID3D11Device* pDevice = GetDevice();
+
+	SetMeshWall(XMFLOAT3(pos.x + (WALL_SIZE / 2), pos.y - (WALL_SIZE), pos.z), XMFLOAT3(0.0f, -90.0f, 0.0f), g_meshWallCol, 1, 2, Wallsize);// 左
+	SetMeshWall(XMFLOAT3(pos.x - (WALL_SIZE / 2), pos.y - (WALL_SIZE), pos.z), XMFLOAT3(0.0f, 90.0f, 0.0f), g_meshWallCol, 1, 2, Wallsize);	// 右
+	SetMeshWall(XMFLOAT3(pos.x, pos.y + (WALL_SIZE), pos.z - (WALL_SIZE / 2)), XMFLOAT3(90.0f, 0.0f, 0.0f), g_meshWallCol, 1, 1, Wallsize);	// 上
+	SetMeshWall(XMFLOAT3(pos.x, pos.y - (WALL_SIZE), pos.z + (WALL_SIZE / 2)), XMFLOAT3(-90.0f, 0.0f, 0.0f), g_meshWallCol, 1, 1, Wallsize);// 下
+	SetMeshWall(XMFLOAT3(pos.x , pos.y - (WALL_SIZE), pos.z - (WALL_SIZE / 2)),XMFLOAT3(0.0f, 0.0f, 0.0f), g_meshWallCol, 1, 2, Wallsize);	// 手前
+
+	return S_OK;
 }

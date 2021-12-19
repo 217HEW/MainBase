@@ -19,7 +19,7 @@
 //#include "smoke.h"
 //#include "meshwall.h"
 //#include "polyline.h"
-
+#include "Fade.h"
 #include "Sound.h"
 #include "SceneManager.h"
 
@@ -508,9 +508,9 @@ HRESULT Init(HWND hWnd, BOOL bWindow)
 	CSound::Init();
 
 	// デバッグ文字列表示初期化
-	hr = InitDebugProc();
-	if (FAILED(hr))
-		return hr;
+//	hr = InitDebugProc();
+//	if (FAILED(hr))
+//		return hr;
 
 	// 入力処理初期化
 	hr = InitInput();
@@ -593,14 +593,14 @@ void Uninit(void)
 	UninitInput();
 
 	// デバッグ文字列表示終了処理
-	UninitDebugProc();
+//	UninitDebugProc();
 
 	// サウンド終了
 	CSound::Fin();
 
 	// シーン遷移終了
 	UninitScene();
-	
+
 	// 深度ステンシルステート解放
 	for (int i = 0; i < _countof(g_pDSS); ++i) {
 		SAFE_RELEASE(g_pDSS[i]);
@@ -641,11 +641,11 @@ void Update(void)
 	UpdateScene();
 
 	// デバッグ文字列表示更新
-	UpdateDebugProc();
+	//UpdateDebugProc();
 
 	// デバッグ文字列設定
-	StartDebugProc();
-	PrintDebugProc("FPS:%d\n\n", g_nCountFPS);
+	//StartDebugProc();
+//	PrintDebugProc("FPS:%d\n\n", g_nCountFPS);
 
 	// サウンド更新
 	CSound::Update();
@@ -689,6 +689,7 @@ void Update(void)
 	// 壁更新
 	UpdateMeshWall();
 	*/
+
 }
 
 //=============================================================================
@@ -755,7 +756,6 @@ void Draw(void)
 	DrawDebugProc();
 	SetBlendState(BS_NONE);
 	
-
 	// バックバッファとフロントバッファの入れ替え
 	g_pSwapChain->Present(g_uSyncInterval, 0);
 }

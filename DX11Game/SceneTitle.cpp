@@ -17,6 +17,7 @@
 #include "SceneTitle.h"
 #include "input.h"
 #include "SceneManager.h"
+#include "polygon.h"
 #include "Fade.h"
 
 //**************************************************************
@@ -25,7 +26,12 @@
 HRESULT InitTitle()
 {
 	HRESULT hr = S_OK;
-	
+
+	// ポリゴン表示初期化
+	hr = InitPolygon(GetDevice());
+	if (FAILED(hr))
+		return hr;
+
 	// 中身はまだない
 
 	return hr;
@@ -37,6 +43,9 @@ HRESULT InitTitle()
 void UninitTitle()
 {
 	// 中身無し
+
+		// ポリゴン表示終了処理
+	UninitPolygon();
 }
 
 //**************************************************************
@@ -48,6 +57,9 @@ void UpdateTitle()
 	{
 		StartFadeOut(SCENE_GAME);
 	}
+	// ポリゴン表示更新
+	UpdatePolygon();
+
 }
 
 //**************************************************************
@@ -56,4 +68,6 @@ void UpdateTitle()
 void DrawTitle()
 {
 	// 特になし
+
+	
 }

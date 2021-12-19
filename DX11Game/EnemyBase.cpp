@@ -162,7 +162,7 @@ int SetEnemy(XMFLOAT3 pos)
 		g_enemy[cntEnemy].m_use = true;	// 使用中ON
 		g_enemy[cntEnemy].m_pos = pos;	// 指定した座標を代入
 
-		Enemy = cntEnemy;	// 使用中の敵数を代入
+		Enemy = cntEnemy + 1;	// 使用中の敵数を代入
 		break;
 	}
 
