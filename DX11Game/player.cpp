@@ -14,6 +14,7 @@
 #include "effect.h"
 #include "collision.h"
 #include "explosion.h"
+#include "life.h"
 
 //*****************************************************************************
 // マクロ定義
@@ -265,6 +266,17 @@ void UpdatePlayer(void)
 		FireBullet(g_posModel, XMFLOAT3(-g_mtxWorld._31, -g_mtxWorld._32, -g_mtxWorld._33),
 			BULLETTYPE_PLAYER);
 	}
+
+	//当たり判定
+	//テスト壁との当たり判定でlifeが減る
+	//XMFLOAT2 vRect(COLLISION_WIDTH, COLLISION_HEIGHT);
+	//if (CollisionEnemy(g_vPos, vRect, 0.0f) >= 0)
+	//{
+	//	//lifeを減算
+	//	DelLife();
+	//	g_nDamage = DAMAGE_TIMER;
+	//	CSound::Play(SE_HIT);
+	//}
 
 	// PrintDebugProc("[ﾋｺｳｷ ｲﾁ : (%f : %f : %f)]\n", g_posModel.x, g_posModel.y, g_posModel.z);
 	// PrintDebugProc("[ﾋｺｳｷ ﾑｷ : (%f) < ﾓｸﾃｷ ｲﾁ:(%f) >]\n", g_rotModel.y, g_rotDestModel.y);
