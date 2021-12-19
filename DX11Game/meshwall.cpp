@@ -234,3 +234,4 @@ HRESULT SetMeshBlock(XMFLOAT3 pos)
 
 	return S_OK;
 }
+
