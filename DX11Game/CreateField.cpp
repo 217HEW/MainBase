@@ -90,7 +90,7 @@ void DrawCField(void)
 
 	//関数化してスケールサイズを指定できるようにする
 	//g_Map[10][10] =
-	int Map[10][10] =
+	bool Map[10][10] =
 	{
 		//		500
 		1,1,1,1,1,1,1,1,1,1,//
@@ -112,7 +112,7 @@ void DrawCField(void)
 		for (int Width = 0; Width < 10; Width++)
 		{
 			//if (g_Map[Height][Width] == 1)
-			if(Map[Height][Width] == 1)
+			if(Map[Height][Width])
 			{
 				//二次元配列Map内で、"1"の場所に描画する
 				//描画するオブジェクトの関数を呼び出す
