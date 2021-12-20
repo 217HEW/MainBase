@@ -16,7 +16,7 @@
 
 static CAssimpModel	g_model;		// モデル
 static XMFLOAT4X4	g_mtxWorld;		// ワールドマトリックス
-MAP g_Map;
+//MAP g_Map;
 
 typedef struct
 {
@@ -68,7 +68,7 @@ void UninitCField(void)
 //=============================================================================
 void UpdateCField(void)
 {
-	XMMATRIX mtxWorld, mtxRot, mtxTranslate;
+	XMMATRIX mtxWorld;
 
 	// ワールドマトリックスの初期化
 	mtxWorld = XMMatrixIdentity();
@@ -89,7 +89,8 @@ void DrawCField(void)
 
 
 	//関数化してスケールサイズを指定できるようにする
-	g_Map[10][10] =
+	//g_Map[10][10] =
+	int Map[10][10] =
 	{
 		//		500
 		1,1,1,1,1,1,1,1,1,1,//
@@ -110,7 +111,8 @@ void DrawCField(void)
 	{
 		for (int Width = 0; Width < 10; Width++)
 		{
-			if (g_Map[Height][Width] == 1)
+			//if (g_Map[Height][Width] == 1)
+			if(Map[Height][Width] == 1)
 			{
 				//二次元配列Map内で、"1"の場所に描画する
 				//描画するオブジェクトの関数を呼び出す
