@@ -39,6 +39,7 @@
 #include "timer.h"
 #include "life.h"
 #include "number.h"
+#include "CreateField.h"
 
 //**************************************************************
 // マクロ定義
@@ -118,6 +119,11 @@ HRESULT InitGame()
 
 	// フィールド初期化
 	hr = InitMeshField(16, 16, 80.0f, 80.0f);
+	if (FAILED(hr))
+		return hr;
+
+	//二次元配列マップ
+	hr = InitCField();
 	if (FAILED(hr))
 		return hr;
 
@@ -236,6 +242,9 @@ void UninitGame()
 	// フィールド終了処理
 	UninitMeshField();
 
+	// 二次元配列マップ終了処理
+	UninitCField();
+
 	// 自機終了処理
 	UninitPlayer();
 
@@ -305,6 +314,9 @@ void UpdateGame()
 	// フィールド更新
 	UpdateMeshField();
 
+	// 二次元配列マップ更新
+	UpdateCField();
+
 	//*12/17澤村瑠人追加
 	// タイマー更新
 	UpdateTimer();
@@ -351,6 +363,9 @@ void DrawGame()
 
 	// フィールド描画
 	DrawMeshField();
+
+	// 二次元配列マップ描画
+	DrawCField();
 
 	// 自機描画
 	DrawPlayer();
