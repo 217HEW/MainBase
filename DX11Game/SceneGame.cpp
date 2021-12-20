@@ -280,6 +280,10 @@ void UpdateGame()
 	{
 		StartFadeOut(SCENE_TITLE);
 	}
+	else if (GetKeyRelease(VK_3))
+	{
+		StartFadeOut(SCENE_GAMEOVER);
+	}
 
 	// 入力処理更新
 	UpdateInput();	// 必ずUpdate関数の先頭で実行.

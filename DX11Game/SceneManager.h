@@ -23,6 +23,7 @@ enum EScene
 	SCENE_GAME,		 // ゲーム画面
 	
 // ↓シーン追加↓
+	SCENE_GAMEOVER,		 // ゲームオーバー画面
 
 	MAX_SCENE // シーン総数
 };
