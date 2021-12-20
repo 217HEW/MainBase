@@ -49,6 +49,12 @@
     <Filter Include="ヘッダー ファイル\UI">
       <UniqueIdentifier>{27b93718-6f7c-47ab-9cfb-1f78683705d5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Model">
+      <UniqueIdentifier>{0c559aa4-59ec-4f00-9776-63b35686d6e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Model">
+      <UniqueIdentifier>{7b9248da-5183-4749-bd5e-e0479db817e7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="input.cpp">
@@ -146,6 +152,9 @@
     </ClCompile>
     <ClCompile Include="life.cpp">
       <Filter>ソース ファイル\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Block.cpp">
+      <Filter>ソース ファイル\Model</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -253,6 +262,9 @@
     </ClInclude>
     <ClInclude Include="life.h">
       <Filter>ヘッダー ファイル\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Block.h">
+      <Filter>ヘッダー ファイル\Model</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
