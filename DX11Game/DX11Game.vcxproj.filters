@@ -153,6 +153,12 @@
     <ClCompile Include="life.cpp">
       <Filter>ソース ファイル\UI</Filter>
     </ClCompile>
+    <ClCompile Include="SceneGameover.cpp">
+      <Filter>ソース ファイル\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="CreateField.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
     <ClCompile Include="Block.cpp">
       <Filter>ソース ファイル\Model</Filter>
     </ClCompile>

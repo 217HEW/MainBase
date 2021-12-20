@@ -1,7 +1,7 @@
 //=============================================================================
 //
 // 自機処理 [player.cpp]
-// Author : HIROHIKO HAMAYA
+// 更新履歴
 //
 //=============================================================================
 #include "player.h"
@@ -14,6 +14,7 @@
 #include "effect.h"
 #include "collision.h"
 #include "explosion.h"
+#include "life.h"
 
 //*****************************************************************************
 // マクロ定義
@@ -26,6 +27,7 @@
 #define	RATE_ROTATE_PLAYER	(0.1f)		// 回転慣性係数
 
 #define	PLAYER_RADIUS		(10.0f)		// 境界球半径
+#define DAMAGE_TIMER		120
 
 //*****************************************************************************
 // グローバル変数
@@ -40,6 +42,7 @@ static XMFLOAT3		g_moveModel;	// 移動量
 static XMFLOAT4X4	g_mtxWorld;		// ワールドマトリックス
 
 static int			g_nShadow;		// 丸影番号
+static int g_nDamage;		// 点滅中
 
 //=============================================================================
 // 初期化処理
@@ -49,6 +52,8 @@ HRESULT InitPlayer(void)
 	HRESULT hr = S_OK;
 	ID3D11Device* pDevice = GetDevice();
 	ID3D11DeviceContext* pDeviceContext = GetDeviceContext();
+
+	g_nDamage = 0;
 
 	// 位置・回転・スケールの初期設定
 	g_posModel = XMFLOAT3(0.0f, 40.0f, 0.0f);
@@ -87,7 +92,15 @@ void UpdatePlayer(void)
 {
 	// カメラの向き取得
 	XMFLOAT3 rotCamera = CCamera::Get()->GetAngle();
-
+	/*do
+	{*/
+	if (g_nDamage > 0) {
+		--g_nDamage;
+		if (g_nDamage <= 0) {
+			
+		}
+		//break;
+	}
 	if (GetKeyPress(VK_LEFT)) {
 		if (GetKeyPress(VK_UP)) {
 			// 左前移動
@@ -265,6 +278,31 @@ void UpdatePlayer(void)
 		FireBullet(g_posModel, XMFLOAT3(-g_mtxWorld._31, -g_mtxWorld._32, -g_mtxWorld._33),
 			BULLETTYPE_PLAYER);
 	}
+	// ダメージテスト
+	if (GetKeyRepeat(VK_D))
+	{
+		DelLife();
+		g_nDamage = DAMAGE_TIMER;
+
+	}
+	// 回復テスト
+	if (GetKeyRepeat(VK_H))
+	{
+		AddLife();
+		//g_nDamage = DAMAGE_TIMER;
+
+	}
+	//} while (0);
+	//当たり判定
+	//テスト壁との当たり判定でlifeが減る
+	//XMFLOAT2 vRect(COLLISION_WIDTH, COLLISION_HEIGHT);
+	//if (CollisionEnemy(g_vPos, vRect, 0.0f) >= 0)
+	//{
+	//	//lifeを減算
+	//	DelLife();
+	//	g_nDamage = DAMAGE_TIMER;
+	//	CSound::Play(SE_HIT);
+	//}
 
 	// PrintDebugProc("[ﾋｺｳｷ ｲﾁ : (%f : %f : %f)]\n", g_posModel.x, g_posModel.y, g_posModel.z);
 	// PrintDebugProc("[ﾋｺｳｷ ﾑｷ : (%f) < ﾓｸﾃｷ ｲﾁ:(%f) >]\n", g_rotModel.y, g_rotDestModel.y);
@@ -288,6 +326,10 @@ void UpdatePlayer(void)
 //=============================================================================
 void DrawPlayer(void)
 {
+	if (g_nDamage > 0) {
+		if (g_nDamage & 4)
+			return;
+	}
 	ID3D11DeviceContext* pDC = GetDeviceContext();
 
 	// 不透明部分を描画

@@ -20,6 +20,7 @@
 #include "SceneManager.h"
 #include "SceneTitle.h"
 #include "SceneGame.h"
+#include "SceneGameover.h"
 #include "Fade.h"
 
 //**************************************************************
@@ -60,6 +61,9 @@ void UpdateScene()
 		UpdateGame();
 		break;
 	// 何かシーンを追加する場合はこちらに
+	case SCENE_GAMEOVER:		// ゲームオーバー画面
+		UpdateGameover();
+		break;
 	}
 	UpdateFade();			//フェード更新
 }
@@ -78,6 +82,9 @@ void DrawScene()
 		DrawGame();
 		break;
 	// 追加シーンの描画
+	case SCENE_GAMEOVER:		// ゲームオーバー画面
+		DrawGameover();
+		break;
 	}
 
 	// 透過(アルファ値)をいじるときはセットブレンドではさむ
@@ -109,6 +116,9 @@ void SetScene(EScene eScene)
 	case SCENE_GAME: // ゲーム画面
 		UninitGame();
 		break;
+	case SCENE_GAMEOVER: // ゲームオーバー画面
+		UninitGameover();
+		break;
 	}
 
 	// 画面を入れ替え
@@ -122,6 +132,9 @@ void SetScene(EScene eScene)
 		break;
 	case SCENE_GAME: // ゲーム画面
 		InitGame();
+		break;
+	case SCENE_GAMEOVER: // ゲームオーバー画面
+		InitGameover();
 		break;
 	}
 }
