@@ -162,7 +162,7 @@ HRESULT InitGame()
 	// SetMeshWall(XMFLOAT3(0.0f, 0.0f, -640.0f), XMFLOAT3(0.0f, 180.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), 16, 2, XMFLOAT2(80.0f, 80.0f));
 
 	 // メッシュ箱座標セット
-	 SetMeshBlock(XMFLOAT3(-60.0f, 30.0f, 0.0f));
+	// SetMeshBlock(XMFLOAT3(-60.0f, 30.0f, 0.0f));
 	 // SetMeshBlock(XMFLOAT3(-60.0f, 90.0f, 0.0f));
 	 // SetMeshBlock(XMFLOAT3(-60.0f, 150.0f, 0.0f));
 	 // SetMeshBlock(XMFLOAT3(-60.0f, 210.0f, 0.0f));
@@ -413,3 +413,32 @@ void DrawGame()
 	DrawDebugProc();
 	SetBlendState(BS_NONE);
 }
+
+//*******************************
+//
+//	ブロック配置処理
+//	
+//	引数:
+//		置きたい座標
+//
+//	戻り値
+//		無し
+//
+//*******************************
+// HRESULT SetMeshBlock(XMFLOAT3 pos)
+// {
+// 	ID3D11Device* pDevice = GetDevice();
+// 
+// 	SetMeshWall(XMFLOAT3(pos.x + (WALL_SIZE / 2), pos.y - (WALL_SIZE), pos.z), 
+// 		XMFLOAT3(  0.0f,-90.0f,0.0f),XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), 1, 2, XMFLOAT2(30.0f, 30.0f));// 左
+// 	SetMeshWall(XMFLOAT3(pos.x - (WALL_SIZE / 2), pos.y - (WALL_SIZE), pos.z),
+// 		XMFLOAT3(  0.0f, 90.0f,0.0f),XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), 1, 2, XMFLOAT2(30.0f, 30.0f));	// 右
+// 	SetMeshWall(XMFLOAT3(pos.x, pos.y + (WALL_SIZE), pos.z - (WALL_SIZE / 2)),
+// 		XMFLOAT3( 90.0f, 0.0f, 0.0f),XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), 1, 1, XMFLOAT2(30.0f, 30.0f));	// 上
+// 	SetMeshWall(XMFLOAT3(pos.x, pos.y - (WALL_SIZE), pos.z + (WALL_SIZE / 2)),
+// 		XMFLOAT3(-90.0f, 0.0f, 0.0f),XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), 1, 1, XMFLOAT2(30.0f, 30.0f));// 下
+// 	SetMeshWall(XMFLOAT3(pos.x, pos.y - (WALL_SIZE), pos.z - (WALL_SIZE / 2)), 
+// 		XMFLOAT3(  0.0f, 0.0f, 0.0f),XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), 1, 2, XMFLOAT2(30.0f, 30.0f));	// 手前
+// 
+// 	return S_OK;
+// }
