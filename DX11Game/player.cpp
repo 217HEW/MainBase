@@ -56,7 +56,7 @@ HRESULT InitPlayer(void)
 	g_nDamage = 0;
 
 	// 位置・回転・スケールの初期設定
-	g_posModel = XMFLOAT3(0.0f, 40.0f, 0.0f);
+	g_posModel = XMFLOAT3(0.0f, -200.0f, 0.0f);
 	g_moveModel = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	g_rotModel = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	g_rotDestModel = XMFLOAT3(0.0f, 0.0f, 0.0f);
@@ -217,12 +217,12 @@ void UpdatePlayer(void)
 	if (g_posModel.z > 630.0f) {
 		g_posModel.z = 630.0f;
 	}
-	if (g_posModel.y < 10.0f) {
-		g_posModel.y = 10.0f;
-	}
-	if (g_posModel.y > 150.0f) {
-		g_posModel.y = 150.0f;
-	}
+	//if (g_posModel.y < 10.0f) {
+	//	g_posModel.y = 10.0f;
+	//}
+	//if (g_posModel.y > 150.0f) {
+	//	g_posModel.y = 150.0f;
+	//}
 	
 	if (GetKeyPress(VK_RETURN)) {
 		// リセット
