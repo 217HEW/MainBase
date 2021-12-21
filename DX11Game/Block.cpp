@@ -8,7 +8,10 @@
 //--------------------------------------------------------------
 //	開発履歴
 //	2021/12/21	　初期Wall.cppから改造して制作	
-//
+//	2021/12/21	　通常ブロック、ひび割れブロックの当たり判定と切り替えを実装	
+//	2021/12/21	　通常ブロック、ひび割れブロックの当たり判定と切り替えを実装	
+//	2021/12/21	　ブロックのサイズを構造体の要素から、グローバル変数へ　||変更者：柴山凜太郎
+//	
 //**************************************************************
 #include "Block.h"
 #include "main.h"
@@ -21,174 +24,197 @@
 //*****************************************************************************
 // マクロ定義
 //*****************************************************************************
-#define MODEL_WALL			"data/model/Block.fbx"
-// #define BLOCK_TEXTURE		"data/model/Block.jpg"
-#define MAX_LIFE			(2)			// 壁耐久置
-#define MAX_BLOCK			(256)		// 壁最大数
+#define MODEL_BLOCK			"data/model/Block.fbx"	// 通常ブロック
+#define MODEL_CRACKS		"data/model/Block2.fbx"	// ひび割れたブロック
+
+#define MAX_LIFE		(2)		// ブロック耐久値
+#define BLOCK_X			(23)	// ブロック最大数
+#define BLOCK_Y			(25)	// ブロック最大数
+#define MAX_BLOCK		(BLOCK_X * BLOCK_Y)		// ブロック最大数
 
 //*****************************************************************************
 // 構造体定義
 //*****************************************************************************
 struct TBLOCK {
 	XMFLOAT3	m_pos;		// 現在の位置
-	XMFLOAT3	m_rot;		// 現在の向き
-	XMFLOAT3    m_size;		// 現在のサイズ
+	//XMFLOAT3    m_size;	// 現在のサイズ
 	XMFLOAT4X4	m_mtxWorld;	// ワールドマトリックス
-
+ std::string	m_3Dmodel;	// モデル情報
 	int			m_nLife;	// 壁の耐久置
 	bool		use;		// 使用しているか
-
 };
 
 //*****************************************************************************
 // グローバル変数
 //*****************************************************************************
-static CAssimpModel	g_model;			// モデル
-static TBLOCK		g_wall[MAX_BLOCK];	// 壁情報
+static CAssimpModel	g_model[MAX_BLOCK];	// モデル
+static TBLOCK		g_block[MAX_BLOCK];	// 壁情報
+XMFLOAT3			g_BlockSize;		// 現在のサイズ
 
 //=============================================================================
 // 初期化処理
 //=============================================================================
-// HRESULT InitBlock(void)
-// {
-// 	HRESULT hr = S_OK;
-// 	ID3D11Device* pDevice = GetDevice();
-// 	ID3D11DeviceContext* pDeviceContext = GetDeviceContext();
-// 
-// 	for (int i = 0; i < MAX_WALL; ++i)
-// 	{
-// 		g_wall[i].m_size = XMFLOAT3(38.0f, 38.0f, 38.0f);
-// 		//g_wall->m_pos = XMFLOAT3(0.0f, 50.0f, 150.0f);
-// 		g_wall[i].m_nLife = MAX_LIFE;
-// 		g_wall[i].use = false;
-// 	}
-// 
-// 	// モデルデータの読み込み
-// 	if (!g_model.Load(pDevice, pDeviceContext, MODEL_WALL)) {
-// 		MessageBoxA(GetMainWnd(), "モデルデータ読み込みエラー", "InitWall", MB_OK);
-// 		return E_FAIL;
-// 	}
-// 
-// 	return hr;
-// }
+HRESULT InitBlock(void)
+{
+	HRESULT hr = S_OK;
+	ID3D11Device* pDevice = GetDevice();
+	ID3D11DeviceContext* pDeviceContext = GetDeviceContext();
+ 
+ 	for (int i = 0; i < MAX_BLOCK; ++i)
+ 	{
+ 		g_BlockSize = XMFLOAT3(20.0f, 40.0f, 10.0f);
+ 		// g_wall->m_pos = XMFLOAT3(0.0f, 50.0f, 150.0f);
+		g_block[i].m_3Dmodel = MODEL_BLOCK;
+ 		g_block[i].m_nLife = MAX_LIFE;
+ 		g_block[i].use = false;
+
+		// モデルデータの読み込み
+		if (!g_model[i].Load(pDevice, pDeviceContext, g_block[i].m_3Dmodel))
+		{
+			MessageBoxA(GetMainWnd(), "モデルデータ読み込みエラー", "InitBlock", MB_OK);
+			return E_FAIL;
+		}
+
+ 	}
+ 
+ 
+ 	return hr;
+}
 
 //=============================================================================
 // 終了処理
 //=============================================================================
-// void UninitBlock(void)
-// {
-// 	// モデルの解放
-// 	g_model.Release();
-// }
+void UninitBlock(void)
+{
+	// モデルの解放
+	for (int i = 0; i < MAX_BLOCK; ++i)
+	{
+		g_model[i].Release();
+	}
+}
 
 //=============================================================================
 // 更新処理
 //=============================================================================
-// void UpdateBlock(void)
-// {
-// 
-// 	XMMATRIX mtxWorld, mtxRot, mtxTranslate;
-// 
-// 	for (int i = 0; i < MAX_WALL; ++i)
-// 	{
-// 		// ワールドマトリックスの初期化
-// 		mtxWorld = XMMatrixIdentity();
-// 
-// 		// 回転を反映
-// 		mtxRot = XMMatrixRotationRollPitchYaw(
-// 			XMConvertToRadians(g_wall[i].m_rot.x),
-// 			XMConvertToRadians(g_wall[i].m_rot.y),
-// 			XMConvertToRadians(g_wall[i].m_rot.z));
-// 		mtxWorld = XMMatrixMultiply(mtxWorld, mtxRot);
-// 		mtxWorld = XMMatrixScaling(10.0f, 10.0f, 10.0f);
-// 		// 移動を反映
-// 		mtxTranslate = XMMatrixTranslation(
-// 			g_wall[i].m_pos.x,
-// 			g_wall[i].m_pos.y,
-// 			g_wall[i].m_pos.z);
-// 		mtxWorld = XMMatrixMultiply(mtxWorld, mtxTranslate);
-// 
-// 		// ワールドマトリックス設定
-// 		XMStoreFloat4x4(&g_wall[i].m_mtxWorld, mtxWorld);
-// 
-// 	}
-// 
-// 	for (int i = 0; i < MAX_WALL; ++i)
-// 	{
-// 		if (!g_wall[i].use)
-// 		{// 未使用なら次へ
-// 			continue;
-// 		}
-// 
-// 		// 壁とプレイヤーが衝突していたら
-// 		if (CollisionWall(g_wall[i].m_pos, g_wall[i].m_size, GetPlayerPos(), GetPlayerSize()))
-// 		{
-// 
-// 			StartExplosion(g_wall[i].m_pos, XMFLOAT2(80.0f, 80.0f));
-// 			g_wall[i].m_nLife--;
-// 
-// 			if (g_wall[i].m_nLife <= 0)
-// 			{
-// 				g_wall[i].use = false;
-// 			}
-// 		}
-// 	}
-// 
-// 
-// }
+void UpdateBlock(void)
+{
+ 
+	XMMATRIX mtxWorld, mtxRot, mtxTranslate;
+
+	for (int i = 0; i < MAX_BLOCK; ++i)
+	{
+		// ワールドマトリックスの初期化
+		mtxWorld = XMMatrixIdentity();
+
+		mtxWorld = XMMatrixMultiply(mtxWorld, mtxRot);
+
+		// 箱のサイズ
+		mtxWorld = XMMatrixScaling(g_BlockSize.x,
+								   g_BlockSize.y, 
+								   g_BlockSize.z);
+
+		// 移動を反映
+		mtxTranslate = XMMatrixTranslation(
+			g_block[i].m_pos.x,
+			g_block[i].m_pos.y,
+			g_block[i].m_pos.z);
+		mtxWorld = XMMatrixMultiply(mtxWorld, mtxTranslate);
+
+		// ワールドマトリックス設定
+		XMStoreFloat4x4(&g_block[i].m_mtxWorld, mtxWorld);
+
+	}
+
+	for (int i = 0; i < MAX_BLOCK; ++i)
+	{
+		if (!g_block[i].use)
+		{// 未使用なら次へ
+			continue;
+		}
+	
+		// 壁とプレイヤーが衝突していたら
+		 if (CollisionAABB(g_block[i].m_pos, g_BlockSize, GetPlayerPos(), XMFLOAT3(5.0f,5.0f,10.0f)))
+		 {
+			 ID3D11Device* pDevice = GetDevice();
+			 ID3D11DeviceContext* pDeviceContext = GetDeviceContext();
+
+			// ブロックにひびが入る
+			g_block[i].m_3Dmodel = MODEL_CRACKS;
+			g_model[i].Load(pDevice, pDeviceContext, g_block[i].m_3Dmodel);
+			g_block[i].m_nLife--;
+		 	
+		 	// 体力が無くなったら使わない
+		 	if (g_block[i].m_nLife <= 0)
+		 	{
+		 		g_block[i].use = false;
+				g_model[i].Release();
+		 	}
+		 }
+	}
+
+
+}
 
 //=============================================================================
 // 描画処理
 //=============================================================================
-// void DrawBlock(void)
-// {
-// 	ID3D11DeviceContext* pDC = GetDeviceContext();
-// 
-// 
-// 	// 不透明部分を描画
-// 	for (int i = 0; i < MAX_WALL; ++i)
-// 	{
-// 		if (!g_wall[i].use)
-// 		{
-// 			continue;
-// 		}
-// 		g_model.Draw(pDC, g_wall[i].m_mtxWorld, eOpacityOnly);
-// 	}
-// 
-// 	// 半透明部分を描画
-// 	for (int i = 0; i < MAX_WALL; ++i) {
-// 		SetBlendState(BS_ALPHABLEND);	// アルファブレンド有効
-// 		SetZWrite(false);				// Zバッファ更新しない
-// 		g_model.Draw(pDC, g_wall[i].m_mtxWorld, eTransparentOnly);
-// 		SetZWrite(true);				// Zバッファ更新する
-// 		SetBlendState(BS_NONE);			// アルファブレンド無効
-// 
-// 
-// 	}
-// 
-// 
-// }
+void DrawBlock(void)
+{
+	ID3D11DeviceContext* pDC = GetDeviceContext();
 
-//===============================================================================
+
+	// 不透明部分を描画
+	for (int i = 0; i < MAX_BLOCK; ++i)
+	{
+		// 使っているブロックの描画
+		if (!g_block[i].use)
+		{
+			continue;
+		}
+		g_model[i].Draw(pDC, g_block[i].m_mtxWorld, eOpacityOnly);
+	}
+
+	// 半透明部分を描画
+	for (int i = 0; i < MAX_BLOCK; ++i) {
+		SetBlendState(BS_ALPHABLEND);	// アルファブレンド有効
+		SetZWrite(false);				// Zバッファ更新しない
+		g_model[i].Draw(pDC, g_block[i].m_mtxWorld, eTransparentOnly);
+		SetZWrite(true);				// Zバッファ更新する
+		SetBlendState(BS_NONE);			// アルファブレンド無効
+	}
+}
+
+//*******************************
 //
-//  　　壁配置
+//		ブロックの配置処理
+//	
+//	引数:
+//		置きたい座標
 //
-//===============================================================================
-// int SetBlock(XMFLOAT3 pos)
-// {
-// 	int Wall = -1;
-// 
-// 	for (int cntWall = 0; cntWall < MAX_WALL; ++cntWall) {
-// 		// 使用中ならスキップ
-// 		if (g_wall[cntWall].use) {
-// 			continue;
-// 		}
-// 		g_wall[cntWall].use = true;
-// 		g_wall[cntWall].m_pos = pos;
-// 
-// 		Wall = cntWall;
-// 		break;
-// 	}
-// 
-// 	return Wall;
-// }
+//	戻り値
+//		無し
+//
+//*******************************
+ int SetBlock(XMFLOAT3 pos)
+ {
+ 	int Block = -1;
+ 
+ 	for (int cntBlock = 0; cntBlock < MAX_BLOCK; ++cntBlock) {
+ 		// 使用中ならスキップ
+ 		if (g_block[cntBlock].use) {
+ 			continue;
+ 		}
+ 		g_block[cntBlock].use = true;
+ 		g_block[cntBlock].m_pos = pos;
+ 
+		Block = cntBlock;
+ 		break;
+ 	}
+ 
+ 	return Block;
+ }
+
+XMFLOAT3 GetBlockSize()
+{
+	return g_BlockSize;
+}

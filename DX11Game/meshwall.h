@@ -20,12 +20,27 @@ enum EDrawPart {
 };
 
 //*****************************************************************************
+// 構造体定義
+//*****************************************************************************
+struct TBLOCK {
+	XMFLOAT3	m_pos;		// 現在の位置
+	XMFLOAT3	m_rot;		// 現在の向き
+	XMFLOAT3    m_size;		// 現在のサイズ
+	XMFLOAT4X4	m_mtxWorld;	// ワールドマトリックス
+
+	int			m_nLife;	// 壁の耐久値
+	bool		use;		// 使用しているか
+
+};
+
+//*****************************************************************************
 // プロトタイプ宣言
 //*****************************************************************************
 HRESULT InitMeshWall(void);
 HRESULT SetMeshWall(XMFLOAT3 pos, XMFLOAT3 rot, XMFLOAT4 col,
 	int nNumBlockX, int nNumBlockY, XMFLOAT2 sizeBlock);
-
+TBLOCK *GetMesh();
 void UninitMeshWall(void);
 void UpdateMeshWall(void);
 void DrawMeshWall(EDrawPart dp = DRAWPART_ALL);
+HRESULT SetMeshBlock(XMFLOAT3 pos);		// 箱生成
