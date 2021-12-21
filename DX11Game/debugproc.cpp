@@ -80,7 +80,7 @@ void DrawDebugProc(void)
 			(nChr >= 0xa6 && nChr <= 0xaf || nChr >= 0xb1 && nChr <= 0xdd))
 			nChr ^= 0x20;
 		SetPolygonUV((nChr & 15) / 16.0f, (nChr >> 4) / 16.0f);
-		UpdatePolygon();
+		//UpdatePolygon();
 		DrawPolygon(pDeviceContext);
 		vPos.x += FONT_WIDTH;
 	}
