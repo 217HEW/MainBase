@@ -66,6 +66,7 @@ HRESULT InitBlock(void)
 	ID3D11DeviceContext* pDeviceContext = GetDeviceContext();
  	for (int i = 0; i < MAX_BLOCK; ++i)
  	{
+		//Xが二倍になる為Yの二分の一にしておく
  		g_BlockSize = XMFLOAT3(20.0f, 40.0f, 10.0f);
  		// g_wall->m_pos = XMFLOAT3(0.0f, 50.0f, 150.0f);
 		g_block[i].m_3Dmodel = MODEL_BLOCK;
@@ -177,14 +178,14 @@ void DrawBlock(void)
 		g_model[i].Draw(pDC, g_block[i].m_mtxWorld, eOpacityOnly);
 	}
 
-	 // 半透明部分を描画
-	 //for (int i = 0; i < MAX_BLOCK; ++i) {
-	 //	SetBlendState(BS_ALPHABLEND);	// アルファブレンド有効
-	 //	SetZWrite(false);				// Zバッファ更新しない
-	 //	g_model[i].Draw(pDC, g_block[i].m_mtxWorld, eTransparentOnly);
-	 //	SetZWrite(true);				// Zバッファ更新する
-	 //	SetBlendState(BS_NONE);			// アルファブレンド無効
-	 //}
+	// 半透明部分を描画
+	//for (int i = 0; i < MAX_BLOCK; ++i) {
+	//	SetBlendState(BS_ALPHABLEND);	// アルファブレンド有効
+	//	SetZWrite(false);				// Zバッファ更新しない
+	//	g_model[i].Draw(pDC, g_block[i].m_mtxWorld, eTransparentOnly);
+	//	SetZWrite(true);				// Zバッファ更新する
+	//	SetBlendState(BS_NONE);			// アルファブレンド無効
+	//}
 }
 
 //*******************************

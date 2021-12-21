@@ -1,9 +1,20 @@
-//=============================================================================
+//**************************************************************
 //
-// 自機処理 [player.cpp]
-// 更新履歴
+//	player.cpp
+//	プレイヤー処理
 //
-//=============================================================================
+//--------------------------------------------------------------
+//	製作者：柴山凜太郎
+//--------------------------------------------------------------
+//**************************************************************
+
+//**************************************************************
+//	開発履歴
+//	2021/12/22	プレイヤーの跳躍操作実装(仮)
+//				移動範囲再設定
+//	編集者：柴山凜太郎
+//--------------------------------------------------------------
+//**************************************************************
 #include "player.h"
 #include "main.h"
 #include "input.h"
@@ -22,6 +33,7 @@
 #define MODEL_PLAYER		"data/model/airplane000.fbx"
 
 #define	VALUE_MOVE_PLAYER	(0.155f)	// 移動速度
+#define	SPEED_MOVE_PLAYER	(20)		// 移動速度
 #define	RATE_MOVE_PLAYER	(0.025f)	// 移動慣性係数
 #define	VALUE_ROTATE_PLAYER	(4.5f)		// 回転速度
 #define	RATE_ROTATE_PLAYER	(0.1f)		// 回転慣性係数
@@ -42,7 +54,8 @@ static XMFLOAT3		g_moveModel;	// 移動量
 static XMFLOAT4X4	g_mtxWorld;		// ワールドマトリックス
 
 static int			g_nShadow;		// 丸影番号
-static int g_nDamage;		// 点滅中
+static int			g_nDamage;		// 点滅中
+static bool			g_bLand;		// 地面判定
 
 //=============================================================================
 // 初期化処理
@@ -56,7 +69,7 @@ HRESULT InitPlayer(void)
 	g_nDamage = 0;
 
 	// 位置・回転・スケールの初期設定
-	g_posModel = XMFLOAT3(0.0f, 40.0f, 0.0f);
+	g_posModel = XMFLOAT3(0.0f, -200.0f, 0.0f);
 	g_moveModel = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	g_rotModel = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	g_rotDestModel = XMFLOAT3(0.0f, 0.0f, 0.0f);
@@ -70,6 +83,9 @@ HRESULT InitPlayer(void)
 	// 丸影の生成
 	g_nShadow = CreateShadow(g_posModel, 12.0f);
 
+	// 壁接触判定初期化
+	g_bLand = false;
+	
 	return hr;
 }
 
@@ -101,59 +117,100 @@ void UpdatePlayer(void)
 		}
 		//break;
 	}
-	if (GetKeyPress(VK_LEFT)) {
-		if (GetKeyPress(VK_UP)) {
-			// 左前移動
-			g_moveModel.x -= SinDeg(rotCamera.y + 135.0f) * VALUE_MOVE_PLAYER;
-			g_moveModel.z -= CosDeg(rotCamera.y + 135.0f) * VALUE_MOVE_PLAYER;
 
-			g_rotDestModel.y = rotCamera.y + 135.0f;
-		} else if (GetKeyPress(VK_DOWN)) {
-			// 左後移動
-			g_moveModel.x -= SinDeg(rotCamera.y + 45.0f) * VALUE_MOVE_PLAYER;
-			g_moveModel.z -= CosDeg(rotCamera.y + 45.0f) * VALUE_MOVE_PLAYER;
-
-			g_rotDestModel.y = rotCamera.y + 45.0f;
-		} else {
-			// 左移動
-			g_moveModel.x -= SinDeg(rotCamera.y + 90.0f) * VALUE_MOVE_PLAYER;
-			g_moveModel.z -= CosDeg(rotCamera.y + 90.0f) * VALUE_MOVE_PLAYER;
-
-			g_rotDestModel.y = rotCamera.y + 90.0f;
+	// 壁等に接触しているとき
+	if (g_bLand)
+	{
+		// 初期化
+		g_moveModel.x = 0;
+		g_moveModel.y = 0;
+		g_moveModel.z = 0;
+		// 上下移動
+		if (GetKeyTrigger(VK_UP)) {
+			StartExplosion(g_posModel, XMFLOAT2(40.0f, 40.0f));
+			g_moveModel.y += SPEED_MOVE_PLAYER;
+			g_bLand = false;
 		}
-	} else if (GetKeyPress(VK_RIGHT)) {
-		if (GetKeyPress(VK_UP)) {
-			// 右前移動
-			g_moveModel.x -= SinDeg(rotCamera.y - 135.0f) * VALUE_MOVE_PLAYER;
-			g_moveModel.z -= CosDeg(rotCamera.y - 135.0f) * VALUE_MOVE_PLAYER;
-
-			g_rotDestModel.y = rotCamera.y - 135.0f;
-		} else if (GetKeyPress(VK_DOWN)) {
-			// 右後移動
-			g_moveModel.x -= SinDeg(rotCamera.y - 45.0f) * VALUE_MOVE_PLAYER;
-			g_moveModel.z -= CosDeg(rotCamera.y - 45.0f) * VALUE_MOVE_PLAYER;
-
-			g_rotDestModel.y = rotCamera.y - 45.0f;
-		} else {
-			// 右移動
-			g_moveModel.x -= SinDeg(rotCamera.y - 90.0f) * VALUE_MOVE_PLAYER;
-			g_moveModel.z -= CosDeg(rotCamera.y - 90.0f) * VALUE_MOVE_PLAYER;
-
-			g_rotDestModel.y = rotCamera.y - 90.0f;
+		else if (GetKeyTrigger(VK_DOWN)) {
+			StartExplosion(g_posModel, XMFLOAT2(40.0f, 40.0f));
+			g_moveModel.y -= SPEED_MOVE_PLAYER;
+			g_bLand = false;
 		}
-	} else if (GetKeyPress(VK_UP)) {
-		// 前移動
-		g_moveModel.x -= SinDeg(180.0f + rotCamera.y) * VALUE_MOVE_PLAYER;
-		g_moveModel.z -= CosDeg(180.0f + rotCamera.y) * VALUE_MOVE_PLAYER;
 
-		g_rotDestModel.y = 180.0f + rotCamera.y;
-	} else if (GetKeyPress(VK_DOWN)) {
-		// 後移動
-		g_moveModel.x -= SinDeg(rotCamera.y) * VALUE_MOVE_PLAYER;
-		g_moveModel.z -= CosDeg(rotCamera.y) * VALUE_MOVE_PLAYER;
 
-		g_rotDestModel.y = rotCamera.y;
+
+		// 壁接触時左右移動しない
+		if (!g_bLand)
+		{
+			// 左右移動
+			if (GetKeyPress(VK_LEFT)) {
+				g_moveModel.x -= SPEED_MOVE_PLAYER;
+			}
+			else if (GetKeyPress(VK_RIGHT)) {
+				g_moveModel.x += SPEED_MOVE_PLAYER;
+			}
+			// 奥手前移動
+			//if (GetKeyPress(VK_UP)) {
+			//	g_moveModel.z += SPEED_MOVE_PLAYER;
+			//}
+			//else if (GetKeyPress(VK_DOWN)) {
+			//	g_moveModel.z -= SPEED_MOVE_PLAYER;
+			//}
+		}
 	}
+	//if (GetKeyPress(VK_LEFT)) {
+	//	if (GetKeyPress(VK_UP)) {
+	//		// 左前移動
+	//		g_moveModel.x -= SinDeg(rotCamera.y + 135.0f) * VALUE_MOVE_PLAYER;
+	//		//g_moveModel.z -= CosDeg(rotCamera.y + 135.0f) * VALUE_MOVE_PLAYER;
+	//
+	//		g_rotDestModel.y = rotCamera.y + 135.0f;
+	//	} else if (GetKeyPress(VK_DOWN)) {
+	//		// 左後移動
+	//		g_moveModel.x -= SinDeg(rotCamera.y + 45.0f) * VALUE_MOVE_PLAYER;
+	//		//g_moveModel.z -= CosDeg(rotCamera.y + 45.0f) * VALUE_MOVE_PLAYER;
+	//
+	//		g_rotDestModel.y = rotCamera.y + 45.0f;
+	//	} else {
+	//		// 左移動
+	//		g_moveModel.x -= SinDeg(rotCamera.y + 90.0f) * VALUE_MOVE_PLAYER;
+	//		//g_moveModel.z -= CosDeg(rotCamera.y + 90.0f) * VALUE_MOVE_PLAYER;
+	//
+	//		g_rotDestModel.y = rotCamera.y + 90.0f;
+	//	}
+	//} else if (GetKeyPress(VK_RIGHT)) {
+	//	if (GetKeyPress(VK_UP)) {
+	//		// 右前移動
+	//		g_moveModel.x -= SinDeg(rotCamera.y - 135.0f) * VALUE_MOVE_PLAYER;
+	//		//g_moveModel.z -= CosDeg(rotCamera.y - 135.0f) * VALUE_MOVE_PLAYER;
+	//
+	//		g_rotDestModel.y = rotCamera.y - 135.0f;
+	//	} else if (GetKeyPress(VK_DOWN)) {
+	//		// 右後移動
+	//		g_moveModel.x -= SinDeg(rotCamera.y - 45.0f) * VALUE_MOVE_PLAYER;
+	//		//g_moveModel.z -= CosDeg(rotCamera.y - 45.0f) * VALUE_MOVE_PLAYER;
+	//
+	//		g_rotDestModel.y = rotCamera.y - 45.0f;
+	//	} else {
+	//		// 右移動
+	//		g_moveModel.x -= SinDeg(rotCamera.y - 90.0f) * VALUE_MOVE_PLAYER;
+	//		//g_moveModel.z -= CosDeg(rotCamera.y - 90.0f) * VALUE_MOVE_PLAYER;
+	//
+	//		g_rotDestModel.y = rotCamera.y - 90.0f;
+	//	}
+	//} else if (GetKeyPress(VK_UP)) {
+	//	// 前移動
+	//	g_moveModel.x -= SinDeg(180.0f + rotCamera.y) * VALUE_MOVE_PLAYER;
+	//	//g_moveModel.z -= CosDeg(180.0f + rotCamera.y) * VALUE_MOVE_PLAYER;
+	//
+	//	g_rotDestModel.y = 180.0f + rotCamera.y;
+	//} else if (GetKeyPress(VK_DOWN)) {
+	//	// 後移動
+	//	g_moveModel.x -= SinDeg(rotCamera.y) * VALUE_MOVE_PLAYER;
+	//	//g_moveModel.z -= CosDeg(rotCamera.y) * VALUE_MOVE_PLAYER;
+	//
+	//	g_rotDestModel.y = rotCamera.y;
+	//}
 
 	if (GetKeyPress(VK_I)) {
 		g_moveModel.y += VALUE_MOVE_PLAYER;
@@ -198,30 +255,34 @@ void UpdatePlayer(void)
 	// 位置移動
 	g_posModel.x += g_moveModel.x;
 	g_posModel.y += g_moveModel.y;
-	g_posModel.z += g_moveModel.z;
+	//g_posModel.z += g_moveModel.z;
 
 	// 移動量に慣性をかける
 	g_moveModel.x += (0.0f - g_moveModel.x) * RATE_MOVE_PLAYER;
 	g_moveModel.y += (0.0f - g_moveModel.y) * RATE_MOVE_PLAYER;
-	g_moveModel.z += (0.0f - g_moveModel.z) * RATE_MOVE_PLAYER;
+	//g_moveModel.z += (0.0f - g_moveModel.z) * RATE_MOVE_PLAYER;
 
 	if (g_posModel.x < -630.0f) {
 		g_posModel.x = -630.0f;
+		g_bLand = true;		// 壁に接触している
 	}
 	if (g_posModel.x > 630.0f) {
 		g_posModel.x = 630.0f;
+		g_bLand = true;		// 壁に接触している
 	}
-	if (g_posModel.z < -630.0f) {
-		g_posModel.z = -630.0f;
+	if (g_posModel.z < 0.0f) {
+		g_posModel.z = 0.0f;
 	}
-	if (g_posModel.z > 630.0f) {
-		g_posModel.z = 630.0f;
+	if (g_posModel.z > 0.0f) {
+		g_posModel.z = 0.0f;
 	}
-	if (g_posModel.y < 10.0f) {
-		g_posModel.y = 10.0f;
+	if (g_posModel.y < -199.0f) {
+		g_posModel.y = -200.0f;
+		g_bLand = true;		// 壁に接触している
 	}
 	if (g_posModel.y > 150.0f) {
 		g_posModel.y = 150.0f;
+		g_bLand = true;		// 壁に接触している
 	}
 	
 	if (GetKeyPress(VK_RETURN)) {
@@ -351,9 +412,18 @@ XMFLOAT3& GetPlayerPos()
 	return g_posModel;
 }
 
-//=============================================================================
-// 衝突判定
-//=============================================================================
+
+//*******************************
+//
+//		プレイヤーとの衝突判定
+//	
+//	引数:
+//		pos:プレイヤー3軸座標、radius:半径、damage:ダメージ数
+//
+//	戻り値
+//		bool:当たったかどうか
+//
+//*******************************
 bool CollisionPlayer(XMFLOAT3 pos, float radius, float damage)
 {
 	bool hit = CollisionSphere(g_posModel, PLAYER_RADIUS, pos, radius);

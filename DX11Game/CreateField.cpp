@@ -6,32 +6,44 @@
 //==============================================================
 //	製作者：澤村瑠人
 //==============================================================
+
+//==============================================================
 //	開発履歴
+//==============================================================
 //	2021/12/20	二次元配列を用いた、マップ構築
 //				生成範囲は未実装
 //	変更者：澤村瑠人
 //--------------------------------------------------------------
-//	2021/12/21	
+//	2021/12/21 マップチップ完成
+//	変更者：柴山凜太朗
+//--------------------------------------------------------------
+//	2021/12/22	マップチップのswith管理に変更
+//	変更者：澤村瑠人
+
+//==============================================================
+//	コメント（意見）
+//==============================================================
+//	2021/12/22	10 * 10 だと物足りないかも？	__澤村瑠人
+//
+//
+//
 //**************************************************************
+
 
 #include "CreateField.h"
 #include "input.h"
 #include "AssimpModel.h"
 #include "Block.h"
 
-//#define STAGEWIDTH		500
-//#define STAGEHEIGHT		500
-//#define FIELD_TEST		"data/model/airplane000.fbx"
-
-//static CAssimpModel	g_model;		// モデル
-//static XMFLOAT4X4	g_mtxWorld;		// ワールドマトリックス
-//MAP g_Map;
-
 
 //関数化してスケールサイズを指定できるようにする
 	//g_Map[10][10] =
-bool Map[10][10] =
+int Map[10][10] =
 {
+	//壊れるブロック"1"
+	//壊れないブロック"2"
+	//※ブロック"2"はブロック数を削減するために
+	//壊れるブロックよりサイズが大きい
 	//		100
 	1,1,1,1,1,1,1,1,1,1,//
 	1,0,0,0,0,0,0,0,0,1,//
@@ -40,8 +52,8 @@ bool Map[10][10] =
 	1,0,0,0,0,0,0,0,0,1,//0
 	1,0,0,0,0,0,0,0,0,1,//0
 	1,0,0,0,0,0,0,0,0,1,//
-	1,0,0,0,0,0,0,0,0,1,//
-	1,0,0,0,0,0,0,0,0,1,//
+	1,0,0,0,1,0,0,0,0,1,//
+	1,0,0,0,1,1,0,0,0,1,//
 	1,1,1,1,1,1,1,1,1,1,//
 
 };
@@ -54,8 +66,8 @@ XMFLOAT3 g_MapPosOrizin = XMFLOAT3(0.0f, 0.0f, 100.0f);	// マップ生成開始座標
 HRESULT InitCField(void)
 {
 	HRESULT hr = S_OK;
-	ID3D11Device* pDevice = GetDevice();
-	ID3D11DeviceContext* pDeviceContext = GetDeviceContext();
+	//ID3D11Device* pDevice = GetDevice();
+	//ID3D11DeviceContext* pDeviceContext = GetDeviceContext();
 	// ブロック初期化
 	hr = InitBlock();
 	if (FAILED(hr))
@@ -76,29 +88,38 @@ HRESULT InitCField(void)
 	//}
 
 	//配列の中身の処理
-	for (int Height = 0; Height < 10; Height++)
+	//二次元配列Map内で、"1"の場所に描画する
+	//描画するオブジェクトの関数を呼び出す
+	for (int Height = 0; Height < 10  ; Height++)
 	{
 		for (int Width = 0; Width < 10; Width++)
 		{
-			//if (g_Map[Height][Width] == 1)
-			if (Map[Height][Width])
+			if (Map[Height][Width] == 0)
 			{
-				SetBlock(XMFLOAT3(g_MapPosOrizin.x + (Width * BlockSize.x), 
-								  g_MapPosOrizin.y + (Height * BlockSize.y),
-								  g_MapPosOrizin.z));
-				//二次元配列Map内で、"1"の場所に描画する
-				//描画するオブジェクトの関数を呼び出す
-				// 不透明部分を描画
-				//g_model.Draw(pDC, g_mtxWorld, eOpacityOnly);
-
-				// 半透明部分を描画
-				//SetBlendState(BS_ALPHABLEND);	// アルファブレンド有効
-				//SetZWrite(false);				// Zバッファ更新しない
-				//g_model.Draw(pDC, g_mtxWorld, eTransparentOnly);
-				//SetZWrite(true);				// Zバッファ更新する
-				//SetBlendState(BS_NONE);			// アルファブレンド無効
-
+				continue;
 			}
+
+			switch (Map[Height][Width])
+			{
+			case 1:
+				//マップチップ"1"の場所に描画するもの
+				SetBlock(XMFLOAT3(g_MapPosOrizin.x + (Width  * BlockSize.x),
+								  g_MapPosOrizin.y - (Height * BlockSize.y),
+								  g_MapPosOrizin.z));
+				break;
+			case 2:
+				//マップチップ"2"の場所に描画するもの
+				break;
+			}
+
+			//if (Map[Height][Width] == 1)
+			//{
+			//	
+			//	/*SetBlock(XMFLOAT3(g_MapPosOrizin.x + (Width * BlockSize.x), 
+			//					  g_MapPosOrizin.y + (Height * BlockSize.y),
+			//					  g_MapPosOrizin.z));*/
+			//	
+			//}
 		}
 	}
 
