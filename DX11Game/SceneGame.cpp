@@ -10,7 +10,16 @@
 //	2021/12/06	小嶋悟君のプログラムを元に作成	
 //	2021/12/17	TimerとLifeを前回のDX作品をもとに制作
 //				描画にまだ問題あり
+//--------------------------------------------------------------
 //	2021/12/19	描画完了
+//--------------------------------------------------------------
+//	2021/12/21	GetDevice関数格納用ポインタ変数を作成し、適所の変更
+//				フェード中に別のフェード処理をしないよう補正
+//				ポリゴン、デバッグ表示、入力処理の4大処理削除(ポリゴンは描画処理以外)
+//				ポリライン関連削除
+//				描画関数の削除
+//	変更者：柴山凜太郎
+//--------------------------------------------------------------
 //
 //**************************************************************
 
@@ -34,7 +43,7 @@
 #include "effect.h"
 #include "smoke.h"
 #include "meshwall.h"
-#include "polyline.h"
+//#include "polyline.h"
 #include "Sound.h"
 #include "timer.h"
 #include "life.h"
@@ -52,7 +61,7 @@
 //**************************************************************
 // グローバル変数
 //**************************************************************
-TPolyline					g_polyline[MAX_POLYLINE];	// ポリライン情報
+//TPolyline					g_polyline[MAX_POLYLINE];	// ポリライン情報
 
 //**************************************************************
 // 初期化処理
@@ -255,19 +264,34 @@ void UninitGame()
 //**************************************************************
 void UpdateGame()
 {
-	// 仮遷移用コマンド
-	if (GetKeyRelease(VK_1))	// １キー
-	{// ゲームシーンへ
-		StartFadeOut(SCENE_GAME);
+	if (GetFadeState() == FADE_NONE)
+	{
+		if (GetKeyRelease(VK_1))
+		{
+			StartFadeOut(SCENE_TITLE);
+		}
+		else if (GetKeyRelease(VK_2))
+		{
+			StartFadeOut(SCENE_GAME);
+		}
+		else if (GetKeyRelease(VK_3))
+		{
+			StartFadeOut(SCENE_GAMEOVER);
+		}
 	}
-	else if(GetKeyRelease(VK_2))// 2キー
-	{// タイトルシーンへ
-		StartFadeOut(SCENE_TITLE);
-	}
-	else if (GetKeyRelease(VK_3))// 3キー
-	{// ゲームオーバーへ
-		StartFadeOut(SCENE_GAMEOVER);
-	}
+	
+
+	// 入力処理更新
+	//UpdateInput();	// 必ずUpdate関数の先頭で実行.
+
+	// デバッグ文字列表示更新
+	//UpdateDebugProc();
+
+	// デバッグ文字列設定
+	//StartDebugProc();
+	
+	// ポリゴン表示更新
+	//UpdatePolygon();
 
 	// 自機更新
 	UpdatePlayer();
@@ -378,35 +402,8 @@ void DrawGame()
 	DrawTimer();
 	// ライフ表示(完了)
 	DrawLife();
-	DrawDebugProc();
+	//DrawDebugProc();
 	SetBlendState(BS_NONE);
 }
 
-//*******************************
-//
-//	ブロック配置処理
-//	
-//	引数:
-//		置きたい座標
-//
-//	戻り値
-//		無し
-//
-//*******************************
-// HRESULT SetMeshBlock(XMFLOAT3 pos)
-// {
-// 	ID3D11Device* pDevice = GetDevice();
-// 
-// 	SetMeshWall(XMFLOAT3(pos.x + (WALL_SIZE / 2), pos.y - (WALL_SIZE), pos.z), 
-// 		XMFLOAT3(  0.0f,-90.0f,0.0f),XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), 1, 2, XMFLOAT2(30.0f, 30.0f));// 左
-// 	SetMeshWall(XMFLOAT3(pos.x - (WALL_SIZE / 2), pos.y - (WALL_SIZE), pos.z),
-// 		XMFLOAT3(  0.0f, 90.0f,0.0f),XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), 1, 2, XMFLOAT2(30.0f, 30.0f));	// 右
-// 	SetMeshWall(XMFLOAT3(pos.x, pos.y + (WALL_SIZE), pos.z - (WALL_SIZE / 2)),
-// 		XMFLOAT3( 90.0f, 0.0f, 0.0f),XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), 1, 1, XMFLOAT2(30.0f, 30.0f));	// 上
-// 	SetMeshWall(XMFLOAT3(pos.x, pos.y - (WALL_SIZE), pos.z + (WALL_SIZE / 2)),
-// 		XMFLOAT3(-90.0f, 0.0f, 0.0f),XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), 1, 1, XMFLOAT2(30.0f, 30.0f));// 下
-// 	SetMeshWall(XMFLOAT3(pos.x, pos.y - (WALL_SIZE), pos.z - (WALL_SIZE / 2)), 
-// 		XMFLOAT3(  0.0f, 0.0f, 0.0f),XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), 1, 2, XMFLOAT2(30.0f, 30.0f));	// 手前
-// 
-// 	return S_OK;
-// }
+
