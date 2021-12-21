@@ -206,7 +206,8 @@ HRESULT InitGame()
 	// 	AddPolylinePoint(&g_polyline[i], pos);
 	// }
 
-	 
+	 // BGM再生開始
+	 CSound::Play(BGM_000);
 
 	return hr;
 }
@@ -216,7 +217,8 @@ HRESULT InitGame()
 //**************************************************************
 void UninitGame()
 {
-	
+	// BGM再生停止
+	CSound::Stop(BGM_000);
 
 	// ポリライン終了処理
 	//UninitPolyline();
