@@ -10,7 +10,7 @@
 //	2021/12/21	　初期Wall.cppから改造して制作	
 //				　通常ブロック、ひび割れブロックの当たり判定と切り替えを実装
 //				　半透明処理が不要なのでFPS向上の為、コメントアウト(Draw)
-//	変更者：上月大地
+//																		変更者：上月大地
 //	2021/12/21	　通常ブロック、ひび割れブロックの当たり判定と切り替えを実装	
 //	2021/12/21	　通常ブロック、ひび割れブロックの当たり判定と切り替えを実装	
 //	2021/12/21	　ブロックのサイズを構造体の要素から、グローバル変数へ　||変更者：柴山凜太郎
@@ -28,14 +28,13 @@
 //*****************************************************************************
 // マクロ定義
 //*****************************************************************************
-#define MODEL_BLOCK			"data/model/Block.fbx"	// 通常ブロック
-#define TEXTURE_BLOCK		"data/model/Block.jpg"	// 通常ブロック
-#define MODEL_CRACKS		"data/model/Block2.fbx"	// ひび割れたブロック
+#define MODEL_BLOCK			"data/model/Hew_3_1.fbx"		// 通常ブロック
+#define MODEL_CRACKS		"data/model/Block2.fbx"			// ひび割れたブロック
 
 #define MAX_LIFE		(2)		// ブロック耐久値
-#define BLOCK_X			(23)	// ブロック最大数
-#define BLOCK_Y			(25)	// ブロック最大数
-#define MAX_BLOCK		(BLOCK_X * BLOCK_Y)			// ブロック最大数
+#define BLOCK_X			(23)	// ブロック最大数X
+#define BLOCK_Y			(25)	// ブロック最大数Y
+#define MAX_BLOCK		(BLOCK_X * BLOCK_Y)					// ブロック最大数
 
 //*****************************************************************************
 // 構造体定義
@@ -47,7 +46,7 @@ struct TBLOCK {
  std::string	m_3Dmodel;	// モデル情報
 	int			m_nLife;	// 壁の耐久置
 	bool		m_use;		// 使用しているか
-	//bool		
+	bool		m_invincible;// 無敵かどうか　ON：無敵
 };
 
 //*****************************************************************************
@@ -72,7 +71,7 @@ HRESULT InitBlock(void)
 		g_block[i].m_3Dmodel = MODEL_BLOCK;
  		g_block[i].m_nLife = MAX_LIFE;
  		g_block[i].m_use = false;
-
+		g_block[i].m_invincible = false;
 		// モデルデータの読み込み
 		if (!g_model[i].Load(pDevice, pDeviceContext, g_block[i].m_3Dmodel))
 		{
@@ -138,6 +137,8 @@ void UpdateBlock(void)
 		// 壁とプレイヤーが衝突していたら
 		 if (CollisionAABB(g_block[i].m_pos, g_BlockSize, GetPlayerPos(), XMFLOAT3(5.0f,5.0f,10.0f)))
 		 {
+			 // プレイヤーがとんでいたら
+
 			 ID3D11Device* pDevice = GetDevice();
 			 ID3D11DeviceContext* pDeviceContext = GetDeviceContext();
 
