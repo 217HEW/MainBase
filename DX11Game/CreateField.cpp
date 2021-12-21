@@ -103,9 +103,9 @@ HRESULT InitCField(void)
 			{
 			case 1:
 				//マップチップ"1"の場所に描画するもの
-				SetBlock(XMFLOAT3(g_MapPosOrizin.x + (Width * BlockSize.x),
-					g_MapPosOrizin.y - (Height * BlockSize.y),
-					g_MapPosOrizin.z));
+				SetBlock(XMFLOAT3(g_MapPosOrizin.x + (Width  * BlockSize.x),
+								  g_MapPosOrizin.y - (Height * BlockSize.y),
+								  g_MapPosOrizin.z));
 				break;
 			case 2:
 				//マップチップ"2"の場所に描画するもの
