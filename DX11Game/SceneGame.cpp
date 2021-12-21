@@ -53,6 +53,7 @@
 #include "number.h"
 #include "CreateField.h"
 #include "Block.h"
+#include "EnemyMelee.h"
 
 //**************************************************************
 // マクロ定義
@@ -150,6 +151,14 @@ HRESULT InitGame()
 	//if (FAILED(hr))
 	//return hr;
 
+	// エネミーメレー初期化
+	hr = InitEnemyMelee();
+	if (FAILED(hr))
+		return hr;
+
+	// メレー呼び出し
+	SetEnemyMelee(XMFLOAT3(30.0f, 30.0f, 0.0f));
+
 	// メッシュ壁初期化
 	 hr = InitMeshWall();
 	 if (FAILED(hr))
@@ -214,6 +223,9 @@ void UninitGame()
 
 	// 壁終了
 	UninitMeshWall();
+
+	// エネミーメレー終了
+	UninitEnemyMelee();
 
 	// ブロック終了
 	//UninitBlock();
@@ -295,6 +307,9 @@ void UpdateGame()
 	// 自機更新
 	UpdatePlayer();
 
+	// エネミーメレー
+	UpdateEnemyMelee();
+
 	// 背景更新
 	UpdateBG();
 
@@ -362,6 +377,9 @@ void DrawGame()
 	// 自機描画
 	DrawPlayer();
 	
+	// エネミーメレー
+	DrawEnemyMelee();
+
 	// 丸影描画
 	DrawShadow();
 

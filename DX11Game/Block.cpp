@@ -17,9 +17,7 @@
 //	
 //**************************************************************
 #include "Block.h"
-#include "main.h"
 #include "AssimpModel.h"
-#include "Texture.h"
 #include "debugproc.h"
 #include "collision.h"
 #include "player.h"
@@ -30,31 +28,14 @@
 //*****************************************************************************
 #define MODEL_BLOCK			"data/model/Hew_3_1.fbx"		// 通常ブロック
 #define MODEL_CRACKS		"data/model/Block2.fbx"			// ひび割れたブロック
-
-#define MAX_LIFE		(2)		// ブロック耐久値
-#define BLOCK_X			(23)	// ブロック最大数X
-#define BLOCK_Y			(25)	// ブロック最大数Y
-#define MAX_BLOCK		(BLOCK_X * BLOCK_Y)					// ブロック最大数
-
-//*****************************************************************************
-// 構造体定義
-//*****************************************************************************
-struct TBLOCK {
-	XMFLOAT3	m_pos;		// 現在の位置
-	//XMFLOAT3    m_size;	// 現在のサイズ
-	XMFLOAT4X4	m_mtxWorld;	// ワールドマトリックス
- std::string	m_3Dmodel;	// モデル情報
-	int			m_nLife;	// 壁の耐久置
-	bool		m_use;		// 使用しているか
-	bool		m_invincible;// 無敵かどうか　ON：無敵
-};
+#define MAX_LIFE			(2)		// ブロック耐久値
 
 //*****************************************************************************
 // グローバル変数
 //*****************************************************************************
 static CAssimpModel	g_model[MAX_BLOCK];	// モデル
 static TBLOCK		g_block[MAX_BLOCK];	// 壁情報
-XMFLOAT3			g_BlockSize;		// 現在のサイズ
+static XMFLOAT3		g_BlockSize;		// 現在のサイズ
 
 //=============================================================================
 // 初期化処理
@@ -218,7 +199,26 @@ void DrawBlock(void)
  	return Block;
  }
 
+ //***********************************
+ //
+ //		ブロックサイズ取得
+ //		
+ //		戻り値：ブロックのサイズ
+ //
+ //***********************************
 XMFLOAT3 GetBlockSize()
 {
 	return g_BlockSize;
+}
+
+//***********************************
+//
+//		ブロック配列取得
+//		
+//		戻り値：ブロックのサイズ
+//
+//***********************************
+TBLOCK* GetBlockArray()
+{
+	return g_block;
 }

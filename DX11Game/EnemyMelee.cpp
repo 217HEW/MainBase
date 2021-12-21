@@ -20,10 +20,11 @@
 #include "AssimpModel.h"
 #include "debugproc.h"
 #include "collision.h"
-#include "main.h"
 #include "player.h"
-//#include "Wall.h"
+#include "Block.h"
 #include "explosion.h"
+#include "life.h"
+#include "SceneManager.h"
 
 //**************************************************************
 // 構造体定義
@@ -43,8 +44,8 @@ struct TEnemy {
 //**************************************************************
 // マクロ定義
 //**************************************************************
-//#define MODEL_ENEMY			"data/model/helicopter000.fbx"
-#define MODEL_ENEMY			"data/model/enemy3.fbx"
+#define MODEL_ENEMY			"data/model/helicopter000.fbx"
+//#define MODEL_ENEMY			"data/model/enemy3.fbx"
 
 #define	VALUE_MOVE_ENEMY		(1.0f)		// 移動速度
 #define MAX_ENEMYMELEE			(10)		// 敵機最大数
@@ -60,6 +61,7 @@ struct TEnemy {
 //**************************************************************
 static CAssimpModel	g_model;			// モデル
 static TEnemy		g_EMelee[MAX_ENEMYMELEE];	// 敵機情報
+static XMFLOAT3		Blocksize;
 
 //**************************************************************
 // 初期化処理
@@ -69,6 +71,9 @@ HRESULT InitEnemyMelee(void)
 	HRESULT hr = S_OK;
 	ID3D11Device* pDevice = GetDevice();
 	ID3D11DeviceContext* pDeviceContext = GetDeviceContext();
+
+	// ブロックのサイズ取得
+	Blocksize = GetBlockSize();
 
 	// モデルデータの読み込み
 	if (!g_model.Load(pDevice, pDeviceContext, MODEL_ENEMY))
@@ -111,15 +116,15 @@ void UpdateEnemyMelee(void)
 
 	//プレイヤーの座標・サイズ取得
 	XMFLOAT3 posPlayer = GetPlayerPos();
-	XMFLOAT3 sizePlayer = GetPlayerSize();
+	float sizePlayer = GetPlayerSize();
 
 	for (int i = 0; i < MAX_ENEMYMELEE; ++i)
 	{
-		//壁取得
-		TWall *Wall = GetWall();
+		//ブロック配列取得
+		TBLOCK *Block = GetBlockArray();
 
 		//敵とプレイヤーの距離が近づいたら
-		if (CollisionSphere(posPlayer, sizePlayer.x, g_EMelee[i].m_pos, SEARCH_ENEMY))
+		if (CollisionSphere(posPlayer, sizePlayer, g_EMelee[i].m_pos, SEARCH_ENEMY))
 		{
 			if (!g_EMelee[i].m_use)
 			{//未使用なら次へ
@@ -179,34 +184,34 @@ void UpdateEnemyMelee(void)
 			}
 
 			// 敵と壁の当たり判定
-			for (int j = 0; j < MAX_WALL; ++j, ++Wall)
+			for (int j = 0; j < MAX_BLOCK; ++j, ++Block)
 			{
-				if (!Wall->use)
+				if (!Block->m_use)
 				{// 未使用なら次へ
 					continue;
 				}
-				if (CollisionAABB(g_EMelee[i].m_pos, g_EMelee[i].m_size, Wall->m_pos, Wall->m_size))
+				if (CollisionAABB(g_EMelee[i].m_pos, g_EMelee[i].m_size, Block->m_pos,Blocksize))
 				{
 					//壁に当たると止まる
 					//右
-					if (Wall->m_pos.x + Wall->m_size.x / 2 <= g_EMelee[i].m_pos.x - g_EMelee[i].m_size.x / 2)
+					if (Block->m_pos.x + Blocksize.x / 2 <= g_EMelee[i].m_pos.x - g_EMelee[i].m_size.x / 2)
 					{
-					 	g_EMelee[i].m_pos.x = (Wall->m_pos.x + Wall->m_size.x + g_EMelee[i].m_size.x);
+					 	g_EMelee[i].m_pos.x = (Block->m_pos.x + Blocksize.x + g_EMelee[i].m_size.x);
 					}
 					//左
-					else if (Wall->m_pos.x - Wall->m_size.x / 2 >= g_EMelee[i].m_pos.x + g_EMelee[i].m_size.x / 2)
+					else if (Block->m_pos.x - Blocksize.x / 2 >= g_EMelee[i].m_pos.x + g_EMelee[i].m_size.x / 2)
 					{
-					 	g_EMelee[i].m_pos.x = (Wall->m_pos.x - Wall->m_size.x - g_EMelee[i].m_size.x);
+					 	g_EMelee[i].m_pos.x = (Block->m_pos.x - Blocksize.x - g_EMelee[i].m_size.x);
 					}
 					//上
-					else if (Wall->m_pos.y - Wall->m_size.y / 2 >= g_EMelee[i].m_pos.y + g_EMelee[i].m_size.y / 2)
+					else if (Block->m_pos.y - Blocksize.y / 2 >= g_EMelee[i].m_pos.y + g_EMelee[i].m_size.y / 2)
 					{
-						g_EMelee[i].m_pos.y = (Wall->m_pos.y - Wall->m_size.y - g_EMelee[i].m_size.y);
+						g_EMelee[i].m_pos.y = (Block->m_pos.y - Blocksize.y - g_EMelee[i].m_size.y);
 					}
 					//下
-					else if (Wall->m_pos.y + Wall->m_size.y / 2 <= g_EMelee[i].m_pos.y - g_EMelee[i].m_size.y / 2)
+					else if (Block->m_pos.y + Blocksize.y / 2 <= g_EMelee[i].m_pos.y - g_EMelee[i].m_size.y / 2)
 					{
-						g_EMelee[i].m_pos.y = (Wall->m_pos.y + Wall->m_size.y + g_EMelee[i].m_size.y);
+						g_EMelee[i].m_pos.y = (Block->m_pos.y + Blocksize.y + g_EMelee[i].m_size.y);
 					}
 				}
 			}
@@ -216,9 +221,13 @@ void UpdateEnemyMelee(void)
 			{// 未使用なら次へ
 				continue;
 			}
-			if (CollisionAABB(g_EMelee[i].m_pos, g_EMelee[i].m_size, posPlayer, sizePlayer))
+			if (CollisionSphere(g_EMelee[i].m_pos, g_EMelee[i].m_size.x, posPlayer, sizePlayer))
 			{
-				StartExplosion(g_EMelee[i].m_pos, XMFLOAT2(20.0f, 20.0f));
+				DelLife();
+				if (GetLife() == 0)
+				{
+					SetScene(SCENE_GAMEOVER);
+				}
 				g_EMelee[i].m_use = false;
 			}
 

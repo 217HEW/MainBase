@@ -19,19 +19,18 @@ enum EDrawPart {
 	DRAWPART_MAX
 };
 
-//*****************************************************************************
-// 構造体定義
-//*****************************************************************************
-struct TBLOCK {
-	XMFLOAT3	m_pos;		// 現在の位置
-	XMFLOAT3	m_rot;		// 現在の向き
-	XMFLOAT3    m_size;		// 現在のサイズ
-	XMFLOAT4X4	m_mtxWorld;	// ワールドマトリックス
-
-	int			m_nLife;	// 壁の耐久値
-	bool		use;		// 使用しているか
-
-};
+// //*****************************************************************************
+// // 構造体定義
+// //*****************************************************************************
+// struct TBLOCK {
+// 	XMFLOAT3	m_pos;		// 現在の位置
+// 	XMFLOAT3    m_size;	// 現在のサイズ
+// 	XMFLOAT4X4	m_mtxWorld;	// ワールドマトリックス
+// 	std::string	m_3Dmodel;	// モデル情報
+// 	int			m_nLife;	// 壁の耐久置
+// 	bool		m_use;		// 使用しているか
+// 	bool		m_invincible;// 無敵かどうか　ON：無敵
+// };
 
 //*****************************************************************************
 // プロトタイプ宣言
@@ -39,7 +38,7 @@ struct TBLOCK {
 HRESULT InitMeshWall(void);
 HRESULT SetMeshWall(XMFLOAT3 pos, XMFLOAT3 rot, XMFLOAT4 col,
 	int nNumBlockX, int nNumBlockY, XMFLOAT2 sizeBlock);
-TBLOCK *GetMesh();
+// TBLOCK *GetMesh();
 void UninitMeshWall(void);
 void UpdateMeshWall(void);
 void DrawMeshWall(EDrawPart dp = DRAWPART_ALL);
