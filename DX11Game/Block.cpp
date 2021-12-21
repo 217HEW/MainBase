@@ -26,7 +26,7 @@
 //*****************************************************************************
 // マクロ定義
 //*****************************************************************************
-#define MODEL_BLOCK			"data/model/Hew_3_1.fbx"		// 通常ブロック
+#define MODEL_BLOCK			"data/model/Block.fbx"		// 通常ブロック
 #define MODEL_CRACKS		"data/model/Block2.fbx"			// ひび割れたブロック
 #define MAX_LIFE			(2)		// ブロック耐久値
 
