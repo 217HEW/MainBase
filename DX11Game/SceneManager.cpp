@@ -35,6 +35,8 @@ HRESULT InitScene()
 {
 	HRESULT hr = S_OK;
 	InitFade();		// フェード初期化
+	InitTitle();
+
 	return hr;
 }
 
