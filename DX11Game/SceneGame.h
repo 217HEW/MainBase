@@ -24,4 +24,3 @@ HRESULT InitGame(); // ‰Šú‰»
 void UninitGame(); // I—¹ˆ—
 void UpdateGame(); // XV
 void DrawGame(); // •`‰æ
-HRESULT SetMeshBlock(XMFLOAT3 pos);		// ” ¶¬

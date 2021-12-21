@@ -11,19 +11,7 @@
 #include "mesh.h"
 #include "Texture.h"
 
-//*****************************************************************************
-// 構造体定義
-//*****************************************************************************
-struct TBLOCK {
-	XMFLOAT3	m_pos;		// 現在の位置
-	XMFLOAT3	m_rot;		// 現在の向き
-	XMFLOAT3    m_size;		// 現在のサイズ
-	XMFLOAT4X4	m_mtxWorld;	// ワールドマトリックス
 
-	int			m_nLife;	// 壁の耐久値
-	bool		use;		// 使用しているか
-
-};
 
 //*****************************************************************************
 // マクロ定義
@@ -42,7 +30,7 @@ static MESH		g_meshWall[MAX_MESHWALL];		// メッシュ壁ワーク
 static int		g_nNumMeshWall = 0;				// メッシュ壁の数
 static XMFLOAT4 g_meshWallCol = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);	// カラー
 static XMFLOAT2 Wallsize = XMFLOAT2(WALL_SIZE, WALL_SIZE);			// 縦横サイズ
-static TBLOCK g_Block[5][MAX_BLOCK];	// ブロックの配列	[1ブロックのメッシュ総数][ブロックの総数]
+static TBLOCK g_Block[MAX_BLOCK];	// ブロックの配列	[1ブロックのメッシュ総数][ブロックの総数]
 
 //=============================================================================
 // 初期化処理
@@ -53,7 +41,7 @@ HRESULT InitMeshWall(void)
 	
 	for (int i = 0; i < MAX_BLOCK; ++i)
 	{
-		
+		g_Block[i].m_size = XMFLOAT3(30.0f, 30.0f, 30.0f);
 	}
 
 	// テクスチャの読み込み
@@ -243,5 +231,40 @@ void DrawMeshWall(EDrawPart dp)
 	}
 	SetBlendState(BS_NONE);
 	SetZBuffer(true);
+}
+
+//*******************************
+//
+//	ブロック配置処理
+//	
+//	引数:
+//		置きたい座標
+//
+//	戻り値
+//		無し
+//
+//*******************************
+HRESULT SetMeshBlock(XMFLOAT3 pos)
+{
+	ID3D11Device* pDevice = GetDevice();
+
+	SetMeshWall(XMFLOAT3(pos.x + (WALL_SIZE / 2), pos.y - (WALL_SIZE), pos.z),
+		XMFLOAT3(0.0f, -90.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), 1, 2, XMFLOAT2(30.0f, 30.0f));// 左
+	SetMeshWall(XMFLOAT3(pos.x - (WALL_SIZE / 2), pos.y - (WALL_SIZE), pos.z),
+		XMFLOAT3(0.0f, 90.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), 1, 2, XMFLOAT2(30.0f, 30.0f));	// 右
+	SetMeshWall(XMFLOAT3(pos.x, pos.y + (WALL_SIZE), pos.z - (WALL_SIZE / 2)),
+		XMFLOAT3(90.0f, 0.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), 1, 1, XMFLOAT2(30.0f, 30.0f));	// 上
+	SetMeshWall(XMFLOAT3(pos.x, pos.y - (WALL_SIZE), pos.z + (WALL_SIZE / 2)),
+		XMFLOAT3(-90.0f, 0.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), 1, 1, XMFLOAT2(30.0f, 30.0f));// 下
+	SetMeshWall(XMFLOAT3(pos.x, pos.y - (WALL_SIZE), pos.z - (WALL_SIZE / 2)),
+		XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), 1, 2, XMFLOAT2(30.0f, 30.0f));	// 手前
+
+	return S_OK;
+}
+
+
+TBLOCK *GetMesh()
+{
+	return g_Block;
 }
 
