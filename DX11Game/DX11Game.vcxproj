@@ -187,6 +187,7 @@
     <ClCompile Include="polygon.cpp" />
     <ClCompile Include="polyline.cpp" />
     <ClCompile Include="SceneGame.cpp" />
+    <ClCompile Include="SceneGameclear.cpp" />
     <ClCompile Include="SceneGameover.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="SceneTitle.cpp" />
@@ -226,6 +227,7 @@
     <ClInclude Include="polyline.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="SceneGame.h" />
+    <ClInclude Include="SceneGameclear.h" />
     <ClInclude Include="SceneGameover.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="SceneTitle.h" />
