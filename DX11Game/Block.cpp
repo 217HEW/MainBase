@@ -8,6 +8,9 @@
 //--------------------------------------------------------------
 //	開発履歴
 //	2021/12/21	　初期Wall.cppから改造して制作	
+//				　通常ブロック、ひび割れブロックの当たり判定と切り替えを実装
+//				　半透明処理が不要なのでFPS向上の為、コメントアウト(Draw)
+//	変更者：上月大地
 //	2021/12/21	　通常ブロック、ひび割れブロックの当たり判定と切り替えを実装	
 //	2021/12/21	　通常ブロック、ひび割れブロックの当たり判定と切り替えを実装	
 //	2021/12/21	　ブロックのサイズを構造体の要素から、グローバル変数へ　||変更者：柴山凜太郎
@@ -16,6 +19,7 @@
 #include "Block.h"
 #include "main.h"
 #include "AssimpModel.h"
+#include "Texture.h"
 #include "debugproc.h"
 #include "collision.h"
 #include "player.h"
@@ -25,12 +29,13 @@
 // マクロ定義
 //*****************************************************************************
 #define MODEL_BLOCK			"data/model/Block.fbx"	// 通常ブロック
+#define TEXTURE_BLOCK		"data/model/Block.jpg"	// 通常ブロック
 #define MODEL_CRACKS		"data/model/Block2.fbx"	// ひび割れたブロック
 
 #define MAX_LIFE		(2)		// ブロック耐久値
 #define BLOCK_X			(23)	// ブロック最大数
 #define BLOCK_Y			(25)	// ブロック最大数
-#define MAX_BLOCK		(BLOCK_X * BLOCK_Y)		// ブロック最大数
+#define MAX_BLOCK		(BLOCK_X * BLOCK_Y)			// ブロック最大数
 
 //*****************************************************************************
 // 構造体定義
@@ -41,7 +46,8 @@ struct TBLOCK {
 	XMFLOAT4X4	m_mtxWorld;	// ワールドマトリックス
  std::string	m_3Dmodel;	// モデル情報
 	int			m_nLife;	// 壁の耐久置
-	bool		use;		// 使用しているか
+	bool		m_use;		// 使用しているか
+	//bool		
 };
 
 //*****************************************************************************
@@ -59,7 +65,6 @@ HRESULT InitBlock(void)
 	HRESULT hr = S_OK;
 	ID3D11Device* pDevice = GetDevice();
 	ID3D11DeviceContext* pDeviceContext = GetDeviceContext();
- 
  	for (int i = 0; i < MAX_BLOCK; ++i)
  	{
 		//Xが二倍になる為Yの二分の一にしておく
@@ -67,7 +72,7 @@ HRESULT InitBlock(void)
  		// g_wall->m_pos = XMFLOAT3(0.0f, 50.0f, 150.0f);
 		g_block[i].m_3Dmodel = MODEL_BLOCK;
  		g_block[i].m_nLife = MAX_LIFE;
- 		g_block[i].use = false;
+ 		g_block[i].m_use = false;
 
 		// モデルデータの読み込み
 		if (!g_model[i].Load(pDevice, pDeviceContext, g_block[i].m_3Dmodel))
@@ -75,9 +80,7 @@ HRESULT InitBlock(void)
 			MessageBoxA(GetMainWnd(), "モデルデータ読み込みエラー", "InitBlock", MB_OK);
 			return E_FAIL;
 		}
-
  	}
- 
  
  	return hr;
 }
@@ -128,7 +131,7 @@ void UpdateBlock(void)
 
 	for (int i = 0; i < MAX_BLOCK; ++i)
 	{
-		if (!g_block[i].use)
+		if (!g_block[i].m_use)
 		{// 未使用なら次へ
 			continue;
 		}
@@ -147,7 +150,7 @@ void UpdateBlock(void)
 		 	// 体力が無くなったら使わない
 		 	if (g_block[i].m_nLife <= 0)
 		 	{
-		 		g_block[i].use = false;
+		 		g_block[i].m_use = false;
 				g_model[i].Release();
 		 	}
 		 }
@@ -163,12 +166,11 @@ void DrawBlock(void)
 {
 	ID3D11DeviceContext* pDC = GetDeviceContext();
 
-
 	// 不透明部分を描画
 	for (int i = 0; i < MAX_BLOCK; ++i)
 	{
 		// 使っているブロックの描画
-		if (!g_block[i].use)
+		if (!g_block[i].m_use)
 		{
 			continue;
 		}
@@ -193,7 +195,7 @@ void DrawBlock(void)
 //		置きたい座標
 //
 //	戻り値
-//		無し
+//		使用したブロックの総数
 //
 //*******************************
  int SetBlock(XMFLOAT3 pos)
@@ -202,13 +204,13 @@ void DrawBlock(void)
  
  	for (int cntBlock = 0; cntBlock < MAX_BLOCK; ++cntBlock) {
  		// 使用中ならスキップ
- 		if (g_block[cntBlock].use) {
+ 		if (g_block[cntBlock].m_use) {
  			continue;
  		}
- 		g_block[cntBlock].use = true;
+ 		g_block[cntBlock].m_use = true;
  		g_block[cntBlock].m_pos = pos;
  
-		Block = cntBlock;
+		Block = cntBlock +1;
  		break;
  	}
  

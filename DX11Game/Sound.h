@@ -126,4 +126,5 @@ public:
 	static float GetVolume(eBGM bgm);
 	static void SetVolume(eSE se, float fVol);
 	static float GetVolume(eSE se);
+
 };
