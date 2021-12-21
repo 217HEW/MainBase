@@ -8,6 +8,12 @@
 //--------------------------------------------------------------
 //	開発履歴
 //	2021/12/06	小嶋悟君のプログラムを元に作成	
+//--------------------------------------------------------------
+//	2021/12/21	GetDevice関数格納用ポインタ変数を作成し、適所の変更
+//				フェード中に別のフェード処理をしないよう補正
+//				ポリゴン4大処理消去
+//	変更者：柴山凜太郎
+//--------------------------------------------------------------
 //
 //**************************************************************
 
@@ -34,10 +40,10 @@ static ID3D11ShaderResourceView* g_pTexture;
 HRESULT InitTitle()
 {
 	HRESULT hr = S_OK;
-	ID3D11Device* pDevice = GetDevice();
+	//ID3D11Device* pDevice = GetDevice();
 
 	// ポリゴン表示初期化
-	hr = InitPolygon(GetDevice());
+	//hr = InitPolygon(pDevice);
 	// テクスチャ読込
 	hr = CreateTextureFromFile(pDevice, PATH_BGTEXTURE, &g_pTexture);
 	if (FAILED(hr))
@@ -57,7 +63,7 @@ void UninitTitle()
 	// テクスチャ解放
 	SAFE_RELEASE(g_pTexture);
 		// ポリゴン表示終了処理
-	UninitPolygon();
+	//UninitPolygon();
 }
 
 //**************************************************************
@@ -65,12 +71,21 @@ void UninitTitle()
 //**************************************************************
 void UpdateTitle()
 {
-	if (GetKeyRelease(VK_1))
+	if (GetFadeState() == FADE_NONE)
 	{
-		StartFadeOut(SCENE_GAME);
+		if (GetKeyRelease(VK_2))
+		{
+			StartFadeOut(SCENE_GAME);
+		}
+		else if (GetKeyRelease(VK_3))
+		{
+			StartFadeOut(SCENE_GAMEOVER);
+		}
 	}
+	
+	
 	// ポリゴン表示更新
-	UpdatePolygon();
+	//UpdatePolygon();
 
 }
 

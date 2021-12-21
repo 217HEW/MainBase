@@ -34,5 +34,5 @@ void UninitScene();		// I—¹ˆ—
 void UpdateScene();		// XV
 void DrawScene();		// •`‰æ
 
-void SetScene(EScene eScene); // Ø‘Öˆ—
+HRESULT SetScene(EScene eScene); // Ø‘Öˆ—
 
