@@ -599,7 +599,7 @@ void Uninit(void)
 	*/
 	// Assimp用シェーダ終了処理
 	CAssimpModel::UninitShader();
-	*/
+	
 
 	// ポリゴン表示終了処理
 	UninitPolygon();

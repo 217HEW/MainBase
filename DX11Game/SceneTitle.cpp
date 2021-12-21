@@ -5,7 +5,9 @@
 //
 //--------------------------------------------------------------
 //	製作者：上月大地
-//--------------------------------------------------------------
+//**************************************************************
+
+//**************************************************************
 //	開発履歴
 //	2021/12/06	小嶋悟君のプログラムを元に作成	
 //--------------------------------------------------------------
@@ -14,7 +16,9 @@
 //				ポリゴン4大処理消去
 //	変更者：柴山凜太郎
 //--------------------------------------------------------------
-//
+//	2021/12/21	フェード処理が出来るようにDraw処理にZバッファを
+//				追加しました。97～106行
+//	編集者：上月大地
 //**************************************************************
 
 //**************************************************************
@@ -47,7 +51,7 @@ static ID3D11ShaderResourceView* g_pTexture;
 HRESULT InitTitle()
 {
 	HRESULT hr = S_OK;
-	//ID3D11Device* pDevice = GetDevice();
+	ID3D11Device* pDevice = GetDevice();
 
 	// テクスチャ読込
 	hr = CreateTextureFromFile(pDevice, PATH_BGTEXTURE, &g_pTexture);
@@ -74,6 +78,7 @@ void UninitTitle()
 //**************************************************************
 void UpdateTitle()
 {
+	// キー入力でシーン遷移
 	if (GetFadeState() == FADE_NONE)
 	{
 		if (GetKeyRelease(VK_2))
@@ -85,11 +90,6 @@ void UpdateTitle()
 			StartFadeOut(SCENE_GAMEOVER);
 		}
 	}
-	
-	
-	// ポリゴン表示更新
-	//UpdatePolygon();
-
 }
 
 //**************************************************************
@@ -97,11 +97,15 @@ void UpdateTitle()
 //**************************************************************
 void DrawTitle()
 {
-	// 特になし
+	// Zバッファ無効(Zチェック無&Z更新無)
+	SetZBuffer(false);
+
 	ID3D11DeviceContext* pDC = GetDeviceContext();
 	SetPolygonSize(BG_WIDTH, BG_HEIGHT);
 	SetPolygonPos(BG_POS_X, BG_POS_Y);
 	SetPolygonTexture(g_pTexture);
 	DrawPolygon(pDC);
 	
+	// Zバッファ有効(Zチェック有&Z更新有)
+	SetZBuffer(true);
 }
