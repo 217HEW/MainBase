@@ -64,7 +64,7 @@ HRESULT InitCField(void)
 	XMFLOAT3 BlockSize = GetBlockSize();
 
 	// 位置・回転・スケールの初期設定
-	//g_posModel = XMFLOAT3(0.0f, 40.0f, 0.0f);
+	//g_posModel = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	//g_moveModel = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	//g_rotModel = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	//g_rotDestModel = XMFLOAT3(0.0f, 0.0f, 0.0f);
@@ -126,6 +126,9 @@ void UninitCField(void)
 void UpdateCField(void)
 {
 	//XMMATRIX mtxWorld;
+	XMFLOAT3 model;
+
+	
 
 	// ワールドマトリックスの初期化
 	//mtxWorld = XMMatrixIdentity();
@@ -142,6 +145,8 @@ void UpdateCField(void)
 
 //=============================================================================
 // 描画処理
+// やりたいこと：マップチップを三次元空間に500 * 500で描画したい
+// 出来ていないこと：座標の割り当て？
 //=============================================================================
 void DrawCField(void)
 {
