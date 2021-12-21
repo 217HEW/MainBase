@@ -40,6 +40,7 @@
 #include "life.h"
 #include "number.h"
 #include "CreateField.h"
+#include "Block.h"
 
 //**************************************************************
 // マクロ定義
@@ -59,25 +60,6 @@ TPolyline					g_polyline[MAX_POLYLINE];	// ポリライン情報
 HRESULT InitGame()
 {
 	HRESULT hr = S_OK;
-
-	// ポリゴン表示初期化
-	hr = InitPolygon(GetDevice());
-	if (FAILED(hr))
-		return hr;
-
-	// デバッグ文字列表示初期化
-	hr = InitDebugProc();
-	if (FAILED(hr))
-		return hr;
-
-	// 入力処理初期化
-	hr = InitInput();
-	if (FAILED(hr))
-		return hr;
-
-	// Assimp用シェーダ初期化
-	if (!CAssimpModel::InitShader(GetDevice()))
-		return E_FAIL;
 
 	// メッシュ初期化
 	hr = InitMesh();
@@ -152,7 +134,12 @@ HRESULT InitGame()
 	if (FAILED(hr))
 		return hr;
 
-	// 壁初期化
+	// ブロック初期化
+	hr = InitBlock();
+	if (FAILED(hr))
+	return hr;
+
+	// メッシュ壁初期化
 	 hr = InitMeshWall();
 	 if (FAILED(hr))
 	 	return hr;
@@ -161,18 +148,14 @@ HRESULT InitGame()
 	// SetMeshWall(XMFLOAT3(640.0f, 0.0f, 0.0f), XMFLOAT3(0.0f, 90.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), 16, 2, XMFLOAT2(80.0f, 80.0f));
 	// SetMeshWall(XMFLOAT3(0.0f, 0.0f, -640.0f), XMFLOAT3(0.0f, 180.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), 16, 2, XMFLOAT2(80.0f, 80.0f));
 
-	 // メッシュ箱座標セット
-	// SetMeshBlock(XMFLOAT3(-60.0f, 30.0f, 0.0f));
-	 // SetMeshBlock(XMFLOAT3(-60.0f, 90.0f, 0.0f));
-	 // SetMeshBlock(XMFLOAT3(-60.0f, 150.0f, 0.0f));
-	 // SetMeshBlock(XMFLOAT3(-60.0f, 210.0f, 0.0f));
-	 // SetMeshBlock(XMFLOAT3(-30.0f, 210.0f, 0.0f));
-	 
-	 
-	 
-	 
-
-
+	// ブロックセット
+	 for (int y = 0; y < 10; ++y)
+	 {
+		 for (int x = 0; x < 12; ++x)
+		 {
+			 SetBlock(XMFLOAT3(21.0f * x, 41.0f * y, 100.0f));
+		 }
+	 }
 	// ボリライン初期化
 	// hr = InitPolyline();
 	// if (FAILED(hr))
@@ -221,59 +204,50 @@ void UninitGame()
 	// ポリライン終了処理
 	//UninitPolyline();
 
-	// 壁終了処理
+	// 壁終了
 	UninitMeshWall();
 
-	// 煙終了処理
+	// ブロック終了
+	UninitBlock();
+
+	// 煙終了
 	UninitSmoke();
 
-	// エフェクト終了処理
+	// エフェクト終了
 	UninitEffect();
 
-	// 爆発終了処理
+	// 爆発終了
 	UninitExplosion();
 
-	// ビルボード弾終了処理
+	// ビルボード弾終了
 	UninitBullet();
 
-	// 背景終了処理
+	// 背景終了
 	UninitBG();
 
-	// フィールド終了処理
+	// フィールド終了
 	UninitMeshField();
 
-	// 二次元配列マップ終了処理
+	// 二次元配列マップ終了
 	UninitCField();
 
-	// 自機終了処理
+	// 自機終了
 	UninitPlayer();
 
-	// 丸影終了処理
+	// 丸影終了
 	UninitShadow();
 
-	//ナンバー終了処理
+	//ナンバー終了
 	UninitNumber();
 
-	//ライフ終了処理
+	//ライフ終了
 	UninitLife();
 
-	//タイマー
+	//タイマー終了
 	UninitTimer();
 
-	// メッシュ終了処理
+	// メッシュ終了
 	UninitMesh();
-
-	// Assimp用シェーダ終了処理
-	CAssimpModel::UninitShader();
-
-	// 入力処理終了処理
-	UninitInput();
-
-	// デバッグ文字列表示終了処理
-	UninitDebugProc();
-
-	// ポリゴン表示終了処理
-	UninitPolygon();
 }
 
 //**************************************************************
@@ -281,30 +255,19 @@ void UninitGame()
 //**************************************************************
 void UpdateGame()
 {
-	if (GetKeyRelease(VK_1))
-	{
+	// 仮遷移用コマンド
+	if (GetKeyRelease(VK_1))	// １キー
+	{// ゲームシーンへ
 		StartFadeOut(SCENE_GAME);
 	}
-	else if(GetKeyRelease(VK_2))
-	{
+	else if(GetKeyRelease(VK_2))// 2キー
+	{// タイトルシーンへ
 		StartFadeOut(SCENE_TITLE);
 	}
-	else if (GetKeyRelease(VK_3))
-	{
+	else if (GetKeyRelease(VK_3))// 3キー
+	{// ゲームオーバーへ
 		StartFadeOut(SCENE_GAMEOVER);
 	}
-
-	// 入力処理更新
-	UpdateInput();	// 必ずUpdate関数の先頭で実行.
-
-	// デバッグ文字列表示更新
-	UpdateDebugProc();
-
-	// デバッグ文字列設定
-	StartDebugProc();
-	
-	// ポリゴン表示更新
-	UpdatePolygon();
 
 	// 自機更新
 	UpdatePlayer();
@@ -340,15 +303,17 @@ void UpdateGame()
 	// エフェクト更新
 	UpdateEffect();
 
+	// ブロック更新
+	 UpdateBlock();
+
 	// 煙更新
 	UpdateSmoke();
 
+	// ブロック更新
 	// ポリライン更新
 	// for (int i = 0; i < MAX_POLYLINE; ++i) {
 	// 	UpdatePolyline(&g_polyline[i]);
 	// }
-
-	
 }
 
 //**************************************************************
@@ -366,7 +331,7 @@ void DrawGame()
 	SetZBuffer(true);
 
 	// フィールド描画
-	DrawMeshField();
+	//DrawMeshField();
 
 	// 二次元配列マップ描画
 	DrawCField();
@@ -388,6 +353,9 @@ void DrawGame()
 
 	// 壁描画 (不透明部分)
 	DrawMeshWall(DRAWPART_OPAQUE);
+
+	// ブロック描画
+	DrawBlock();
 
 	// 爆発描画
 	DrawExplosion();

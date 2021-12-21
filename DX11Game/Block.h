@@ -15,14 +15,14 @@
 //**************************************************************
 // インクルード部
 //**************************************************************
-// #include "main.h"
+ #include "main.h"
 
 //**************************************************************
 // プロトタイプ宣言
 //**************************************************************
-//HRESULT InitBlock(void);
-//void UninitBlock(void);
-//void UpdateBlock(void);
-//void DrawBlock(void);
-//
-//int SetBlock(XMFLOAT3 pos);
+HRESULT InitBlock(void);
+void UninitBlock(void);
+void UpdateBlock(void);
+void DrawBlock(void);
+
+int SetBlock(XMFLOAT3 pos);	// ブロック配置

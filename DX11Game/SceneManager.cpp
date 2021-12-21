@@ -61,7 +61,7 @@ void UpdateScene()
 		UpdateGame();
 		break;
 	// 何かシーンを追加する場合はこちらに
-	case SCENE_GAMEOVER:		// ゲームオーバー画面
+	case SCENE_GAMEOVER:	// ゲームオーバー画面
 		UpdateGameover();
 		break;
 	}
