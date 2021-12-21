@@ -203,8 +203,9 @@ HRESULT InitGame()
 	// 	AddPolylinePoint(&g_polyline[i], pos);
 	// }
 
+	 //Œå’Ç‰Á
 	// BGMÄ¶
-	//CSound::Play(BGM_003);
+	CSound::Play(SE_010);
 
 	return hr;
 }
@@ -214,9 +215,9 @@ HRESULT InitGame()
 //**************************************************************
 void UninitGame()
 {
-
+	//Œå’Ç‰Á
 	// BGMÄ¶’â~
-	//CSound::Stop(BGM_003);
+	CSound::Stop(BGM_003);
 
 	// ƒ|ƒŠƒ‰ƒCƒ“I—¹ˆ—
 	//UninitPolyline();
