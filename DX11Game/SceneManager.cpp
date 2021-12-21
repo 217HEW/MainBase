@@ -28,6 +28,7 @@
 #include "SceneTitle.h"
 #include "SceneGame.h"
 #include "SceneGameover.h"
+#include "SceneGameclear.h"
 #include "Fade.h"
 
 //**************************************************************
@@ -74,6 +75,9 @@ void UpdateScene()
 	case SCENE_GAMEOVER:	// ゲームオーバー画面
 		UpdateGameover();
 		break;
+	case SCENE_GAMECLEAR:	// ゲームクリア画面
+		UpdateGameclear();
+		break;
 	}
 	UpdateFade();			//フェード更新
 }
@@ -94,6 +98,9 @@ void DrawScene()
 	// 追加シーンの描画
 	case SCENE_GAMEOVER:		// ゲームオーバー画面
 		DrawGameover();
+		break;
+	case SCENE_GAMECLEAR:		// ゲームクリア画面
+		DrawGameclear();
 		break;
 	}
 
@@ -127,6 +134,9 @@ HRESULT SetScene(EScene eScene)
 	case SCENE_GAMEOVER: // ゲームオーバー画面
 		UninitGameover();
 		break;
+	case SCENE_GAMECLEAR: // ゲームクリア画面
+		UninitGameclear();
+		break;
 	}
 
 	// 画面を入れ替え
@@ -143,6 +153,9 @@ HRESULT SetScene(EScene eScene)
 		break;
 	case SCENE_GAMEOVER: // ゲームオーバー画面
 		InitGameover();
+		break;
+	case SCENE_GAMECLEAR: // ゲームクリア画面
+		InitGameclear();
 		break;
 	}
 	return hr;

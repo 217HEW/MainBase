@@ -24,7 +24,7 @@ enum EScene
 	
 // ↓シーン追加↓
 	SCENE_GAMEOVER,		 // ゲームオーバー画面
-
+	SCENE_GAMECLEAR,
 	MAX_SCENE // シーン総数
 };
 
