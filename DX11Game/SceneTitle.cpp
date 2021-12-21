@@ -47,7 +47,7 @@ static ID3D11ShaderResourceView* g_pTexture;
 HRESULT InitTitle()
 {
 	HRESULT hr = S_OK;
-	//ID3D11Device* pDevice = GetDevice();
+	ID3D11Device* pDevice = GetDevice();
 
 	// テクスチャ読込
 	hr = CreateTextureFromFile(pDevice, PATH_BGTEXTURE, &g_pTexture);

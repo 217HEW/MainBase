@@ -144,9 +144,9 @@ HRESULT InitGame()
 		return hr;
 
 	// ブロック初期化
-	hr = InitBlock();
-	if (FAILED(hr))
-	return hr;
+	//hr = InitBlock();
+	//if (FAILED(hr))
+	//return hr;
 
 	// メッシュ壁初期化
 	 hr = InitMeshWall();
@@ -158,13 +158,13 @@ HRESULT InitGame()
 	// SetMeshWall(XMFLOAT3(0.0f, 0.0f, -640.0f), XMFLOAT3(0.0f, 180.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), 16, 2, XMFLOAT2(80.0f, 80.0f));
 
 	// ブロックセット
-	 for (int y = 0; y < 10; ++y)
-	 {
-		 for (int x = 0; x < 12; ++x)
-		 {
-			 SetBlock(XMFLOAT3(21.0f * x, 41.0f * y, 100.0f));
-		 }
-	 }
+	// for (int y = 0; y < 10; ++y)
+	// {
+	//	 for (int x = 0; x < 12; ++x)
+	//	 {
+	//		 SetBlock(XMFLOAT3(21.0f * x, 41.0f * y, 100.0f));
+	//	 }
+	// }
 	// ボリライン初期化
 	// hr = InitPolyline();
 	// if (FAILED(hr))
@@ -217,7 +217,7 @@ void UninitGame()
 	UninitMeshWall();
 
 	// ブロック終了
-	UninitBlock();
+	//UninitBlock();
 
 	// 煙終了
 	UninitSmoke();
@@ -328,7 +328,7 @@ void UpdateGame()
 	UpdateEffect();
 
 	// ブロック更新
-	 UpdateBlock();
+	// UpdateBlock();
 
 	// 煙更新
 	UpdateSmoke();
@@ -379,7 +379,7 @@ void DrawGame()
 	DrawMeshWall(DRAWPART_OPAQUE);
 
 	// ブロック描画
-	DrawBlock();
+	//DrawBlock();
 
 	// 爆発描画
 	DrawExplosion();

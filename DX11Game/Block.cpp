@@ -9,6 +9,8 @@
 //	開発履歴
 //	2021/12/21	　初期Wall.cppから改造して制作	
 //	2021/12/21	　通常ブロック、ひび割れブロックの当たり判定と切り替えを実装	
+//	2021/12/21	　通常ブロック、ひび割れブロックの当たり判定と切り替えを実装	
+//	2021/12/21	　ブロックのサイズを構造体の要素から、グローバル変数へ　||変更者：柴山凜太郎
 //	
 //**************************************************************
 #include "Block.h"
@@ -35,7 +37,7 @@
 //*****************************************************************************
 struct TBLOCK {
 	XMFLOAT3	m_pos;		// 現在の位置
-	XMFLOAT3    m_size;		// 現在のサイズ
+	//XMFLOAT3    m_size;	// 現在のサイズ
 	XMFLOAT4X4	m_mtxWorld;	// ワールドマトリックス
  std::string	m_3Dmodel;	// モデル情報
 	int			m_nLife;	// 壁の耐久置
@@ -47,6 +49,7 @@ struct TBLOCK {
 //*****************************************************************************
 static CAssimpModel	g_model[MAX_BLOCK];	// モデル
 static TBLOCK		g_block[MAX_BLOCK];	// 壁情報
+XMFLOAT3			g_BlockSize;		// 現在のサイズ
 
 //=============================================================================
 // 初期化処理
@@ -59,7 +62,7 @@ HRESULT InitBlock(void)
  
  	for (int i = 0; i < MAX_BLOCK; ++i)
  	{
- 		g_block[i].m_size = XMFLOAT3(10.0f, 10.0f, 10.0f);
+ 		g_BlockSize = XMFLOAT3(20.0f, 40.0f, 10.0f);
  		// g_wall->m_pos = XMFLOAT3(0.0f, 50.0f, 150.0f);
 		g_block[i].m_3Dmodel = MODEL_BLOCK;
  		g_block[i].m_nLife = MAX_LIFE;
@@ -86,7 +89,7 @@ void UninitBlock(void)
 	// モデルの解放
 	for (int i = 0; i < MAX_BLOCK; ++i)
 	{
-	g_model[i].Release();
+		g_model[i].Release();
 	}
 }
 
@@ -106,7 +109,9 @@ void UpdateBlock(void)
 		mtxWorld = XMMatrixMultiply(mtxWorld, mtxRot);
 
 		// 箱のサイズ
-		mtxWorld = XMMatrixScaling(20.0f, 40.0f, 20.0f);
+		mtxWorld = XMMatrixScaling(g_BlockSize.x,
+								   g_BlockSize.y, 
+								   g_BlockSize.z);
 
 		// 移動を反映
 		mtxTranslate = XMMatrixTranslation(
@@ -128,7 +133,7 @@ void UpdateBlock(void)
 		}
 	
 		// 壁とプレイヤーが衝突していたら
-		 if (CollisionAABB(g_block[i].m_pos, g_block[i].m_size, GetPlayerPos(), XMFLOAT3(5.0f,5.0f,10.0f)))
+		 if (CollisionAABB(g_block[i].m_pos, g_BlockSize, GetPlayerPos(), XMFLOAT3(5.0f,5.0f,10.0f)))
 		 {
 			 ID3D11Device* pDevice = GetDevice();
 			 ID3D11DeviceContext* pDeviceContext = GetDeviceContext();
@@ -208,3 +213,8 @@ void DrawBlock(void)
  
  	return Block;
  }
+
+XMFLOAT3 GetBlockSize()
+{
+	return g_BlockSize;
+}
