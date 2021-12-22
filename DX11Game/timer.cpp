@@ -36,7 +36,7 @@
 #define TIMERFRAME_POS_Y ((SCREEN_HEIGHT-TIMERFRAME_HEIGHT)*0.5f)	// タイマー枠縦軸座標
 
 // タイマー
-#define TIMER_CHRCNT (3)		// タイマーの表示桁数
+#define TIMER_CHRCNT (2)		// タイマーの表示桁数
 #define TIMER_POS_X (TIMERFRAME_POS_X-TIMER_CHRCNT*NUMBER_SIZE_X*0.5f)	// タイマー横軸座標
 #define TIMER_POS_Y (TIMERFRAME_POS_Y+16.0f)	// タイマー縦軸座標
 
