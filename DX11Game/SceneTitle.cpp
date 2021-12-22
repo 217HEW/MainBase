@@ -91,6 +91,10 @@ void UpdateTitle()
 		{
 			StartFadeOut(SCENE_GAMEOVER);
 		}
+		else if (GetKeyRelease(VK_4))
+		{
+			StartFadeOut(SCENE_GAMECLEAR);
+		}
 		
 	}
 }

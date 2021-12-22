@@ -18,6 +18,8 @@
 //	変更者：柴山凜太郎
 //--------------------------------------------------------------
 //	2021/12/22	コメントの追加&編集
+//				フェードインの挙動がおかしかったためDraw関数に
+//				Zバッファの処理を追加
 //	編集者：柴山凜太郎
 //--------------------------------------------------------------
 //**************************************************************
@@ -86,6 +88,11 @@ void UpdateGameover()
 			// ゲームシーンへ
 			StartFadeOut(SCENE_GAME);
 		}
+		else if (GetKeyRelease(VK_4))
+		{
+			// ゲームクリアへ
+			StartFadeOut(SCENE_GAMECLEAR);
+		}
 	}
 
 	// ポリゴン表示更新
@@ -98,6 +105,8 @@ void UpdateGameover()
 //**************************************************************
 void DrawGameover()
 {
+	// Zバッファ無効(Zチェック無&Z更新無)
+	SetZBuffer(false);
 	ID3D11DeviceContext* pDC = GetDeviceContext();
 	SetPolygonSize(BG_WIDTH, BG_HEIGHT);
 	SetPolygonPos(BG_POS_X, BG_POS_Y);

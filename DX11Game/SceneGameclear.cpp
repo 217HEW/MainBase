@@ -78,6 +78,10 @@ void UpdateGameclear()
 		{
 			StartFadeOut(SCENE_GAME);
 		}
+		else if (GetKeyRelease(VK_3))
+		{
+			StartFadeOut(SCENE_GAMEOVER);
+		}
 	}
 
 	// ポリゴン表示更新
