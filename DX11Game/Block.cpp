@@ -36,6 +36,7 @@
 #define MODEL_BLOCK			"data/model/Block.fbx"	// 通常ブロック
 //#define TEXTURE_BLOCK		"data/model/Block.jpg"	// 通常ブロック
 #define MODEL_CRACKS		"data/model/Block2.fbx"	// ひび割れたブロック
+#define MAX_LIFE			(2)			// 壁の耐久値
 
 //*****************************************************************************
 // グローバル変数

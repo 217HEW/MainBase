@@ -27,7 +27,9 @@
 //				描画関数の削除
 //	編集者：柴山凜太郎
 //--------------------------------------------------------------
-//
+//	2021/12/22	ポーズに移るキーを一つ削除(VK_PAUSE)
+//	編集者：柴山凜太郎
+//--------------------------------------------------------------
 //**************************************************************
 
 //**************************************************************
@@ -303,6 +305,7 @@ void UpdateGame()
 	{
 		if (GetFadeState() == FADE_NONE)
 		{
+#ifdef _DEBUG
 			if (GetKeyRelease(VK_1))
 			{
 				StartFadeOut(SCENE_TITLE);
@@ -318,6 +321,12 @@ void UpdateGame()
 			else if (GetKeyRelease(VK_4))
 			{
 				StartFadeOut(SCENE_GAMECLEAR);
+			}
+#endif
+			int Timer = GetTimer();
+			if (Timer <= 0)
+			{
+				StartFadeOut(SCENE_GAMEOVER);
 			}
 		}
 
@@ -385,7 +394,7 @@ void UpdateGame()
 		
 	}
 	//一時停止ON/OFF
-	if (GetKeyTrigger(VK_P) || GetKeyTrigger(VK_PAUSE))
+	if (GetKeyTrigger(VK_P))
 	{
 		if (GetFadeState() == FADE_NONE)
 		{
