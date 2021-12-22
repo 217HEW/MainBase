@@ -21,10 +21,12 @@ enum EScene
 	SCENE_NONE = 0,	 // 未設定
 	SCENE_TITLE,	 // タイトル画面
 	SCENE_GAME,		 // ゲーム画面
+	SCENE_AREA2,	// ゲーム画面エリア2
+	SCENE_AREA3,	// ゲーム画面エリア3
 	
 // ↓シーン追加↓
 	SCENE_GAMEOVER,		 // ゲームオーバー画面
-	SCENE_GAMECLEAR,
+	SCENE_GAMECLEAR,	//ゲームクリア画面
 	MAX_SCENE // シーン総数
 };
 
@@ -35,4 +37,6 @@ void UpdateScene();		// 更新
 void DrawScene();		// 描画
 
 HRESULT SetScene(EScene eScene); // 切替処理
+HRESULT GetScene(); // シーン情報取得
+
 

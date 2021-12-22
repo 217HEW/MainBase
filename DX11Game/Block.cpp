@@ -26,7 +26,7 @@
 //*****************************************************************************
 // マクロ定義
 //*****************************************************************************
-#define MODEL_BLOCK			"data/model/Block.fbx"			// 通常ブロック
+#define MODEL_BLOCK			"data/model/Hew_3_3.fbx"			// 通常ブロック
 #define MODEL_CRACKS		"data/model/Block2.fbx"			// ひび割れたブロック
 #define MAX_LIFE			(2)		// ブロック耐久値
 
@@ -55,11 +55,11 @@ HRESULT InitBlock(void)
  		g_block[i].m_use = false;
 		g_block[i].m_invincible = false;
 		// モデルデータの読み込み
-		if (!g_model[i].Load(pDevice, pDeviceContext, g_block[i].m_3Dmodel))
-		{
-			MessageBoxA(GetMainWnd(), "モデルデータ読み込みエラー", "InitBlock", MB_OK);
-			return E_FAIL;
-		}
+		//if (!g_model[i].Load(pDevice, pDeviceContext, g_block[i].m_3Dmodel))
+		//{
+		//	MessageBoxA(GetMainWnd(), "モデルデータ読み込みエラー", "InitBlock", MB_OK);
+		//	return E_FAIL;
+		//}
  	}
  
  	return hr;
@@ -182,6 +182,8 @@ void DrawBlock(void)
 //*******************************
  int SetBlock(XMFLOAT3 pos)
  {
+	 ID3D11Device* pDevice = GetDevice();
+	 ID3D11DeviceContext* pDeviceContext = GetDeviceContext();
  	int Block = -1;
  
  	for (int cntBlock = 0; cntBlock < MAX_BLOCK; ++cntBlock) {
@@ -189,6 +191,12 @@ void DrawBlock(void)
  		if (g_block[cntBlock].m_use) {
  			continue;
  		}
+		// モデルデータの読み込み
+		if (!g_model[cntBlock].Load(pDevice, pDeviceContext, g_block[cntBlock].m_3Dmodel))
+		{
+			MessageBoxA(GetMainWnd(), "モデルデータ読み込みエラー", "InitBlock", MB_OK);
+			return E_FAIL;
+		}
  		g_block[cntBlock].m_use = true;
  		g_block[cntBlock].m_pos = pos;
  
