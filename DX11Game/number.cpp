@@ -82,7 +82,7 @@ void DrawNumber(XMFLOAT2 vPos,	// ï\é¶à íu(ç∂è„)
 		// áB
 		uNumber /= 10;
 		// áC
-		vPos.x -= NUMBER_SIZE_X;
+		vPos.x -= NUMBER_SIZE_X* 1.1;
 	}
 	// å≥Ç…ñﬂÇ∑
 	SetPolygonFrameSize(1.0f, 1.0f);

@@ -91,6 +91,7 @@ void UpdateTitle()
 		{
 			StartFadeOut(SCENE_GAMEOVER);
 		}
+		
 	}
 }
 

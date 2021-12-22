@@ -24,9 +24,7 @@
 //	2121/12/22	コメントの編集&追加、不要なソースの削除
 //**************************************************************
 #include "Block.h"
-#include "main.h"
 #include "AssimpModel.h"
-#include "Texture.h"
 #include "debugproc.h"
 #include "collision.h"
 #include "player.h"
@@ -39,30 +37,12 @@
 //#define TEXTURE_BLOCK		"data/model/Block.jpg"	// 通常ブロック
 #define MODEL_CRACKS		"data/model/Block2.fbx"	// ひび割れたブロック
 
-#define MAX_LIFE		(2)		// ブロック耐久値
-#define BLOCK_X			(23)	// ブロック最大数
-#define BLOCK_Y			(25)	// ブロック最大数
-#define MAX_BLOCK		(BLOCK_X * BLOCK_Y)			// ブロック最大数
-
-//*****************************************************************************
-// 構造体定義
-//*****************************************************************************
-struct TBLOCK {
-	XMFLOAT3	m_pos;		// 現在の位置
-	//XMFLOAT3    m_size;	// 現在のサイズ
-	XMFLOAT4X4	m_mtxWorld;	// ワールドマトリックス
- std::string	m_3Dmodel;	// モデル情報
-	int			m_nLife;	// 壁の耐久置
-	bool		m_use;		// 使用しているか
-	//bool		
-};
-
 //*****************************************************************************
 // グローバル変数
 //*****************************************************************************
 static CAssimpModel	g_model[MAX_BLOCK];	// モデル
 static TBLOCK		g_block[MAX_BLOCK];	// 壁情報
-XMFLOAT3			g_BlockSize;		// 現在のサイズ
+static XMFLOAT3		g_BlockSize;		// 現在のサイズ
 
 //=============================================================================
 // 初期化処理
@@ -81,7 +61,7 @@ HRESULT InitBlock(void)
 		g_block[i].m_3Dmodel = MODEL_BLOCK;
  		g_block[i].m_nLife = MAX_LIFE;
  		g_block[i].m_use = false;
-
+		g_block[i].m_invincible = false;
 		// モデルデータの読み込み
 		if (!g_model[i].Load(pDevice, pDeviceContext, g_block[i].m_3Dmodel))
 		{
@@ -149,6 +129,8 @@ void UpdateBlock(void)
 		// 壁とプレイヤーが衝突していたら
 		 if (CollisionAABB(g_block[i].m_pos, g_BlockSize, GetPlayerPos(), XMFLOAT3(5.0f,5.0f,10.0f)))
 		 {
+			 // プレイヤーがとんでいたら
+
 			 ID3D11Device* pDevice = GetDevice();
 			 ID3D11DeviceContext* pDeviceContext = GetDeviceContext();
 
@@ -241,4 +223,16 @@ void DrawBlock(void)
 XMFLOAT3 GetBlockSize()
 {
 	return g_BlockSize;
+}
+
+//***********************************
+//
+//		ブロック配列取得
+//		
+//		戻り値：ブロックのサイズ
+//
+//***********************************
+TBLOCK* GetBlockArray()
+{
+	return g_block;
 }
