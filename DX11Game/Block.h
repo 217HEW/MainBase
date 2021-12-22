@@ -35,7 +35,7 @@ struct TBLOCK {
 //**************************************************************
 // マクロ定義
 //**************************************************************
-#define BLOCK_X			(23)	// ブロック最大数X
+#define BLOCK_X			(25)	// ブロック最大数X
 #define BLOCK_Y			(25)	// ブロック最大数Y
 #define MAX_BLOCK		(BLOCK_X * BLOCK_Y)	// ブロック最大数
 
@@ -47,6 +47,6 @@ void UninitBlock(void);
 void UpdateBlock(void);
 void DrawBlock(void);
 
-int SetBlock(XMFLOAT3 pos);	// ブロック配置
+int SetBlock(XMFLOAT3 pos, bool inv);	// ブロック配置 
 XMFLOAT3 GetBlockSize();	// ブロックサイズ取得
 TBLOCK* GetBlockArray();	// ブロック配列取得

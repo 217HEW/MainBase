@@ -21,9 +21,10 @@
 //				ポリゴン、デバッグ表示、入力処理の4大処理削除(ポリゴンは描画処理以外)
 //				ポリライン関連削除
 //				描画関数の削除
-//	編集者：柴山凜太郎
+//														編集者：柴山凜太郎
 //--------------------------------------------------------------
-//
+//	2021/12/22	必要が無いモノの描画、更新を中断しています。
+//														変更者：上月大地
 //**************************************************************
 
 //**************************************************************
@@ -114,10 +115,10 @@ HRESULT InitGame()
 	if (FAILED(hr))
 		return hr;
 
-	// フィールド初期化
-	hr = InitMeshField(16, 16, 80.0f, 80.0f);
-	if (FAILED(hr))
-		return hr;
+	// // フィールド初期化
+	// hr = InitMeshField(16, 16, 80.0f, 80.0f);
+	// if (FAILED(hr))
+	// 	return hr;
 
 	//二次元配列マップ
 	hr = InitCField();
@@ -244,7 +245,7 @@ void UninitGame()
 	//UninitBlock();
 
 	// 煙終了
-	UninitSmoke();
+	//UninitSmoke();
 
 	// エフェクト終了
 	UninitEffect();
@@ -268,7 +269,7 @@ void UninitGame()
 	UninitPlayer();
 
 	// 丸影終了
-	UninitShadow();
+	//UninitShadow();
 
 	//ナンバー終了
 	UninitNumber();
@@ -340,10 +341,10 @@ void UpdateGame()
 		UpdateBG();
 
 		// 壁更新
-		UpdateMeshWall();
+		//UpdateMeshWall();
 
 		// フィールド更新
-		UpdateMeshField();
+		//UpdateMeshField();
 
 		// 二次元配列マップ更新
 		UpdateCField();
@@ -353,13 +354,13 @@ void UpdateGame()
 		UpdateTimer();
 
 		// 丸影更新
-		UpdateShadow();
+		//UpdateShadow();
 
 		// カメラ更新
 		CCamera::Get()->Update();
 
 		// ビルボード弾更新
-		UpdateBullet();
+		//UpdateBullet();
 
 		// 爆発更新
 		UpdateExplosion();
@@ -368,10 +369,10 @@ void UpdateGame()
 		UpdateEffect();
 
 		// ブロック更新
-		// UpdateBlock();
+		 UpdateBlock();
 
 		// 煙更新
-		UpdateSmoke();
+		// UpdateSmoke();
 
 		// ブロック更新
 		// ポリライン更新
@@ -452,13 +453,13 @@ void DrawGame()
 	DrawEnemyMelee();
 
 	// 丸影描画
-	DrawShadow();
+	//DrawShadow();
 
 	// ビルボード弾描画
 	DrawBullet();
 
 	// 煙描画
-	DrawSmoke();
+	//DrawSmoke();
 
 	// エフェクト描画
 	DrawEffect();

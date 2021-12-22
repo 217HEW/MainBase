@@ -16,6 +16,10 @@
 //--------------------------------------------------------------
 //	2021/12/22	GetPlayerSizeを作成
 //				他の所で当たり判定が必要になった為
+//				GetPlayerJumpを作成
+//				ブロックの耐久値を減らす際に飛んでるか知りたい為
+//				SetPlayerJumpを作成
+//				ゲットと共にブロック側で呼び出しジャンプフラグをおろすため
 //	編集者：上月大地
 //
 //**************************************************************
@@ -30,11 +34,12 @@
 #include "collision.h"
 #include "explosion.h"
 #include "life.h"
+#include "Fade.h"
 
 //*****************************************************************************
 // マクロ定義
 //*****************************************************************************
-#define MODEL_PLAYER		"data/model/airplane000.fbx"
+#define MODEL_PLAYER		"data/model/Character01.fbx"
 
 #define	VALUE_MOVE_PLAYER	(0.155f)	// 移動速度
 #define	SPEED_MOVE_PLAYER	(20)		// 移動速度
@@ -43,7 +48,7 @@
 #define	RATE_ROTATE_PLAYER	(0.1f)		// 回転慣性係数
 
 #define	PLAYER_RADIUS		(10.0f)		// 境界球半径
-#define DAMAGE_TIMER		120
+#define DAMAGE_TIMER		(120)		// 無敵時間
 
 //*****************************************************************************
 // グローバル変数
@@ -59,7 +64,8 @@ static XMFLOAT4X4	g_mtxWorld;		// ワールドマトリックス
 
 static int			g_nShadow;		// 丸影番号
 static int			g_nDamage;		// 点滅中
-static bool			g_bLand;		// 地面判定
+static bool			g_bInv;			// ダメージ時の無敵判定	true:無敵
+static bool			g_bLand;		// 地面判定	true:飛んでない
 
 //=============================================================================
 // 初期化処理
@@ -87,9 +93,10 @@ HRESULT InitPlayer(void)
 	// 丸影の生成
 	g_nShadow = CreateShadow(g_posModel, 12.0f);
 
-	// 壁接触判定初期化
-	g_bLand = false;
-	
+	// 壁接触,無敵判定初期化
+	g_bLand = true;
+	g_bInv  = false;
+
 	return hr;
 }
 
@@ -117,7 +124,7 @@ void UpdatePlayer(void)
 	if (g_nDamage > 0) {
 		--g_nDamage;
 		if (g_nDamage <= 0) {
-			
+			g_bInv = false;
 		}
 		//break;
 	}
@@ -262,33 +269,36 @@ void UpdatePlayer(void)
 	//g_posModel.z += g_moveModel.z;
 
 	// 移動量に慣性をかける
-	g_moveModel.x += (0.0f - g_moveModel.x) * RATE_MOVE_PLAYER;
-	g_moveModel.y += (0.0f - g_moveModel.y) * RATE_MOVE_PLAYER;
-	//g_moveModel.z += (0.0f - g_moveModel.z) * RATE_MOVE_PLAYER;
+	// g_moveModel.x += (0.0f - g_moveModel.x) * RATE_MOVE_PLAYER;
+	// g_moveModel.y += (0.0f - g_moveModel.y) * RATE_MOVE_PLAYER;
+	// //g_moveModel.z += (0.0f - g_moveModel.z) * RATE_MOVE_PLAYER;
+	// 
+	  if (g_posModel.x < -630.0f) {
+	  	g_posModel.x = -630.0f;
 
-	if (g_posModel.x < -630.0f) {
-		g_posModel.x = -630.0f;
-		g_bLand = true;		// 壁に接触している
-	}
-	if (g_posModel.x > 630.0f) {
-		g_posModel.x = 630.0f;
-		g_bLand = true;		// 壁に接触している
-	}
-	if (g_posModel.z < 0.0f) {
-		g_posModel.z = 0.0f;
-	}
-	if (g_posModel.z > 0.0f) {
-		g_posModel.z = 0.0f;
-	}
-	if (g_posModel.y < -199.0f) {
-		g_posModel.y = -200.0f;
-		g_bLand = true;		// 壁に接触している
-	}
-	if (g_posModel.y > 150.0f) {
-		g_posModel.y = 150.0f;
-		g_bLand = true;		// 壁に接触している
-	}
-	
+		StartFadeOut(SCENE_GAMEOVER);
+	  }
+	  if (g_posModel.x > 1630.0f) {
+	  	g_posModel.x = 1630.0f;
+	  
+		StartFadeOut(SCENE_GAMEOVER);
+	  }
+	//  if (g_posModel.z < 0.0f) {
+	//  	g_posModel.z = 0.0f;
+	//  }
+	//  if (g_posModel.z > 0.0f) {
+	//  	g_posModel.z = 0.0f;
+	//  }
+	//  if (g_posModel.y < -199.0f) {
+	//  	g_posModel.y = -200.0f;
+	//	StartFadeOut(SCENE_GAMEOVER);
+	//  }
+	  if (g_posModel.y > 800.0f) {
+	  	g_posModel.y = 800.0f;
+	  	
+		StartFadeOut(SCENE_GAMECLEAR);
+	  }
+	// 
 	if (GetKeyPress(VK_RETURN)) {
 		// リセット
 		g_posModel = XMFLOAT3(0.0f, 40.0f, 0.0f);
@@ -298,7 +308,7 @@ void UpdatePlayer(void)
 	}
 
 	XMMATRIX mtxWorld, mtxRot, mtxTranslate;
-
+	
 	// ワールドマトリックスの初期化
 	mtxWorld = XMMatrixIdentity();
 
@@ -307,6 +317,10 @@ void UpdatePlayer(void)
 		XMConvertToRadians(g_rotModel.y), XMConvertToRadians(g_rotModel.z));
 	mtxWorld = XMMatrixMultiply(mtxWorld, mtxRot);
 
+	// 箱のサイズ
+	mtxWorld = XMMatrixScaling(2.0f,
+		1.5f,
+		1.0f);
 	// 移動を反映
 	mtxTranslate = XMMatrixTranslation(g_posModel.x, g_posModel.y, g_posModel.z);
 	mtxWorld = XMMatrixMultiply(mtxWorld, mtxTranslate);
@@ -346,6 +360,7 @@ void UpdatePlayer(void)
 	// ダメージテスト
 	if (GetKeyRepeat(VK_D))
 	{
+		g_bInv = true;
 		DelLife();
 		g_nDamage = DAMAGE_TIMER;
 
@@ -400,12 +415,12 @@ void DrawPlayer(void)
 	// 不透明部分を描画
 	g_model.Draw(pDC, g_mtxWorld, eOpacityOnly);
 
-	// 半透明部分を描画
-	SetBlendState(BS_ALPHABLEND);	// アルファブレンド有効
-	SetZWrite(false);				// Zバッファ更新しない
-	g_model.Draw(pDC, g_mtxWorld, eTransparentOnly);
-	SetZWrite(true);				// Zバッファ更新する
-	SetBlendState(BS_NONE);			// アルファブレンド無効
+	// // 半透明部分を描画
+	// SetBlendState(BS_ALPHABLEND);	// アルファブレンド有効
+	// SetZWrite(false);				// Zバッファ更新しない
+	// g_model.Draw(pDC, g_mtxWorld, eTransparentOnly);
+	// SetZWrite(true);				// Zバッファ更新する
+	// SetBlendState(BS_NONE);			// アルファブレンド無効
 }
 
 //*******************************
@@ -436,6 +451,37 @@ float GetPlayerSize()
 
 //*******************************
 //
+//		ジャンプ状態情報取得
+//	 ジャンプのboolを取得する
+//
+//	戻り値
+//		ジャンプ状態 true:飛んでいない
+//
+//*******************************
+bool GetPlayerJump()
+{
+	return g_bLand;
+}
+
+//*******************************
+//
+//		ジャンプ状態セット
+// ジャンプのboolを外から変更する
+//
+//	引数：
+//		jump:ジャンプ状態のbool
+//		true:飛んでいない
+//
+//	戻り値
+//		無し
+//
+//*******************************
+void SetPlayerJump(bool jump)
+{
+	g_bLand = jump;
+}
+//*******************************
+//
 //		プレイヤーとの衝突判定
 //	
 //	引数:
@@ -443,6 +489,7 @@ float GetPlayerSize()
 //
 //	戻り値
 //		bool:当たったかどうか
+//		true:飛んでいない
 //
 //*******************************
 bool CollisionPlayer(XMFLOAT3 pos, float radius, float damage)
