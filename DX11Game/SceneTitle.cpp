@@ -19,6 +19,10 @@
 //	2021/12/21	フェード処理が出来るようにDraw処理にZバッファを
 //				追加しました。97～106行
 //	編集者：上月大地
+//--------------------------------------------------------------
+//	2021/12/22	タイトルからゲームに行く正規ボタンの実装
+//				「Enter」「Space」
+//	編集者：柴山凜太郎
 //**************************************************************
 
 //**************************************************************
@@ -58,8 +62,6 @@ HRESULT InitTitle()
 	if (FAILED(hr))
 		return hr;
 
-	// 中身はまだない
-
 	return hr;
 }
 
@@ -81,7 +83,7 @@ void UpdateTitle()
 	// キー入力でシーン遷移
 	if (GetFadeState() == FADE_NONE)
 	{
-		if (GetKeyRelease(VK_2))
+		if (GetKeyRelease(VK_2) || GetKeyTrigger(VK_RETURN) || GetKeyTrigger(VK_SPACE))
 		{
 			StartFadeOut(SCENE_GAME);
 		}
