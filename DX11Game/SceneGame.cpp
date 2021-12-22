@@ -53,6 +53,8 @@
 #include "number.h"
 #include "CreateField.h"
 #include "Block.h"
+#include "EnemyMelee.h"
+#include "Pause.h"
 
 //**************************************************************
 // マクロ定義
@@ -64,6 +66,8 @@
 // グローバル変数
 //**************************************************************
 //TPolyline					g_polyline[MAX_POLYLINE];	// ポリライン情報
+
+static bool g_bPause;								//一時停止中
 
 //**************************************************************
 // 初期化処理
@@ -150,10 +154,24 @@ HRESULT InitGame()
 	//if (FAILED(hr))
 	//return hr;
 
+	// エネミーメレー初期化
+	hr = InitEnemyMelee();
+	if (FAILED(hr))
+		return hr;
+
+	// メレー呼び出し
+	SetEnemyMelee(XMFLOAT3(30.0f, 30.0f, 0.0f));
+
 	// メッシュ壁初期化
 	 hr = InitMeshWall();
 	 if (FAILED(hr))
 	 	return hr;
+
+	// ポーズ初期化
+	hr = InitPause();
+	g_bPause = false;
+	if (FAILED(hr))
+	return hr;
 	// SetMeshWall(XMFLOAT3(0.0f, 0.0f, 640.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), 16, 2, XMFLOAT2(40.0f, 40.0f));
 	// SetMeshWall(XMFLOAT3(-640.0f, 0.0f, 0.0f), XMFLOAT3(0.0f, -90.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), 16, 2, XMFLOAT2(80.0f, 80.0f));
 	// SetMeshWall(XMFLOAT3(640.0f, 0.0f, 0.0f), XMFLOAT3(0.0f, 90.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), 16, 2, XMFLOAT2(80.0f, 80.0f));
@@ -197,7 +215,8 @@ HRESULT InitGame()
 	// 	AddPolylinePoint(&g_polyline[i], pos);
 	// }
 
-	 
+	 // BGM再生開始
+	 CSound::Play(BGM_000);
 
 	return hr;
 }
@@ -207,13 +226,19 @@ HRESULT InitGame()
 //**************************************************************
 void UninitGame()
 {
-	
+	//ポーズ終了処理
+	UninitPause();
+	// BGM再生停止
+	CSound::Stop(BGM_000);
 
 	// ポリライン終了処理
 	//UninitPolyline();
 
 	// 壁終了
 	UninitMeshWall();
+
+	// エネミーメレー終了
+	UninitEnemyMelee();
 
 	// ブロック終了
 	//UninitBlock();
@@ -263,80 +288,141 @@ void UninitGame()
 //**************************************************************
 void UpdateGame()
 {
-	if (GetFadeState() == FADE_NONE)
-	{
-		if (GetKeyRelease(VK_1))
-		{
-			StartFadeOut(SCENE_TITLE);
-		}
-		else if (GetKeyRelease(VK_2))
-		{
-			StartFadeOut(SCENE_GAME);
-		}
-		else if (GetKeyRelease(VK_3))
-		{
-			StartFadeOut(SCENE_GAMEOVER);
-		}
-	}
-	
-
 	// 入力処理更新
 	//UpdateInput();	// 必ずUpdate関数の先頭で実行.
 
-	// デバッグ文字列表示更新
-	//UpdateDebugProc();
+	//一時停止中?
+	if (g_bPause) {
+		//一時停止更新
+		UpdatePause();
+	}
+	else
+	{
+		if (GetFadeState() == FADE_NONE)
+		{
+			if (GetKeyRelease(VK_1))
+			{
+				StartFadeOut(SCENE_TITLE);
+			}
+			else if (GetKeyRelease(VK_2))
+			{
+				StartFadeOut(SCENE_GAME);
+			}
+			else if (GetKeyRelease(VK_3))
+			{
+				StartFadeOut(SCENE_GAMEOVER);
+			}
+			else if (GetKeyRelease(VK_4))
+			{
+				StartFadeOut(SCENE_GAMECLEAR);
+			}
+		}
 
-	// デバッグ文字列設定
-	//StartDebugProc();
-	
-	// ポリゴン表示更新
-	//UpdatePolygon();
 
-	// 自機更新
-	UpdatePlayer();
 
-	// 背景更新
-	UpdateBG();
 
-	// 壁更新
-	UpdateMeshWall();
+		// デバッグ文字列表示更新
+		//UpdateDebugProc();
 
-	// フィールド更新
-	UpdateMeshField();
+		// デバッグ文字列設定
+		//StartDebugProc();
 
-	// 二次元配列マップ更新
-	UpdateCField();
+		// ポリゴン表示更新
+		//UpdatePolygon();
 
-	//*12/17澤村瑠人追加
-	// タイマー更新
-	UpdateTimer();
+		// 自機更新
+		UpdatePlayer();
 
-	// 丸影更新
-	UpdateShadow();
+		// エネミーメレー
+		UpdateEnemyMelee();
 
-	// カメラ更新
-	CCamera::Get()->Update();
+		// 背景更新
+		UpdateBG();
 
-	// ビルボード弾更新
-	UpdateBullet();
+		// 壁更新
+		UpdateMeshWall();
 
-	// 爆発更新
-	UpdateExplosion();
+		// フィールド更新
+		UpdateMeshField();
 
-	// エフェクト更新
-	UpdateEffect();
+		// 二次元配列マップ更新
+		UpdateCField();
 
-	// ブロック更新
-	// UpdateBlock();
+		//*12/17澤村瑠人追加
+		// タイマー更新
+		UpdateTimer();
 
-	// 煙更新
-	UpdateSmoke();
+		// 丸影更新
+		UpdateShadow();
 
-	// ブロック更新
-	// ポリライン更新
-	// for (int i = 0; i < MAX_POLYLINE; ++i) {
-	// 	UpdatePolyline(&g_polyline[i]);
-	// }
+		// カメラ更新
+		CCamera::Get()->Update();
+
+		// ビルボード弾更新
+		UpdateBullet();
+
+		// 爆発更新
+		UpdateExplosion();
+
+		// エフェクト更新
+		UpdateEffect();
+
+		// ブロック更新
+		// UpdateBlock();
+
+		// 煙更新
+		UpdateSmoke();
+
+		// ブロック更新
+		// ポリライン更新
+		// for (int i = 0; i < MAX_POLYLINE; ++i) {
+		// 	UpdatePolyline(&g_polyline[i]);
+		// }
+
+		
+	}
+	//一時停止ON/OFF
+	if (GetKeyTrigger(VK_P) || GetKeyTrigger(VK_PAUSE))
+	{
+		if (GetFadeState() == FADE_NONE)
+		{
+			g_bPause = !g_bPause;
+			if (g_bPause) {
+				//CSound::Pause();
+				//CSound::Play(SE_DECIDE);
+				ResetPauseMenu();
+			}
+			else
+			{
+				//CSound::Play(SE_CANCEL);
+				//CSound::Resume();
+			}
+		}
+	}
+
+	//一時停止メニューの選択
+	if (g_bPause && GetFadeState() == FADE_NONE)
+	{
+		//[ENTER]が押された?
+		if (GetKeyTrigger(VK_RETURN))
+		{
+			//選択中のメニュー項目により分岐
+			switch (GetPauseMenu())
+			{
+			case PAUSE_MENU_CONTINUE:
+				g_bPause = false;
+				//CSound::Play(SE_CANCEL);
+				//CSound::Resume();
+				break;
+			case PAUSE_MENU_RETRY:
+				StartFadeOut(SCENE_GAME);
+				break;
+			case PAUSE_MENU_QUIT:
+				StartFadeOut(SCENE_TITLE);
+				break;
+			}
+		}
+	}
 }
 
 //**************************************************************
@@ -362,6 +448,9 @@ void DrawGame()
 	// 自機描画
 	DrawPlayer();
 	
+	// エネミーメレー
+	DrawEnemyMelee();
+
 	// 丸影描画
 	DrawShadow();
 
@@ -391,6 +480,13 @@ void DrawGame()
 
 	// 壁描画 (半透明部分)
 	 DrawMeshWall(DRAWPART_TRANSLUCENT);
+
+	 SetZBuffer(false);
+	 //一時停止描画
+	 if (g_bPause) {
+		 DrawPause();
+	 }
+	 SetZBuffer(true);
 	 
 	// Zバッファ無効(Zチェック無&Z更新無)
 	SetZBuffer(false);

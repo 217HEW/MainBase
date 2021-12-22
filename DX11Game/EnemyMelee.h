@@ -24,3 +24,5 @@ HRESULT InitEnemyMelee(void);	// ‰Šú‰»
 void UninitEnemyMelee(void);	// I—¹
 void UpdateEnemyMelee(void);	// XV
 void DrawEnemyMelee(void);		// •`‰æ
+
+int SetEnemyMelee(XMFLOAT3(pos));

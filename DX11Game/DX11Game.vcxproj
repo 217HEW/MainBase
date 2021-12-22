@@ -182,10 +182,12 @@
     <ClCompile Include="meshfield.cpp" />
     <ClCompile Include="meshwall.cpp" />
     <ClCompile Include="number.cpp" />
+    <ClCompile Include="Pause.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="polygon.cpp" />
     <ClCompile Include="polyline.cpp" />
     <ClCompile Include="SceneGame.cpp" />
+    <ClCompile Include="SceneGameclear.cpp" />
     <ClCompile Include="SceneGameover.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="SceneTitle.cpp" />
@@ -219,11 +221,13 @@
     <ClInclude Include="meshfield.h" />
     <ClInclude Include="meshwall.h" />
     <ClInclude Include="number.h" />
+    <ClInclude Include="Pause.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="polygon.h" />
     <ClInclude Include="polyline.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="SceneGame.h" />
+    <ClInclude Include="SceneGameclear.h" />
     <ClInclude Include="SceneGameover.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="SceneTitle.h" />

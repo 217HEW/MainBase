@@ -30,7 +30,7 @@ static MESH		g_meshWall[MAX_MESHWALL];		// メッシュ壁ワーク
 static int		g_nNumMeshWall = 0;				// メッシュ壁の数
 static XMFLOAT4 g_meshWallCol = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);	// カラー
 static XMFLOAT2 Wallsize = XMFLOAT2(WALL_SIZE, WALL_SIZE);			// 縦横サイズ
-static TBLOCK g_Block[MAX_BLOCK];	// ブロックの配列	[1ブロックのメッシュ総数][ブロックの総数]
+// static TBLOCK g_Block[MAX_BLOCK];	// ブロックの配列	[1ブロックのメッシュ総数][ブロックの総数]
 
 //=============================================================================
 // 初期化処理
@@ -41,7 +41,7 @@ HRESULT InitMeshWall(void)
 	
 	for (int i = 0; i < MAX_BLOCK; ++i)
 	{
-		g_Block[i].m_size = XMFLOAT3(30.0f, 30.0f, 30.0f);
+		//g_Block[i].m_size = XMFLOAT3(30.0f, 30.0f, 30.0f);
 	}
 
 	// テクスチャの読み込み

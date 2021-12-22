@@ -3,7 +3,7 @@
 #include "Texture.h"
 #include "polygon.h"
 // マクロ定義
-#define PATH_NUMBERTEXTURE L"data/texture/number000.png"
+#define PATH_NUMBERTEXTURE L"data/texture/number001.png"
 #define NUMBER_COUNT_X 10
 #define NUMBER_COUNT_Y 1
 // グローバル変数
@@ -54,7 +54,7 @@ void UninitNumber()
 		// ③
 		uNumber /= 10;
 		// ④
-		vPos.x -= NUMBER_SIZE_X;
+		vPos.x -= NUMBER_SIZE_X* 1.1;
 	}
 	// 元に戻す
 	SetPolygonFrameSize(1.0f, 1.0f);

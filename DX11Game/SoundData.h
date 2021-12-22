@@ -1,7 +1,7 @@
 // BGM/SE’è‹` (SoundData.h)
 
 enum eBGM {
-	BGM_000,	//–{•Ò3
+	BGM_000,	//BGM_000
 	BGM_001,	//–{•Ò4
 
 
