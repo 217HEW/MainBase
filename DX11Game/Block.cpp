@@ -64,11 +64,11 @@ HRESULT InitBlock(void)
  		g_block[i].m_use = false;
 		g_block[i].m_invincible = false;
 		// モデルデータの読み込み
-		if (!g_model[i].Load(pDevice, pDeviceContext, g_block[i].m_3Dmodel))
-		{
-			MessageBoxA(GetMainWnd(), "モデルデータ読み込みエラー", "InitBlock", MB_OK);
-			return E_FAIL;
-		}
+		//if (!g_model[i].Load(pDevice, pDeviceContext, g_block[i].m_3Dmodel))
+		//{
+		//	MessageBoxA(GetMainWnd(), "モデルデータ読み込みエラー", "InitBlock", MB_OK);
+		//	return E_FAIL;
+		//}
  	}
  
  	return hr;
@@ -194,6 +194,8 @@ void DrawBlock(void)
 //*******************************
  int SetBlock(XMFLOAT3 pos)
  {
+	 ID3D11Device* pDevice = GetDevice();
+	 ID3D11DeviceContext* pDeviceContext = GetDeviceContext();
  	int Block = -1;
  
  	for (int cntBlock = 0; cntBlock < MAX_BLOCK; ++cntBlock) {

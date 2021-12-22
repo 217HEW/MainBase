@@ -34,7 +34,7 @@
 #include "polygon.h"
 #include "Fade.h"
 #include "Texture.h"
-
+#include "Sound.h"
 //**************************************************************
 // マクロ定義
 //**************************************************************
@@ -62,6 +62,9 @@ HRESULT InitTitle()
 	if (FAILED(hr))
 		return hr;
 
+	// 中身はまだない
+	// BGM再生開始
+	CSound::Play(BGM_001);
 	return hr;
 }
 
@@ -71,6 +74,8 @@ HRESULT InitTitle()
 void UninitTitle()
 {
 	// 中身無し
+	// BGM再生停止
+	CSound::Stop(BGM_001);
 	// テクスチャ解放
 	SAFE_RELEASE(g_pTexture);
 }
@@ -83,15 +88,27 @@ void UpdateTitle()
 	// キー入力でシーン遷移
 	if (GetFadeState() == FADE_NONE)
 	{
-		if (GetKeyRelease(VK_2) || GetKeyTrigger(VK_RETURN) || GetKeyTrigger(VK_SPACE))
+		if (GetKeyRelease(VK_1))
+		{
+			StartFadeOut(SCENE_TITLE);
+		}
+		else if (GetKeyRelease(VK_2))
 		{
 			StartFadeOut(SCENE_GAME);
 		}
 		else if (GetKeyRelease(VK_3))
 		{
-			StartFadeOut(SCENE_GAMEOVER);
+			StartFadeOut(SCENE_AREA2);
 		}
 		else if (GetKeyRelease(VK_4))
+		{
+			StartFadeOut(SCENE_AREA3);
+		}
+		else if (GetKeyRelease(VK_5))
+		{
+			StartFadeOut(SCENE_GAMEOVER);
+		}
+		else if (GetKeyRelease(VK_6))
 		{
 			StartFadeOut(SCENE_GAMECLEAR);
 		}

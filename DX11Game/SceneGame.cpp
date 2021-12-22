@@ -316,9 +316,17 @@ void UpdateGame()
 			}
 			else if (GetKeyRelease(VK_3))
 			{
-				StartFadeOut(SCENE_GAMEOVER);
+				StartFadeOut(SCENE_AREA2);
 			}
 			else if (GetKeyRelease(VK_4))
+			{
+				StartFadeOut(SCENE_AREA3);
+			}
+			else if (GetKeyRelease(VK_5))
+			{
+				StartFadeOut(SCENE_GAMEOVER);
+			}
+			else if (GetKeyRelease(VK_6))
 			{
 				StartFadeOut(SCENE_GAMECLEAR);
 			}

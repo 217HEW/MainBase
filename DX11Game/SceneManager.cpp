@@ -37,10 +37,12 @@
 #include "SceneManager.h"
 #include "SceneTitle.h"
 #include "SceneGame.h"
+#include "SceneArea2.h"
+#include "SceneArea3.h"
 #include "SceneGameover.h"
 #include "SceneGameclear.h"
 #include "Fade.h"
-
+#include "bg.h"
 //**************************************************************
 // グローバル宣言
 //**************************************************************
@@ -82,6 +84,12 @@ void UpdateScene()
 	case SCENE_GAME:
 		UpdateGame();
 		break;
+	case SCENE_AREA2:		// ゲーム画面
+		UpdateArea2();
+		break;
+	case SCENE_AREA3:		// ゲーム画面
+		UpdateArea3();
+		break;
 	// 何かシーンを追加する場合はこちらに
 	case SCENE_GAMEOVER:
 		UpdateGameover();
@@ -107,6 +115,12 @@ void DrawScene()
 		break;
 	case SCENE_GAME:
 		DrawGame();
+		break;
+	case SCENE_AREA2:		// ゲーム画面
+		DrawArea2();
+		break;
+	case SCENE_AREA3:		// ゲーム画面
+		DrawArea3();
 		break;
 	// 追加シーンの描画
 	case SCENE_GAMEOVER:
@@ -144,7 +158,13 @@ HRESULT SetScene(EScene eScene)
 	case SCENE_GAME:
 		UninitGame();
 		break;
-	case SCENE_GAMEOVER:
+	case SCENE_AREA2: // ゲーム画面
+		UninitArea2();
+		break;
+	case SCENE_AREA3: // ゲーム画面
+		UninitArea3();
+		break;
+	case SCENE_GAMEOVER: // ゲームオーバー画面
 		UninitGameover();
 		break;
 	case SCENE_GAMECLEAR: // ゲームクリア画面
@@ -164,7 +184,13 @@ HRESULT SetScene(EScene eScene)
 	case SCENE_GAME:
 		InitGame();
 		break;
-	case SCENE_GAMEOVER:
+	case SCENE_AREA2: // ゲーム画面エリア2
+		InitArea2();
+		break;
+	case SCENE_AREA3: // ゲーム画面エリア3
+		InitArea3();
+		break;
+	case SCENE_GAMEOVER: // ゲームオーバー画面
 		InitGameover();
 		break;
 	case SCENE_GAMECLEAR: // ゲームクリア画面
