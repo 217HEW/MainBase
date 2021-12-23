@@ -31,7 +31,7 @@
 //**************************************************************
 // 構造体定義
 //**************************************************************
-struct TEnemy {
+struct TEnemyExplode {
 	XMFLOAT3	m_pos;		// 現在の位置
 	XMFLOAT3	m_rot;		// 現在の向き
 	XMFLOAT3	m_size;		// 現在のサイズ
@@ -62,7 +62,7 @@ struct TEnemy {
 // グローバル変数
 //**************************************************************
 static CAssimpModel	g_model;			// モデル情報
-static TEnemy		g_EExplode[MAX_ENEMYEXPLODE];	// 敵機情報
+static TEnemyExplode		g_EExplode[MAX_ENEMYEXPLODE];	// 敵機情報
 static XMFLOAT3		Blocksize;
 
 //**************************************************************
