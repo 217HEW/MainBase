@@ -88,11 +88,11 @@ void UpdateTitle()
 	// キー入力でシーン遷移
 	if (GetFadeState() == FADE_NONE)
 	{
-		if (GetKeyRelease(VK_1) || GetKeyRelease(VK_SPACE) || GetKeyRelease(VK_RETURN))
+		if (GetKeyRelease(VK_1))
 		{
 			StartFadeOut(SCENE_TITLE);
 		}
-		else if (GetKeyRelease(VK_2))
+		else if (GetKeyRelease(VK_2) || GetKeyRelease(VK_SPACE) || GetKeyRelease(VK_RETURN))
 		{
 			StartFadeOut(SCENE_GAME);
 		}

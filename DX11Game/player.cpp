@@ -150,6 +150,7 @@ void UpdatePlayer(void)
 
 
 
+		//Œ»Ý‰¡•ûŒü‚Ì•Ç‚ÉU‚ê‚Ä‚¢‚é‚Æ‹t‘¤‚É‚Í”ò‚×‚È‚¢
 		// •ÇÚGŽž¶‰EˆÚ“®‚µ‚È‚¢
 		if (!g_bLand)
 		{

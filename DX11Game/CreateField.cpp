@@ -188,6 +188,8 @@ void UpdateCField(void)
 	//XMMATRIX mtxWorld;
 	//XMFLOAT3 model;
 
+	
+
 	// ワールドマトリックスの初期化
 	//mtxWorld = XMMatrixIdentity();
 	// ワールドマトリックス設定
