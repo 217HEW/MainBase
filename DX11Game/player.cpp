@@ -73,7 +73,7 @@ HRESULT InitPlayer(void)
 	g_nDamage = 0;
 
 	// 位置・回転・スケールの初期設定
-	g_posModel = XMFLOAT3(0.0f, -200.0f, 0.0f);
+	g_posModel = XMFLOAT3(0.0f, -500.0f, 0.0f);
 	g_moveModel = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	g_rotModel = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	g_rotDestModel = XMFLOAT3(0.0f, 0.0f, 0.0f);
@@ -143,6 +143,7 @@ void UpdatePlayer(void)
 
 
 
+		//現在横方向の壁に振れていると逆側には飛べない
 		// 壁接触時左右移動しない
 		if (!g_bLand)
 		{
@@ -280,8 +281,10 @@ void UpdatePlayer(void)
 	if (g_posModel.z > 0.0f) {
 		g_posModel.z = 0.0f;
 	}
-	if (g_posModel.y < -199.0f) {
-		g_posModel.y = -200.0f;
+
+	//壁がないと跳び続けるため座標制限を掛けて疑似的に行っている
+	if (g_posModel.y < -499.0f) {
+		g_posModel.y = -500.0f;
 		g_bLand = true;		// 壁に接触している
 	}
 	if (g_posModel.y > 150.0f) {
@@ -339,10 +342,10 @@ void UpdatePlayer(void)
 	}
 
 	// 弾発射
-	if (GetKeyRepeat(VK_SPACE)) {
-		FireBullet(g_posModel, XMFLOAT3(-g_mtxWorld._31, -g_mtxWorld._32, -g_mtxWorld._33),
-			BULLETTYPE_PLAYER);
-	}
+	//if (GetKeyRepeat(VK_SPACE)) {
+	//	FireBullet(g_posModel, XMFLOAT3(-g_mtxWorld._31, -g_mtxWorld._32, -g_mtxWorld._33),
+	//		BULLETTYPE_PLAYER);
+	//}
 	// ダメージテスト
 	if (GetKeyRepeat(VK_D))
 	{
