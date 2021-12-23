@@ -19,6 +19,10 @@
 //	2021/12/21	フェード処理が出来るようにDraw処理にZバッファを
 //				追加しました。97～106行
 //	編集者：上月大地
+//--------------------------------------------------------------
+//	2021/12/22	タイトルからゲームに行く正規ボタンの実装
+//				「Enter」「Space」
+//	編集者：柴山凜太郎
 //**************************************************************
 
 //**************************************************************
@@ -30,7 +34,7 @@
 #include "polygon.h"
 #include "Fade.h"
 #include "Texture.h"
-
+#include "Sound.h"
 //**************************************************************
 // マクロ定義
 //**************************************************************
@@ -59,7 +63,8 @@ HRESULT InitTitle()
 		return hr;
 
 	// 中身はまだない
-
+	// BGM再生開始
+	CSound::Play(BGM_001);
 	return hr;
 }
 
@@ -69,6 +74,8 @@ HRESULT InitTitle()
 void UninitTitle()
 {
 	// 中身無し
+	// BGM再生停止
+	CSound::Stop(BGM_001);
 	// テクスチャ解放
 	SAFE_RELEASE(g_pTexture);
 }
@@ -81,13 +88,29 @@ void UpdateTitle()
 	// キー入力でシーン遷移
 	if (GetFadeState() == FADE_NONE)
 	{
-		if (GetKeyRelease(VK_2))
+		if (GetKeyRelease(VK_1))
+		{
+			StartFadeOut(SCENE_TITLE);
+		}
+		else if (GetKeyRelease(VK_2) || GetKeyRelease(VK_SPACE) || GetKeyRelease(VK_RETURN))
 		{
 			StartFadeOut(SCENE_GAME);
 		}
 		else if (GetKeyRelease(VK_3))
 		{
+			StartFadeOut(SCENE_AREA2);
+		}
+		else if (GetKeyRelease(VK_4))
+		{
+			StartFadeOut(SCENE_AREA3);
+		}
+		else if (GetKeyRelease(VK_5))
+		{
 			StartFadeOut(SCENE_GAMEOVER);
+		}
+		else if (GetKeyRelease(VK_6))
+		{
+			StartFadeOut(SCENE_GAMECLEAR);
 		}
 		
 	}

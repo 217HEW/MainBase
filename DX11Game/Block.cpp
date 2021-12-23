@@ -1,20 +1,27 @@
 //**************************************************************
 //
 //	Block.cpp
-//	ブロック(壁箱)のcpp
+//	ブロック(壁箱)の処理
 //
 //--------------------------------------------------------------
 //	製作者：上月大地
 //--------------------------------------------------------------
+//**************************************************************
+
+//**************************************************************
 //	開発履歴
-//	2021/12/21	　初期Wall.cppから改造して制作	
-//				　通常ブロック、ひび割れブロックの当たり判定と切り替えを実装
-//				　半透明処理が不要なのでFPS向上の為、コメントアウト(Draw)
-//																		変更者：上月大地
-//	2021/12/21	　通常ブロック、ひび割れブロックの当たり判定と切り替えを実装	
-//	2021/12/21	　通常ブロック、ひび割れブロックの当たり判定と切り替えを実装	
-//	2021/12/21	　ブロックのサイズを構造体の要素から、グローバル変数へ　||変更者：柴山凜太郎
-//	
+//	2021/12/21	初期Wall.cppから改造して制作	
+//				通常ブロック、ひび割れブロックの当たり判定と切り替えを実装
+//				半透明処理が不要なのでFPS向上の為、コメントアウト(Draw)
+//--------------------------------------------------------------
+//	2021/12/21	通常ブロック、ひび割れブロックの当たり判定と切り替えを実装	
+//	2021/12/21	通常ブロック、ひび割れブロックの当たり判定と切り替えを実装	
+//	編集者：上月大地
+//--------------------------------------------------------------
+//	2021/12/21	ブロックのサイズを構造体の要素から、グローバル変数へ
+//	編集者：柴山凜太郎
+//--------------------------------------------------------------
+//	2121/12/22	コメントの編集&追加、不要なソースの削除
 //**************************************************************
 #include "Block.h"
 #include "AssimpModel.h"
@@ -26,9 +33,10 @@
 //*****************************************************************************
 // マクロ定義
 //*****************************************************************************
-#define MODEL_BLOCK			"data/model/Block.fbx"			// 通常ブロック
-#define MODEL_CRACKS		"data/model/Block2.fbx"			// ひび割れたブロック
-#define MAX_LIFE			(2)		// ブロック耐久値
+#define MODEL_BLOCK			"data/model/Block.fbx"	// 通常ブロック
+//#define TEXTURE_BLOCK		"data/model/Block.jpg"	// 通常ブロック
+#define MODEL_CRACKS		"data/model/Block2.fbx"	// ひび割れたブロック
+#define MAX_LIFE			(2)			// 壁の耐久値
 
 //*****************************************************************************
 // グローバル変数
@@ -45,7 +53,8 @@ HRESULT InitBlock(void)
 	HRESULT hr = S_OK;
 	ID3D11Device* pDevice = GetDevice();
 	ID3D11DeviceContext* pDeviceContext = GetDeviceContext();
- 	for (int i = 0; i < MAX_BLOCK; ++i)
+ // ------ブロックの初期化-----------------------------------------------------
+	for (int i = 0; i < MAX_BLOCK; ++i)
  	{
 		//Xが二倍になる為Yの二分の一にしておく
  		g_BlockSize = XMFLOAT3(20.0f, 40.0f, 10.0f);
@@ -55,11 +64,11 @@ HRESULT InitBlock(void)
  		g_block[i].m_use = false;
 		g_block[i].m_invincible = false;
 		// モデルデータの読み込み
-		if (!g_model[i].Load(pDevice, pDeviceContext, g_block[i].m_3Dmodel))
-		{
-			MessageBoxA(GetMainWnd(), "モデルデータ読み込みエラー", "InitBlock", MB_OK);
-			return E_FAIL;
-		}
+		//if (!g_model[i].Load(pDevice, pDeviceContext, g_block[i].m_3Dmodel))
+		//{
+		//	MessageBoxA(GetMainWnd(), "モデルデータ読み込みエラー", "InitBlock", MB_OK);
+		//	return E_FAIL;
+		//}
  	}
  
  	return hr;
@@ -82,7 +91,8 @@ void UninitBlock(void)
 //=============================================================================
 void UpdateBlock(void)
 {
- 
+ //------ワールドマトリクスにブロックのデータを反映----------------------------
+
 	XMMATRIX mtxWorld, mtxRot, mtxTranslate;
 
 	for (int i = 0; i < MAX_BLOCK; ++i)
@@ -109,6 +119,7 @@ void UpdateBlock(void)
 
 	}
 
+//------ブロックとプレイヤーの当たり判定処理-------------------------------
 	for (int i = 0; i < MAX_BLOCK; ++i)
 	{
 		if (!g_block[i].m_use)
@@ -156,6 +167,7 @@ void DrawBlock(void)
 		{
 			continue;
 		}
+		// ブロックモデル描画
 		g_model[i].Draw(pDC, g_block[i].m_mtxWorld, eOpacityOnly);
 	}
 
@@ -176,12 +188,14 @@ void DrawBlock(void)
 //	引数:
 //		置きたい座標
 //
-//	戻り値
+//	戻り値:
 //		使用したブロックの総数
 //
 //*******************************
  int SetBlock(XMFLOAT3 pos)
  {
+	 ID3D11Device* pDevice = GetDevice();
+	 ID3D11DeviceContext* pDeviceContext = GetDeviceContext();
  	int Block = -1;
  
  	for (int cntBlock = 0; cntBlock < MAX_BLOCK; ++cntBlock) {
@@ -189,8 +203,8 @@ void DrawBlock(void)
  		if (g_block[cntBlock].m_use) {
  			continue;
  		}
- 		g_block[cntBlock].m_use = true;
- 		g_block[cntBlock].m_pos = pos;
+ 		g_block[cntBlock].m_use = true;	// 使用中
+ 		g_block[cntBlock].m_pos = pos;	// 座標設定
  
 		Block = cntBlock +1;
  		break;
@@ -199,13 +213,16 @@ void DrawBlock(void)
  	return Block;
  }
 
- //***********************************
- //
- //		ブロックサイズ取得
- //		
- //		戻り値：ブロックのサイズ
- //
- //***********************************
+ //*******************************
+//
+//		ブロックのサイズ取得
+//	
+//	引数:なし
+//
+//	戻り値:
+//		ブロックのサイズ
+//
+//*******************************
 XMFLOAT3 GetBlockSize()
 {
 	return g_BlockSize;

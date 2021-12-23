@@ -338,7 +338,15 @@ void CSoundStream::Play()
 		m_status = SS_PLAY;
 	}
 }
-
+// BGMÉãÅ[Év
+void CSoundStream::Loop()
+{
+	if (m_endOfStream==true)
+	{
+		m_pSourceVoice->Start();
+		m_status = SS_LOOP;
+	}
+}
 // BGMí‚é~
 void CSoundStream::Stop()
 {

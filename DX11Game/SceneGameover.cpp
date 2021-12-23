@@ -5,6 +5,7 @@
 //
 //--------------------------------------------------------------
 //	製作者：小嶋悟
+//--------------------------------------------------------------
 //**************************************************************
 
 //**************************************************************
@@ -15,7 +16,14 @@
 //				フェード中に別のフェード処理をしないよう補正
 //				ポリゴン4大処理消去(描画処理以外)
 //	変更者：柴山凜太郎
-//				
+//--------------------------------------------------------------
+//	2021/12/22	コメントの追加&編集
+//				フェードインの挙動がおかしかったためDraw関数に
+//				Zバッファの処理を追加
+//				ゲームオーバーからタイトルに行く正規ボタンの実装
+//				「Enter」「Space」
+//	編集者：柴山凜太郎
+//--------------------------------------------------------------
 //**************************************************************
 
 //**************************************************************
@@ -27,14 +35,18 @@
 #include "polygon.h"
 #include "Fade.h"
 #include "Texture.h"
+//**************************************************************
 // マクロ定義
-#define PATH_BGTEXTURE "data/texture/Gameover.png"
-#define BG_POS_X 0.0f
-#define BG_POS_Y 0.0f
-#define BG_WIDTH SCREEN_WIDTH
-#define BG_HEIGHT SCREEN_HEIGHT
+//**************************************************************
+#define PATH_BGTEXTURE "data/texture/Gameover.png"	//ゲームオーバーテクスチャ
+#define BG_POS_X (0.0f)	// シーン背景の横軸座標
+#define BG_POS_Y (0.0f)	// シーン背景の横軸座標
+#define BG_WIDTH SCREEN_WIDTH	// テクスチャの横幅
+#define BG_HEIGHT SCREEN_HEIGHT	// テクスチャの縦幅
+//**************************************************************
 // グローバル変数
-static ID3D11ShaderResourceView* g_pTexture;
+//**************************************************************
+static ID3D11ShaderResourceView* g_pTexture;	// テクスチャ用変数
 //**************************************************************
 // 初期化処理
 //**************************************************************
@@ -48,8 +60,6 @@ HRESULT InitGameover()
 	if (FAILED(hr))
 		return hr;
 
-	// 中身はまだない
-
 	return hr;
 }
 
@@ -58,7 +68,6 @@ HRESULT InitGameover()
 //**************************************************************
 void UninitGameover()
 {
-	// 中身無し
 	// テクスチャ解放
 	SAFE_RELEASE(g_pTexture);
 }
@@ -68,15 +77,34 @@ void UninitGameover()
 //**************************************************************
 void UpdateGameover()
 {
+	// フェード処理していなかったら
 	if (GetFadeState() == FADE_NONE)
 	{
-		if (GetKeyRelease(VK_1))
+		if (GetKeyRelease(VK_1) || GetKeyTrigger(VK_RETURN) || GetKeyTrigger(VK_SPACE))
 		{
+			// タイトルへ
 			StartFadeOut(SCENE_TITLE);
 		}
 		else if (GetKeyRelease(VK_2))
 		{
+			// ゲームシーンへ
 			StartFadeOut(SCENE_GAME);
+		}
+		else if (GetKeyRelease(VK_3))
+		{
+			StartFadeOut(SCENE_AREA2);
+		}
+		else if (GetKeyRelease(VK_4))
+		{
+			StartFadeOut(SCENE_AREA3);
+		}
+		else if (GetKeyRelease(VK_5))
+		{
+			StartFadeOut(SCENE_GAMEOVER);
+		}
+		else if (GetKeyRelease(VK_6))
+		{
+			StartFadeOut(SCENE_GAMECLEAR);
 		}
 	}
 
@@ -90,7 +118,8 @@ void UpdateGameover()
 //**************************************************************
 void DrawGameover()
 {
-	// 特になし
+	// Zバッファ無効(Zチェック無&Z更新無)
+	SetZBuffer(false);
 	ID3D11DeviceContext* pDC = GetDeviceContext();
 	SetPolygonSize(BG_WIDTH, BG_HEIGHT);
 	SetPolygonPos(BG_POS_X, BG_POS_Y);
