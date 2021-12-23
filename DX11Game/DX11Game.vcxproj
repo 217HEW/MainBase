@@ -170,6 +170,7 @@
     <ClCompile Include="debugproc.cpp" />
     <ClCompile Include="effect.cpp" />
     <ClCompile Include="EnemyBase.cpp" />
+    <ClCompile Include="EnemyExplode.cpp" />
     <ClCompile Include="EnemyMelee.cpp" />
     <ClCompile Include="EnemyRange.cpp" />
     <ClCompile Include="explosion.cpp" />
@@ -211,6 +212,7 @@
     <ClInclude Include="debugproc.h" />
     <ClInclude Include="effect.h" />
     <ClInclude Include="EnemyBase.h" />
+    <ClInclude Include="EnemyExplode.h" />
     <ClInclude Include="EnemyMelee.h" />
     <ClInclude Include="EnemyRange.h" />
     <ClInclude Include="explosion.h" />
