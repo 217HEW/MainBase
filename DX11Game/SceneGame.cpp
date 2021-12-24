@@ -168,13 +168,13 @@ HRESULT InitGame()
 	// メレー呼び出し
 	SetEnemyMelee(XMFLOAT3(30.0f, 30.0f, 0.0f));
 
-	//// エネミーエクスプロード初期化
-	//hr = InitEnemyExplode();
-	//if (FAILED(hr))
-	//	return hr;
-	//
-	//// エクスプロード呼び出し
-	//SetEnemyExplode(XMFLOAT3(30.0f, 30.0f, 0.0f));
+	// エネミーエクスプロード初期化
+	hr = InitEnemyExplode();
+	if (FAILED(hr))
+		return hr;
+	
+	// エクスプロード呼び出し
+	SetEnemyExplode(XMFLOAT3(60.0f, 60.0f, 0.0f));
 
 	// メッシュ壁初期化
 	 hr = InitMeshWall();
@@ -255,7 +255,7 @@ void UninitGame()
 	UninitEnemyMelee();
 
 	// エネミーエクスプロード終了
-	//UninitEnemyExplode();
+	UninitEnemyExplode();
 
 	// ブロック終了
 	//UninitBlock();
@@ -369,7 +369,7 @@ void UpdateGame()
 		UpdateEnemyMelee();
 
 		// エネミーエクスプロード更新
-		//UpdateEnemyExplode();
+		UpdateEnemyExplode();
 
 		// 背景更新
 		UpdateBG();
@@ -487,7 +487,7 @@ void DrawGame()
 	DrawEnemyMelee();
 
 	// エネミーエクスプロード
-	//DrawEnemyExplode();
+	DrawEnemyExplode();
 
 	// 丸影描画
 	DrawShadow();
