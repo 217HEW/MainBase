@@ -1,8 +1,23 @@
-//=============================================================================
+//**************************************************************
 //
-// メイン処理 [main.cpp]
+//	main.cpp
+//	メインベース
 //
-//=============================================================================
+//--------------------------------------------------------------
+//	製作者：上月大地
+//--------------------------------------------------------------
+//**************************************************************
+
+//**************************************************************
+//	開発履歴
+//	2021/12/21	ポリゴン、入力、デバッグ表示の4大処理復元
+//	編集者：柴山凜太郎
+//--------------------------------------------------------------
+//**************************************************************
+
+//**************************************************************
+// インクルード部
+//**************************************************************
 #include "AssimpModel.h"
 #include "main.h"
 #include "input.h"
@@ -403,11 +418,11 @@ HRESULT Init(HWND hWnd, BOOL bWindow)
 	if (FAILED(hr))
 		return hr;
 
-	/*
-	// Assimp用シェーダ初期化
+	
+	//  Assimp用シェーダ初期化
 	if (!CAssimpModel::InitShader(g_pDevice))
 		return E_FAIL;
-
+	 /*
 	// メッシュ初期化
 	hr = InitMesh();
 	if (FAILED(hr))
@@ -508,9 +523,9 @@ HRESULT Init(HWND hWnd, BOOL bWindow)
 	CSound::Init();
 
 	// デバッグ文字列表示初期化
-//	hr = InitDebugProc();
-//	if (FAILED(hr))
-//		return hr;
+	hr = InitDebugProc();
+	if (FAILED(hr))
+		return hr;
 
 	// 入力処理初期化
 	hr = InitInput();
@@ -581,19 +596,19 @@ void Uninit(void)
 	// メッシュ終了処理
 	UninitMesh();
 
+	*/
 	// Assimp用シェーダ終了処理
 	CAssimpModel::UninitShader();
+	
 
 	// ポリゴン表示終了処理
 	UninitPolygon();
-
-	*/
 
 	// 入力処理終了処理
 	UninitInput();
 
 	// デバッグ文字列表示終了処理
-//	UninitDebugProc();
+	UninitDebugProc();
 
 	// サウンド終了
 	CSound::Fin();
@@ -641,19 +656,19 @@ void Update(void)
 	UpdateScene();
 
 	// デバッグ文字列表示更新
-	//UpdateDebugProc();
+	UpdateDebugProc();
 
 	// デバッグ文字列設定
-	//StartDebugProc();
-//	PrintDebugProc("FPS:%d\n\n", g_nCountFPS);
+	StartDebugProc();
+	PrintDebugProc("FPS:%d\n\n", g_nCountFPS);
 
 	// サウンド更新
 	CSound::Update();
 
-	/*
+	
 	// ポリゴン表示更新
 	UpdatePolygon();
-
+	/*
 	// 自機更新
 	UpdatePlayer();
 
@@ -747,7 +762,7 @@ void Draw(void)
 	// Zバッファ無効(Zチェック無&Z更新無)
 	SetZBuffer(false);
 	*/
-
+	
 	// シーン描画
 	DrawScene();
 

@@ -43,7 +43,7 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -162,6 +162,7 @@
   <ItemGroup>
     <ClCompile Include="AssimpModel.cpp" />
     <ClCompile Include="bg.cpp" />
+    <ClCompile Include="Block.cpp" />
     <ClCompile Include="bullet.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="collision.cpp" />
@@ -169,6 +170,7 @@
     <ClCompile Include="debugproc.cpp" />
     <ClCompile Include="effect.cpp" />
     <ClCompile Include="EnemyBase.cpp" />
+    <ClCompile Include="EnemyExplode.cpp" />
     <ClCompile Include="EnemyMelee.cpp" />
     <ClCompile Include="EnemyRange.cpp" />
     <ClCompile Include="explosion.cpp" />
@@ -181,10 +183,15 @@
     <ClCompile Include="meshfield.cpp" />
     <ClCompile Include="meshwall.cpp" />
     <ClCompile Include="number.cpp" />
+    <ClCompile Include="Pause.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="polygon.cpp" />
     <ClCompile Include="polyline.cpp" />
+    <ClCompile Include="SceneArea2.cpp" />
+    <ClCompile Include="SceneArea3.cpp" />
     <ClCompile Include="SceneGame.cpp" />
+    <ClCompile Include="SceneGameclear.cpp" />
+    <ClCompile Include="SceneGameover.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="SceneTitle.cpp" />
     <ClCompile Include="Shader.cpp" />
@@ -197,6 +204,7 @@
   <ItemGroup>
     <ClInclude Include="AssimpModel.h" />
     <ClInclude Include="bg.h" />
+    <ClInclude Include="Block.h" />
     <ClInclude Include="bullet.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="collision.h" />
@@ -204,6 +212,7 @@
     <ClInclude Include="debugproc.h" />
     <ClInclude Include="effect.h" />
     <ClInclude Include="EnemyBase.h" />
+    <ClInclude Include="EnemyExplode.h" />
     <ClInclude Include="EnemyMelee.h" />
     <ClInclude Include="EnemyRange.h" />
     <ClInclude Include="explosion.h" />
@@ -216,11 +225,16 @@
     <ClInclude Include="meshfield.h" />
     <ClInclude Include="meshwall.h" />
     <ClInclude Include="number.h" />
+    <ClInclude Include="Pause.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="polygon.h" />
     <ClInclude Include="polyline.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="SceneArea2.h" />
+    <ClInclude Include="SceneArea3.h" />
     <ClInclude Include="SceneGame.h" />
+    <ClInclude Include="SceneGameclear.h" />
+    <ClInclude Include="SceneGameover.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="SceneTitle.h" />
     <ClInclude Include="Shader.h" />

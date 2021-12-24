@@ -6,11 +6,28 @@
 //--------------------------------------------------------------
 //	製作者：上月大地
 //--------------------------------------------------------------
+//**************************************************************
+
+//**************************************************************
 //	開発履歴
-//	2021/11/30	フェード制御実装開始		：柴山凜太郎
-//	2021/12/03	フェード制御ベース実装完了	：柴山凜太郎
-//	2021/12/06	柴山凜太郎君のプログラムを元に変更	：上月大地	
-//
+//	2021/11/30	フェード制御実装開始
+//	編集者：柴山凜太郎
+//--------------------------------------------------------------
+//	2021/12/03	フェード制御ベース実装完了
+//	編集者：柴山凜太郎
+//--------------------------------------------------------------
+//	2021/12/06	柴山凜太郎君のプログラムを元に変更
+//	編集者：上月大地
+//--------------------------------------------------------------
+//	2021/12/19	柴山凜太郎君のプログラムを元に変更
+//	編集者：上月大地
+//--------------------------------------------------------------
+//	2021/12/21	g_fFadeRate変数の削除
+//				グローバル変数初期化位置を「グローバル領域→初期化関数内」に変更
+//				Draw関数内にSetBlendState関数の追加
+//	編集者：柴山凜太郎
+//--------------------------------------------------------------
+//	2021/12/22	コメントの編集&追加
 //**************************************************************
 
 //**************************************************************
@@ -28,14 +45,13 @@
 //**************************************************************
 // グローバル変数
 //**************************************************************
-static float g_fRed = 0.0f;			// 赤:0.0f~255.0fト色
-static float g_fGreen = 0.0f;		// 緑:0.0f~255.0f
-static float g_fBlue = 0.0f;		// 青:0.0f~255.0f
-static float g_fAlpha = 1.0f;		// α値:0.0f~1.0f
-static float g_fFadeRate = FADE_RATE;	// フェードイン/アウトの刻み
+static float g_fRed;		// 赤:0.0f~255.0fト色
+static float g_fGreen;		// 緑:0.0f~255.0f
+static float g_fBlue;		// 青:0.0f~255.0f
+static float g_fAlpha;		// α値:0.0f~1.0f
 
-static E_FADE_STATE g_eState = FADE_IN;	// フェード状態
-static EScene g_eNext = SCENE_TITLE;	// 次のシーン
+static E_FADE_STATE g_eState;	// フェード状態
+static EScene g_eNext;			// 次のシーン
 
 //**************************************************************
 // 初期化処理
@@ -44,7 +60,11 @@ HRESULT InitFade()
 {
 	HRESULT hr = S_OK;
 
-	g_fFadeRate = FADE_RATE;	//1.0fだと一瞬でおわる
+	// 変数の初期化
+	g_fRed = 0.0f;
+	g_fGreen = 0.0f;
+	g_fBlue = 0.0f;
+	g_fAlpha = 1.0f;
 	g_eState = FADE_IN;
 	g_eNext = SCENE_TITLE;
 
@@ -56,6 +76,7 @@ HRESULT InitFade()
 //**************************************************************
 void UninitFade()
 {
+	// 終了時に初期化
 	g_fAlpha = 0.0f;
 	g_eState = FADE_NONE;
 }
@@ -73,7 +94,7 @@ void UpdateFade()
 
 	case FADE_OUT:
 		// フェードアウト---------------------------------------
-		g_fAlpha += g_fFadeRate; // 不透明度を増す
+		g_fAlpha += FADE_RATE; // 不透明度を増す
 		if (g_fAlpha >= 1.0f)
 		{
 			// フェードイン処理に切り替え
@@ -93,7 +114,7 @@ void UpdateFade()
 
 	case FADE_IN:
 		// フェードイン-----------------------------------------
-		g_fAlpha -= g_fFadeRate; // 透明度を増す
+		g_fAlpha -= FADE_RATE; // 透明度を増す
 		if (g_fAlpha <= 0.0f)
 		{
 			// フェードイン終了
@@ -115,17 +136,19 @@ void UpdateFade()
 void DrawFade()
 {
 	// 画面全体に半透明の矩形を描画
+	SetBlendState(BS_ALPHABLEND);
 	 ID3D11DeviceContext* pDC = GetDeviceContext();
-	 SetPolygonPos(0.0f, 0.0f);				// 座標
-	 SetPolygonSize(SCREEN_WIDTH, SCREEN_HEIGHT);	// 額縁サイズ
-	 SetPolygonUV(0.0f, 0.0f);				// テクスチャ座標
-	 SetPolygonFrameSize(1.0f, 1.0f);		// テクスチャサイズ
-	 SetPolygonTexture(nullptr);				// テクスチャ情報
-	 SetPolygonColor(g_fRed, g_fGreen, g_fBlue);		// 色情報
-	 SetPolygonAlpha(g_fAlpha);				// 透明度
+	 SetPolygonPos(0.0f, 0.0f);			// 座標設定
+	 SetPolygonSize(SCREEN_WIDTH, SCREEN_HEIGHT);	// 額縁サイズ設定
+	 SetPolygonUV(0.0f, 0.0f);			// テクスチャ座標設定
+	 SetPolygonFrameSize(1.0f, 1.0f);	// テクスチャサイズ設定
+	 SetPolygonTexture(nullptr);		// テクスチャ情報設定
+	 SetPolygonColor(g_fRed, g_fGreen, g_fBlue);	// 色情報設定
+	 SetPolygonAlpha(g_fAlpha);		// 透明度設定
 	 DrawPolygon(pDC);
 	 
-	 // 元に戻す
+	  // 元に戻す
+	 SetBlendState(BS_NONE);// 透過(アルファ値)をいじるときはセットブレンドではさむ
 	 SetPolygonColor(1.0f, 1.0f, 1.0f);
 	 SetPolygonAlpha(1.0f);
 
@@ -144,6 +167,7 @@ void DrawFade()
 //*******************************
 void StartFadeOut(EScene eNext)
 {
+	// フェードアウトしていなければ処理
 	if (g_eState != FADE_OUT)
 	{
 		g_eState = FADE_OUT;
