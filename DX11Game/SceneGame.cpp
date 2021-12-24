@@ -221,7 +221,7 @@ HRESULT InitGame()
 	// }
 
 	 // BGMÄ¶ŠJn
-	 CSound::Play(BGM_000);
+	 //CSound::Play(BGM_000);
 
 	return hr;
 }

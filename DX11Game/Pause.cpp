@@ -13,21 +13,21 @@
 //*****************************************************************************
 // マクロ定義
 //*****************************************************************************
-#define	NUM_PAUSE_MENU		(3)			// ポーズメニュー数
+#define	NUM_PAUSE_MENU		(4)			// ポーズメニュー数
 #define	PAUSE_MENU_WIDTH	(320.0f)	// ポーズメニュー幅
 #define	PAUSE_MENU_HEIGHT	(60.0f)		// ポーズメニュー高さ
 #define	PAUSE_MENU_POS_X	(0.0f)		// ポーズメニュー位置(X座標)
 #define	PAUSE_MENU_POS_Y	(PAUSE_MENU_INTERVAL)	// ポーズメニュー位置(Y座標)
 #define	PAUSE_MENU_INTERVAL	(100.0f)	// ポーズメニュー間隔
 #define	PLATE_WIDTH			(360.0f)	// プレートの幅
-#define	PLATE_HEIGHT		(340.0f)	// プレートの幅
+#define	PLATE_HEIGHT		(400.0f)	// プレートの幅
 #define	PLATE_POS_X			(0.0f)		// プレートの位置(X座標)
-#define	PLATE_POS_Y			(0.0f)		// プレートの位置(Y座標)
+#define	PLATE_POS_Y			(-50.0f)		// プレートの位置(Y座標)
 
 //*****************************************************************************
 // グローバル変数
 //*****************************************************************************
-static ID3D11ShaderResourceView*	g_pTextures[3] = { nullptr };	// テクスチャへのポインタ
+static ID3D11ShaderResourceView*	g_pTextures[4] = { nullptr };	// テクスチャへのポインタ
 
 static PAUSE_MENU g_nSelectMenu = PAUSE_MENU_CONTINUE;		// 選択中のメニューNo.
 static float g_fCurve = 0.0f;
@@ -38,6 +38,8 @@ static LPCWSTR c_aFileNamePauseMenu[NUM_PAUSE_MENU] =
 	L"data/texture/pause000.png",	// コンティニュー
 	L"data/texture/pause001.png",	// リトライ
 	L"data/texture/pause002.png",	// クイット
+	L"data/texture/pause003.png",	// ガイド
+
 };
 
 //=============================================================================

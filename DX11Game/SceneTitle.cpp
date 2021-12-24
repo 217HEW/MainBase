@@ -64,7 +64,7 @@ HRESULT InitTitle()
 
 	// ’†g‚Í‚Ü‚¾‚È‚¢
 	// BGMÄ¶ŠJn
-	CSound::Play(BGM_001);
+	//CSound::Play(BGM_001);
 	return hr;
 }
 
