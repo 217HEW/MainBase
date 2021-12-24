@@ -27,6 +27,7 @@
 #include "explosion.h"
 #include "life.h"
 #include "SceneManager.h"
+#include <stdlib.h>
 
 //**************************************************************
 // 構造体定義
@@ -138,6 +139,10 @@ void UpdateEnemyExplode(void)
 			g_EExplode[i].m_rot = g_EExplode[i].m_rotDest;
 			g_EExplode[i].m_rot = XMFLOAT3(posPlayer.x, posPlayer.y, posPlayer.z);*/
 
+			//*********************************
+			//追従処理
+			//*********************************
+
 			//敵のx座標がプレイヤーよりも大きかったら
 			if (g_EExplode[i].m_pos.x >= posPlayer.x)
 			{
@@ -167,6 +172,36 @@ void UpdateEnemyExplode(void)
 
 			}
 			
+			//*********************************
+			//敵とプレイヤーの距離測定処理
+			//*********************************
+			//※）毎回SetSceneを読み込む必要は無いが現状放置
+			//敵とプレイヤーのX座標が"10.0f"以内であるならば爆発(消滅)する
+			//if (abs(g_EExplode[i].m_pos.x - posPlayer.x <= 10.0f))
+			//if (g_EExplode[i].m_pos.x - posPlayer.x <= 10.0f)
+			//{
+			//	DelLife();
+			//	if (GetLife() == 0)
+			//	{
+			//		SetScene(SCENE_GAMEOVER);
+			//	}
+			//	g_EExplode[i].m_use = false;
+			//}
+			//
+			////敵とプレイヤーのY座標が"10.0f"以内であるならば爆発(消滅)する
+			//if (g_EExplode[i].m_pos.y - posPlayer.y <= 10.0f)
+			////if (abs(g_EExplode[i].m_pos.y - posPlayer.y <= 10.0f))
+			//{
+			//	DelLife();
+			//	if (GetLife() == 0)
+			//	{
+			//		SetScene(SCENE_GAMEOVER);
+			//	}
+			//	g_EExplode[i].m_use = false;
+			//}
+
+
+
 			//**************************************************************************************
 			//		当たり判定
 			//**************************************************************************************
