@@ -47,7 +47,7 @@ struct TEnemyExplode {
 //**************************************************************
 // マクロ定義
 //**************************************************************
-#define MODEL_ENEMY			"data/model/helicopter000.fbx"
+#define MODEL_ENEMY			"data/model/sentouki.fbx"
 //#define MODEL_ENEMY			"data/model/enemy3.fbx"
 
 #define	VALUE_MOVE_ENEMY		(1.0f)		// 移動速度
@@ -175,30 +175,27 @@ void UpdateEnemyExplode(void)
 			//*********************************
 			//敵とプレイヤーの距離測定処理
 			//*********************************
-			//※）毎回SetSceneを読み込む必要は無いが現状放置
+			//※)毎回SetSceneを読み込む必要は無いが現状放置
+			//※)完成してもエリアに入った瞬間爆発が当たる為、制限は必要
+			//※)XMStoreMatrixがあいまいといわれるがおそらく、いきなり絶対値を用いているからと推測される
 			//敵とプレイヤーのX座標が"10.0f"以内であるならば爆発(消滅)する
-			//if (abs(g_EExplode[i].m_pos.x - posPlayer.x <= 10.0f))
 			//if (g_EExplode[i].m_pos.x - posPlayer.x <= 10.0f)
-			//{
-			//	DelLife();
-			//	if (GetLife() == 0)
-			//	{
-			//		SetScene(SCENE_GAMEOVER);
-			//	}
-			//	g_EExplode[i].m_use = false;
-			//}
-			//
-			////敵とプレイヤーのY座標が"10.0f"以内であるならば爆発(消滅)する
-			//if (g_EExplode[i].m_pos.y - posPlayer.y <= 10.0f)
-			////if (abs(g_EExplode[i].m_pos.y - posPlayer.y <= 10.0f))
-			//{
-			//	DelLife();
-			//	if (GetLife() == 0)
-			//	{
-			//		SetScene(SCENE_GAMEOVER);
-			//	}
-			//	g_EExplode[i].m_use = false;
-			//}
+			if (abs(g_EExplode[i].m_pos.x - posPlayer.x <= 10.0f))
+			{
+				// 敵とプレイヤーのY座標が"10.0f"以内であるならば爆発(消滅)する
+					//if (g_EExplode[i].m_pos.y - posPlayer.y <= 10.0f)
+					if (abs(g_EExplode[i].m_pos.y - posPlayer.y <= 10.0f))
+					{
+						DelLife();
+						if (GetLife() == 0)
+						{
+							SetScene(SCENE_GAMEOVER);
+						}
+						g_EExplode[i].m_use = false;
+					}
+			}
+			
+			
 
 
 
@@ -312,6 +309,7 @@ void UpdateEnemyExplode(void)
 
 		}
 	}
+	PrintDebugProc("[ﾋｺｳｷ ｲﾁ : (%f : %f : %f)]\n", g_EExplode->m_pos.x, g_EExplode->m_pos.y, g_EExplode->m_pos.z);
 }
 
 //**************************************************************
