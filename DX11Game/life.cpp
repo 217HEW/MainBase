@@ -44,7 +44,8 @@
 
 //#define LIFE_COUNT_X	3
 //#define LIFE_COUNT_Y	4
-//#define LIFE_START 3
+//#define LIFE_START 3
+
 //**************************************************************
 // 列挙体宣言
 //**************************************************************
@@ -93,7 +94,8 @@ enum TEXTURE
 //};
 
 static ID3D11ShaderResourceView* g_pTexture[MAX_TEXTURE];	// テクスチャ情報
-static int g_nLife;	// 体力
+static int g_nLife;	// 体力
+
 
 
 

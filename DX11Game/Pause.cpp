@@ -13,21 +13,27 @@
 //*****************************************************************************
 // マクロ定義
 //*****************************************************************************
-#define	NUM_PAUSE_MENU		(4)			// ポーズメニュー数
+#define	NUM_PAUSE_MENU		(3)			// ポーズメニュー数
 #define	PAUSE_MENU_WIDTH	(320.0f)	// ポーズメニュー幅
 #define	PAUSE_MENU_HEIGHT	(60.0f)		// ポーズメニュー高さ
-#define	PAUSE_MENU_POS_X	(0.0f)		// ポーズメニュー位置(X座標)
+#define	PAUSE_MENU_POS_X	(-450.0f)		// ポーズメニュー位置(X座標)
 #define	PAUSE_MENU_POS_Y	(PAUSE_MENU_INTERVAL)	// ポーズメニュー位置(Y座標)
 #define	PAUSE_MENU_INTERVAL	(100.0f)	// ポーズメニュー間隔
 #define	PLATE_WIDTH			(360.0f)	// プレートの幅
-#define	PLATE_HEIGHT		(400.0f)	// プレートの幅
-#define	PLATE_POS_X			(0.0f)		// プレートの位置(X座標)
-#define	PLATE_POS_Y			(-50.0f)		// プレートの位置(Y座標)
+#define	PLATE_HEIGHT		(320.0f)	// プレートの幅
+#define	PLATE_POS_X			(-450.0f)		// プレートの位置(X座標)
+#define	PLATE_POS_Y			(0.0f)		// プレートの位置(Y座標)
 
+//説明用
+#define PATH_STEXTURE "data/texture/pausesetumei.png"
+#define S_POS_X 200.0f
+#define S_POS_Y 0.0f
+#define S_WIDTH 809
+#define S_HEIGHT 500
 //*****************************************************************************
 // グローバル変数
 //*****************************************************************************
-static ID3D11ShaderResourceView*	g_pTextures[4] = { nullptr };	// テクスチャへのポインタ
+static ID3D11ShaderResourceView*	g_pTextures[3] = { nullptr };	// テクスチャへのポインタ
 
 static PAUSE_MENU g_nSelectMenu = PAUSE_MENU_CONTINUE;		// 選択中のメニューNo.
 static float g_fCurve = 0.0f;
@@ -38,10 +44,11 @@ static LPCWSTR c_aFileNamePauseMenu[NUM_PAUSE_MENU] =
 	L"data/texture/pause000.png",	// コンティニュー
 	L"data/texture/pause001.png",	// リトライ
 	L"data/texture/pause002.png",	// クイット
-	L"data/texture/pause003.png",	// ガイド
+	//L"data/texture/pause003.png",	// ガイド
 
 };
 
+static ID3D11ShaderResourceView* g_pSTexture;//説明用
 //=============================================================================
 // 初期化処理
 //=============================================================================
@@ -63,7 +70,10 @@ HRESULT InitPause(void)
 	// 効果音初期化
 	//g_pSE_Select = CreateSound(SE_SELECT_PATH);
 
-	return hr;
+	// テクスチャ読込
+	hr = CreateTextureFromFile(pDevice, PATH_STEXTURE, &g_pSTexture);
+	if (FAILED(hr))
+		return hr;
 }
 
 //=============================================================================
@@ -75,6 +85,9 @@ void UninitPause(void)
 	for (int nCntPauseMenu = 0; nCntPauseMenu < NUM_PAUSE_MENU; ++nCntPauseMenu) {
 		SAFE_RELEASE(g_pTextures[nCntPauseMenu]);
 	}
+
+	// テクスチャ解放
+	SAFE_RELEASE(g_pSTexture);
 }
 
 //=============================================================================
@@ -134,7 +147,22 @@ void DrawPause(void)
 		DrawPolygon(pDeviceContext);
 	}
 
-	SetPolygonColor(1.0f, 1.0f, 1.0f);
+
+	//説明用
+	// Zバッファ無効(Zチェック無&Z更新無)
+	SetZBuffer(false);
+	SetBlendState(BS_ALPHABLEND);
+	SetPolygonColor(3.0f, 3.0f, 3.0f);
+	ID3D11DeviceContext* pDC = GetDeviceContext();
+	SetPolygonSize(S_WIDTH, S_HEIGHT);
+	SetPolygonPos(S_POS_X, S_POS_Y);
+	SetPolygonTexture(g_pSTexture);
+	DrawPolygon(pDC);
+
+	// Zバッファ有効(Zチェック有&Z更新有)
+	SetZBuffer(true);
+	SetBlendState(BS_NONE);
+
 }
 
 //=============================================================================

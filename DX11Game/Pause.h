@@ -13,7 +13,7 @@ typedef enum {
 	PAUSE_MENU_CONTINUE = 0,	// コンティニュー
 	PAUSE_MENU_RETRY,			// リトライ
 	PAUSE_MENU_QUIT,			// クイット
-	PAUSE_MENU_GUIDE,			// ガイド
+	//PAUSE_MENU_GUIDE,			// ガイド
 	PAUSE_MENU_MAX
 } PAUSE_MENU;
 
