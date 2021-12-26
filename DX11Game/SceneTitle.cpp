@@ -23,6 +23,10 @@
 //	2021/12/22	タイトルからゲームに行く正規ボタンの実装
 //				「Enter」「Space」
 //	編集者：柴山凜太郎
+//--------------------------------------------------------------
+//	2021/12/22	タイトルBGMを追加しました。音量がとても大きいので
+//				手動で下げています。
+//	編集者：上月大地
 //**************************************************************
 
 //**************************************************************
@@ -35,6 +39,7 @@
 #include "Fade.h"
 #include "Texture.h"
 #include "Sound.h"
+
 //**************************************************************
 // マクロ定義
 //**************************************************************
@@ -62,9 +67,12 @@ HRESULT InitTitle()
 	if (FAILED(hr))
 		return hr;
 
-	// 中身はまだない
-	// BGM再生開始
-	CSound::Play(BGM_001);
+	// タイトルBGM再生
+	CSound::Play(BGM_TITLE);
+
+	// 音量が大きいので少し下げる
+	CSound::SetVolume(BGM_TITLE, 0.01f);	// 下げたい音源と下げる量(多分1.0fが最大です)
+
 	return hr;
 }
 
@@ -73,9 +81,12 @@ HRESULT InitTitle()
 //**************************************************************
 void UninitTitle()
 {
+	// タイトルBGM終了
+	CSound::Stop(BGM_TITLE);
+
 	// 中身無し
 	// BGM再生停止
-	CSound::Stop(BGM_001);
+	// CSound::Stop(BGM_001);
 	// テクスチャ解放
 	SAFE_RELEASE(g_pTexture);
 }
@@ -94,6 +105,9 @@ void UpdateTitle()
 		}
 		else if (GetKeyRelease(VK_2) || GetKeyRelease(VK_SPACE) || GetKeyRelease(VK_RETURN))
 		{
+			// お試し
+			CSound::Play(SE_SELECT);
+
 			StartFadeOut(SCENE_GAME);
 		}
 		else if (GetKeyRelease(VK_3))
@@ -106,13 +120,16 @@ void UpdateTitle()
 		}
 		else if (GetKeyRelease(VK_5))
 		{
+			// お試し
+			CSound::Play(SE_SELECT);
+
 			StartFadeOut(SCENE_GAMEOVER);
 		}
 		else if (GetKeyRelease(VK_6))
 		{
 			StartFadeOut(SCENE_GAMECLEAR);
 		}
-		
+
 	}
 }
 
@@ -129,7 +146,7 @@ void DrawTitle()
 	SetPolygonPos(BG_POS_X, BG_POS_Y);
 	SetPolygonTexture(g_pTexture);
 	DrawPolygon(pDC);
-	
+
 	// Zバッファ有効(Zチェック有&Z更新有)
 	SetZBuffer(true);
 }
