@@ -29,6 +29,9 @@
 //--------------------------------------------------------------
 //	2021/12/22	必要が無いモノの描画、更新を中断しています。
 //														変更者：上月大地
+//--------------------------------------------------------------
+//	2021/12/25	音データを追加したので各所に実装(ポーズ等)
+//														変更者：上月大地
 //	2021/12/22	ポーズに移るキーを一つ削除(VK_PAUSE)
 //	編集者：柴山凜太郎
 //--------------------------------------------------------------
@@ -76,7 +79,7 @@
 //**************************************************************
 //TPolyline					g_polyline[MAX_POLYLINE];	// ポリライン情報
 
-static bool g_bPause;								//一時停止中
+static bool g_bPause;		//一時停止中
 
 //**************************************************************
 // 初期化処理
@@ -174,20 +177,20 @@ HRESULT InitGame()
 	hr = InitEnemyExplode();
 	if (FAILED(hr))
 		return hr;
-	
+
 	// エクスプロード呼び出し
 	SetEnemyExplode(XMFLOAT3(60.0f, 60.0f, 0.0f));
 
 	// メッシュ壁初期化
-	 hr = InitMeshWall();
-	 if (FAILED(hr))
-	 	return hr;
+	hr = InitMeshWall();
+	if (FAILED(hr))
+		return hr;
 
 	// ポーズ初期化
 	hr = InitPause();
 	g_bPause = false;
 	if (FAILED(hr))
-	return hr;
+		return hr;
 	// SetMeshWall(XMFLOAT3(0.0f, 0.0f, 640.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), 16, 2, XMFLOAT2(40.0f, 40.0f));
 	// SetMeshWall(XMFLOAT3(-640.0f, 0.0f, 0.0f), XMFLOAT3(0.0f, -90.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), 16, 2, XMFLOAT2(80.0f, 80.0f));
 	// SetMeshWall(XMFLOAT3(640.0f, 0.0f, 0.0f), XMFLOAT3(0.0f, 90.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), 16, 2, XMFLOAT2(80.0f, 80.0f));
@@ -232,7 +235,7 @@ HRESULT InitGame()
 	// }
 
 	 // BGM再生開始
-	 CSound::Play(BGM_000);
+	//CSound::Play(BGM_000);
 
 	return hr;
 }
@@ -245,7 +248,7 @@ void UninitGame()
 	//ポーズ終了処理
 	UninitPause();
 	// BGM再生停止
-	CSound::Stop(BGM_000);
+	//CSound::Stop(BGM_000);
 
 	// ポリライン終了処理
 	//UninitPolyline();
@@ -405,7 +408,7 @@ void UpdateGame()
 		UpdateEffect();
 
 		// ブロック更新
-		 UpdateBlock();
+		// UpdateBlock();
 
 		// 煙更新
 		// UpdateSmoke();
@@ -416,7 +419,7 @@ void UpdateGame()
 		// 	UpdatePolyline(&g_polyline[i]);
 		// }
 
-		
+
 	}
 	//一時停止ON/OFF
 	if (GetKeyTrigger(VK_P))
@@ -484,7 +487,7 @@ void DrawGame()
 
 	// 自機描画
 	DrawPlayer();
-	
+
 	// エネミーメレー
 	DrawEnemyMelee();
 
@@ -499,9 +502,6 @@ void DrawGame()
 
 	// 煙描画
 	//DrawSmoke();
-
-	// エフェクト描画
-	DrawEffect();
 
 	// 壁描画 (不透明部分)
 	DrawMeshWall(DRAWPART_OPAQUE);
@@ -519,15 +519,19 @@ void DrawGame()
 	// }
 
 	// 壁描画 (半透明部分)
-	 DrawMeshWall(DRAWPART_TRANSLUCENT);
+	DrawMeshWall(DRAWPART_TRANSLUCENT);
 
-	 SetZBuffer(false);
-	 //一時停止描画
-	 if (g_bPause) {
-		 DrawPause();
-	 }
-	 SetZBuffer(true);
-	 
+	SetZBuffer(false);
+
+	// エフェクト描画
+	DrawEffect();
+
+	//一時停止描画
+	if (g_bPause) {
+		DrawPause();
+	}
+	SetZBuffer(true);
+
 	// Zバッファ無効(Zチェック無&Z更新無)
 	SetZBuffer(false);
 
