@@ -69,7 +69,12 @@ HRESULT InitBlock(void)
  		g_block[i].m_nLife = MAX_LIFE;
  		g_block[i].m_use = false;
 		g_block[i].m_invincible = false;
-		
+		// モデルデータの読み込み
+		//if (!g_model[i].Load(pDevice, pDeviceContext, g_block[i].m_3Dmodel))
+		//{
+		//	MessageBoxA(GetMainWnd(), "モデルデータ読み込みエラー", "InitBlock", MB_OK);
+		//	return E_FAIL;
+		//}
  	}
  
  	return hr;

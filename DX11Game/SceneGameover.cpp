@@ -18,6 +18,10 @@
 //	変更者：柴山凜太郎
 //--------------------------------------------------------------
 //	2021/12/22	コメントの追加&編集
+//				フェードインの挙動がおかしかったためDraw関数に
+//				Zバッファの処理を追加
+//				ゲームオーバーからタイトルに行く正規ボタンの実装
+//				「Enter」「Space」
 //	編集者：柴山凜太郎
 //--------------------------------------------------------------
 //**************************************************************
@@ -86,6 +90,22 @@ void UpdateGameover()
 			// ゲームシーンへ
 			StartFadeOut(SCENE_GAME);
 		}
+		else if (GetKeyRelease(VK_3))
+		{
+			StartFadeOut(SCENE_AREA2);
+		}
+		else if (GetKeyRelease(VK_4))
+		{
+			StartFadeOut(SCENE_AREA3);
+		}
+		else if (GetKeyRelease(VK_5))
+		{
+			StartFadeOut(SCENE_GAMEOVER);
+		}
+		else if (GetKeyRelease(VK_6))
+		{
+			StartFadeOut(SCENE_GAMECLEAR);
+		}
 	}
 
 	// ポリゴン表示更新
@@ -98,6 +118,8 @@ void UpdateGameover()
 //**************************************************************
 void DrawGameover()
 {
+	// Zバッファ無効(Zチェック無&Z更新無)
+	SetZBuffer(false);
 	ID3D11DeviceContext* pDC = GetDeviceContext();
 	SetPolygonSize(BG_WIDTH, BG_HEIGHT);
 	SetPolygonPos(BG_POS_X, BG_POS_Y);

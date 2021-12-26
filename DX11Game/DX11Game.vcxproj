@@ -166,10 +166,12 @@
     <ClCompile Include="bullet.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="collision.cpp" />
+    <ClCompile Include="CreateBossField.cpp" />
     <ClCompile Include="CreateField.cpp" />
     <ClCompile Include="debugproc.cpp" />
     <ClCompile Include="effect.cpp" />
     <ClCompile Include="EnemyBase.cpp" />
+    <ClCompile Include="EnemyExplode.cpp" />
     <ClCompile Include="EnemyMelee.cpp" />
     <ClCompile Include="EnemyRange.cpp" />
     <ClCompile Include="explosion.cpp" />
@@ -186,6 +188,8 @@
     <ClCompile Include="player.cpp" />
     <ClCompile Include="polygon.cpp" />
     <ClCompile Include="polyline.cpp" />
+    <ClCompile Include="SceneArea2.cpp" />
+    <ClCompile Include="SceneArea3.cpp" />
     <ClCompile Include="SceneGame.cpp" />
     <ClCompile Include="SceneGameclear.cpp" />
     <ClCompile Include="SceneGameover.cpp" />
@@ -205,10 +209,12 @@
     <ClInclude Include="bullet.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="collision.h" />
+    <ClInclude Include="CreateBossField.h" />
     <ClInclude Include="CreateField.h" />
     <ClInclude Include="debugproc.h" />
     <ClInclude Include="effect.h" />
     <ClInclude Include="EnemyBase.h" />
+    <ClInclude Include="EnemyExplode.h" />
     <ClInclude Include="EnemyMelee.h" />
     <ClInclude Include="EnemyRange.h" />
     <ClInclude Include="explosion.h" />
@@ -226,6 +232,8 @@
     <ClInclude Include="polygon.h" />
     <ClInclude Include="polyline.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="SceneArea2.h" />
+    <ClInclude Include="SceneArea3.h" />
     <ClInclude Include="SceneGame.h" />
     <ClInclude Include="SceneGameclear.h" />
     <ClInclude Include="SceneGameover.h" />

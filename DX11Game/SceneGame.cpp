@@ -29,6 +29,9 @@
 //--------------------------------------------------------------
 //	2021/12/22	必要が無いモノの描画、更新を中断しています。
 //														変更者：上月大地
+//	2021/12/22	ポーズに移るキーを一つ削除(VK_PAUSE)
+//	編集者：柴山凜太郎
+//--------------------------------------------------------------
 //**************************************************************
 
 //**************************************************************
@@ -59,6 +62,7 @@
 #include "CreateField.h"
 #include "Block.h"
 #include "EnemyMelee.h"
+#include "EnemyExplode.h"
 #include "Pause.h"
 
 //**************************************************************
@@ -166,6 +170,14 @@ HRESULT InitGame()
 	// メレー呼び出し
 	SetEnemyMelee(XMFLOAT3(30.0f, 30.0f, 0.0f));
 
+	// エネミーエクスプロード初期化
+	hr = InitEnemyExplode();
+	if (FAILED(hr))
+		return hr;
+	
+	// エクスプロード呼び出し
+	SetEnemyExplode(XMFLOAT3(60.0f, 60.0f, 0.0f));
+
 	// メッシュ壁初期化
 	 hr = InitMeshWall();
 	 if (FAILED(hr))
@@ -244,6 +256,9 @@ void UninitGame()
 	// エネミーメレー終了
 	UninitEnemyMelee();
 
+	// エネミーエクスプロード終了
+	UninitEnemyExplode();
+
 	// ブロック終了
 	//UninitBlock();
 
@@ -304,6 +319,7 @@ void UpdateGame()
 	{
 		if (GetFadeState() == FADE_NONE)
 		{
+#ifdef _DEBUG
 			if (GetKeyRelease(VK_1))
 			{
 				StartFadeOut(SCENE_TITLE);
@@ -314,11 +330,25 @@ void UpdateGame()
 			}
 			else if (GetKeyRelease(VK_3))
 			{
-				StartFadeOut(SCENE_GAMEOVER);
+				StartFadeOut(SCENE_AREA2);
 			}
 			else if (GetKeyRelease(VK_4))
 			{
+				StartFadeOut(SCENE_AREA3);
+			}
+			else if (GetKeyRelease(VK_5))
+			{
+				StartFadeOut(SCENE_GAMEOVER);
+			}
+			else if (GetKeyRelease(VK_6))
+			{
 				StartFadeOut(SCENE_GAMECLEAR);
+			}
+#endif
+			int Timer = GetTimer();
+			if (Timer <= 0)
+			{
+				StartFadeOut(SCENE_GAMEOVER);
 			}
 		}
 
@@ -337,8 +367,11 @@ void UpdateGame()
 		// 自機更新
 		UpdatePlayer();
 
-		// エネミーメレー
+		// エネミーメレー更新
 		UpdateEnemyMelee();
+
+		// エネミーエクスプロード更新
+		UpdateEnemyExplode();
 
 		// 背景更新
 		UpdateBG();
@@ -386,7 +419,7 @@ void UpdateGame()
 		
 	}
 	//一時停止ON/OFF
-	if (GetKeyTrigger(VK_P) || GetKeyTrigger(VK_PAUSE))
+	if (GetKeyTrigger(VK_P))
 	{
 		if (GetFadeState() == FADE_NONE)
 		{
@@ -454,6 +487,9 @@ void DrawGame()
 	
 	// エネミーメレー
 	DrawEnemyMelee();
+
+	// エネミーエクスプロード
+	DrawEnemyExplode();
 
 	// 丸影描画
 	//DrawShadow();

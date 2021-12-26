@@ -44,7 +44,7 @@ enum SoundStatus {
 	SS_STOP = 0,
 	SS_PLAY,
 	SS_PAUSE,
-
+	SS_LOOP,
 	MAX_SOUNDSTATUS
 };
 
@@ -72,6 +72,7 @@ public:
 	bool IsPlaying();
 	void SetVolume(float fVol);
 	float GetVolume();
+	void Loop();
 };
 
 // SEƒNƒ‰ƒX
