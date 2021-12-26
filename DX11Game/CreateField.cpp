@@ -23,13 +23,17 @@
 //　		何も処理せずにとばす
 //			マップチップの縦横を定数で宣言
 //　編集者：柴山凜太郎
+//--------------------------------------------------------------
+//　2021/12/24	ブロックサイズが統一化されたの為、61行にあった
+//				サイズに関するコメントを削除しました。
+//				マップサイズを25*25に変更しました
+//　編集者：上月大地
 //**************************************************************
 
 //**************************************************************
 //	コメント（意見）
 //	2021/12/22	10 * 10 だと物足りないかも？	__澤村瑠人
 //	2021/12/22	25 * 25 がレベデザの要望です	＿上月大地
-//
 //
 //**************************************************************
 
@@ -44,8 +48,8 @@
 //**************************************************************
 // マクロ定義
 //**************************************************************
-#define MAP_WIDTH (30)
-#define MAP_HEIGHT (30)
+#define MAP_WIDTH (25)
+#define MAP_HEIGHT (25)
 
 //**************************************************************
 // グローバル変数
@@ -56,8 +60,6 @@ int g_Map[MAP_WIDTH][MAP_HEIGHT] =
 {
 	//壊れるブロック"1"
 	//壊れないブロック"2"
-	//※ブロック"2"はブロック数を削減するために
-	//壊れるブロックよりサイズが大きい
 	//						X
 	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,//
 	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,//
@@ -86,7 +88,7 @@ int g_Map[MAP_WIDTH][MAP_HEIGHT] =
 	2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0,0,0,0,0,0,//
 };
 
-XMFLOAT3 g_MapPosOrizin = XMFLOAT3(-40.0f, 700.0f, 0.0f);	// マップ生成開始座標
+XMFLOAT3 g_MapPosOrizin = XMFLOAT3(-40.0f, 130.0f, 0.0f);	// マップ生成開始座標
 
 //=============================================================================
 // 初期化処理
@@ -100,7 +102,7 @@ HRESULT InitCField(void)
 	hr = InitBlock();
 	if (FAILED(hr))
 		return hr;
-	
+
 	// ブロックのサイズ取得
 	XMFLOAT3 BlockSize = GetBlockSize();
 
@@ -138,16 +140,16 @@ HRESULT InitCField(void)
 
 				// 通常ブロック
 				SetBlock(XMFLOAT3(g_MapPosOrizin.x + (Width  * BlockSize.x),
-								  g_MapPosOrizin.y - (Height * BlockSize.y),
-								  g_MapPosOrizin.z),false);
+					g_MapPosOrizin.y - (Height * BlockSize.y),
+					g_MapPosOrizin.z), false);
 				break;
 			case 2:
 				//マップチップ"2"の場所に描画するもの
-				
+
 				// 無敵ブロック
 				SetBlock(XMFLOAT3(g_MapPosOrizin.x + (Width  * BlockSize.x),
-								  g_MapPosOrizin.y - (Height * BlockSize.y),
-								  g_MapPosOrizin.z), true);
+					g_MapPosOrizin.y - (Height * BlockSize.y),
+					g_MapPosOrizin.z), true);
 				break;
 			}
 
@@ -188,7 +190,7 @@ void UpdateCField(void)
 	//XMMATRIX mtxWorld;
 	//XMFLOAT3 model;
 
-	
+
 
 	// ワールドマトリックスの初期化
 	//mtxWorld = XMMatrixIdentity();
@@ -211,7 +213,7 @@ void UpdateCField(void)
 void DrawCField(void)
 {
 	//ID3D11DeviceContext* pDC = GetDeviceContext();
-	
+
 	// ブロック描画
 	DrawBlock();
 }
