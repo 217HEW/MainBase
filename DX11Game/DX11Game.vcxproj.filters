@@ -180,6 +180,12 @@
     <ClCompile Include="CreateBossField.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="Boss.cpp">
+      <Filter>ソース ファイル\Model\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Gate.cpp">
+      <Filter>ソース ファイル\Model</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="input.h">
@@ -313,6 +319,12 @@
     </ClInclude>
     <ClInclude Include="CreateBossField.h">
       <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Boss.h">
+      <Filter>ヘッダー ファイル\Model\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Gate.h">
+      <Filter>ヘッダー ファイル\Model</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
