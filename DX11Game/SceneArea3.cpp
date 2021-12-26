@@ -51,7 +51,7 @@
 #define MAX_POLYLINE	(20)					// ƒ|ƒŠƒ‰ƒCƒ“”
 #define THICKNESS		(10.0f)					// ü‚Ì‘¾‚³
 
-#define PATH_BGTEXTURE "data/texture/Area3.png"
+#define PATH_BGTEXTURE  "data/texture/sky001.jpg"
 #define BG_POS_X 0.0f
 #define BG_POS_Y 0.0f
 #define BG_WIDTH SCREEN_WIDTH
@@ -220,6 +220,7 @@ HRESULT InitArea3()
 	if (FAILED(hr))
 	return hr;
 	
+	return hr;
 }
 
 //**************************************************************

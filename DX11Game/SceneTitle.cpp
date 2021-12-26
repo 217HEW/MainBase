@@ -24,8 +24,9 @@
 //				「Enter」「Space」
 //	編集者：柴山凜太郎
 //--------------------------------------------------------------
-//	2021/12/22	タイトルBGMを追加しました。音量がとても大きいので
+//	2021/12/27	タイトルBGMを追加しました。音量がとても大きいので
 //				手動で下げています。
+//				セレクト音も入っています
 //	編集者：上月大地
 //**************************************************************
 
@@ -84,9 +85,6 @@ void UninitTitle()
 	// タイトルBGM終了
 	CSound::Stop(BGM_TITLE);
 
-	// 中身無し
-	// BGM再生停止
-	// CSound::Stop(BGM_001);
 	// テクスチャ解放
 	SAFE_RELEASE(g_pTexture);
 }
@@ -105,28 +103,42 @@ void UpdateTitle()
 		}
 		else if (GetKeyRelease(VK_2) || GetKeyRelease(VK_SPACE) || GetKeyRelease(VK_RETURN))
 		{
-			// お試し
-			CSound::Play(SE_SELECT);
+			// 決定音
+			CSound::Play(SE_DECISION);
+			CSound::SetVolume(SE_DECISION, 0.03f);	// まだ音量の全体ボリュームを下げるやり方がわかって無いので手打ち
 
 			StartFadeOut(SCENE_GAME);
 		}
 		else if (GetKeyRelease(VK_3))
 		{
+			// 決定音
+			CSound::Play(SE_DECISION);
+			CSound::SetVolume(SE_DECISION, 0.03f);
+
 			StartFadeOut(SCENE_AREA2);
 		}
 		else if (GetKeyRelease(VK_4))
 		{
+			// 決定音
+			CSound::Play(SE_DECISION);
+			CSound::SetVolume(SE_DECISION, 0.03f);
+
 			StartFadeOut(SCENE_AREA3);
 		}
 		else if (GetKeyRelease(VK_5))
 		{
-			// お試し
-			CSound::Play(SE_SELECT);
-
+			// 決定音
+			CSound::Play(SE_DECISION);
+			CSound::SetVolume(SE_DECISION, 0.03f);
+			
 			StartFadeOut(SCENE_GAMEOVER);
 		}
 		else if (GetKeyRelease(VK_6))
 		{
+			// 決定音
+			CSound::Play(SE_DECISION);
+			CSound::SetVolume(SE_DECISION, 0.03f);
+
 			StartFadeOut(SCENE_GAMECLEAR);
 		}
 

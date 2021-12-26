@@ -1,14 +1,28 @@
-//=============================================================================
+//**************************************************************
 //
-// 一時停止処理 [pause.cpp]
+//	Pause.cpp
+//	ポーズ機能
 //
-//=============================================================================
+//--------------------------------------------------------------
+//	製作者：だれ？
+//--------------------------------------------------------------
+//**************************************************************
+
+//**************************************************************
+//	開発履歴
+//	2021/??/??
+//	編集者：??
+//--------------------------------------------------------------
+//	2021/12/27	音データを追加したので実装(セレクト＆キャンセル音)
+//														変更者：上月大地
+//**************************************************************
+
 #include "Pause.h"
 #include "input.h"
 //#include "fade.h"
 #include "polygon.h"
 #include "Texture.h"
-//#include "Sound.h"
+#include "Sound.h"
 
 //*****************************************************************************
 // マクロ定義
@@ -48,9 +62,10 @@ HRESULT InitPause(void)
 	ID3D11Device* pDevice = GetDevice();
 	HRESULT hr = S_OK;
 
-	for (int nCntPauseMenu = 0; nCntPauseMenu < NUM_PAUSE_MENU; ++nCntPauseMenu) {
+	for (int nCntPauseMenu = 0; nCntPauseMenu < NUM_PAUSE_MENU; ++nCntPauseMenu) 
+	{
 		// テクスチャの読み込み
-		hr = CreateTextureFromFile(pDevice,									// デバイスへのポインタ
+		hr = CreateTextureFromFile(pDevice,			// デバイスへのポインタ
 			c_aFileNamePauseMenu[nCntPauseMenu],	// ファイルの名前
 			&g_pTextures[nCntPauseMenu]);			// 読み込むメモリー
 	}
@@ -70,7 +85,8 @@ HRESULT InitPause(void)
 void UninitPause(void)
 {
 	// テクスチャの開放
-	for (int nCntPauseMenu = 0; nCntPauseMenu < NUM_PAUSE_MENU; ++nCntPauseMenu) {
+	for (int nCntPauseMenu = 0; nCntPauseMenu < NUM_PAUSE_MENU; ++nCntPauseMenu)
+	{
 		SAFE_RELEASE(g_pTextures[nCntPauseMenu]);
 	}
 }
@@ -80,13 +96,17 @@ void UninitPause(void)
 //=============================================================================
 void UpdatePause(void)
 {
-	if (GetKeyRepeat(VK_W) || GetKeyRepeat(VK_UP)) {
-		//CSound::Play(SE_SELECT);
+	if (GetKeyRepeat(VK_W) || GetKeyRepeat(VK_UP)) 
+	{
+		CSound::Play(SE_SELECT);
+		CSound::SetVolume(SE_SELECT, 0.02f);
 		g_nSelectMenu = (PAUSE_MENU)((g_nSelectMenu + NUM_PAUSE_MENU - 1) % NUM_PAUSE_MENU);
 		SetPauseMenu();
 	}
-	else if (GetKeyRepeat(VK_S) || GetKeyRepeat(VK_DOWN)) {
-		//CSound::Play(SE_SELECT);
+	else if (GetKeyRepeat(VK_S) || GetKeyRepeat(VK_DOWN))
+	{
+		CSound::Play(SE_SELECT);
+		CSound::SetVolume(SE_SELECT, 0.02f);
 		g_nSelectMenu = (PAUSE_MENU)((g_nSelectMenu + 1) % NUM_PAUSE_MENU);
 		SetPauseMenu();
 	}
@@ -117,7 +137,8 @@ void DrawPause(void)
 	DrawPolygon(pDeviceContext);
 
 	SetPolygonSize(PAUSE_MENU_WIDTH, PAUSE_MENU_HEIGHT);
-	for (int nCntPauseMenu = 0; nCntPauseMenu < NUM_PAUSE_MENU; ++nCntPauseMenu) {
+	for (int nCntPauseMenu = 0; nCntPauseMenu < NUM_PAUSE_MENU; ++nCntPauseMenu) 
+	{
 		SetPolygonPos(PAUSE_MENU_POS_X, PAUSE_MENU_POS_Y - nCntPauseMenu * PAUSE_MENU_INTERVAL);
 
 		if (nCntPauseMenu == g_nSelectMenu) {
@@ -157,6 +178,7 @@ PAUSE_MENU GetPauseMenu(void)
 void ResetPauseMenu(void)
 {
 	g_nSelectMenu = PAUSE_MENU_CONTINUE;
-	//CSound::Play(SE_SELECT);
+	// CSound::Play(SE_SELECT);
+	// CSound::SetVolume(SE_SELECT, 0.02f);
 	SetPauseMenu();
 }

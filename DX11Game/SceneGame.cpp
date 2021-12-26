@@ -30,11 +30,11 @@
 //	2021/12/22	必要が無いモノの描画、更新を中断しています。
 //														変更者：上月大地
 //--------------------------------------------------------------
-//	2021/12/25	音データを追加したので各所に実装(ポーズ等)
-//														変更者：上月大地
 //	2021/12/22	ポーズに移るキーを一つ削除(VK_PAUSE)
-//	編集者：柴山凜太郎
+//														編集者：柴山凜太郎
 //--------------------------------------------------------------
+//	2021/12/27	音データを追加したので実装(BGM)
+//														変更者：上月大地
 //**************************************************************
 
 //**************************************************************
@@ -234,8 +234,9 @@ HRESULT InitGame()
 	// 	AddPolylinePoint(&g_polyline[i], pos);
 	// }
 
-	 // BGM再生開始
-	//CSound::Play(BGM_000);
+	// BGM再生開始
+	CSound::Play(BGM_GAME000);
+	CSound::SetVolume(BGM_GAME000, 0.01f);
 
 	return hr;
 }
@@ -245,10 +246,11 @@ HRESULT InitGame()
 //**************************************************************
 void UninitGame()
 {
+	// BGM再生停止
+	CSound::Stop(BGM_GAME000);
+
 	//ポーズ終了処理
 	UninitPause();
-	// BGM再生停止
-	//CSound::Stop(BGM_000);
 
 	// ポリライン終了処理
 	//UninitPolyline();
@@ -428,14 +430,16 @@ void UpdateGame()
 		{
 			g_bPause = !g_bPause;
 			if (g_bPause) {
-				//CSound::Pause();
-				//CSound::Play(SE_DECIDE);
+				CSound::Pause();
+				CSound::Play(SE_SELECT);
+				CSound::SetVolume(SE_SELECT, 0.02f);
 				ResetPauseMenu();
 			}
 			else
 			{
-				//CSound::Play(SE_CANCEL);
-				//CSound::Resume();
+				CSound::Play(SE_CANCEL);
+				CSound::SetVolume(SE_CANCEL, 0.02f);
+				CSound::Resume();
 			}
 		}
 	}
@@ -451,8 +455,9 @@ void UpdateGame()
 			{
 			case PAUSE_MENU_CONTINUE:
 				g_bPause = false;
-				//CSound::Play(SE_CANCEL);
-				//CSound::Resume();
+				CSound::Play(SE_CANCEL);
+				CSound::SetVolume(SE_CANCEL, 0.02f);
+				CSound::Resume();
 				break;
 			case PAUSE_MENU_RETRY:
 				StartFadeOut(SCENE_GAME);
