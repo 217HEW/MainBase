@@ -89,7 +89,7 @@ HRESULT InitBoss(void)
 //**************************************************************
 // 終了処理
 //**************************************************************
-void UninitEnemy(void)
+void UninitBoss(void)
 {
 	// モデルの解放
 	g_model.Release();
@@ -98,7 +98,7 @@ void UninitEnemy(void)
 //**************************************************************
 // 更新処理
 //**************************************************************
-void UpdateEnemy(void)
+void UpdateBoss(void)
 {
 	XMMATRIX mtxWorld, mtxRot, mtxTranslate;
 
@@ -131,7 +131,7 @@ void UpdateEnemy(void)
 //**************************************************************
 // 描画処理
 //**************************************************************
-void DrawEnemy(void)
+void DrawBoss(void)
 {
 
 	ID3D11DeviceContext* pDC = GetDeviceContext();
@@ -159,7 +159,7 @@ void DrawEnemy(void)
 //		:使用している敵の最大数
 //
 //*******************************
-int SetEnemy(XMFLOAT3 pos)
+int SetBoss(XMFLOAT3 pos)
 {
 	// 戻り値の初期化
 	int Enemy = 1;

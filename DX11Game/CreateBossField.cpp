@@ -51,7 +51,7 @@
 //**************************************************************
 
 //関数化してスケールサイズを指定できるようにする
-int g_Map[BOSS_MAP_WIDTH][BOSS_MAP_HEIGHT] =
+int g_BossMap[BOSS_MAP_WIDTH][BOSS_MAP_HEIGHT] =
 {
 	//壊れるブロック"1"
 	//壊れないブロック"2"
@@ -92,7 +92,7 @@ int g_Map[BOSS_MAP_WIDTH][BOSS_MAP_HEIGHT] =
 	1,1,1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1,1,1,//19
 };
 
-XMFLOAT3 g_MapPosOrizin = XMFLOAT3(0.0f, 0.0f, 100.0f);	// マップ生成開始座標
+XMFLOAT3 g_BossMapPosOrizin = XMFLOAT3(0.0f, 0.0f, 100.0f);	// マップ生成開始座標
 
 //=============================================================================
 // 初期化処理
@@ -134,16 +134,16 @@ HRESULT InitCBField(void)
 			//	continue;
 			//}
 
-			switch (g_Map[Height][Width])
+			switch (g_BossMap[Height][Width])
 			{
 			case 0:
 				// 何もしない
 				break;
 			case 1:
 				//マップチップ"1"の場所に描画するもの
-				SetBlock(XMFLOAT3(g_MapPosOrizin.x + (Width  * BlockSize.x),
-								  g_MapPosOrizin.y - (Height * BlockSize.y),
-								  g_MapPosOrizin.z));
+				SetBlock(XMFLOAT3(g_BossMapPosOrizin.x + (Width  * BlockSize.x),
+								  g_BossMapPosOrizin.y - (Height * BlockSize.y),
+								  g_BossMapPosOrizin.z));
 				break;
 			case 2:
 				//マップチップ"2"の場所に描画するもの

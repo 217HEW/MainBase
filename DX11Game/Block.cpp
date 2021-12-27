@@ -22,6 +22,10 @@
 //	編集者：柴山凜太郎
 //--------------------------------------------------------------
 //	2121/12/22	コメントの編集&追加、不要なソースの削除
+//	編集者：柴山凜太郎
+//--------------------------------------------------------------
+//	2121/12/28	モデルの読込処理の見直し開始
+//	編集者：柴山凜太郎
 //**************************************************************
 #include "Block.h"
 #include "AssimpModel.h"
@@ -33,15 +37,17 @@
 //*****************************************************************************
 // マクロ定義
 //*****************************************************************************
-#define MODEL_BLOCK			"data/model/Block.fbx"	// 通常ブロック
+#define BLOCK			"data/model/Block.fbx"	// 通常ブロック
 //#define TEXTURE_BLOCK		"data/model/Block.jpg"	// 通常ブロック
-#define MODEL_CRACKS		"data/model/Block2.fbx"	// ひび割れたブロック
+#define CRACKS		"data/model/Block2.fbx"	// ひび割れたブロック
 #define MAX_LIFE			(2)			// 壁の耐久値
+#define BLOCK_SIZE			(XMFLOAT3(20.0f, 40.0f, 10.0f))		// ブロック1つ分の大きさ
 
 //*****************************************************************************
 // グローバル変数
 //*****************************************************************************
-static CAssimpModel	g_model[MAX_BLOCK];	// モデル
+//static CAssimpModel	g_model[MAX_BLOCK];	// モデル
+static CAssimpModel	g_model[MAX_MODEL];	// モデル
 static TBLOCK		g_block[MAX_BLOCK];	// 壁情報
 static XMFLOAT3		g_BlockSize;		// 現在のサイズ
 
@@ -57,11 +63,12 @@ HRESULT InitBlock(void)
 	for (int i = 0; i < MAX_BLOCK; ++i)
  	{
 		//Xが二倍になる為Yの二分の一にしておく
- 		g_BlockSize = XMFLOAT3(20.0f, 40.0f, 10.0f);
+ 		g_BlockSize = BLOCK_SIZE;
  		// g_wall->m_pos = XMFLOAT3(0.0f, 50.0f, 150.0f);
-		g_block[i].m_3Dmodel = MODEL_BLOCK;
  		g_block[i].m_nLife = MAX_LIFE;
  		g_block[i].m_use = false;
+		g_block[i].cracks = false;
+ 		g_block[i].state = MODEL_BLOCK;
 		g_block[i].m_invincible = false;
 		// モデルデータの読み込み
 		//if (!g_model[i].Load(pDevice, pDeviceContext, g_block[i].m_3Dmodel))
@@ -70,6 +77,20 @@ HRESULT InitBlock(void)
 		//	return E_FAIL;
 		//}
  	}
+	
+	//g_block[0].m_3Dmodel = MODEL_BLOCK;
+	
+	if (!g_model[MODEL_BLOCK].Load(pDevice, pDeviceContext, BLOCK))
+	{
+		MessageBoxA(GetMainWnd(), "モデルデータ読み込みエラー", "InitBlock", MB_OK);
+		return E_FAIL;
+	}
+	if (!g_model[MODEL_CRACKS].Load(pDevice, pDeviceContext, CRACKS))
+	{
+		MessageBoxA(GetMainWnd(), "モデルデータ読み込みエラー", "InitBlock", MB_OK);
+		return E_FAIL;
+	}
+
  
  	return hr;
 }
@@ -80,7 +101,7 @@ HRESULT InitBlock(void)
 void UninitBlock(void)
 {
 	// モデルの解放
-	for (int i = 0; i < MAX_BLOCK; ++i)
+	for (int i = 0; i < MAX_MODEL; ++i)
 	{
 		g_model[i].Release();
 	}
@@ -127,7 +148,7 @@ void UpdateBlock(void)
 			continue;
 		}
 	
-		// 壁とプレイヤーが衝突していたら
+		 // 壁とプレイヤーが衝突していたら
 		 if (CollisionAABB(g_block[i].m_pos, g_BlockSize, GetPlayerPos(), XMFLOAT3(5.0f,5.0f,10.0f)))
 		 {
 			 // プレイヤーがとんでいたら
@@ -136,15 +157,19 @@ void UpdateBlock(void)
 			 ID3D11DeviceContext* pDeviceContext = GetDeviceContext();
 
 			// ブロックにひびが入る
-			g_block[i].m_3Dmodel = MODEL_CRACKS;
-			g_model[i].Load(pDevice, pDeviceContext, g_block[i].m_3Dmodel);
+			//g_block[i].m_3Dmodel = MODEL_CRACKS;
+			//g_model[].Load(pDevice, pDeviceContext, g_block[i].m_3Dmodel);
 			g_block[i].m_nLife--;
-		 	
+			//g_block[i].m_cracks = true;
+			g_block[i].m_use = false;
+			g_block[i].state = MODEL_CRACKS;
+			g_block[i].cracks = true;
 		 	// 体力が無くなったら使わない
 		 	if (g_block[i].m_nLife <= 0)
 		 	{
-		 		g_block[i].m_use = false;
-				g_model[i].Release();
+				g_block[i].state = MODEL_NONE;
+				//g_model[MODEL_CRACKS].Release();
+				g_block[i].cracks = false;
 		 	}
 		 }
 	}
@@ -158,18 +183,41 @@ void UpdateBlock(void)
 void DrawBlock(void)
 {
 	ID3D11DeviceContext* pDC = GetDeviceContext();
-
-	// 不透明部分を描画
-	for (int i = 0; i < MAX_BLOCK; ++i)
-	{
-		// 使っているブロックの描画
-		if (!g_block[i].m_use)
+	
+		//
+	
+	
+		// 不透明部分を描画
+		for (int i = 0; i < MAX_BLOCK; ++i)
 		{
-			continue;
+			
+			
+			switch (g_block[i].state)
+			{
+			case MODEL_NONE:
+				break;
+			case MODEL_BLOCK:
+				// 使っているブロックの描画
+				if (!g_block[i].m_use)
+				{
+					break;
+				}
+				// ブロックモデル描画
+				g_model[MODEL_BLOCK].Draw(pDC, g_block[i].m_mtxWorld, eOpacityOnly);
+				break;
+			case MODEL_CRACKS:
+				// 使っているブロックの描画
+				if (!g_block[i].cracks)
+				{
+					break;
+				}
+				// ブロックモデル描画
+				g_model[MODEL_CRACKS].Draw(pDC, g_block[i].m_mtxWorld, eOpacityOnly);
+				break;
+			default:
+				break;
+			}
 		}
-		// ブロックモデル描画
-		g_model[i].Draw(pDC, g_block[i].m_mtxWorld, eOpacityOnly);
-	}
 
 	// 半透明部分を描画
 	//for (int i = 0; i < MAX_BLOCK; ++i) {

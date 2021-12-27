@@ -26,9 +26,9 @@
 //**************************************************************
 // プロトタイプ宣言
 //**************************************************************
-HRESULT InitEnemy(void);	// 初期化
-void UninitEnemy(void);		// 終了
-void UpdateEnemy(void);		// 更新
-void DrawEnemy(void);		// 描画
+HRESULT InitBoss(void);		// 初期化
+void UninitBoss(void);		// 終了
+void UpdateBoss(void);		// 更新
+void DrawBoss(void);		// 描画
 
-int SetEnemy(XMFLOAT3 pos);	// ボス配置
+int SetBoss(XMFLOAT3 pos);	// ボス配置

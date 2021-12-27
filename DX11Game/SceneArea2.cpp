@@ -220,6 +220,7 @@ HRESULT InitArea2()
 	if (FAILED(hr))
 		return hr;
 
+	return hr;
 }
 
 //**************************************************************
