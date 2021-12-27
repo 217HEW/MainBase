@@ -32,6 +32,9 @@
 //--------------------------------------------------------------
 //	2021/12/25	スティックを傾けると飛ぶ方向が表示されるようにしました
 //	編集者：上月大地
+//--------------------------------------------------------------
+//	2021/12/27	サウンドを追加しました。ジャンプ音
+//	編集者：上月大地
 //**************************************************************
 
 //**************************************************************
@@ -49,6 +52,7 @@
 #include "explosion.h"
 #include "life.h"
 #include "Fade.h"
+#include "Sound.h"
 
 //**************************************************************
 // マクロ定義
@@ -215,11 +219,15 @@ void UpdatePlayer(void)
 		if (GetKeyTrigger(VK_UP)) {
 			StartExplosion(g_posModel, XMFLOAT2(40.0f, 40.0f));
 			g_moveModel.y += SPEED_MOVE_PLAYER;
+			CSound::Play(SE_JUMP);
+			CSound::SetVolume(SE_JUMP, 0.04f);
 			g_bLand = false;
 		}
 		else if (GetKeyTrigger(VK_DOWN)) {
 			StartExplosion(g_posModel, XMFLOAT2(40.0f, 40.0f));
 			g_moveModel.y -= SPEED_MOVE_PLAYER;
+			CSound::Play(SE_JUMP);
+			CSound::SetVolume(SE_JUMP, 0.04f);
 			g_bLand = false;
 		}
 
