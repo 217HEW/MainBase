@@ -21,10 +21,23 @@
 // インクルード部
 //**************************************************************
 #include "main.h"
+
+enum AREA
+{
+	AREA_1 = 0,			// エリア１
+	AREA_2,			// エリア２
+	AREA_3,			// エリア３
+	AREA_BOSS,		// ボスエリア
+
+	MAX_AREA		// エリアの最大数
+};
+
 //*****************************************************************************
 // プロトタイプ宣言
 //*****************************************************************************
-HRESULT InitCField(void);	// 初期化
+HRESULT InitCField(AREA Area);	// 初期化
 void UninitCField(void);	// 終了
 void UpdateCField(void);	// 更新
 void DrawCField(void);		// 描画
+
+AREA GetAreaState();		// エリア状態の取得

@@ -28,6 +28,9 @@
 //				手動で下げています。
 //				セレクト音も入っています
 //	編集者：上月大地
+//--------------------------------------------------------------
+//	2021/12/28	デバッグ操作で遷移できるシーンの追加(AREA2,3,BOSS)
+//	編集者：柴山凜太郎
 //**************************************************************
 
 //**************************************************************
@@ -131,9 +134,17 @@ void UpdateTitle()
 			CSound::Play(SE_DECISION);
 			CSound::SetVolume(SE_DECISION, 0.03f);
 			
-			StartFadeOut(SCENE_GAMEOVER);
+			StartFadeOut(SCENE_AREA_BOSS);
 		}
 		else if (GetKeyRelease(VK_6))
+		{
+			// 決定音
+			CSound::Play(SE_DECISION);
+			CSound::SetVolume(SE_DECISION, 0.03f);
+
+			StartFadeOut(SCENE_GAMEOVER);
+		}
+		else if (GetKeyRelease(VK_7))
 		{
 			// 決定音
 			CSound::Play(SE_DECISION);

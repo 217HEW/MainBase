@@ -32,6 +32,10 @@
 //--------------------------------------------------------------
 //	2021/12/25	スティックを傾けると飛ぶ方向が表示されるようにしました
 //	編集者：上月大地
+//--------------------------------------------------------------
+//	2021/12/28	エリアクリア時、次のエリアに遷移するよう変更
+//				CreateField.hをインクルード
+//	編集者：柴山凜太郎
 //**************************************************************
 
 //**************************************************************
@@ -49,6 +53,7 @@
 #include "explosion.h"
 #include "life.h"
 #include "Fade.h"
+#include "CreateField.h"
 
 //**************************************************************
 // マクロ定義
@@ -375,8 +380,24 @@ void UpdatePlayer(void)
 	//  }
 	if (g_posModel.y > 800.0f) {
 		g_posModel.y = 800.0f;
-
-		StartFadeOut(SCENE_GAMECLEAR);
+		// 今のエリアから次のエリアへ
+		switch (GetAreaState())
+		{
+		case AREA_1:
+			StartFadeOut(SCENE_AREA2);
+			break;
+		case AREA_2:
+			StartFadeOut(SCENE_AREA3);
+			break;
+		case AREA_3:
+			StartFadeOut(SCENE_AREA_BOSS);
+			break;
+		case AREA_BOSS:
+			StartFadeOut(SCENE_GAMECLEAR);
+			break;
+		default:
+			break;
+		}
 	}
 	// 
 	if (GetKeyPress(VK_RETURN)) {
