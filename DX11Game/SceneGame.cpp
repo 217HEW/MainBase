@@ -179,7 +179,7 @@ HRESULT InitGame()
 		return hr;
 
 	// エクスプロード呼び出し
-	SetEnemyExplode(XMFLOAT3(60.0f, 60.0f, 0.0f));
+	SetEnemyExplode(XMFLOAT3(60.0f, -800.0f, 0.0f));
 
 	// メッシュ壁初期化
 	hr = InitMeshWall();
