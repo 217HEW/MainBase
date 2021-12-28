@@ -177,9 +177,6 @@
     <ClCompile Include="EnemyExplode.cpp">
       <Filter>ソース ファイル\Model\Enemy</Filter>
     </ClCompile>
-    <ClCompile Include="CreateBossField.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="input.h">
@@ -310,9 +307,6 @@
     </ClInclude>
     <ClInclude Include="EnemyExplode.h">
       <Filter>ヘッダー ファイル\Model\Enemy</Filter>
-    </ClInclude>
-    <ClInclude Include="CreateBossField.h">
-      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
