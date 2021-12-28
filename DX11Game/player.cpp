@@ -56,6 +56,8 @@
 #include "explosion.h"
 #include "life.h"
 #include "Fade.h"
+#include "CreateField.h"
+#include "Sound.h"
 
 //**************************************************************
 // É}ÉNÉçíËã`

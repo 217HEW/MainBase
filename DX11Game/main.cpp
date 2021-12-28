@@ -660,8 +660,15 @@ void Update(void)
 
 	// デバッグ文字列設定
 	StartDebugProc();
-	PrintDebugProc("FPS:%d\n\n", g_nCountFPS);
-
+	PrintDebugProc("FPS:%d\n\n\n\n\n", g_nCountFPS);
+	PrintDebugProc("< ｼｰﾝ ｾﾝｲｻｷ >\n");
+	PrintDebugProc("1:[   ﾀｲﾄﾙ  ]\n");
+	PrintDebugProc("2:[   ｴﾘｱ1  ]\n");
+	PrintDebugProc("3:[   ｴﾘｱ2  ]\n");
+	PrintDebugProc("4:[   ｴﾘｱ3  ]\n");
+	PrintDebugProc("5:[ ｴﾘｱﾎﾞｽ  ]\n");
+	PrintDebugProc("6:[ｹﾞｰﾑｵｰﾊﾞｰ]\n");
+	PrintDebugProc("7:[ ｹﾞｰﾑｸﾘｱ ]\n\n");
 	// サウンド更新
 	CSound::Update();
 
