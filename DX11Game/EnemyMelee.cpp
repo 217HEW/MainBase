@@ -299,14 +299,14 @@ void DrawEnemyMelee(void)
 		g_model.Draw(pDC, g_EMelee[i].m_mtxWorld, eOpacityOnly);
 	}
 
-	// 半透明部分を描画
-	for (int i = 0; i < MAX_ENEMYMELEE; ++i) {
-		SetBlendState(BS_ALPHABLEND);	// アルファブレンド有効
-		SetZWrite(false);				// Zバッファ更新しない
-		g_model.Draw(pDC, g_EMelee[i].m_mtxWorld, eTransparentOnly);
-		SetZWrite(true);				// Zバッファ更新する
-		SetBlendState(BS_NONE);			// アルファブレンド無効
-	}
+	// // 半透明部分を描画
+	// for (int i = 0; i < MAX_ENEMYMELEE; ++i) {
+	// 	SetBlendState(BS_ALPHABLEND);	// アルファブレンド有効
+	// 	SetZWrite(false);				// Zバッファ更新しない
+	// 	g_model.Draw(pDC, g_EMelee[i].m_mtxWorld, eTransparentOnly);
+	// 	SetZWrite(true);				// Zバッファ更新する
+	// 	SetBlendState(BS_NONE);			// アルファブレンド無効
+	// }
 }
 
 //*****************************************************************

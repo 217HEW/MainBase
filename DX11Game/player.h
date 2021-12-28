@@ -28,4 +28,8 @@ void DrawPlayer(void);		// 描画
 
 XMFLOAT3& GetPlayerPos();	// プレイヤー位置情報取得
 float GetPlayerSize();		// プライヤーサイズ情報取得
+bool GetPlayerJump();		// 飛んでいるかのboolを取得する	true:飛んでいない
+void SetPlayerJump(bool jump);		// 飛んでいるかのboolをセットする	
+
+
 bool CollisionPlayer(XMFLOAT3 pos, float radius, float damage);

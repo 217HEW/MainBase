@@ -54,6 +54,6 @@ void UninitBlock(void);
 void UpdateBlock(void);
 void DrawBlock(void);
 
-int SetBlock(XMFLOAT3 pos);	// ブロック配置
+int SetBlock(XMFLOAT3 pos, bool inv);	// ブロック配置 
 XMFLOAT3 GetBlockSize();	// ブロックサイズ取得
 TBLOCK* GetBlockArray();	// ブロック配列取得

@@ -23,6 +23,11 @@
 //	2021/12/22	タイトルからゲームに行く正規ボタンの実装
 //				「Enter」「Space」
 //	編集者：柴山凜太郎
+//--------------------------------------------------------------
+//	2021/12/27	タイトルBGMを追加しました。音量がとても大きいので
+//				手動で下げています。
+//				セレクト音も入っています
+//	編集者：上月大地
 //**************************************************************
 
 //**************************************************************
@@ -35,6 +40,7 @@
 #include "Fade.h"
 #include "Texture.h"
 #include "Sound.h"
+
 //**************************************************************
 // マクロ定義
 //**************************************************************
@@ -62,9 +68,12 @@ HRESULT InitTitle()
 	if (FAILED(hr))
 		return hr;
 
-	// 中身はまだない
-	// BGM再生開始
-	CSound::Play(BGM_001);
+	// タイトルBGM再生
+	CSound::Play(BGM_TITLE);
+
+	// 音量が大きいので少し下げる
+	CSound::SetVolume(BGM_TITLE, 0.01f);	// 下げたい音源と下げる量(多分1.0fが最大です)
+
 	return hr;
 }
 
@@ -73,9 +82,9 @@ HRESULT InitTitle()
 //**************************************************************
 void UninitTitle()
 {
-	// 中身無し
-	// BGM再生停止
-	CSound::Stop(BGM_001);
+	// タイトルBGM終了
+	CSound::Stop(BGM_TITLE);
+
 	// テクスチャ解放
 	SAFE_RELEASE(g_pTexture);
 }
@@ -94,25 +103,45 @@ void UpdateTitle()
 		}
 		else if (GetKeyRelease(VK_2) || GetKeyRelease(VK_SPACE) || GetKeyRelease(VK_RETURN))
 		{
+			// 決定音
+			CSound::Play(SE_DECISION);
+			CSound::SetVolume(SE_DECISION, 0.03f);	// まだ音量の全体ボリュームを下げるやり方がわかって無いので手打ち
+
 			StartFadeOut(SCENE_GAME);
 		}
 		else if (GetKeyRelease(VK_3))
 		{
+			// 決定音
+			CSound::Play(SE_DECISION);
+			CSound::SetVolume(SE_DECISION, 0.03f);
+
 			StartFadeOut(SCENE_AREA2);
 		}
 		else if (GetKeyRelease(VK_4))
 		{
+			// 決定音
+			CSound::Play(SE_DECISION);
+			CSound::SetVolume(SE_DECISION, 0.03f);
+
 			StartFadeOut(SCENE_AREA3);
 		}
 		else if (GetKeyRelease(VK_5))
 		{
+			// 決定音
+			CSound::Play(SE_DECISION);
+			CSound::SetVolume(SE_DECISION, 0.03f);
+			
 			StartFadeOut(SCENE_GAMEOVER);
 		}
 		else if (GetKeyRelease(VK_6))
 		{
+			// 決定音
+			CSound::Play(SE_DECISION);
+			CSound::SetVolume(SE_DECISION, 0.03f);
+
 			StartFadeOut(SCENE_GAMECLEAR);
 		}
-		
+
 	}
 }
 
@@ -129,7 +158,7 @@ void DrawTitle()
 	SetPolygonPos(BG_POS_X, BG_POS_Y);
 	SetPolygonTexture(g_pTexture);
 	DrawPolygon(pDC);
-	
+
 	// Zバッファ有効(Zチェック有&Z更新有)
 	SetZBuffer(true);
 }

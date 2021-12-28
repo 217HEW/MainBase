@@ -18,8 +18,23 @@
 //--------------------------------------------------------------
 //	2021/12/22	GetPlayerSizeを作成
 //				他の所で当たり判定が必要になった為
+//				GetPlayerJumpを作成
+//				ブロックの耐久値を減らす際に飛んでるか知りたい為
+//				SetPlayerJumpを作成
 //	編集者：上月大地
-//
+//--------------------------------------------------------------
+//	2021/12/24	コントローラーの処理を追加
+//				スティックの値を取得するにしています。
+//				コントローラーが無い場合、反応しません
+//				スティックを傾けてボタンを押すと
+//				プレイヤーがその方向にジャンプするようにしました。
+//	編集者：上月大地
+//--------------------------------------------------------------
+//	2021/12/25	スティックを傾けると飛ぶ方向が表示されるようにしました
+//	編集者：上月大地
+//--------------------------------------------------------------
+//	2021/12/27	サウンドを追加しました。ジャンプ音
+//	編集者：上月大地
 //**************************************************************
 
 //**************************************************************
@@ -36,11 +51,13 @@
 #include "collision.h"
 #include "explosion.h"
 #include "life.h"
+#include "Fade.h"
+#include "Sound.h"
 
 //**************************************************************
 // マクロ定義
 //**************************************************************
-#define MODEL_PLAYER		"data/model/airplane000.fbx"	// プレイヤーモデル
+#define MODEL_PLAYER		"data/model/Character02.fbx"
 
 #define	VALUE_MOVE_PLAYER	(0.155f)	// 移動速度
 #define	SPEED_MOVE_PLAYER	(50)		// 跳躍速度
@@ -63,9 +80,14 @@ static XMFLOAT3		g_moveModel;	// 移動量
 
 static XMFLOAT4X4	g_mtxWorld;		// ワールドマトリックス
 
-//static int			g_nShadow;		// 丸影番号
+//static int			g_nShadow;	// 丸影番号
 static int			g_nDamage;		// 点滅中
-static bool			g_bLand;		// 地面判定
+static bool			g_bInv;			// ダメージ時の無敵判定	true:無敵
+static bool			g_bLand;		// 地面判定	true:飛んでない
+
+// コントローラー
+// DWORD	Joycon = 0;			// コントローラー情報
+// static XMFLOAT2 Stick;	// スティックの傾き用	
 
 //**************************************************************
 // 初期化処理
@@ -83,6 +105,7 @@ HRESULT InitPlayer(void)
 	g_moveModel = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	g_rotModel = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	g_rotDestModel = XMFLOAT3(0.0f, 0.0f, 0.0f);
+	// Stick = XMFLOAT2(0.0f, 0.0f);
 
 	// モデルデータの読み込み
 	if (!g_model.Load(pDevice, pDeviceContext, MODEL_PLAYER)) {
@@ -93,9 +116,10 @@ HRESULT InitPlayer(void)
 	// 丸影の生成
 	//g_nShadow = CreateShadow(g_posModel, 12.0f);
 
-	// 壁接触判定初期化
-	g_bLand = false;
-	
+	// 壁接触,無敵判定初期化
+	g_bLand = true;
+	g_bInv = false;
+
 	return hr;
 }
 
@@ -118,33 +142,92 @@ void UpdatePlayer(void)
 {
 	// カメラの向き取得
 	XMFLOAT3 rotCamera = CCamera::Get()->GetAngle();
+
+
+	/*	// -------コントローラー操作------------------------------------------
+		GetJoyState(Joycon);
+
+		// コントローラーの接続状況確認
+		if (Joycon == 0)
+		{	// 接続有り↓
+			if (g_bLand)
+			{
+				// スティック入力時処理
+				if (GetJoyX(Joycon) != 0 || GetJoyY(Joycon) != 0)
+				{
+					// スティックのデッドゾーン処理
+					if ((GetJoyX(Joycon) < JOYSTICK_DEADZONE && GetJoyX(Joycon) > -JOYSTICK_DEADZONE) &&
+						(GetJoyY(Joycon) < JOYSTICK_DEADZONE && GetJoyY(Joycon) > -JOYSTICK_DEADZONE))
+					{	// 傾きが少ない場合↓
+						// スティックの値をゼロにする
+						Stick.x = 0.0f;
+						Stick.y = 0.0f;
+					}
+					else
+					{	// 大きく傾けた場合↓
+						// スティックの値－1～1で代入
+						Stick.x = static_cast<FLOAT>(GetJoyX(Joycon) / 32767.0);
+						Stick.y = -static_cast<FLOAT>(GetJoyY(Joycon) / 32767.0);
+						SetEffect(XMFLOAT3((g_posModel.x + (60.0f * (Stick.x /2))), (g_posModel.y + (60.0f * Stick.y)),0.0f),
+							XMFLOAT3(0.0f, 0.0f, 0.0f),
+							XMFLOAT4(1.0f, 0.05f, 0.05f, 0.80f),
+							XMFLOAT2(9.0f, 18.0f), 5);
+						for (int i = 0; i < 5; i++)
+						{
+							SetEffect(XMFLOAT3((g_posModel.x + ((60.0f / 6 * i) * (Stick.x / 2))), (g_posModel.y + ((60.0f / 6 * i) * Stick.y)), 0.0f),
+								XMFLOAT3(0.0f, 0.0f, 0.0f),
+								XMFLOAT4(1.0f, 0.05f, 0.05f, 0.80f),
+								XMFLOAT2(4.5f, 9.0f), 5);
+						}
+						// Bボタンが押されたら
+						if (GetJoyTrigger(Joycon, JOYSTICKID2))
+						{
+							g_moveModel.x = Stick.x *7.5f;
+							g_moveModel.y = Stick.y *15;
+							g_bLand = false;
+						}
+					}
+				}
+			}
+		}
+		else
+		{	// 接続無し↓
+
+		}
+	*/
 	/*do
 	{*/
 	if (g_nDamage > 0) {
 		--g_nDamage;
 		if (g_nDamage <= 0) {
+			g_bInv = false;
 			g_nDamage = 0;
 		}
 		//break;
 	}
 
-// -------プレイヤー操作------------------------------------------
-	// 壁等に接触しているとき
+	// -------プレイヤー操作------------------------------------------
+		// 壁等に接触しているとき
 	if (g_bLand)
 	{
 		// 初期化
 		g_moveModel.x = 0;
 		g_moveModel.y = 0;
 		g_moveModel.z = 0;
+
 		// 上下移動
 		if (GetKeyTrigger(VK_UP)) {
 			StartExplosion(g_posModel, XMFLOAT2(40.0f, 40.0f));
 			g_moveModel.y += SPEED_MOVE_PLAYER;
+			CSound::Play(SE_JUMP);
+			CSound::SetVolume(SE_JUMP, 0.04f);
 			g_bLand = false;
 		}
 		else if (GetKeyTrigger(VK_DOWN)) {
 			StartExplosion(g_posModel, XMFLOAT2(40.0f, 40.0f));
 			g_moveModel.y -= SPEED_MOVE_PLAYER;
+			CSound::Play(SE_JUMP);
+			CSound::SetVolume(SE_JUMP, 0.04f);
 			g_bLand = false;
 		}
 
@@ -248,9 +331,9 @@ void UpdatePlayer(void)
 		}
 	}
 
-// -------移動の制限&制御------------------------------------------
+	// -------移動の制限&制御------------------------------------------
 
-	// 目的の角度までの差分
+		// 目的の角度までの差分
 	float fDiffRotY = g_rotDestModel.y - g_rotModel.y;
 	if (fDiffRotY >= 180.0f) {
 		fDiffRotY -= 360.0f;
@@ -274,55 +357,47 @@ void UpdatePlayer(void)
 	//g_posModel.z += g_moveModel.z;
 
 	// 移動量に慣性をかける
-	g_moveModel.x += (0.0f - g_moveModel.x) * RATE_MOVE_PLAYER;
-	g_moveModel.y += (0.0f - g_moveModel.y) * RATE_MOVE_PLAYER;
-	//g_moveModel.z += (0.0f - g_moveModel.z) * RATE_MOVE_PLAYER;
+	// g_moveModel.x += (0.0f - g_moveModel.x) * RATE_MOVE_PLAYER;
+	// g_moveModel.y += (0.0f - g_moveModel.y) * RATE_MOVE_PLAYER;
+	// //g_moveModel.z += (0.0f - g_moveModel.z) * RATE_MOVE_PLAYER;
+	// 
+	if (g_posModel.x < -630.0f) {
+		g_posModel.x = -630.0f;
 
-	// 左端
-	if (g_posModel.x < -430.0f) {
-		g_posModel.x = -430.0f;
-		g_bLand = true;		// 壁に接触している
+		StartFadeOut(SCENE_GAMEOVER);
 	}
+	if (g_posModel.x > 1630.0f) {
+		g_posModel.x = 1630.0f;
 
-	// 右端
-	if (g_posModel.x > 630.0f) {
-		g_posModel.x = 630.0f;
-		g_bLand = true;		// 壁に接触している
+		StartFadeOut(SCENE_GAMEOVER);
 	}
+	//  if (g_posModel.z < 0.0f) {
+	//  	g_posModel.z = 0.0f;
+	//  }
+	//  if (g_posModel.z > 0.0f) {
+	//  	g_posModel.z = 0.0f;
+	//  }
+	//  if (g_posModel.y < -199.0f) {
+	//  	g_posModel.y = -200.0f;
+	//	StartFadeOut(SCENE_GAMEOVER);
+	//  }
+	if (g_posModel.y > 800.0f) {
+		g_posModel.y = 800.0f;
 
-	// Z軸固定
-	if (g_posModel.z < 0.0f) {
-		g_posModel.z = 0.0f;
+		StartFadeOut(SCENE_GAMECLEAR);
 	}
-
-	// Z軸固定
-	if (g_posModel.z > 0.0f) {
-		g_posModel.z = 0.0f;
-	}
-
-	// 下端
-	if (g_posModel.y < -799.0f) {
-		g_posModel.y = -800.0f;
-		g_bLand = true;		// 壁に接触している
-	}
-
-	// 上端
-	if (g_posModel.y > 150.0f) {
-		g_posModel.y = 150.0f;
-		g_bLand = true;		// 壁に接触している
-	}
-	
+	// 
 	if (GetKeyPress(VK_RETURN)) {
 		// リセット
-		g_posModel = XMFLOAT3(0.0f, -200.0f, 0.0f);
+		g_posModel = XMFLOAT3(0.0f, -800.0f, 0.0f);
 		g_moveModel = XMFLOAT3(0.0f, 0.0f, 0.0f);
 		g_rotModel = XMFLOAT3(0.0f, 0.0f, 0.0f);
 		g_rotDestModel = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	}
 
-// -------ワールドマトリクス制御------------------------------------------
+	// -------ワールドマトリクス制御------------------------------------------
 
-	// 1.ワールドマトリクス、2.回転移動、3.平行移動
+		// 1.ワールドマトリクス、2.回転移動、3.平行移動
 	XMMATRIX mtxWorld, mtxRot, mtxTranslate;
 
 	// ワールドマトリックスの初期化
@@ -332,6 +407,10 @@ void UpdatePlayer(void)
 	mtxRot = XMMatrixRotationRollPitchYaw(XMConvertToRadians(g_rotModel.x),
 		XMConvertToRadians(g_rotModel.y), XMConvertToRadians(g_rotModel.z));
 	mtxWorld = XMMatrixMultiply(mtxWorld, mtxRot);
+
+	// モデルのサイズ
+	mtxWorld = XMMatrixScaling(2.0f, 1.5f, 1.0f);
+	// mtxWorld = XMMatrixScaling(10.0f, 25.0f, 1.0f);
 
 	// 移動を反映
 	mtxTranslate = XMMatrixTranslation(g_posModel.x, g_posModel.y, g_posModel.z);
@@ -345,8 +424,8 @@ void UpdatePlayer(void)
 
 // -------エフェクト制御------------------------------------------
 	if ((g_moveModel.x * g_moveModel.x
-	   + g_moveModel.y * g_moveModel.y
-	   + g_moveModel.z * g_moveModel.z) > 1.0f) {
+		+ g_moveModel.y * g_moveModel.y
+		+ g_moveModel.z * g_moveModel.z) > 1.0f) {
 		XMFLOAT3 pos;
 
 		pos.x = g_posModel.x + SinDeg(g_rotModel.y) * 10.0f;
@@ -374,6 +453,7 @@ void UpdatePlayer(void)
 	// ダメージテスト
 	if (GetKeyRepeat(VK_D))
 	{
+		g_bInv = true;
 		DelLife();
 		g_nDamage = DAMAGE_TIMER;
 
@@ -400,7 +480,7 @@ void UpdatePlayer(void)
 	// PrintDebugProc("[ﾋｺｳｷ ｲﾁ : (%f : %f : %f)]\n", g_posModel.x, g_posModel.y, g_posModel.z);
 	// PrintDebugProc("[ﾋｺｳｷ ﾑｷ : (%f) < ﾓｸﾃｷ ｲﾁ:(%f) >]\n", g_rotModel.y, g_rotDestModel.y);
 	// PrintDebugProc("\n");
-	   
+
 	// PrintDebugProc("*** ﾋｺｳｷ ｿｳｻ ***\n");
 	// PrintDebugProc("ﾏｴ   ｲﾄﾞｳ : \x1e\n");//↑
 	// PrintDebugProc("ｳｼﾛ  ｲﾄﾞｳ : \x1f\n");//↓
@@ -429,12 +509,12 @@ void DrawPlayer(void)
 	// 不透明部分を描画
 	g_model.Draw(pDC, g_mtxWorld, eOpacityOnly);
 
-	// 半透明部分を描画
-	SetBlendState(BS_ALPHABLEND);	// アルファブレンド有効
-	SetZWrite(false);				// Zバッファ更新しない
-	g_model.Draw(pDC, g_mtxWorld, eTransparentOnly);	// プレイヤーモデル描画
-	SetZWrite(true);				// Zバッファ更新する
-	SetBlendState(BS_NONE);			// アルファブレンド無効
+	// // 半透明部分を描画
+	// SetBlendState(BS_ALPHABLEND);	// アルファブレンド有効
+	// SetZWrite(false);				// Zバッファ更新しない
+	// g_model.Draw(pDC, g_mtxWorld, eTransparentOnly);
+	// SetZWrite(true);				// Zバッファ更新する
+	// SetBlendState(BS_NONE);			// アルファブレンド無効
 }
 
 //*******************************
@@ -463,7 +543,38 @@ float GetPlayerSize()
 	return PLAYER_RADIUS;
 }
 
-//***********************************************************
+//*******************************
+//
+//		ジャンプ状態情報取得
+//	 ジャンプのboolを取得する
+//
+//	戻り値
+//		ジャンプ状態 true:飛んでいない
+//
+//*******************************
+bool GetPlayerJump()
+{
+	return g_bLand;
+}
+
+//*******************************
+//
+//		ジャンプ状態セット
+// ジャンプのboolを外から変更する
+//
+//	引数：
+//		jump:ジャンプ状態のbool
+//		true:飛んでいない
+//
+//	戻り値
+//		無し
+//
+//*******************************
+void SetPlayerJump(bool jump)
+{
+	g_bLand = jump;
+}
+//*******************************
 //
 //		プレイヤーとの衝突判定
 //	
@@ -472,6 +583,7 @@ float GetPlayerSize()
 //
 //	戻り値
 //		bool:当たったかどうか
+//		true:飛んでいない
 //
 //***********************************************************
 bool CollisionPlayer(XMFLOAT3 pos, float radius, float damage)
@@ -483,7 +595,8 @@ bool CollisionPlayer(XMFLOAT3 pos, float radius, float damage)
 		if (damage > 0.0f) {
 			nExp = StartExplosion(g_posModel, XMFLOAT2(40.0f, 40.0f));
 			// 
-		} else {
+		}
+		else {
 			nExp = StartExplosion(g_posModel, XMFLOAT2(20.0f, 20.0f));
 		}
 		// 爆発エフェクトの色を設定

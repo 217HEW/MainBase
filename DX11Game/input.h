@@ -62,6 +62,7 @@
 #define JOYSTICKID14	13
 #define JOYSTICKID15	14
 #define JOYSTICKID16	15
+#define JOYSTICK_DEADZONE 23000	// スティックのデッドゾーン	 追加：上月大地
 
 #define MOUSEBUTTON_L	0
 #define MOUSEBUTTON_R	1
