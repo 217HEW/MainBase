@@ -15,7 +15,9 @@
 //				「Enter」「Space」
 //				コメントの編集&追加
 //	編集者：柴山凜太郎
-//				
+//--------------------------------------------------------------
+//	2021/12/28	デバッグ操作で遷移できるシーンの追加(AREA2,3,BOSS)
+//	編集者：柴山凜太郎
 //**************************************************************
 
 //**************************************************************
@@ -89,9 +91,13 @@ void UpdateGameclear()
 		}
 		else if (GetKeyRelease(VK_5))
 		{
-			StartFadeOut(SCENE_GAMEOVER);
+			StartFadeOut(SCENE_AREA_BOSS);
 		}
 		else if (GetKeyRelease(VK_6))
+		{
+			StartFadeOut(SCENE_GAMEOVER);
+		}
+		else if (GetKeyRelease(VK_7))
 		{
 			StartFadeOut(SCENE_GAMECLEAR);
 		}

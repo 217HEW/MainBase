@@ -31,16 +31,17 @@
 // シーン状態
 enum EScene
 {
-	SCENE_NONE = 0,	 // 未設定
-	SCENE_TITLE,	 // タイトル画面
-	SCENE_GAME,		 // ゲーム画面
-	SCENE_AREA2,	// ゲーム画面エリア2
-	SCENE_AREA3,	// ゲーム画面エリア3
+	SCENE_NONE = 0,		// 未設定
+	SCENE_TITLE,		// タイトル画面
+	SCENE_GAME,			// ゲーム画面
+	SCENE_AREA2,		// ゲーム画面エリア2
+	SCENE_AREA3,		// ゲーム画面エリア3
+	SCENE_AREA_BOSS,	// ゲーム画面ボスエリア
 	
 // ↓シーン追加↓
-	SCENE_GAMEOVER,		 // ゲームオーバー画面
+	SCENE_GAMEOVER,		// ゲームオーバー画面
 	SCENE_GAMECLEAR,	//ゲームクリア画面
-	MAX_SCENE // シーン総数
+	MAX_SCENE			// シーン総数
 };
 
 //**************************************************************
