@@ -168,8 +168,14 @@
     <ClCompile Include="Pause.cpp">
       <Filter>ソース ファイル\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="player.cpp">
-      <Filter>ソース ファイル\Model</Filter>
+    <ClCompile Include="SceneArea2.cpp">
+      <Filter>ソース ファイル\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneArea3.cpp">
+      <Filter>ソース ファイル\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyExplode.cpp">
+      <Filter>ソース ファイル\Model\Enemy</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -293,8 +299,14 @@
     <ClInclude Include="Pause.h">
       <Filter>ヘッダー ファイル\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="player.h">
-      <Filter>ヘッダー ファイル\Model</Filter>
+    <ClInclude Include="SceneArea2.h">
+      <Filter>ヘッダー ファイル\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneArea3.h">
+      <Filter>ヘッダー ファイル\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyExplode.h">
+      <Filter>ヘッダー ファイル\Model\Enemy</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
