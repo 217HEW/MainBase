@@ -12,13 +12,23 @@
 //	開発履歴
 //**************************************************************
 //	2021/12/24　EnemyExplode作成
-//	編集者：
+//	編集者：澤村瑠人
 //--------------------------------------------------------------
 //　2021/12/25	EnemyExplodeの範囲判定完了	
-//
+//	編集者：澤村瑠人
 //--------------------------------------------------------------
-//
+//　2021/12/29	爆発までの猶予(5秒)の完了	
+//	編集者：澤村瑠人
+//--------------------------------------------------------------
 //**************************************************************
+
+//**************************************************************
+//	コメント（意見）
+//	2021/12/29	壁を這うのはむずいかもです... _澤村瑠人
+//**************************************************************
+
+
+
 
 //**************************************************************
 // インクルード部
@@ -31,6 +41,7 @@
 #include "Block.h"
 #include "explosion.h"
 #include "life.h"
+//#include "timer.h"
 #include "SceneManager.h"
 #include <stdlib.h>
 
@@ -63,6 +74,9 @@ struct TEnemyExplode {
 
 #define SEARCH_ENEMY			(250)		// 探索範囲
 
+#define ENEMY_EXPLODE_TIMER_START (5)// 制限時間
+
+
 
 //**************************************************************
 // グローバル変数
@@ -70,6 +84,7 @@ struct TEnemyExplode {
 static CAssimpModel	g_model;			// モデル情報
 static TEnemyExplode		g_EExplode[MAX_ENEMYEXPLODE];	// 敵機情報
 static XMFLOAT3		Blocksize;
+static int g_nEETimer;		// 時間をカウントする
 
 //**************************************************************
 // 初期化処理
@@ -100,6 +115,9 @@ HRESULT InitEnemyExplode(void)
 		g_EExplode[i].m_use = false;
 	}
 
+	//変数初期化
+	g_nEETimer = ENEMY_EXPLODE_TIMER_START * 60 + 59;
+
 	return hr;
 }
 
@@ -125,6 +143,16 @@ void UpdateEnemyExplode(void)
 	//プレイヤーの座標・サイズ取得
 	XMFLOAT3 posPlayer = GetPlayerPos();
 	float sizePlayer = GetPlayerSize();
+
+	// タイマーカウントダウン
+	if (g_nEETimer > 0)
+	{
+		--g_nEETimer;
+	}
+	else
+	{
+		g_nEETimer;
+	}
 
 	for (int i = 0; i < MAX_ENEMYEXPLODE; ++i)
 	{
@@ -248,20 +276,26 @@ void UpdateEnemyExplode(void)
 			//※)XMStoreMatrixがあいまいといわれるがおそらく、いきなり絶対値を用いているからと推測される
 			//敵とプレイヤーのX座標が"10.0f"以内であるならば爆発(消滅)する
 			//if (g_EExplode[i].m_pos.x - posPlayer.x <= 10.0f)
-			if (abs(g_EExplode[i].m_pos.x - posPlayer.x <= 10.0f))
-			{
-				// 敵とプレイヤーのY座標が"10.0f"以内であるならば爆発(消滅)する
-					//if (g_EExplode[i].m_pos.y - posPlayer.y <= 10.0f)
-				if (abs(g_EExplode[i].m_pos.y - posPlayer.y <= 10.0f))
+			
+				if (abs(g_EExplode[i].m_pos.x - posPlayer.x <= 10.0f))
 				{
-					DelLife();
-					if (GetLife() == 0)
+					// 敵とプレイヤーのY座標が"10.0f"以内であるならば爆発(消滅)する
+						//if (g_EExplode[i].m_pos.y - posPlayer.y <= 10.0f)
+					if (abs(g_EExplode[i].m_pos.y - posPlayer.y <= 10.0f))
 					{
-						SetScene(SCENE_GAMEOVER);
+						if (g_nEETimer <= 0)
+						{
+							DelLife();
+							if (GetLife() == 0)
+							{
+								SetScene(SCENE_GAMEOVER);
+							}
+							g_EExplode[i].m_use = false;
+						}
 					}
-					g_EExplode[i].m_use = false;
 				}
-			}
+
+			
 
 			//if (CollisionSphere(g_EExplode[i].m_pos, g_EExplode[i].m_size.x, posPlayer, sizePlayer))
 			//{

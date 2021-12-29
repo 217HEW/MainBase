@@ -28,7 +28,10 @@
 //				SetBlendState関数を「SceneManager.cppからFade.cppへ移動」
 //	編集者：柴山凜太郎
 //--------------------------------------------------------------
-//
+//	2021/12/28	遷移するシーンに新しくボスエリアの追加
+//				エリア系cppの4大処理からGame.cppの4大処理に変更
+//	編集者：柴山凜太郎
+//--------------------------------------------------------------
 //**************************************************************
 
 //**************************************************************
@@ -85,10 +88,13 @@ void UpdateScene()
 		UpdateGame();
 		break;
 	case SCENE_AREA2:		// ゲーム画面
-		UpdateArea2();
+		UpdateGame();
 		break;
 	case SCENE_AREA3:		// ゲーム画面
-		UpdateArea3();
+		UpdateGame();
+		break;
+	case SCENE_AREA_BOSS:		// ゲーム画面
+		UpdateGame();
 		break;
 	// 何かシーンを追加する場合はこちらに
 	case SCENE_GAMEOVER:
@@ -117,10 +123,13 @@ void DrawScene()
 		DrawGame();
 		break;
 	case SCENE_AREA2:		// ゲーム画面
-		DrawArea2();
+		DrawGame();
 		break;
 	case SCENE_AREA3:		// ゲーム画面
-		DrawArea3();
+		DrawGame();
+		break;
+	case SCENE_AREA_BOSS:		// ゲーム画面
+		DrawGame();
 		break;
 	// 追加シーンの描画
 	case SCENE_GAMEOVER:
@@ -159,10 +168,13 @@ HRESULT SetScene(EScene eScene)
 		UninitGame();
 		break;
 	case SCENE_AREA2: // ゲーム画面
-		UninitArea2();
+		UninitGame();
 		break;
 	case SCENE_AREA3: // ゲーム画面
-		UninitArea3();
+		UninitGame();
+		break;
+	case SCENE_AREA_BOSS: // ゲーム画面
+		UninitGame();
 		break;
 	case SCENE_GAMEOVER: // ゲームオーバー画面
 		UninitGameover();
@@ -182,13 +194,16 @@ HRESULT SetScene(EScene eScene)
 		InitTitle();
 		break;
 	case SCENE_GAME:
-		InitGame();
+		InitGame(AREA_1);
 		break;
 	case SCENE_AREA2: // ゲーム画面エリア2
-		InitArea2();
+		InitGame(AREA_2);
 		break;
 	case SCENE_AREA3: // ゲーム画面エリア3
-		InitArea3();
+		InitGame(AREA_3);
+		break;
+	case SCENE_AREA_BOSS: // ゲーム画面エリア3
+		InitGame(AREA_BOSS);
 		break;
 	case SCENE_GAMEOVER: // ゲームオーバー画面
 		InitGameover();

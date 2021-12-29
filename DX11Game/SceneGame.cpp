@@ -35,6 +35,13 @@
 //--------------------------------------------------------------
 //	2021/12/27	音データを追加したので実装(BGM)
 //														変更者：上月大地
+//--------------------------------------------------------------
+//	2021/12/28	デバッグ用シーン切り替えににボスエリアの追加
+//				InitGameの引数にエリア用の引数追加
+//				BGM再生処理の手前にエリア毎にBGMを変えたい場合の手順コメントを追加
+//				デバッグ操作で遷移できるシーンの追加(AREA2,3,BOSS)
+//				CreateField.hをSceneGame.hに移動
+//														編集者：柴山凜太郎
 //**************************************************************
 
 //**************************************************************
@@ -62,7 +69,7 @@
 #include "timer.h"
 #include "life.h"
 #include "number.h"
-#include "CreateField.h"
+//#include "CreateField.h"
 #include "Block.h"
 #include "EnemyMelee.h"
 #include "EnemyExplode.h"
@@ -83,8 +90,9 @@ static bool g_bPause;		//一時停止中
 
 //**************************************************************
 // 初期化処理
+//	引数：遷移先のエリア
 //**************************************************************
-HRESULT InitGame()
+HRESULT InitGame(AREA Area)
 {
 	HRESULT hr = S_OK;
 
@@ -131,7 +139,7 @@ HRESULT InitGame()
 	// 	return hr;
 
 	//二次元配列マップ
-	hr = InitCField();
+	hr = InitCField(Area);
 	if (FAILED(hr))
 		return hr;
 
@@ -179,7 +187,7 @@ HRESULT InitGame()
 		return hr;
 
 	// エクスプロード呼び出し
-	SetEnemyExplode(XMFLOAT3(60.0f, 60.0f, 0.0f));
+	SetEnemyExplode(XMFLOAT3(60.0f, -800.0f, 0.0f));
 
 	// メッシュ壁初期化
 	hr = InitMeshWall();
@@ -235,6 +243,7 @@ HRESULT InitGame()
 	// }
 
 	// BGM再生開始
+	// エリア毎にBGMを変えたい時はここをswitch文で切り替えるようにする
 	CSound::Play(BGM_GAME000);
 	CSound::SetVolume(BGM_GAME000, 0.01f);
 
@@ -343,9 +352,13 @@ void UpdateGame()
 			}
 			else if (GetKeyRelease(VK_5))
 			{
-				StartFadeOut(SCENE_GAMEOVER);
+				StartFadeOut(SCENE_AREA_BOSS);
 			}
 			else if (GetKeyRelease(VK_6))
+			{
+				StartFadeOut(SCENE_GAMEOVER);
+			}
+			else if (GetKeyRelease(VK_7))
 			{
 				StartFadeOut(SCENE_GAMECLEAR);
 			}
