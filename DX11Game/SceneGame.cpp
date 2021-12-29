@@ -501,7 +501,7 @@ void DrawGame()
 	//DrawMeshField();
 
 	// 二次元配列マップ描画
-	DrawCField();
+	//DrawCField();
 
 	// 自機描画
 	DrawPlayer();
