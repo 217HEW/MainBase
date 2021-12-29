@@ -147,7 +147,7 @@ void UpdateBlock(void)
 				if (g_block[i].m_nLife <= 0)
 				{
 					g_block[i].m_use = false;
-					g_model[i].Release();
+					//g_model[i].Release();
 					break;
 				}
 
