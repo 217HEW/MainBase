@@ -45,11 +45,11 @@ struct TBLOCK {
 	XMFLOAT3	m_pos;		// 現在の位置
 	//XMFLOAT3    m_size;	// 現在のサイズ
 	XMFLOAT4X4	m_mtxWorld;	// ワールドマトリックス
-	//std::string	m_3Dmodel;	// モデル情報
+	std::string	m_3Dmodel;	// モデル情報
 	int			m_nLife;	// 壁の耐久値
 	bool		m_use;		// 使用しているか
-	bool		cracks;		// 使用しているか
-	MODEL		state;			// ブロックの状態
+	//bool		cracks;		// 使用しているか
+	//MODEL		state;			// ブロックの状態
 	bool		m_invincible;// 無敵かどうか　ON：無敵
 };
 

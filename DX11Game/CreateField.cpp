@@ -240,10 +240,10 @@ HRESULT InitCField(AREA Area)
 
 			switch (g_Map[eArea][Height][Width])
 			{
-			case __:
+			case 0:
 				// 何もしない
 				break;
-			case LJ:
+			case 1:
 				//マップチップ"1"の場所に描画するもの
 
 				// 通常ブロック
@@ -251,7 +251,7 @@ HRESULT InitCField(AREA Area)
 					g_MapPosOrizin.y - (Height * BlockSize.y),
 					g_MapPosOrizin.z), false);
 				break;
-			case NN:
+			case 2:
 				//マップチップ"2"の場所に描画するもの
 
 				// 無敵ブロック
