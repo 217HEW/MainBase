@@ -30,14 +30,20 @@
 #define	NUM_PAUSE_MENU		(3)			// ポーズメニュー数
 #define	PAUSE_MENU_WIDTH	(320.0f)	// ポーズメニュー幅
 #define	PAUSE_MENU_HEIGHT	(60.0f)		// ポーズメニュー高さ
-#define	PAUSE_MENU_POS_X	(0.0f)		// ポーズメニュー位置(X座標)
+#define	PAUSE_MENU_POS_X	(-450.0f)		// ポーズメニュー位置(X座標)
 #define	PAUSE_MENU_POS_Y	(PAUSE_MENU_INTERVAL)	// ポーズメニュー位置(Y座標)
 #define	PAUSE_MENU_INTERVAL	(100.0f)	// ポーズメニュー間隔
 #define	PLATE_WIDTH			(360.0f)	// プレートの幅
-#define	PLATE_HEIGHT		(340.0f)	// プレートの幅
-#define	PLATE_POS_X			(0.0f)		// プレートの位置(X座標)
+#define	PLATE_HEIGHT		(320.0f)	// プレートの幅
+#define	PLATE_POS_X			(-450.0f)		// プレートの位置(X座標)
 #define	PLATE_POS_Y			(0.0f)		// プレートの位置(Y座標)
 
+//説明用
+#define PATH_STEXTURE "data/texture/pause003.png"
+#define S_POS_X 200.0f
+#define S_POS_Y 0.0f
+#define S_WIDTH 809
+#define S_HEIGHT 500
 //*****************************************************************************
 // グローバル変数
 //*****************************************************************************
@@ -54,6 +60,7 @@ static LPCWSTR c_aFileNamePauseMenu[NUM_PAUSE_MENU] =
 	L"data/texture/pause002.png",	// クイット
 };
 
+static ID3D11ShaderResourceView* g_pSTexture;//説明用
 //=============================================================================
 // 初期化処理
 //=============================================================================
@@ -62,8 +69,7 @@ HRESULT InitPause(void)
 	ID3D11Device* pDevice = GetDevice();
 	HRESULT hr = S_OK;
 
-	for (int nCntPauseMenu = 0; nCntPauseMenu < NUM_PAUSE_MENU; ++nCntPauseMenu) 
-	{
+	for (int nCntPauseMenu = 0; nCntPauseMenu < NUM_PAUSE_MENU; ++nCntPauseMenu) {
 		// テクスチャの読み込み
 		hr = CreateTextureFromFile(pDevice,			// デバイスへのポインタ
 			c_aFileNamePauseMenu[nCntPauseMenu],	// ファイルの名前
@@ -76,7 +82,14 @@ HRESULT InitPause(void)
 	// 効果音初期化
 	//g_pSE_Select = CreateSound(SE_SELECT_PATH);
 
+	// テクスチャ読込
+	hr = CreateTextureFromFile(pDevice, PATH_STEXTURE, &g_pSTexture);
+	if (FAILED(hr))
+	{
+		return hr;
+	}
 	return hr;
+
 }
 
 //=============================================================================
@@ -89,6 +102,8 @@ void UninitPause(void)
 	{
 		SAFE_RELEASE(g_pTextures[nCntPauseMenu]);
 	}
+	// テクスチャ解放
+	SAFE_RELEASE(g_pSTexture);
 }
 
 //=============================================================================
@@ -111,10 +126,10 @@ void UpdatePause(void)
 		SetPauseMenu();
 	}
 
-	g_fCurve += XM_PI * 0.01f;
-	if (g_fCurve > XM_PI) {
-		g_fCurve -= XM_2PI;
-	}
+	//g_fCurve += XM_PI * 0.01f;
+	//if (g_fCurve > XM_PI) {
+	//	g_fCurve -= XM_2PI;
+	//}
 
 	// 反射光の設定
 	g_fCol = cosf(g_fCurve) * 0.2f + 0.8f;
@@ -125,6 +140,9 @@ void UpdatePause(void)
 //=============================================================================
 void DrawPause(void)
 {
+	// Zバッファ無効(Zチェック無&Z更新無)
+	SetZBuffer(false);
+	SetBlendState(BS_ALPHABLEND);
 	ID3D11DeviceContext* pDeviceContext = GetDeviceContext();
 
 	SetPolygonTexture(nullptr);
@@ -153,7 +171,18 @@ void DrawPause(void)
 		DrawPolygon(pDeviceContext);
 	}
 
-	SetPolygonColor(1.0f, 1.0f, 1.0f);
+	//説明用
+	SetPolygonColor(3.0f, 3.0f, 3.0f);
+	ID3D11DeviceContext* pDC = GetDeviceContext();
+	SetPolygonSize(S_WIDTH, S_HEIGHT);
+	SetPolygonPos(S_POS_X, S_POS_Y);
+	SetPolygonTexture(g_pSTexture);
+	DrawPolygon(pDC);
+
+	// Zバッファ有効(Zチェック有&Z更新有)
+	SetZBuffer(true);
+	SetBlendState(BS_NONE);
+	//SetPolygonColor(1.0f, 1.0f, 1.0f);
 }
 
 //=============================================================================

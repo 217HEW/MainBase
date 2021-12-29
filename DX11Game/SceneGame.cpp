@@ -543,18 +543,19 @@ void DrawGame()
 
 	// エフェクト描画
 	DrawEffect();
-
+	SetZBuffer(true);
 	//一時停止描画
 	if (g_bPause) {
 		DrawPause();
 	}
-	SetZBuffer(true);
 
 	// Zバッファ無効(Zチェック無&Z更新無)
 	SetZBuffer(false);
 
 	// デバッグ文字列表示(透過)
 	SetBlendState(BS_ALPHABLEND);
+	SetZBuffer(false);
+
 	// タイマー表示
 	DrawTimer();
 	// ライフ表示(完了)
