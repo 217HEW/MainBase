@@ -163,6 +163,7 @@
     <ClCompile Include="AssimpModel.cpp" />
     <ClCompile Include="bg.cpp" />
     <ClCompile Include="Block.cpp" />
+    <ClCompile Include="Boss.cpp" />
     <ClCompile Include="bullet.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="collision.cpp" />
@@ -175,6 +176,7 @@
     <ClCompile Include="EnemyRange.cpp" />
     <ClCompile Include="explosion.cpp" />
     <ClCompile Include="Fade.cpp" />
+    <ClCompile Include="Gate.cpp" />
     <ClCompile Include="input.cpp" />
     <ClCompile Include="life.cpp" />
     <ClCompile Include="Light.cpp" />
@@ -205,6 +207,7 @@
     <ClInclude Include="AssimpModel.h" />
     <ClInclude Include="bg.h" />
     <ClInclude Include="Block.h" />
+    <ClInclude Include="Boss.h" />
     <ClInclude Include="bullet.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="collision.h" />
@@ -217,6 +220,7 @@
     <ClInclude Include="EnemyRange.h" />
     <ClInclude Include="explosion.h" />
     <ClInclude Include="Fade.h" />
+    <ClInclude Include="Gate.h" />
     <ClInclude Include="input.h" />
     <ClInclude Include="life.h" />
     <ClInclude Include="Light.h" />
