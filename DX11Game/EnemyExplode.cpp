@@ -20,11 +20,15 @@
 //　2021/12/29	爆発までの猶予(5秒)の完了	
 //	編集者：澤村瑠人
 //--------------------------------------------------------------
+//　2021/12/31	モデルのスケールを組み込みました。347行	
+//	編集者：上月大地
+//--------------------------------------------------------------
 //**************************************************************
 
 //**************************************************************
 //	コメント（意見）
 //	2021/12/29	壁を這うのはむずいかもです... _澤村瑠人
+//	2021/12/29	プランナーに相談してみます	  _上月大地
 //**************************************************************
 
 
@@ -63,11 +67,11 @@ struct TEnemyExplode {
 //**************************************************************
 // マクロ定義
 //**************************************************************
-#define MODEL_ENEMY			"data/model/sentouki.fbx"
+#define MODEL_ENEMY			"data/model/Explode/Explode.fbx"//"data/model/sentouki.fbx"
 //#define MODEL_ENEMY			"data/model/enemy3.fbx"
 
 #define	VALUE_MOVE_ENEMY		(1.0f)		// 移動速度
-#define MAX_ENEMYEXPLODE			(10)		// 敵機最大数
+#define MAX_ENEMYEXPLODE		(10)		// 敵機最大数
 
 #define	VALUE_ROTATE_ENEMY		(7.0f)		// 回転速度
 #define	RATE_ROTATE_ENEMY		(0.20f)		// 回転慣性係数
@@ -81,9 +85,9 @@ struct TEnemyExplode {
 //**************************************************************
 // グローバル変数
 //**************************************************************
-static CAssimpModel	g_model;			// モデル情報
+static CAssimpModel			g_model;	// モデル情報
 static TEnemyExplode		g_EExplode[MAX_ENEMYEXPLODE];	// 敵機情報
-static XMFLOAT3		Blocksize;
+static XMFLOAT3				Blocksize;
 static int g_nEETimer;		// 時間をカウントする
 
 //**************************************************************
@@ -108,7 +112,7 @@ HRESULT InitEnemyExplode(void)
 	for (int i = 0; i < MAX_ENEMYEXPLODE; ++i)
 	{// 初期化したいモノがあればここに↓
 		g_EExplode[i].m_pos = (XMFLOAT3(0.0f, 0.0f, 0.0f));
-		g_EExplode[i].m_size = (XMFLOAT3(10.0f, 10.0f, 10.0f));
+		g_EExplode[i].m_size = (XMFLOAT3(20.0f, 10.0f, 10.0f));
 		g_EExplode[i].m_move = (XMFLOAT3(0.0f, 0.0f, 0.0f));
 		g_EExplode[i].m_rot = (XMFLOAT3(90.0f, 0.0f, 0.0f));
 		g_EExplode[i].m_rotDest = g_EExplode[i].m_rot;
@@ -338,6 +342,9 @@ void UpdateEnemyExplode(void)
 				XMConvertToRadians(g_EExplode[i].m_rot.y),
 				XMConvertToRadians(g_EExplode[i].m_rot.z));
 			mtxWorld = XMMatrixMultiply(mtxWorld, mtxRot);
+
+			// モデルのサイズ
+			mtxWorld = XMMatrixScaling(0.15f, 0.15f, 0.15f);
 
 			// 移動を反映
 			mtxTranslate = XMMatrixTranslation(

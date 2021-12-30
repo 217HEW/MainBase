@@ -23,7 +23,7 @@
 //**************************************************************
 #include "AssimpModel.h"
 #include "main.h"
-#include "input.h"
+// #include "input.h"
 #include "polygon.h"
 #include "debugproc.h"
 //#include "mesh.h"

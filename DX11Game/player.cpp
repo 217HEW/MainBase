@@ -39,14 +39,21 @@
 //	2021/12/28	エリアクリア時、次のエリアに遷移するよう変更
 //				CreateField.hをインクルード
 //	編集者：柴山凜太郎
+//--------------------------------------------------------------
+//	2021/12/30	コントローラーが無かったら発生してしまうバグを
+//				取り除きました。無い場合はスティックの値がゼロに
+//				なります。
+//	編集者：上月大地
+//--------------------------------------------------------------
+//	2021/12/30	モデルのスケールをデファインにしました。
+//	編集者：上月大地
 //**************************************************************
 
 //**************************************************************
 // インクルード部
 //**************************************************************
 #include "player.h"
-#include "main.h"
-#include "input.h"
+#include <xinput.h>		// コントローラー情報取得に必要
 #include "AssimpModel.h"
 #include "debugproc.h"
 #include "shadow.h"
@@ -59,16 +66,18 @@
 #include "CreateField.h"
 #include "Sound.h"
 
+#pragma comment (lib, "xinput.lib")	// コントローラー情報取得に必要
 //**************************************************************
 // マクロ定義
 //**************************************************************
-#define MODEL_PLAYER	 "data/model/Range/Hew_1_1.fbx"	// "data/model/Character02.fbx"
+#define MODEL_PLAYER	 "data/model/Character02.fbx"
 
 #define	VALUE_MOVE_PLAYER	(0.155f)	// 移動速度
 #define	SPEED_MOVE_PLAYER	(50)		// 跳躍速度
 #define	RATE_MOVE_PLAYER	(0.025f)	// 移動慣性係数
 #define	VALUE_ROTATE_PLAYER	(4.5f)		// 回転速度
 #define	RATE_ROTATE_PLAYER	(0.1f)		// 回転慣性係数
+#define SCALE_PLAYER		(XMFLOAT3(2.0f, 1.5f, 1.0f)) //	プレイヤーのモデルスケール
 
 #define	PLAYER_RADIUS		(10.0f)		// 境界球半径
 #define DAMAGE_TIMER		(120)		// ダメージ後の無敵時間
@@ -85,14 +94,15 @@ static XMFLOAT3		g_moveModel;	// 移動量
 
 static XMFLOAT4X4	g_mtxWorld;		// ワールドマトリックス
 
-//static int			g_nShadow;	// 丸影番号
+//static int		g_nShadow;		// 丸影番号
 static int			g_nDamage;		// 点滅中
 static bool			g_bInv;			// ダメージ時の無敵判定	true:無敵
 static bool			g_bLand;		// 地面判定	true:飛んでない
 
 // コントローラー
-// DWORD	Joycon = 0;			// コントローラー情報
-// static XMFLOAT2 Stick;	// スティックの傾き用	
+static DWORD	Joycon;		// コントローラー情報
+static DWORD	JoyState;	// 接続確認用
+static XMFLOAT2 Stick;		// スティックの傾き用	
 
 //**************************************************************
 // 初期化処理
@@ -110,7 +120,7 @@ HRESULT InitPlayer(void)
 	g_moveModel = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	g_rotModel = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	g_rotDestModel = XMFLOAT3(0.0f, 0.0f, 0.0f);
-	// Stick = XMFLOAT2(0.0f, 0.0f);
+	 Stick = XMFLOAT2(0.0f, 0.0f);
 
 	// モデルデータの読み込み
 	if (!g_model.Load(pDevice, pDeviceContext, MODEL_PLAYER)) {
@@ -148,58 +158,61 @@ void UpdatePlayer(void)
 	// カメラの向き取得
 	XMFLOAT3 rotCamera = CCamera::Get()->GetAngle();
 
+	//ゲームパッドの状態を取得
+	XINPUT_STATE state;
 
-	/*	// -------コントローラー操作------------------------------------------
-		GetJoyState(Joycon);
-
-		// コントローラーの接続状況確認
-		if (Joycon == 0)
-		{	// 接続有り↓
-			if (g_bLand)
+	// -------コントローラー操作------------------------------------------
+	GetJoyState(Joycon);
+	// コントローラーの接続状況確認
+	JoyState = XInputGetState(0, &state);
+	if (JoyState == ERROR_SUCCESS)
+	{	// 接続有り↓
+		if (g_bLand)
+		{
+			// スティック入力時処理
+			if (GetJoyX(Joycon) != 0 || GetJoyY(Joycon) != 0)
 			{
-				// スティック入力時処理
-				if (GetJoyX(Joycon) != 0 || GetJoyY(Joycon) != 0)
-				{
-					// スティックのデッドゾーン処理
-					if ((GetJoyX(Joycon) < JOYSTICK_DEADZONE && GetJoyX(Joycon) > -JOYSTICK_DEADZONE) &&
-						(GetJoyY(Joycon) < JOYSTICK_DEADZONE && GetJoyY(Joycon) > -JOYSTICK_DEADZONE))
-					{	// 傾きが少ない場合↓
-						// スティックの値をゼロにする
-						Stick.x = 0.0f;
-						Stick.y = 0.0f;
-					}
-					else
-					{	// 大きく傾けた場合↓
-						// スティックの値－1～1で代入
-						Stick.x = static_cast<FLOAT>(GetJoyX(Joycon) / 32767.0);
-						Stick.y = -static_cast<FLOAT>(GetJoyY(Joycon) / 32767.0);
-						SetEffect(XMFLOAT3((g_posModel.x + (60.0f * (Stick.x /2))), (g_posModel.y + (60.0f * Stick.y)),0.0f),
+				// スティックのデッドゾーン処理
+				if ((GetJoyX(Joycon) < JOYSTICK_DEADZONE && GetJoyX(Joycon) > -JOYSTICK_DEADZONE) &&
+					(GetJoyY(Joycon) < JOYSTICK_DEADZONE && GetJoyY(Joycon) > -JOYSTICK_DEADZONE))
+				{	// 傾きが少ない場合↓
+					// スティックの値をゼロにする
+					Stick.x = 0.0f;
+					Stick.y = 0.0f;
+				}
+				else
+				{	// 大きく傾けた場合↓
+					// スティックの値－1～1で代入
+					Stick.x = static_cast<FLOAT>(GetJoyX(Joycon) / 32767.0);
+					Stick.y = -static_cast<FLOAT>(GetJoyY(Joycon) / 32767.0);
+					SetEffect(XMFLOAT3((g_posModel.x + (60.0f * (Stick.x /2))), (g_posModel.y + (60.0f * Stick.y)),0.0f),
+						XMFLOAT3(0.0f, 0.0f, 0.0f),
+						XMFLOAT4(1.0f, 0.05f, 0.05f, 0.80f),
+						XMFLOAT2(9.0f, 18.0f), 5);
+					for (int i = 0; i < 5; i++)
+					{
+						SetEffect(XMFLOAT3((g_posModel.x + ((60.0f / 6 * i) * (Stick.x / 2))), (g_posModel.y + ((60.0f / 6 * i) * Stick.y)), 0.0f),
 							XMFLOAT3(0.0f, 0.0f, 0.0f),
 							XMFLOAT4(1.0f, 0.05f, 0.05f, 0.80f),
-							XMFLOAT2(9.0f, 18.0f), 5);
-						for (int i = 0; i < 5; i++)
-						{
-							SetEffect(XMFLOAT3((g_posModel.x + ((60.0f / 6 * i) * (Stick.x / 2))), (g_posModel.y + ((60.0f / 6 * i) * Stick.y)), 0.0f),
-								XMFLOAT3(0.0f, 0.0f, 0.0f),
-								XMFLOAT4(1.0f, 0.05f, 0.05f, 0.80f),
-								XMFLOAT2(4.5f, 9.0f), 5);
-						}
-						// Bボタンが押されたら
-						if (GetJoyTrigger(Joycon, JOYSTICKID2))
-						{
-							g_moveModel.x = Stick.x *7.5f;
-							g_moveModel.y = Stick.y *15;
-							g_bLand = false;
-						}
+							XMFLOAT2(4.5f, 9.0f), 5);
+					}
+					// Bボタンが押されたら
+					if (GetJoyTrigger(Joycon, JOYSTICKID2))
+					{
+						g_moveModel.x = Stick.x *7.5f;
+						g_moveModel.y = Stick.y *15;
+						g_bLand = false;
 					}
 				}
 			}
 		}
-		else
-		{	// 接続無し↓
-
-		}
-	*/
+	}
+	else
+	{	// 接続無し↓
+		Stick.x = 0.0f;
+		Stick.y = 0.0f;
+	}
+	
 	/*do
 	{*/
 	if (g_nDamage > 0) {
@@ -235,8 +248,6 @@ void UpdatePlayer(void)
 			CSound::SetVolume(SE_JUMP, 0.04f);
 			g_bLand = false;
 		}
-
-
 
 		//現在横方向の壁に振れていると逆側には飛べない
 		// 壁接触時左右移動しない
@@ -430,8 +441,7 @@ void UpdatePlayer(void)
 	mtxWorld = XMMatrixMultiply(mtxWorld, mtxRot);
 
 	// モデルのサイズ
-	 //mtxWorld = XMMatrixScaling(2.0f, 1.5f, 1.0f);
-	mtxWorld = XMMatrixScaling(0.3f, 0.5f, 0.3f);
+	mtxWorld = XMMatrixScaling(SCALE_PLAYER.x, SCALE_PLAYER.y, SCALE_PLAYER.z);
 
 	// 移動を反映
 	mtxTranslate = XMMatrixTranslation(g_posModel.x, g_posModel.y, g_posModel.z);

@@ -17,6 +17,7 @@
 #include <d3d11.h>
 #include <DirectXMath.h>
 #include "resource.h"
+#include "input.h"
 
 // –{—ˆ‚Íƒwƒbƒ_‚É‘‚©‚È‚¢•û‚ª—Ç‚¢
 using namespace DirectX;
