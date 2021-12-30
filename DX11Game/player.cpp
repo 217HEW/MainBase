@@ -62,7 +62,7 @@
 //**************************************************************
 // マクロ定義
 //**************************************************************
-#define MODEL_PLAYER	 "data/model/Range/Hew_1_1.fbx"	// "data/model/Character02.fbx"
+#define MODEL_PLAYER	 "data/model/Character02.fbx"//"data/model/Range/Hew_1_1.fbx"
 
 #define	VALUE_MOVE_PLAYER	(0.155f)	// 移動速度
 #define	SPEED_MOVE_PLAYER	(50)		// 跳躍速度
@@ -430,8 +430,8 @@ void UpdatePlayer(void)
 	mtxWorld = XMMatrixMultiply(mtxWorld, mtxRot);
 
 	// モデルのサイズ
-	 //mtxWorld = XMMatrixScaling(2.0f, 1.5f, 1.0f);
-	mtxWorld = XMMatrixScaling(0.3f, 0.5f, 0.3f);
+	 mtxWorld = XMMatrixScaling(2.0f, 1.5f, 1.0f);
+	//mtxWorld = XMMatrixScaling(0.3f, 0.5f, 0.3f);
 
 	// 移動を反映
 	mtxTranslate = XMMatrixTranslation(g_posModel.x, g_posModel.y, g_posModel.z);
