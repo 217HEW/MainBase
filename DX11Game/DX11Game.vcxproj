@@ -170,6 +170,7 @@
     <ClCompile Include="CreateField.cpp" />
     <ClCompile Include="debugproc.cpp" />
     <ClCompile Include="effect.cpp" />
+    <ClCompile Include="EnemyBarrier.cpp" />
     <ClCompile Include="EnemyBase.cpp" />
     <ClCompile Include="EnemyExplode.cpp" />
     <ClCompile Include="EnemyMelee.cpp" />
@@ -213,6 +214,7 @@
     <ClInclude Include="CreateField.h" />
     <ClInclude Include="debugproc.h" />
     <ClInclude Include="effect.h" />
+    <ClInclude Include="EnemyBarrier.h" />
     <ClInclude Include="EnemyBase.h" />
     <ClInclude Include="EnemyExplode.h" />
     <ClInclude Include="EnemyMelee.h" />

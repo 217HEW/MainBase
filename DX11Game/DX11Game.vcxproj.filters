@@ -171,6 +171,21 @@
     <ClCompile Include="player.cpp">
       <Filter>ソース ファイル\Model</Filter>
     </ClCompile>
+    <ClCompile Include="CreateBossField.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyExplode.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneArea2.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneArea3.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyBarrier.cpp">
+      <Filter>ソース ファイル\Model\Enemy</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="input.h">
@@ -295,6 +310,21 @@
     </ClInclude>
     <ClInclude Include="player.h">
       <Filter>ヘッダー ファイル\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="CreateBossField.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyExplode.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneArea2.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneArea3.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyBarrier.h">
+      <Filter>ヘッダー ファイル\Model\Enemy</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
