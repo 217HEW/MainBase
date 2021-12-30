@@ -4,13 +4,13 @@
 //	ポーズ機能
 //
 //--------------------------------------------------------------
-//	製作者：だれ？
+//	製作者：小嶋悟
 //--------------------------------------------------------------
 //**************************************************************
 
 //**************************************************************
 //	開発履歴
-//	2021/??/??
+//	2021/12/30	ポーズ画面デザイン変更及び画像追加
 //	編集者：??
 //--------------------------------------------------------------
 //	2021/12/27	音データを追加したので実装(セレクト＆キャンセル音)
@@ -39,7 +39,7 @@
 #define	PLATE_POS_Y			(0.0f)		// プレートの位置(Y座標)
 
 //説明用
-#define PATH_STEXTURE "data/texture/pause003.png"
+#define PATH_STEXTURE "data/texture/pause003.png"//説明画像
 #define S_POS_X 200.0f
 #define S_POS_Y 0.0f
 #define S_WIDTH 809
@@ -126,7 +126,7 @@ void UpdatePause(void)
 		SetPauseMenu();
 	}
 
-	//g_fCurve += XM_PI * 0.01f;
+	//g_fCurve += XM_PI * 0.01f;//ピカピカの原因
 	//if (g_fCurve > XM_PI) {
 	//	g_fCurve -= XM_2PI;
 	//}
@@ -172,7 +172,7 @@ void DrawPause(void)
 	}
 
 	//説明用
-	SetPolygonColor(3.0f, 3.0f, 3.0f);
+	SetPolygonColor(3.0f, 3.0f, 3.0f);//1以上にすることで明るさ変更可能
 	ID3D11DeviceContext* pDC = GetDeviceContext();
 	SetPolygonSize(S_WIDTH, S_HEIGHT);
 	SetPolygonPos(S_POS_X, S_POS_Y);
