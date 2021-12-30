@@ -159,13 +159,18 @@ void UpdateEnemyExplode(void)
 		//ブロック配列取得
 		TBLOCK *Block = GetBlockArray();
 
+		//*********************************
+		//
+		//*********************************
+
+
 		//敵とプレイヤーの距離が近づいたら
-		if (CollisionSphere(posPlayer, sizePlayer, g_EExplode[i].m_pos, SEARCH_ENEMY))
-		{
-			if (!g_EExplode[i].m_use)
-			{//未使用なら次へ
-				continue;
-			}
+		//if (CollisionSphere(posPlayer, sizePlayer, g_EExplode[i].m_pos, SEARCH_ENEMY))
+		//{
+		//	if (!g_EExplode[i].m_use)
+		//	{//未使用なら次へ
+		//		continue;
+		//	}
 
 			//常にプレイヤーの方向を向く
 			/*g_EExplode[i].m_rotDest = posPlayer;
@@ -176,34 +181,34 @@ void UpdateEnemyExplode(void)
 			//追従処理
 			//*********************************
 
-			//敵のx座標がプレイヤーよりも大きかったら
-			if (g_EExplode[i].m_pos.x >= posPlayer.x)
-			{
-				g_EExplode[i].m_pos.x += -VALUE_MOVE_ENEMY;
-				g_EExplode[i].m_rot = (XMFLOAT3(90.0f, 0.0f, 0.0f) );
-
-				g_EExplode[i].m_rotDest.y = rotCamera.y - 90.0f;
-			}
-			//敵のx座標がプレイヤーよりも小さかったら
-			if (g_EExplode[i].m_pos.x <= posPlayer.x)
-			{
-				g_EExplode[i].m_pos.x += VALUE_MOVE_ENEMY;
-				g_EExplode[i].m_rot = (XMFLOAT3(90.0f, 0.0f, 90.0f));
-				g_EExplode[i].m_rotDest.y = rotCamera.y + 90.0f;
-
-			}
-			//敵のy座標がプレイヤーよりも大きかったら
-			if (g_EExplode[i].m_pos.y >= posPlayer.y)
-			{
-				g_EExplode[i].m_pos.y += -VALUE_MOVE_ENEMY;
-
-			}
-			//敵のy座標がプレイヤーよりも小さかったら
-			if (g_EExplode[i].m_pos.y <= posPlayer.y)
-			{
-				g_EExplode[i].m_pos.y += VALUE_MOVE_ENEMY;
-
-			}
+			////敵のx座標がプレイヤーよりも大きかったら
+			//if (g_EExplode[i].m_pos.x >= posPlayer.x)
+			//{
+			//	g_EExplode[i].m_pos.x += -VALUE_MOVE_ENEMY;
+			//	g_EExplode[i].m_rot = (XMFLOAT3(90.0f, 0.0f, 0.0f) );
+			//
+			//	g_EExplode[i].m_rotDest.y = rotCamera.y - 90.0f;
+			//}
+			////敵のx座標がプレイヤーよりも小さかったら
+			//if (g_EExplode[i].m_pos.x <= posPlayer.x)
+			//{
+			//	g_EExplode[i].m_pos.x += VALUE_MOVE_ENEMY;
+			//	g_EExplode[i].m_rot = (XMFLOAT3(90.0f, 0.0f, 90.0f));
+			//	g_EExplode[i].m_rotDest.y = rotCamera.y + 90.0f;
+			//
+			//}
+			////敵のy座標がプレイヤーよりも大きかったら
+			//if (g_EExplode[i].m_pos.y >= posPlayer.y)
+			//{
+			//	g_EExplode[i].m_pos.y += -VALUE_MOVE_ENEMY;
+			//
+			//}
+			////敵のy座標がプレイヤーよりも小さかったら
+			//if (g_EExplode[i].m_pos.y <= posPlayer.y)
+			//{
+			//	g_EExplode[i].m_pos.y += VALUE_MOVE_ENEMY;
+			//
+			//}
 			
 			
 			
@@ -262,6 +267,8 @@ void UpdateEnemyExplode(void)
 				}
 			}
 
+
+
 			// 敵とプレイヤーの当たり判定
 			if (!g_EExplode[i].m_use)
 			{// 未使用なら次へ
@@ -294,6 +301,14 @@ void UpdateEnemyExplode(void)
 						}
 					}
 				}
+
+			//*****************************************************
+			//プレイヤーがジャンプしている時にぶつかった場合の処理
+			//*****************************************************
+
+
+
+
 
 			
 
@@ -349,7 +364,7 @@ void UpdateEnemyExplode(void)
 			// ワールドマトリックス設定
 			XMStoreFloat4x4(&g_EExplode[i].m_mtxWorld, mtxWorld);
 
-		}
+		//}
 	}
 	PrintDebugProc("[ﾋｺｳｷ ｲﾁ : (%f : %f : %f)]\n", g_EExplode->m_pos.x, g_EExplode->m_pos.y, g_EExplode->m_pos.z);
 }
