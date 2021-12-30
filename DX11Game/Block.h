@@ -48,8 +48,8 @@ struct TBLOCK {
 	std::string	m_3Dmodel;	// モデル情報
 	int			m_nLife;	// 壁の耐久値
 	bool		m_use;		// 使用しているか
-	bool		cracks;		// 使用しているか
-	MODEL		state;			// ブロックの状態
+	//bool		cracks;		// 使用しているか
+	//MODEL		state;			// ブロックの状態
 	bool		m_invincible;// 無敵かどうか　ON：無敵
 };
 
