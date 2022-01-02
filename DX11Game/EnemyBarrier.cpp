@@ -43,7 +43,7 @@ struct TEnemyBarrier {
 //**************************************************************
 // マクロ定義
 //**************************************************************
-#define MODEL_ENEMY			"data/model/helicopter000.fbx"//バリアエネミー
+#define MODEL_ENEMY			"data/model/Hew4.fbx"//バリアエネミー
 
 
 #define MAX_EnemyBarrier			(10)// 敵機最大数
