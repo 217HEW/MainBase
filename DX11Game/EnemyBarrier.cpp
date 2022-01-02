@@ -44,11 +44,7 @@ struct TEnemyBarrier {
 // マクロ定義
 //**************************************************************
 #define MODEL_ENEMY			"data/model/Hew4.fbx"//バリアエネミー
-
-
 #define MAX_EnemyBarrier			(10)// 敵機最大数
-
-
 
 //**************************************************************
 // グローバル変数
@@ -62,8 +58,8 @@ static XMFLOAT3			Blocksize;
 //**************************************************************
 HRESULT InitEnemyBarrier(void)
 {
-	HRESULT hr = S_OK;
-	ID3D11Device* pDevice = GetDevice();
+	HRESULT hr = S_OK;//
+	ID3D11Device* pDevice = GetDevice();//
 	ID3D11DeviceContext* pDeviceContext = GetDeviceContext();
 
 	// ブロックのサイズ取得
@@ -85,7 +81,7 @@ HRESULT InitEnemyBarrier(void)
 		g_EMelee[i].m_use = false;
 	}
 
-	return hr;
+	return hr;//
 }
 
 //**************************************************************
