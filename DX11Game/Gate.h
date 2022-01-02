@@ -27,7 +27,7 @@
 struct TGATE {
 	XMFLOAT3	pos;		// 現在の位置
 	XMFLOAT4X4	mtxWorld;	// ワールドマトリックス
-	std::string	model3D;	// モデル情報
+	//std::string	model3D;	// モデル情報
 	bool		use;		// 使用しているか
 	bool		invincible;// 無敵かどうか　ON：無敵
 };

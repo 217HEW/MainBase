@@ -12,6 +12,11 @@
 //	開発履歴
 //	2021/12/21	ゲートの作成開始
 //	編集者：柴山凜太郎
+//--------------------------------------------------------------
+//	2021/12/30	for文を回すための変数の初期値を0→1に変更
+//				そのためSetGateの戻り値の計算「Gate = cntGate + 1」
+//				から「+1」を削除
+//	編集者：柴山凜太郎
 //**************************************************************
 
 //**************************************************************
@@ -47,21 +52,21 @@ HRESULT InitGate(void)
 	ID3D11Device* pDevice = GetDevice();
 	ID3D11DeviceContext* pDeviceContext = GetDeviceContext();
 	// ------ブロックの初期化-----------------------------------------------------
-	for (int i = 0; i < MAX_GATE; ++i)
+	for (int i = 1; i < MAX_GATE; ++i)
 	{
 		//Xが二倍になる為、XをYの二分の一にしておく
-		g_gate[i].model3D = MODEL_GATE;
+		//g_gate[i].model3D = MODEL_GATE;
 		g_GateSize = GATE_SIZE;
 		g_gate[i].use = false;
 		g_gate[i].invincible = false;
-		// モデルデータの読み込み
-		if (!g_model.Load(pDevice, pDeviceContext, g_gate[i].model3D))
-		{
-			MessageBoxA(GetMainWnd(), "ゲートモデルデータ読み込みエラー", "InitGate", MB_OK);
-			return E_FAIL;
-		}
+		
 	}
-
+	// モデルデータの読み込み
+	if (!g_model.Load(pDevice, pDeviceContext, MODEL_GATE))
+	{
+		MessageBoxA(GetMainWnd(), "ゲートモデルデータ読み込みエラー", "InitGate", MB_OK);
+		return E_FAIL;
+	}
 	return hr;
 }
 
@@ -70,11 +75,7 @@ HRESULT InitGate(void)
 //=============================================================================
 void UninitGate(void)
 {
-	// モデルの解放
-	for (int i = 0; i < MAX_GATE; ++i)
-	{
-		g_model.Release();
-	}
+	g_model.Release();	
 }
 
 //=============================================================================
@@ -126,7 +127,7 @@ void UpdateGate(void)
 			ID3D11Device* pDevice = GetDevice();
 			ID3D11DeviceContext* pDeviceContext = GetDeviceContext();
 
-			g_model.Load(pDevice, pDeviceContext, g_gate[i].model3D);
+			g_model.Load(pDevice, pDeviceContext, MODEL_GATE);
 		}
 	}
 
@@ -179,7 +180,7 @@ int SetGate(XMFLOAT3 pos)
 	ID3D11DeviceContext* pDeviceContext = GetDeviceContext();
 	int Gate = -1;
 
-	for (int cntGate = 0; cntGate < MAX_GATE; ++cntGate) {
+	for (int cntGate = 1; cntGate < MAX_GATE; ++cntGate) {
 		// 使用中ならスキップ
 		if (g_gate[cntGate].use) {
 			continue;
@@ -187,7 +188,7 @@ int SetGate(XMFLOAT3 pos)
 		g_gate[cntGate].use = true;	// 使用中
 		g_gate[cntGate].pos = pos;	// 座標設定
 
-		Gate = cntGate + 1;
+		Gate = cntGate;
 		break;
 	}
 
