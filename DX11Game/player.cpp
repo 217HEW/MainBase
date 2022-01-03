@@ -50,6 +50,10 @@
 //--------------------------------------------------------------
 //	2021/12/30	当たり判定用、プレイヤーの境界球半径を取得する関数の名前を変更
 //	編集者：柴山凜太郎
+//--------------------------------------------------------------
+//	2022/01/03	プレイヤーのサイズを取得するための関数作成
+//				そのため、サイズ用の変数「g_sizeModel」をグローバル変数に宣言
+//	編集者：柴山凜太郎
 //**************************************************************
 
 //**************************************************************
@@ -94,6 +98,7 @@ static XMFLOAT3		g_posModel;		// 現在の位置
 static XMFLOAT3		g_rotModel;		// 現在の向き
 static XMFLOAT3		g_rotDestModel;	// 目的の向き
 static XMFLOAT3		g_moveModel;	// 移動量
+static XMFLOAT3		g_sizeModel;	// 移動量
 
 static XMFLOAT4X4	g_mtxWorld;		// ワールドマトリックス
 
@@ -121,6 +126,7 @@ HRESULT InitPlayer(void)
 	// 位置・回転・スケールの初期設定
 	g_posModel = XMFLOAT3(0.0f, -800.0f, 0.0f);
 	g_moveModel = XMFLOAT3(0.0f, 0.0f, 0.0f);
+	g_sizeModel = SCALE_PLAYER;
 	g_rotModel = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	g_rotDestModel = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	 Stick = XMFLOAT2(0.0f, 0.0f);
@@ -440,11 +446,12 @@ void UpdatePlayer(void)
 
 	// 回転を反映
 	mtxRot = XMMatrixRotationRollPitchYaw(XMConvertToRadians(g_rotModel.x),
-		XMConvertToRadians(g_rotModel.y), XMConvertToRadians(g_rotModel.z));
+										  XMConvertToRadians(g_rotModel.y),
+										  XMConvertToRadians(g_rotModel.z));
 	mtxWorld = XMMatrixMultiply(mtxWorld, mtxRot);
 
 	// モデルのサイズ
-	mtxWorld = XMMatrixScaling(SCALE_PLAYER.x, SCALE_PLAYER.y, SCALE_PLAYER.z);
+	mtxWorld = XMMatrixScaling(g_sizeModel.x, g_sizeModel.y, g_sizeModel.z);
 
 	// 移動を反映
 	mtxTranslate = XMMatrixTranslation(g_posModel.x, g_posModel.y, g_posModel.z);
@@ -458,8 +465,8 @@ void UpdatePlayer(void)
 
 // -------エフェクト制御------------------------------------------
 	if ((g_moveModel.x * g_moveModel.x
-		+ g_moveModel.y * g_moveModel.y
-		+ g_moveModel.z * g_moveModel.z) > 1.0f) {
+	   + g_moveModel.y * g_moveModel.y
+	   + g_moveModel.z * g_moveModel.z) > 1.0f) {
 		XMFLOAT3 pos;
 
 		pos.x = g_posModel.x + SinDeg(g_rotModel.y) * 10.0f;
@@ -468,14 +475,14 @@ void UpdatePlayer(void)
 
 		// エフェクトの設定
 		SetEffect(pos, XMFLOAT3(0.0f, 0.0f, 0.0f),
-			XMFLOAT4(0.85f, 0.05f, 0.65f, 0.50f),
-			XMFLOAT2(14.0f, 14.0f), 20);
+					   XMFLOAT4(0.85f, 0.05f, 0.65f, 0.50f),
+					   XMFLOAT2(14.0f, 14.0f), 20);
 		SetEffect(pos, XMFLOAT3(0.0f, 0.0f, 0.0f),
-			XMFLOAT4(0.65f, 0.85f, 0.05f, 0.30f),
-			XMFLOAT2(10.0f, 10.0f), 20);
+					   XMFLOAT4(0.65f, 0.85f, 0.05f, 0.30f),
+					   XMFLOAT2(10.0f, 10.0f), 20);
 		SetEffect(pos, XMFLOAT3(0.0f, 0.0f, 0.0f),
-			XMFLOAT4(0.45f, 0.45f, 0.05f, 0.15f),
-			XMFLOAT2(5.0f, 5.0f), 20);
+					   XMFLOAT4(0.45f, 0.45f, 0.05f, 0.15f),
+					   XMFLOAT2(5.0f, 5.0f), 20);
 	}
 
 	// 弾発射
@@ -562,6 +569,19 @@ void DrawPlayer(void)
 XMFLOAT3& GetPlayerPos()
 {
 	return g_posModel;
+}
+
+//*******************************
+//
+//		位置情報取得
+//	
+//	戻り値
+//		プレイヤーの位置
+//
+//*******************************
+XMFLOAT3& GetPlayerSize()
+{
+	return g_sizeModel;
 }
 
 //*******************************
