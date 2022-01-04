@@ -77,6 +77,7 @@
 #include "Block.h"
 #include "EnemyMelee.h"
 #include "EnemyExplode.h"
+#include "EnemyRange.h"
 #include "Pause.h"
 
 //**************************************************************
@@ -193,6 +194,14 @@ HRESULT InitGame(AREA Area)
 	// エクスプロード呼び出し
 	SetEnemyExplode(XMFLOAT3(60.0f, -800.0f, 0.0f));
 
+	// レンジ初期化
+	hr = InitEnemyRange();
+	if (FAILED(hr))
+		return hr;
+
+	// レンジ呼び出し
+	SetEnemyRange(XMFLOAT3(40.0f, -500.0f, 0.0f));
+
 	// メッシュ壁初期化
 	hr = InitMeshWall();
 	if (FAILED(hr))
@@ -270,6 +279,9 @@ void UninitGame()
 
 	// 壁終了
 	UninitMeshWall();
+
+	// レンジ終了
+	UninitEnemyRange();
 
 	// エネミーメレー終了
 	UninitEnemyMelee();
@@ -395,6 +407,9 @@ void UpdateGame()
 		// エネミーエクスプロード更新
 		UpdateEnemyExplode();
 
+		// エネミーレンジ更新
+		UpdateEnemyRange();
+
 		// 背景更新
 		UpdateBG();
 
@@ -515,6 +530,9 @@ void DrawGame()
 
 	// エネミーエクスプロード
 	DrawEnemyExplode();
+
+	// エネミーレンジ
+	DrawEnemyRange();
 
 	// 丸影描画
 	//DrawShadow();
