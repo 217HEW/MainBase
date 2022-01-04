@@ -25,3 +25,5 @@ HRESULT InitEnemyRange(void);	// ‰Šú‰»
 void UninitEnemyRange(void);	// I—¹
 void UpdateEnemyRange(void);	// XV
 void DrawEnemyRange(void);		// •`‰æ
+
+int SetEnemyRange(XMFLOAT3(pos));
