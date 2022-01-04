@@ -96,14 +96,14 @@ void UpdateGate(void)
 
 		// 箱のサイズ
 		mtxWorld = XMMatrixScaling(g_GateSize.x,
-			g_GateSize.y,
-			g_GateSize.z);
+								   g_GateSize.y,
+								   g_GateSize.z);
 
 		// 移動を反映
 		mtxTranslate = XMMatrixTranslation(
-			g_gate[i].pos.x,
-			g_gate[i].pos.y,
-			g_gate[i].pos.z);
+					   g_gate[i].pos.x,
+					   g_gate[i].pos.y,
+					   g_gate[i].pos.z);
 		mtxWorld = XMMatrixMultiply(mtxWorld, mtxTranslate);
 
 		// ワールドマトリックス設定
@@ -111,24 +111,16 @@ void UpdateGate(void)
 
 	}
 
+	XMFLOAT3 PlayerSize = GetPlayerSize();
+	XMFLOAT3 PlayerPos = GetPlayerPos();
+
 	//------ブロックとプレイヤーの当たり判定処理-------------------------------
 	for (int i = 0; i < MAX_GATE; ++i)
 	{
 		if (!g_gate[i].use)
-		{// 未使用なら次へ
+		// 未使用なら次へ
 			continue;
-		}
-
-		// 壁とプレイヤーが衝突していたら
-		if (CollisionAABB(g_gate[i].pos, g_GateSize, GetPlayerPos(), XMFLOAT3(5.0f, 5.0f, 10.0f)))
-		{
-			// プレイヤーがとんでいたら
-
-			ID3D11Device* pDevice = GetDevice();
-			ID3D11DeviceContext* pDeviceContext = GetDeviceContext();
-
-			g_model.Load(pDevice, pDeviceContext, MODEL_GATE);
-		}
+		
 	}
 
 
