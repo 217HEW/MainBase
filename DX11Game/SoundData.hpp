@@ -21,5 +21,6 @@ LPCWSTR g_pszFileSE[MAX_SE] = {
 	L"SE_Beep000.mp3",		// 警告音		※仮
 	L"SE_EnemyBreak000.mp3",// 敵破壊		※仮
 	L"SE_Laser000.mp3",		// レーザー
+	L"SE_GameOver000.mp3",	// ジングル(ゲームオーバー)
 
 };

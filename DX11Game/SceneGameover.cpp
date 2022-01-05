@@ -38,6 +38,8 @@
 #include "polygon.h"
 #include "Fade.h"
 #include "Texture.h"
+#include "Sound.h"
+
 //**************************************************************
 // マクロ定義
 //**************************************************************
@@ -62,6 +64,9 @@ HRESULT InitGameover()
 	hr = CreateTextureFromFile(pDevice, PATH_BGTEXTURE, &g_pTexture);
 	if (FAILED(hr))
 		return hr;
+
+	CSound::Play(SE_GAMEOVER);
+	CSound::SetVolume(SE_GAMEOVER, 0.03f);
 
 	return hr;
 }
@@ -117,7 +122,6 @@ void UpdateGameover()
 
 	// ポリゴン表示更新
 	//UpdatePolygon();
-
 }
 
 //**************************************************************

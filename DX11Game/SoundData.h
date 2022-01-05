@@ -21,6 +21,6 @@ enum eSE {
 	SE_BEEP,		// 警告音
 	SE_ENEMYBREAK,	// 敵破壊音
 	SE_LASER,		// レーザー音
-
+	SE_GAMEOVER,	// ジングル(ゲームオーバー)
 	MAX_SE
 };

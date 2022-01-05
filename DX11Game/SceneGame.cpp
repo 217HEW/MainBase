@@ -249,7 +249,7 @@ HRESULT InitGame(AREA Area)
 	// BGM再生開始
 	// エリア毎にBGMを変えたい時はここをswitch文で切り替えるようにする
 	CSound::Play(BGM_GAME000);
-	CSound::SetVolume(BGM_GAME000, 0.01f);
+	CSound::SetVolume(BGM_GAME000, 0.02f);
 
 	return hr;
 }
@@ -470,17 +470,21 @@ void UpdateGame()
 			//選択中のメニュー項目により分岐
 			switch (GetPauseMenu())
 			{
-			case PAUSE_MENU_CONTINUE:
+			case PAUSE_MENU_CONTINUE:	// コンテニュー
 				g_bPause = false;
 				CSound::Play(SE_CANCEL);
-				CSound::SetVolume(SE_CANCEL, 0.02f);
+				CSound::SetVolume(SE_CANCEL, 0.03f);
 				CSound::Resume();
 				break;
-			case PAUSE_MENU_RETRY:
+			case PAUSE_MENU_RETRY:		// リトライ
 				StartFadeOut(SCENE_GAME);
+				CSound::Play(SE_SELECT);
+				CSound::SetVolume(SE_SELECT, 0.03f);
 				break;
-			case PAUSE_MENU_QUIT:
+			case PAUSE_MENU_QUIT:		// ゲームを辞める
 				StartFadeOut(SCENE_TITLE);
+				CSound::Play(SE_SELECT);
+				CSound::SetVolume(SE_SELECT, 0.03f);
 				break;
 			}
 		}
