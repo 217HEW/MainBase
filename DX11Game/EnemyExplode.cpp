@@ -27,6 +27,10 @@
 //				爆発の仕様の不備を発見
 //	編集者：澤村瑠人
 //--------------------------------------------------------------
+//　2022/1/3	画像の中心とモデルの中心がズレている可能性あり
+//				
+//	編集者：澤村瑠人
+//--------------------------------------------------------------
 //**************************************************************
 
 //**************************************************************
@@ -153,15 +157,7 @@ void UpdateEnemyExplode(void)
 	XMFLOAT3 posPlayer = GetPlayerPos();
 	float sizePlayer = GetPlayerSize();
 
-	// タイマーカウントダウン
-	if (g_nEETimer > 0)
-	{
-		--g_nEETimer;
-	}
-	else
-	{
-		g_nEETimer;
-	}
+	
 
 	for (int i = 0; i < MAX_ENEMYEXPLODE; ++i)
 	{
@@ -246,33 +242,41 @@ void UpdateEnemyExplode(void)
 			// 敵と壁の当たり判定
 			//for (int j = 0; j < MAX_BLOCK; ++j, ++Block)
 			//{
+			//	//g_EExplode[i].m_pos.x += 2;
 			//	if (!Block->m_use)
 			//	{// 未使用なら次へ
 			//		continue;
 			//	}
+			//	//g_EExplode[i].m_pos.x = g_EExplode[i].m_pos.x++;
 			//	if (CollisionAABB(g_EExplode[i].m_pos, g_EExplode[i].m_size, Block->m_pos,Blocksize))
 			//	{
-			//		//壁に当たると止まる
+			//		//壁に当たると反転する
+			//		//ぶつかったとき、前の移動処理から抜けるための処理を追加する必要がある
 			//		//右
 			//		if (Block->m_pos.x + Blocksize.x / 2 <= g_EExplode[i].m_pos.x - g_EExplode[i].m_size.x / 2)
 			//		{
-			//		 	g_EExplode[i].m_pos.x = (Block->m_pos.x + Blocksize.x + g_EExplode[i].m_size.x);
+			//		 	//g_EExplode[i].m_pos.x = (Block->m_pos.x + Blocksize.x + g_EExplode[i].m_size.x);
+			//			//右壁にぶつかった時の処理
+			//			g_EExplode[i].m_pos.x = g_EExplode[i].m_pos.x--;
+			//
 			//		}
 			//		//左
 			//		else if (Block->m_pos.x - Blocksize.x / 2 >= g_EExplode[i].m_pos.x + g_EExplode[i].m_size.x / 2)
 			//		{
-			//		 	g_EExplode[i].m_pos.x = (Block->m_pos.x - Blocksize.x - g_EExplode[i].m_size.x);
+			//		 	//g_EExplode[i].m_pos.x = (Block->m_pos.x - Blocksize.x - g_EExplode[i].m_size.x);
+			//			//右壁にぶつかった時の処理
+			//			g_EExplode[i].m_pos.x = g_EExplode[i].m_pos.x++;
 			//		}
 			//		//上
-			//		else if (Block->m_pos.y - Blocksize.y / 2 >= g_EExplode[i].m_pos.y + g_EExplode[i].m_size.y / 2)
-			//		{
-			//			g_EExplode[i].m_pos.y = (Block->m_pos.y - Blocksize.y - g_EExplode[i].m_size.y);
-			//		}
-			//		//下
-			//		else if (Block->m_pos.y + Blocksize.y / 2 <= g_EExplode[i].m_pos.y - g_EExplode[i].m_size.y / 2)
-			//		{
-			//			g_EExplode[i].m_pos.y = (Block->m_pos.y + Blocksize.y + g_EExplode[i].m_size.y);
-			//		}
+			//		//else if (Block->m_pos.y - Blocksize.y / 2 >= g_EExplode[i].m_pos.y + g_EExplode[i].m_size.y / 2)
+			//		//{
+			//		//	//g_EExplode[i].m_pos.y = (Block->m_pos.y - Blocksize.y - g_EExplode[i].m_size.y);
+			//		//}
+			//		////下
+			//		//else if (Block->m_pos.y + Blocksize.y / 2 <= g_EExplode[i].m_pos.y - g_EExplode[i].m_size.y / 2)
+			//		//{
+			//		//	//g_EExplode[i].m_pos.y = (Block->m_pos.y + Blocksize.y + g_EExplode[i].m_size.y);
+			//		//}
 			//	}
 			//}
 
@@ -292,27 +296,48 @@ void UpdateEnemyExplode(void)
 			//※)XMStoreMatrixがあいまいといわれるがおそらく、いきなり絶対値を用いているからと推測される
 			//敵とプレイヤーのX座標が"10.0f"以内であるならば爆発(消滅)する
 			//if (g_EExplode[i].m_pos.x - posPlayer.x <= 10.0f)
-			
-				if (abs(g_EExplode[i].m_pos.x - posPlayer.x <= 10.0f))
-				{
-					// 敵とプレイヤーのY座標が"10.0f"以内であるならば爆発(消滅)する
-					//シーンが始まった瞬間から、タイマーが、作動して、0になったまま保持される
-					//範囲内に入った瞬間、タイマーが0であるから敵が消え、即座にダメージを受ける。
-						//if (g_EExplode[i].m_pos.y - posPlayer.y <= 10.0f)
-					if (abs(g_EExplode[i].m_pos.y - posPlayer.y <= 10.0f))
+			if ((abs(g_EExplode[i].m_pos.x - posPlayer.x) <= 10.0f)&&(abs(g_EExplode[i].m_pos.y - posPlayer.y) <= 10.0f))
+			{
+				// 敵とプレイヤーのY座標が"10.0f"以内であるならば爆発(消滅)する
+				//シーンが始まった瞬間から、タイマーが、作動して、0になったまま保持される
+				//範囲内に入った瞬間、タイマーが0であるから敵が消え、即座にダメージを受ける。
+					//if (g_EExplode[i].m_pos.y - posPlayer.y <= 10.0f)
+				//if (abs(g_EExplode[i].m_pos.y - posPlayer.y <= 10.0f))
+				//{
+
+					//もし範囲内に入っているならば
+					// タイマーカウントダウン
+					
+					--g_nEETimer;
+					
+					//タイマーの値が、0よりも小さくなったら
+					//ライフを削り、エネミーを削除する
+					if (g_nEETimer <= 0)
 					{
-						if (g_nEETimer <= 0)
-						{
-							DelLife();
-							
-							g_EExplode[i].m_use = false;
-						}
+						DelLife();
+
+						//ここに範囲内のブロックを壊す処理を入れる
+
+					
+						g_EExplode[i].m_use = false;
 					}
-				}
+			}
+			else
+			{
+				g_nEETimer = ENEMY_EXPLODE_TIMER_START * 60 + 59;
+			}
+				
+			
+				
+				
 
 			//*****************************************************
 			//プレイヤーがジャンプしている時にぶつかった場合の処理
 			//*****************************************************
+				//if (GetPlayerJump())
+				//{
+				//
+				//}
 
 
 
@@ -378,7 +403,8 @@ void UpdateEnemyExplode(void)
 
 		//}
 	}
-	PrintDebugProc("[ﾋｺｳｷ ｲﾁ : (%f : %f : %f)]\n", g_EExplode->m_pos.x, g_EExplode->m_pos.y, g_EExplode->m_pos.z);
+
+	//PrintDebugProc("[ﾋｺｳｷ ｲﾁ : (%f : %f : %f)]\n", g_EExplode->m_pos.x, g_EExplode->m_pos.y, g_EExplode->m_pos.z);
 }
 
 //**************************************************************

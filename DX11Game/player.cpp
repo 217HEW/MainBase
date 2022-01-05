@@ -116,7 +116,7 @@ HRESULT InitPlayer(void)
 	g_nDamage = 0;
 
 	// 位置・回転・スケールの初期設定
-	g_posModel = XMFLOAT3(0.0f, -800.0f, 0.0f);
+	g_posModel = XMFLOAT3(50.0f, -800.0f, 0.0f);
 	g_moveModel = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	g_rotModel = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	g_rotDestModel = XMFLOAT3(0.0f, 0.0f, 0.0f);
