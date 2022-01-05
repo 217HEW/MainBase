@@ -155,16 +155,17 @@ void UninitPlayer(void)
 //**************************************************************
 void UpdatePlayer(void)
 {
-	// カメラの向き取得
-	XMFLOAT3 rotCamera = CCamera::Get()->GetAngle();
-
 	//ゲームパッドの状態を取得
 	XINPUT_STATE state;
+
+	// カメラの向き取得
+	XMFLOAT3 rotCamera = CCamera::Get()->GetAngle();
 
 	// -------コントローラー操作------------------------------------------
 	GetJoyState(Joycon);
 	// コントローラーの接続状況確認
 	JoyState = XInputGetState(0, &state);
+
 	if (JoyState == ERROR_SUCCESS)
 	{	// 接続有り↓
 		if (g_bLand)
@@ -202,6 +203,8 @@ void UpdatePlayer(void)
 						g_moveModel.x = Stick.x *7.5f;
 						g_moveModel.y = Stick.y *15;
 						g_bLand = false;
+						CSound::Play(SE_JUMP);
+						CSound::SetVolume(SE_JUMP, 0.01f);
 					}
 				}
 			}
@@ -238,14 +241,14 @@ void UpdatePlayer(void)
 			StartExplosion(g_posModel, XMFLOAT2(40.0f, 40.0f));
 			g_moveModel.y += SPEED_MOVE_PLAYER;
 			CSound::Play(SE_JUMP);
-			CSound::SetVolume(SE_JUMP, 0.04f);
+			CSound::SetVolume(SE_JUMP, 0.01f);
 			g_bLand = false;
 		}
 		else if (GetKeyTrigger(VK_DOWN)) {
 			StartExplosion(g_posModel, XMFLOAT2(40.0f, 40.0f));
 			g_moveModel.y -= SPEED_MOVE_PLAYER;
 			CSound::Play(SE_JUMP);
-			CSound::SetVolume(SE_JUMP, 0.04f);
+			CSound::SetVolume(SE_JUMP, 0.01f);
 			g_bLand = false;
 		}
 

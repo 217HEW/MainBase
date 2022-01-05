@@ -77,6 +77,7 @@
 #include "Block.h"
 #include "EnemyMelee.h"
 #include "EnemyExplode.h"
+#include "EnemyRange.h"
 #include "Pause.h"
 
 //**************************************************************
@@ -193,6 +194,14 @@ HRESULT InitGame(AREA Area)
 	// エクスプロード呼び出し
 	SetEnemyExplode(XMFLOAT3(60.0f, -790.0f, 0.0f));
 
+	// レンジ初期化
+	hr = InitEnemyRange();
+	if (FAILED(hr))
+		return hr;
+
+	// レンジ呼び出し
+	SetEnemyRange(XMFLOAT3(40.0f, -500.0f, 0.0f));
+
 	// メッシュ壁初期化
 	hr = InitMeshWall();
 	if (FAILED(hr))
@@ -249,7 +258,7 @@ HRESULT InitGame(AREA Area)
 	// BGM再生開始
 	// エリア毎にBGMを変えたい時はここをswitch文で切り替えるようにする
 	CSound::Play(BGM_GAME000);
-	CSound::SetVolume(BGM_GAME000, 0.01f);
+	CSound::SetVolume(BGM_GAME000, 0.02f);
 
 	return hr;
 }
@@ -270,6 +279,9 @@ void UninitGame()
 
 	// 壁終了
 	UninitMeshWall();
+
+	// レンジ終了
+	UninitEnemyRange();
 
 	// エネミーメレー終了
 	UninitEnemyMelee();
@@ -395,6 +407,9 @@ void UpdateGame()
 		// エネミーエクスプロード更新
 		UpdateEnemyExplode();
 
+		// エネミーレンジ更新
+		UpdateEnemyRange();
+
 		// 背景更新
 		UpdateBG();
 
@@ -470,17 +485,21 @@ void UpdateGame()
 			//選択中のメニュー項目により分岐
 			switch (GetPauseMenu())
 			{
-			case PAUSE_MENU_CONTINUE:
+			case PAUSE_MENU_CONTINUE:	// コンテニュー
 				g_bPause = false;
 				CSound::Play(SE_CANCEL);
-				CSound::SetVolume(SE_CANCEL, 0.02f);
+				CSound::SetVolume(SE_CANCEL, 0.03f);
 				CSound::Resume();
 				break;
-			case PAUSE_MENU_RETRY:
+			case PAUSE_MENU_RETRY:		// リトライ
 				StartFadeOut(SCENE_GAME);
+				CSound::Play(SE_SELECT);
+				CSound::SetVolume(SE_SELECT, 0.03f);
 				break;
-			case PAUSE_MENU_QUIT:
+			case PAUSE_MENU_QUIT:		// ゲームを辞める
 				StartFadeOut(SCENE_TITLE);
+				CSound::Play(SE_SELECT);
+				CSound::SetVolume(SE_SELECT, 0.03f);
 				break;
 			}
 		}
@@ -515,6 +534,9 @@ void DrawGame()
 
 	// エネミーエクスプロード
 	DrawEnemyExplode();
+
+	// エネミーレンジ
+	DrawEnemyRange();
 
 	// 丸影描画
 	//DrawShadow();
