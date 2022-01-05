@@ -23,6 +23,10 @@
 //　2021/12/31	モデルのスケールを組み込みました。347行	
 //	編集者：上月大地
 //--------------------------------------------------------------
+//　2021/12/31	デザイナのモデルに変換完了
+//				爆発の仕様の不備を発見
+//	編集者：澤村瑠人
+//--------------------------------------------------------------
 //**************************************************************
 
 //**************************************************************
@@ -45,14 +49,14 @@
 #include "Block.h"
 #include "explosion.h"
 #include "life.h"
-//#include "timer.h"
 #include "SceneManager.h"
 #include <stdlib.h>
 
 //**************************************************************
 // 構造体定義
 //**************************************************************
-struct TEnemyExplode {
+struct TEnemyExplode 
+{
 	XMFLOAT3	m_pos;		// 現在の位置
 	XMFLOAT3	m_rot;		// 現在の向き
 	XMFLOAT3	m_size;		// 現在のサイズ
@@ -67,7 +71,8 @@ struct TEnemyExplode {
 //**************************************************************
 // マクロ定義
 //**************************************************************
-#define MODEL_ENEMY			"data/model/Explode/Explode.fbx"//"data/model/sentouki.fbx"
+#define MODEL_ENEMY			"data/model/Explode/Explode.fbx"
+//#define MODEL_ENEMY			"data/model/sentouki.fbx"
 //#define MODEL_ENEMY			"data/model/enemy3.fbx"
 
 #define	VALUE_MOVE_ENEMY		(1.0f)		// 移動速度
@@ -112,7 +117,7 @@ HRESULT InitEnemyExplode(void)
 	for (int i = 0; i < MAX_ENEMYEXPLODE; ++i)
 	{// 初期化したいモノがあればここに↓
 		g_EExplode[i].m_pos = (XMFLOAT3(0.0f, 0.0f, 0.0f));
-		g_EExplode[i].m_size = (XMFLOAT3(20.0f, 10.0f, 10.0f));
+		g_EExplode[i].m_size = (XMFLOAT3(10.0f, 10.0f, 10.0f));
 		g_EExplode[i].m_move = (XMFLOAT3(0.0f, 0.0f, 0.0f));
 		g_EExplode[i].m_rot = (XMFLOAT3(90.0f, 0.0f, 0.0f));
 		g_EExplode[i].m_rotDest = g_EExplode[i].m_rot;
@@ -239,37 +244,37 @@ void UpdateEnemyExplode(void)
 			}
 
 			// 敵と壁の当たり判定
-			for (int j = 0; j < MAX_BLOCK; ++j, ++Block)
-			{
-				if (!Block->m_use)
-				{// 未使用なら次へ
-					continue;
-				}
-				if (CollisionAABB(g_EExplode[i].m_pos, g_EExplode[i].m_size, Block->m_pos,Blocksize))
-				{
-					//壁に当たると止まる
-					//右
-					if (Block->m_pos.x + Blocksize.x / 2 <= g_EExplode[i].m_pos.x - g_EExplode[i].m_size.x / 2)
-					{
-					 	g_EExplode[i].m_pos.x = (Block->m_pos.x + Blocksize.x + g_EExplode[i].m_size.x);
-					}
-					//左
-					else if (Block->m_pos.x - Blocksize.x / 2 >= g_EExplode[i].m_pos.x + g_EExplode[i].m_size.x / 2)
-					{
-					 	g_EExplode[i].m_pos.x = (Block->m_pos.x - Blocksize.x - g_EExplode[i].m_size.x);
-					}
-					//上
-					else if (Block->m_pos.y - Blocksize.y / 2 >= g_EExplode[i].m_pos.y + g_EExplode[i].m_size.y / 2)
-					{
-						g_EExplode[i].m_pos.y = (Block->m_pos.y - Blocksize.y - g_EExplode[i].m_size.y);
-					}
-					//下
-					else if (Block->m_pos.y + Blocksize.y / 2 <= g_EExplode[i].m_pos.y - g_EExplode[i].m_size.y / 2)
-					{
-						g_EExplode[i].m_pos.y = (Block->m_pos.y + Blocksize.y + g_EExplode[i].m_size.y);
-					}
-				}
-			}
+			//for (int j = 0; j < MAX_BLOCK; ++j, ++Block)
+			//{
+			//	if (!Block->m_use)
+			//	{// 未使用なら次へ
+			//		continue;
+			//	}
+			//	if (CollisionAABB(g_EExplode[i].m_pos, g_EExplode[i].m_size, Block->m_pos,Blocksize))
+			//	{
+			//		//壁に当たると止まる
+			//		//右
+			//		if (Block->m_pos.x + Blocksize.x / 2 <= g_EExplode[i].m_pos.x - g_EExplode[i].m_size.x / 2)
+			//		{
+			//		 	g_EExplode[i].m_pos.x = (Block->m_pos.x + Blocksize.x + g_EExplode[i].m_size.x);
+			//		}
+			//		//左
+			//		else if (Block->m_pos.x - Blocksize.x / 2 >= g_EExplode[i].m_pos.x + g_EExplode[i].m_size.x / 2)
+			//		{
+			//		 	g_EExplode[i].m_pos.x = (Block->m_pos.x - Blocksize.x - g_EExplode[i].m_size.x);
+			//		}
+			//		//上
+			//		else if (Block->m_pos.y - Blocksize.y / 2 >= g_EExplode[i].m_pos.y + g_EExplode[i].m_size.y / 2)
+			//		{
+			//			g_EExplode[i].m_pos.y = (Block->m_pos.y - Blocksize.y - g_EExplode[i].m_size.y);
+			//		}
+			//		//下
+			//		else if (Block->m_pos.y + Blocksize.y / 2 <= g_EExplode[i].m_pos.y - g_EExplode[i].m_size.y / 2)
+			//		{
+			//			g_EExplode[i].m_pos.y = (Block->m_pos.y + Blocksize.y + g_EExplode[i].m_size.y);
+			//		}
+			//	}
+			//}
 
 
 
@@ -291,16 +296,15 @@ void UpdateEnemyExplode(void)
 				if (abs(g_EExplode[i].m_pos.x - posPlayer.x <= 10.0f))
 				{
 					// 敵とプレイヤーのY座標が"10.0f"以内であるならば爆発(消滅)する
+					//シーンが始まった瞬間から、タイマーが、作動して、0になったまま保持される
+					//範囲内に入った瞬間、タイマーが0であるから敵が消え、即座にダメージを受ける。
 						//if (g_EExplode[i].m_pos.y - posPlayer.y <= 10.0f)
 					if (abs(g_EExplode[i].m_pos.y - posPlayer.y <= 10.0f))
 					{
 						if (g_nEETimer <= 0)
 						{
 							DelLife();
-							if (GetLife() == 0)
-							{
-								SetScene(SCENE_GAMEOVER);
-							}
+							
 							g_EExplode[i].m_use = false;
 						}
 					}
@@ -367,6 +371,7 @@ void UpdateEnemyExplode(void)
 				g_EExplode[i].m_pos.y,
 				g_EExplode[i].m_pos.z);
 			mtxWorld = XMMatrixMultiply(mtxWorld, mtxTranslate);
+
 
 			// ワールドマトリックス設定
 			XMStoreFloat4x4(&g_EExplode[i].m_mtxWorld, mtxWorld);
