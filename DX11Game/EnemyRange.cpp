@@ -106,7 +106,7 @@ void UpdateEnemyRange(void)
 
 	//プレイヤーの座標・サイズ取得
 	XMFLOAT3 posPlayer = GetPlayerPos();
-	float sizePlayer = GetPlayerSize();
+	float sizePlayer = GetPlayerRadSize();
 
 	for (int i = 0; i < MAX_ENEMYRANGE; ++i)
 	{

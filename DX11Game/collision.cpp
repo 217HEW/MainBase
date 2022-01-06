@@ -61,13 +61,13 @@ bool CollisionAABB(XMFLOAT3 Apos, XMFLOAT3 Asize, XMFLOAT3 Bpos, XMFLOAT3 Bsize)
 }
 //*******************************
 //
-//	矩形と矩形の当たり判定
+//	矩形と矩形の「非貫通」当たり判定
 //	
 //	引数:
-//		矩形１の中心座標
-//		矩形２の中心座標
-//		矩形１のサイズ
-//		矩形２のサイズ
+//		動的矩形１の中心座標
+//		静的矩形２の中心座標
+//		動的矩形１のサイズ
+//		静的矩形２のサイズ
 //		矩形の縦の判定か横の判定か
 //
 //	戻り値
@@ -75,7 +75,7 @@ bool CollisionAABB(XMFLOAT3 Apos, XMFLOAT3 Asize, XMFLOAT3 Bpos, XMFLOAT3 Bsize)
 //		true：接触している
 //
 //*******************************
-bool CheckCollisionRectToRect(XMFLOAT3 centerPos1, XMFLOAT3 centerPos2, XMFLOAT3 size1, XMFLOAT3 size2, Way way)
+bool CollisionKRectToSRect(XMFLOAT3 centerPos1, XMFLOAT3 centerPos2, XMFLOAT3 size1, XMFLOAT3 size2, Way way)
 {
 	// モデルの半分のサイズを取得
 	XMFLOAT3 halfSize1 = XMFLOAT3(size1.x / 2.0f, size1.y / 2.0f,size1.z /2.0f);
