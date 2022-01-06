@@ -17,6 +17,10 @@
 //				そのためSetGateの戻り値の計算「Gate = cntGate + 1」
 //				から「+1」を削除
 //	編集者：柴山凜太郎
+//--------------------------------------------------------------
+//	2022/01/07	「for文を回すための変数の初期値を0→1に変更」の部分を
+//				元に戻しました
+//	編集者：柴山凜太郎
 //**************************************************************
 
 //**************************************************************
@@ -32,7 +36,7 @@
 // マクロ定義
 //**************************************************************
 #define MODEL_GATE		"data/model/Block.fbx"	// ゲートモデル
-#define GATE_SIZE		(XMFLOAT3(20.0f,40.0f,10.0f))	// ゲートの大きさ
+#define GATE_SIZE		(XMFLOAT3(40.0f,40.0f,10.0f))	// ゲートの大きさ
 #define MAX_GATE		(2)		// 
 
 
@@ -52,7 +56,7 @@ HRESULT InitGate(void)
 	ID3D11Device* pDevice = GetDevice();
 	ID3D11DeviceContext* pDeviceContext = GetDeviceContext();
 	// ------ブロックの初期化-----------------------------------------------------
-	for (int i = 1; i < MAX_GATE; ++i)
+	for (int i = 0; i < MAX_GATE; ++i)
 	{
 		//Xが二倍になる為、XをYの二分の一にしておく
 		//g_gate[i].model3D = MODEL_GATE;
@@ -120,7 +124,8 @@ void UpdateGate(void)
 		if (!g_gate[i].use)
 		// 未使用なら次へ
 			continue;
-		
+		// 接地状態ON
+		SetPlayerJump(true);
 	}
 
 
@@ -138,9 +143,7 @@ void DrawGate(void)
 	{
 		// 使っているブロックの描画
 		if (!g_gate[i].use)
-		{
 			continue;
-		}
 		// ブロックモデル描画
 		g_model.Draw(pDC, g_gate[i].mtxWorld, eOpacityOnly);
 	}
@@ -172,7 +175,7 @@ int SetGate(XMFLOAT3 pos)
 	ID3D11DeviceContext* pDeviceContext = GetDeviceContext();
 	int Gate = -1;
 
-	for (int cntGate = 1; cntGate < MAX_GATE; ++cntGate) {
+	for (int cntGate = 0; cntGate < MAX_GATE; ++cntGate) {
 		// 使用中ならスキップ
 		if (g_gate[cntGate].use) {
 			continue;

@@ -123,7 +123,7 @@ void UpdateBlock(void)
 		}
 
 		// 壁とプレイヤーが衝突していたら
-		if (CollisionAABB(g_block[i].m_pos, g_BlockHalfScale, GetPlayerPos(), GetPlayerSize()))//プレイヤーのサイズ XMFLOAT3(3.0f, 7.0f, 0.5f)
+		if (CollisionAABB(g_block[i].m_pos, g_BlockHalfScale, GetPlayerPos(), XMFLOAT3(3.0f, 7.0f, 0.5f)))//プレイヤーのサイズ 
 		{
 			// プレイヤーがとんでいたら
 			if (GetPlayerJump() == false)

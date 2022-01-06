@@ -80,7 +80,7 @@
 #define MODEL_PLAYER	 "data/model/Character02.fbx"
 
 #define	VALUE_MOVE_PLAYER	(0.155f)	// 移動速度
-#define	SPEED_MOVE_PLAYER	(50)		// 跳躍速度
+#define	SPEED_MOVE_PLAYER	(30)		// 跳躍速度
 #define	RATE_MOVE_PLAYER	(0.025f)	// 移動慣性係数
 #define	VALUE_ROTATE_PLAYER	(4.5f)		// 回転速度
 #define	RATE_ROTATE_PLAYER	(0.1f)		// 回転慣性係数
