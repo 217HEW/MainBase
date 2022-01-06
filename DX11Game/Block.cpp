@@ -31,6 +31,9 @@
 //	2121/12/28	モデルの読込処理の見直し開始
 //	編集者：柴山凜太郎
 //--------------------------------------------------------------
+//	2122/1/4	効果音を追加
+//	編集者：上月大地
+//--------------------------------------------------------------
 //	2122/01/07	ブロックのサイズの変数名の一部をsize→scaleに変更
 //	編集者：柴山凜太郎
 //**************************************************************
@@ -44,6 +47,7 @@
 #include "collision.h"
 #include "player.h"
 #include "explosion.h"
+#include "Sound.h"
 
 //*****************************************************************************
 // マクロ定義
@@ -51,7 +55,7 @@
 #define MODEL_BLOCK		 "data/model/Block.fbx"		// "data/model/Hew_3_3.fbx"		// 通常ブロック			テクスチャ名 Block1.jpg
 #define MODEL_CRACKS	 "data/model/Block2.fbx"	// "data/model2/Hew_2.fbx"		// ひび割れたブロック	テクスチャ名 Block1.jpg※今はフォルダを変えて反映しています
 #define MODEL_INVINCIBLE "data/model/Block2.fbx"	// 無敵ブロック			テクスチャ無し
-#define MAX_LIFE			(1)						// ブロック耐久値
+#define MAX_LIFE		 (1)						// ブロック耐久値
 
 //*****************************************************************************
 // グローバル変数
@@ -127,10 +131,14 @@ void UpdateBlock(void)
 				// 体力が無くなったら使わない
 				if (g_block[i].m_nLife <= 0)
 				{
+					CSound::Play(SE_WALLBREAK);
+					CSound::SetVolume(SE_WALLBREAK, 0.04f);
 					g_block[i].m_use = false;
 					//g_model[i].Release();
 					break;
 				}
+				CSound::Play(SE_LANDING);
+				CSound::SetVolume(SE_LANDING, 0.08f);
 
 				// 無敵ブロックだったら出る
 				if (g_block[i].m_invincible)

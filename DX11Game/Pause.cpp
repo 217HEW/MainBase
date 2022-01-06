@@ -160,7 +160,7 @@ void DrawPause(void)
 		SetPolygonPos(PAUSE_MENU_POS_X, PAUSE_MENU_POS_Y - nCntPauseMenu * PAUSE_MENU_INTERVAL);
 
 		if (nCntPauseMenu == g_nSelectMenu) {
-			SetPolygonColor(1.0f, 1.0f, 1.0f);
+			SetPolygonColor(1.0f, 1.0f, 0.1f);
 		}
 		else {
 			SetPolygonColor(0.3f, 0.3f, 0.3f);

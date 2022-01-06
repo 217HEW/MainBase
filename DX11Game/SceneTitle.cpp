@@ -31,6 +31,9 @@
 //--------------------------------------------------------------
 //	2021/12/28	デバッグ操作で遷移できるシーンの追加(AREA2,3,BOSS)
 //	編集者：柴山凜太郎
+//--------------------------------------------------------------
+//	2021/1/5	コントローラーでもシーン遷移出来るようにしました
+//	編集者：上月大地
 //**************************************************************
 
 //**************************************************************
@@ -57,6 +60,7 @@
 // グローバル変数
 //**************************************************************
 static ID3D11ShaderResourceView* g_pTexture;
+static DWORD	Joycon;		// コントローラー情報
 
 //**************************************************************
 // 初期化処理
@@ -97,6 +101,9 @@ void UninitTitle()
 //**************************************************************
 void UpdateTitle()
 {
+	// コントローラー情報
+	GetJoyState(Joycon);
+
 	// キー入力でシーン遷移
 	if (GetFadeState() == FADE_NONE)
 	{
@@ -104,7 +111,7 @@ void UpdateTitle()
 		{
 			StartFadeOut(SCENE_TITLE);
 		}
-		else if (GetKeyRelease(VK_2) || GetKeyRelease(VK_SPACE) || GetKeyRelease(VK_RETURN))
+		else if (GetKeyRelease(VK_2) || GetKeyRelease(VK_SPACE) || GetKeyRelease(VK_RETURN)|| GetJoyTrigger(Joycon, JOYSTICKID2))
 		{
 			// 決定音
 			CSound::Play(SE_DECISION);
