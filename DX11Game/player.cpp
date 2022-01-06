@@ -84,7 +84,7 @@
 #define	RATE_MOVE_PLAYER	(0.025f)	// 移動慣性係数
 #define	VALUE_ROTATE_PLAYER	(4.5f)		// 回転速度
 #define	RATE_ROTATE_PLAYER	(0.1f)		// 回転慣性係数
-#define SCALE_PLAYER		(XMFLOAT3(2.0f, 1.5f, 1.0f)) //	プレイヤーのモデルスケール
+#define SCALE_PLAYER		XMFLOAT3(2.0f, 1.5f, 1.0f) //	プレイヤーのモデルスケール
 
 #define	PLAYER_RADIUS		(10.0f)		// 境界球半径
 #define DAMAGE_TIMER		(120)		// ダメージ後の無敵時間
