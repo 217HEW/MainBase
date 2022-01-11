@@ -192,7 +192,7 @@ HRESULT InitGame(AREA Area)
 		return hr;
 
 	// エクスプロード呼び出し
-	SetEnemyExplode(XMFLOAT3(60.0f, -800.0f, 0.0f));
+	SetEnemyExplode(XMFLOAT3(60.0f, -790.0f, 0.0f));
 
 	// レンジ初期化
 	hr = InitEnemyRange();
