@@ -33,6 +33,11 @@
 //--------------------------------------------------------------
 //	2122/1/4	効果音を追加
 //	編集者：上月大地
+//--------------------------------------------------------------
+//	2122/1/8	サイズとスケールを分けました
+//				スケールだけY軸に2倍しています
+//				座標がズレている疑惑がある為補正
+//	編集者：上月大地
 //**************************************************************
 
 //*****************************************************************************
@@ -49,10 +54,11 @@
 //*****************************************************************************
 // マクロ定義
 //*****************************************************************************
-#define MODEL_BLOCK		 "data/model/Block.fbx"		// "data/model/Hew_3_3.fbx"		// 通常ブロック			テクスチャ名 Block1.jpg
-#define MODEL_CRACKS	 "data/model/Block2.fbx"	// "data/model2/Hew_2.fbx"		// ひび割れたブロック	テクスチャ名 Block1.jpg※今はフォルダを変えて反映しています
+#define MODEL_BLOCK		 "data/model/Block2.fbx"//"data/model/Block.fbx"		// "data/model/Hew_3_3.fbx"		// 通常ブロック			テクスチャ名 Block1.jpg
+#define MODEL_CRACKS	 "data/model/Block.fbx"	// "data/model2/Hew_2.fbx"		// ひび割れたブロック	テクスチャ名 Block1.jpg※今はフォルダを変えて反映しています
 #define MODEL_INVINCIBLE "data/model/Block2.fbx"	// 無敵ブロック			テクスチャ無し
 #define MAX_LIFE		 (1)						// ブロック耐久値
+#define BLOCK_SCALE		 (20.0f)					// ブロックのスケールサイズ
 
 //*****************************************************************************
 // グローバル変数
@@ -71,9 +77,9 @@ HRESULT InitBlock(void)
 	HRESULT hr = S_OK;
 	for (int i = 0; i < MAX_BLOCK; ++i)
 	{
-		//Xが二倍になる為Yの二分の一にしておく
-		g_BlockSize = XMFLOAT3(20.0f, 40.0f, 20.0f);
-		g_BlockHalfSize = XMFLOAT3(15.0f, 28.0f, 10.0f);
+		//Yが二倍になる為Xの二分の一にしておく
+		g_BlockSize = XMFLOAT3(20.0f, 20.0f, 30.0f);
+		g_BlockHalfSize = XMFLOAT3(15.0f, 15.0f, 15.0f);
 		// g_wall->m_pos = XMFLOAT3(0.0f, 50.0f, 150.0f);
 		g_block[i].m_3Dmodel = MODEL_BLOCK;
 		g_block[i].m_nLife = MAX_LIFE;
@@ -86,7 +92,6 @@ HRESULT InitBlock(void)
 		//	return E_FAIL;
 		//}
 	}
-
 	return hr;
 }
 
@@ -107,7 +112,6 @@ void UninitBlock(void)
 //=============================================================================
 void UpdateBlock(void)
 {
-
 	ID3D11Device* pDevice = GetDevice();
 	ID3D11DeviceContext* pDeviceContext = GetDeviceContext();
 
@@ -125,20 +129,17 @@ void UpdateBlock(void)
 		mtxWorld = XMMatrixMultiply(mtxWorld, mtxRot);
 
 		// 箱のサイズ
-		mtxWorld = XMMatrixScaling(g_BlockSize.x,
-			g_BlockSize.y,
-			g_BlockSize.z);
+		mtxWorld = XMMatrixScaling(BLOCK_SCALE, BLOCK_SCALE *8, BLOCK_SCALE);
 
 		// 移動を反映
 		mtxTranslate = XMMatrixTranslation(
 			g_block[i].m_pos.x,
-			g_block[i].m_pos.y,
+			g_block[i].m_pos.y + 10.0f,	// ブロックの座標がズレている疑惑がある為補正
 			g_block[i].m_pos.z);
 		mtxWorld = XMMatrixMultiply(mtxWorld, mtxTranslate);
 
 		// ワールドマトリックス設定
 		XMStoreFloat4x4(&g_block[i].m_mtxWorld, mtxWorld);
-
 	}
 
 	//------ブロックとプレイヤーの当たり判定処理-------------------------------
@@ -150,7 +151,7 @@ void UpdateBlock(void)
 		}
 
 		// 壁とプレイヤーが衝突していたら
-		if (CollisionAABB(g_block[i].m_pos, g_BlockHalfSize, GetPlayerPos(), XMFLOAT3(3.0f, 7.0f, 0.5f)))
+		if (CollisionAABB(g_block[i].m_pos, g_BlockHalfSize, GetPlayerPos(), XMFLOAT3(3.0f, 15.0f, 0.5f)))
 		{
 			// プレイヤーがとんでいたら
 			if (GetPlayerJump() == false)

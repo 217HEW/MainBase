@@ -13,9 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="ソース ファイル\Scene">
-      <UniqueIdentifier>{cc9af3c2-2655-444d-a13b-e37f78a33615}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ヘッダー ファイル\Scene">
       <UniqueIdentifier>{af7aea98-8a9c-4c15-b47f-454f18b1b07e}</UniqueIdentifier>
     </Filter>
@@ -54,6 +51,9 @@
     </Filter>
     <Filter Include="ヘッダー ファイル\Model\Enemy">
       <UniqueIdentifier>{2db3ef47-bbf7-4e4a-8430-825b5c85c8bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Scene">
+      <UniqueIdentifier>{cc9af3c2-2655-444d-a13b-e37f78a33615}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -176,6 +176,12 @@
     </ClCompile>
     <ClCompile Include="EnemyExplode.cpp">
       <Filter>ソース ファイル\Model\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Boss.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Gate.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -307,6 +313,12 @@
     </ClInclude>
     <ClInclude Include="EnemyExplode.h">
       <Filter>ヘッダー ファイル\Model\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Boss.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Gate.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -70,14 +70,14 @@
 //**************************************************************
 // マクロ定義
 //**************************************************************
-#define MODEL_PLAYER	 "data/model/Character02.fbx"
+#define MODEL_PLAYER	 "data/model/test.fbx"// "data/model/Character02.fbx"
 
 #define	VALUE_MOVE_PLAYER	(0.155f)	// 移動速度
-#define	SPEED_MOVE_PLAYER	(50)		// 跳躍速度
+#define	SPEED_MOVE_PLAYER	(5)			// 跳躍速度
 #define	RATE_MOVE_PLAYER	(0.025f)	// 移動慣性係数
 #define	VALUE_ROTATE_PLAYER	(4.5f)		// 回転速度
 #define	RATE_ROTATE_PLAYER	(0.1f)		// 回転慣性係数
-#define SCALE_PLAYER		(XMFLOAT3(2.0f, 1.5f, 1.0f)) //	プレイヤーのモデルスケール
+#define SCALE_PLAYER		(XMFLOAT3(1.0f, 1.5f, 1.0f))//(XMFLOAT3(2.0f, 1.5f, 1.0f)) //	プレイヤーのモデルスケール
 
 #define	PLAYER_RADIUS		(10.0f)		// 境界球半径
 #define DAMAGE_TIMER		(120)		// ダメージ後の無敵時間
@@ -120,7 +120,7 @@ HRESULT InitPlayer(void)
 	g_moveModel = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	g_rotModel = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	g_rotDestModel = XMFLOAT3(0.0f, 0.0f, 0.0f);
-	 Stick = XMFLOAT2(0.0f, 0.0f);
+	Stick = XMFLOAT2(0.0f, 0.0f);
 
 	// モデルデータの読み込み
 	if (!g_model.Load(pDevice, pDeviceContext, MODEL_PLAYER)) {
