@@ -247,7 +247,7 @@ HRESULT InitCField(AREA Area)
 				//マップチップ"1"の場所に描画するもの
 
 				// 通常ブロック
-				SetBlock(XMFLOAT3(g_MapPosOrizin.x + (Width  * BlockSize.x),
+				SetBlock(XMFLOAT3(g_MapPosOrizin.x + (Width * BlockSize.x),
 					g_MapPosOrizin.y - (Height * BlockSize.y),
 					g_MapPosOrizin.z), false);
 				break;
@@ -255,7 +255,7 @@ HRESULT InitCField(AREA Area)
 				//マップチップ"2"の場所に描画するもの
 
 				// 無敵ブロック
-				SetBlock(XMFLOAT3(g_MapPosOrizin.x + (Width  * BlockSize.x),
+				SetBlock(XMFLOAT3(g_MapPosOrizin.x + (Width * BlockSize.x),
 					g_MapPosOrizin.y - (Height * BlockSize.y),
 					g_MapPosOrizin.z), true);
 				break;

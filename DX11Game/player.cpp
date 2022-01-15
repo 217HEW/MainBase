@@ -77,6 +77,7 @@
 //**************************************************************
 // マクロ定義
 //**************************************************************
+//#define MODEL_PLAYER	 "data/model/Ninzin_Metersx25.fbx"
 #define MODEL_PLAYER	 "data/model/Character02.fbx"
 
 #define	VALUE_MOVE_PLAYER	(0.155f)	// 移動速度
@@ -84,7 +85,8 @@
 #define	RATE_MOVE_PLAYER	(0.025f)	// 移動慣性係数
 #define	VALUE_ROTATE_PLAYER	(4.5f)		// 回転速度
 #define	RATE_ROTATE_PLAYER	(0.1f)		// 回転慣性係数
-#define SCALE_PLAYER		XMFLOAT3(2.0f, 1.5f, 1.0f) //	プレイヤーのモデルスケール
+#define SCALE_PLAYER		XMFLOAT3(1.0f, 1.5f, 1.0f)	// プレイヤーのモデルスケール
+#define SIZE_PLAYER			XMFLOAT3(110.5f, 16.5f, 1.0f)	// プレイヤーのモデルサイズ
 
 #define	PLAYER_RADIUS		(10.0f)		// 境界球半径
 #define DAMAGE_TIMER		(120)		// ダメージ後の無敵時間
@@ -98,7 +100,8 @@ static XMFLOAT3		g_posModel;		// 現在の位置
 static XMFLOAT3		g_rotModel;		// 現在の向き
 static XMFLOAT3		g_rotDestModel;	// 目的の向き
 static XMFLOAT3		g_moveModel;	// 移動量
-static XMFLOAT3		g_sizeModel;	// 移動量
+static XMFLOAT3		g_ScaleModel;	// 拡縮率量
+static XMFLOAT3		g_SizeModel;	// 当たり判定用サイズ
 
 static XMFLOAT4X4	g_mtxWorld;		// ワールドマトリックス
 
@@ -126,7 +129,8 @@ HRESULT InitPlayer(void)
 	// 位置・回転・スケールの初期設定
 	g_posModel = XMFLOAT3(50.0f, -800.0f, 0.0f);
 	g_moveModel = XMFLOAT3(0.0f, 0.0f, 0.0f);
-	g_sizeModel = SCALE_PLAYER;
+	g_ScaleModel = SCALE_PLAYER;
+	g_SizeModel = SIZE_PLAYER;
 	g_rotModel = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	g_rotDestModel = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	 Stick = XMFLOAT2(0.0f, 0.0f);
@@ -454,7 +458,7 @@ void UpdatePlayer(void)
 	mtxWorld = XMMatrixMultiply(mtxWorld, mtxRot);
 
 	// モデルのサイズ
-	mtxWorld = XMMatrixScaling(g_sizeModel.x, g_sizeModel.y, g_sizeModel.z);
+	mtxWorld = XMMatrixScaling(g_ScaleModel.x, g_ScaleModel.y, g_ScaleModel.z);
 
 	// 移動を反映
 	mtxTranslate = XMMatrixTranslation(g_posModel.x, g_posModel.y, g_posModel.z);
@@ -584,7 +588,7 @@ XMFLOAT3& GetPlayerPos()
 //*******************************
 XMFLOAT3& GetPlayerSize()
 {
-	return g_sizeModel;
+	return g_ScaleModel;
 }
 
 //*******************************

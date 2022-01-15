@@ -38,6 +38,7 @@
 #define MODEL_GATE		"data/model/Block.fbx"	// ゲートモデル
 #define GATE_SIZE		(XMFLOAT3(40.0f,40.0f,10.0f))	// ゲートの大きさ
 #define MAX_GATE		(2)		// 
+#define POS_DIFFERENCE	(50.0f)
 
 
 //**************************************************************
@@ -87,6 +88,17 @@ void UninitGate(void)
 //=============================================================================
 void UpdateGate(void)
 {
+	for (int i = 0; i < MAX_GATE; ++i)
+	{
+		if (!g_gate[i].use)
+			// 未使用なら次へ
+			continue;
+		if ((g_gate[i].pos.x - g_gate[i].savePos.x) <= POS_DIFFERENCE)
+		{
+			g_gate[i].pos.x++;
+		}
+	}
+
 	//------ワールドマトリクスにブロックのデータを反映----------------------------
 
 	XMMATRIX mtxWorld, mtxRot, mtxTranslate;
@@ -114,9 +126,6 @@ void UpdateGate(void)
 		XMStoreFloat4x4(&g_gate[i].mtxWorld, mtxWorld);
 
 	}
-
-	XMFLOAT3 PlayerSize = GetPlayerSize();
-	XMFLOAT3 PlayerPos = GetPlayerPos();
 
 	//------ブロックとプレイヤーの当たり判定処理-------------------------------
 	for (int i = 0; i < MAX_GATE; ++i)
@@ -181,6 +190,7 @@ int SetGate(XMFLOAT3 pos)
 			continue;
 		}
 		g_gate[cntGate].use = true;	// 使用中
+		g_gate[cntGate].savePos =
 		g_gate[cntGate].pos = pos;	// 座標設定
 
 		Gate = cntGate;
