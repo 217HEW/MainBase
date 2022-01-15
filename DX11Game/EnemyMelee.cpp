@@ -119,6 +119,7 @@ void UpdateEnemyMelee(void)
 
 	XMMATRIX mtxWorld, mtxRot, mtxTranslate;
 
+	TBLOCK *Block = GetBlockArray();
 	//プレイヤーの座標・サイズ取得
 	XMFLOAT3 posPlayer = GetPlayerPos();
 	float sizePlayer = GetPlayerSize();
@@ -126,7 +127,6 @@ void UpdateEnemyMelee(void)
 	for (int i = 0; i < MAX_ENEMYMELEE; ++i)
 	{
 		//ブロック配列取得
-		TBLOCK *Block = GetBlockArray();
 
 		//敵とプレイヤーの距離が近づいたら
 		if (CollisionSphere(posPlayer, sizePlayer, g_EMelee[i].m_pos, SEARCH_ENEMY))
