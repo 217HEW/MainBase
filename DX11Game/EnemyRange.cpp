@@ -5,12 +5,19 @@
 //
 //--------------------------------------------------------------
 //	製作者：石原聖斗
-//--------------------------------------------------------------
+//**************************************************************
+
+//**************************************************************
 //	開発履歴
 //	2021/12/28	敵の範囲に入ったらタイマーでダメージを喰らう処理
 //				の実装
 //	2021/01/03	ジャンプ中は攻撃を喰らわない処理の実装
-//
+//	編集者：石原聖斗
+//--------------------------------------------------------------
+//	2022/01/14	正式遠距離エネミーモデルを導入しました。
+//				射撃までのクールタイムを多少ランダムにする処理を
+//				作成中
+//	編集者：上月大地
 //**************************************************************
 
 //**************************************************************
@@ -43,7 +50,7 @@ struct TEnemyRange {
 //**************************************************************
 // マクロ定義
 //**************************************************************
-#define MODEL_ENEMY			"data/model/helicopter000.fbx"
+#define MODEL_ENEMY			"data/model/Range/Range.fbx"	// "data/model/helicopter000.fbx"
 
 #define MAX_ENEMYRANGE			(10)		// 敵機最大数
 
@@ -55,7 +62,7 @@ struct TEnemyRange {
 // グローバル変数
 //**************************************************************
 static CAssimpModel	g_model;			// モデル
-static TEnemyRange		g_ERange[MAX_ENEMYRANGE];	// 敵機情報
+static TEnemyRange	g_ERange[MAX_ENEMYRANGE];	// 敵機情報
 
 
 //**************************************************************
@@ -82,7 +89,8 @@ HRESULT InitEnemyRange(void)
 		g_ERange[i].m_rotDest = g_ERange[i].m_rot;
 		g_ERange[i].m_size = XMFLOAT3(5.0f, 5.0f, 5.0f);
 		g_ERange[i].m_use = false;
-		g_ERange[i].m_Time = ENEMY_TIMER * 60 + 59;
+		// g_ERange[i].m_Time = ENEMY_TIMER * 60 + 59;
+		g_ERange[i].m_Time = (ENEMY_TIMER + rand() % 3) * 60 + 59;	// 3～6秒のランダムで
 	}
 
 	return hr;
@@ -106,7 +114,7 @@ void UpdateEnemyRange(void)
 
 	//プレイヤーの座標・サイズ取得
 	XMFLOAT3 posPlayer = GetPlayerPos();
-	float sizePlayer = GetPlayerSize();
+	float sizePlayer = GetPlayerRadSize();
 
 	for (int i = 0; i < MAX_ENEMYRANGE; ++i)
 	{
@@ -138,7 +146,7 @@ void UpdateEnemyRange(void)
 					{
 						continue;
 					}
-					g_ERange[i].m_Time += ENEMY_TIMER * 60 + 59;
+					g_ERange[i].m_Time += (ENEMY_TIMER + rand() % 3) * 60 + 59;	// もう一度3～6秒数える
 					
 				}
 			}

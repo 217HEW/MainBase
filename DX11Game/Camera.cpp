@@ -15,7 +15,7 @@
 namespace {
 	const float CAM_POS_P_X = 0.0f;					// カメラの視点初期位置(X座標)
 	const float CAM_POS_P_Y = 100.0f;				// カメラの視点初期位置(Y座標)
-	const float CAM_POS_P_Z = -600.0f;				// カメラの視点初期位置(Z座標)
+	const float CAM_POS_P_Z = -1400.0f;				// カメラの視点初期位置(Z座標)
 	const float CAM_POS_R_X = 0.0f;					// カメラの注視点初期位置(X座標)
 	const float CAM_POS_R_Y = 50.0f;				// カメラの注視点初期位置(Y座標)
 	const float CAM_POS_R_Z = 0.0f;					// カメラの注視点初期位置(Z座標)
@@ -111,8 +111,8 @@ void CCamera::Update()
 	m_vSrcPos.x = -SinDeg(m_vAngle.y) * m_fLengthInterval;
 	m_vSrcPos.z = -CosDeg(m_vAngle.y) * m_fLengthInterval;
 
-	// 追跡カメラ
-	XMFLOAT3& vModelPos = GetPlayerPos();	// 自機座標
+	// 追跡カメラ&
+	XMFLOAT3 vModelPos = XMFLOAT3(200.0f, -400.0f, 0.0f);// GetPlayerPos();	// 自機座標
 
 	// 視点座標移動先を算出
 	 m_vDestPos.x = m_vSrcPos.x + vModelPos.x;

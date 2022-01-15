@@ -54,9 +54,9 @@
 //*****************************************************************************
 // マクロ定義
 //*****************************************************************************
-#define MODEL_BLOCK		 "data/model/Block2.fbx"//"data/model/Block.fbx"		// "data/model/Hew_3_3.fbx"		// 通常ブロック			テクスチャ名 Block1.jpg
-#define MODEL_CRACKS	 "data/model/Block.fbx"	// "data/model2/Hew_2.fbx"		// ひび割れたブロック	テクスチャ名 Block1.jpg※今はフォルダを変えて反映しています
-#define MODEL_INVINCIBLE "data/model/Block2.fbx"	// 無敵ブロック			テクスチャ無し
+#define MODEL_BLOCK		 "data/model/Block2.fbx"	// "data/model/Hew_3_3.fbx"		// 通常ブロック			テクスチャ名 Block1.jpg
+#define MODEL_CRACKS	 "data/model/Block.fbx"		// "data/model2/Hew_2.fbx"		// ひび割れたブロック	テクスチャ名 Block1.jpg※今はフォルダを変えて反映しています
+#define MODEL_INVINCIBLE "data/model/Hew_3_3.fbx"	// 無敵ブロック			テクスチャ無し
 #define MAX_LIFE		 (1)						// ブロック耐久値
 #define BLOCK_SCALE		 (20.0f)					// ブロックのスケールサイズ
 
@@ -78,7 +78,7 @@ HRESULT InitBlock(void)
 	for (int i = 0; i < MAX_BLOCK; ++i)
 	{
 		//Yが二倍になる為Xの二分の一にしておく
-		g_BlockSize = XMFLOAT3(20.0f, 20.0f, 30.0f);
+		g_BlockSize = XMFLOAT3(20.0f, 20.0f, 20.0f);
 		g_BlockHalfSize = XMFLOAT3(15.0f, 15.0f, 15.0f);
 		// g_wall->m_pos = XMFLOAT3(0.0f, 50.0f, 150.0f);
 		g_block[i].m_3Dmodel = MODEL_BLOCK;
@@ -129,7 +129,7 @@ void UpdateBlock(void)
 		mtxWorld = XMMatrixMultiply(mtxWorld, mtxRot);
 
 		// 箱のサイズ
-		mtxWorld = XMMatrixScaling(BLOCK_SCALE, BLOCK_SCALE *8, BLOCK_SCALE);
+		mtxWorld = XMMatrixScaling(BLOCK_SCALE, BLOCK_SCALE *2, BLOCK_SCALE);
 
 		// 移動を反映
 		mtxTranslate = XMMatrixTranslation(
@@ -187,8 +187,6 @@ void UpdateBlock(void)
 			}
 		}
 	}
-
-
 }
 
 //=============================================================================

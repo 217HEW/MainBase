@@ -1,4 +1,14 @@
 // Assimpライブラリ用モデルクラス定義 [AssimpModel.h]
+
+//**************************************************************
+//	開発履歴
+//	2022/01/16	プログラム上でモデルのカラーを変更出来るように
+//				関数を追加しました。モデルをロードする前に
+//				SetDif(XMFLOAT4 変えたいカラー)をいれてあげて
+//				下さい。ロードが終わったら元に戻してください
+//	編集者：柴山凜太郎
+//**************************************************************
+
 #pragma once
 #define NOMINMAX
 //#define D3DCOMPILER
@@ -232,8 +242,12 @@ private:
 	static ID3D11VertexShader* m_pVertexShader;
 	static ID3D11PixelShader* m_pPixelShader;
 	static ID3D11SamplerState* m_pSampleLinear;
-
 public:
+	// 追加＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+	void SetDif(XMFLOAT4 Dif);	// 変えたいカラーを入れる
+	DirectX::XMFLOAT4 GetDif();
+	// 追加＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+
 	CAssimpModel();
 	virtual ~CAssimpModel();
 
@@ -257,7 +271,6 @@ public:
 
 	DirectX::XMFLOAT3& GetBBox() { return m_vBBox; }
 	DirectX::XMFLOAT3& GetCenter() { return m_vCenter; }
-
 private:
 	void ScaleAsset();
 	void CalculateBounds(aiNode* piNode, aiVector3D* p_avOut, const aiMatrix4x4& piMatrix);

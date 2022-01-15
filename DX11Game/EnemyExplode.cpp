@@ -155,7 +155,7 @@ void UpdateEnemyExplode(void)
 
 	//プレイヤーの座標・サイズ取得
 	XMFLOAT3 posPlayer = GetPlayerPos();
-	float sizePlayer = GetPlayerSize();
+	float sizePlayer = GetPlayerRadSize();
 
 	
 

@@ -47,6 +47,9 @@
 //--------------------------------------------------------------
 //	2021/12/30	モデルのスケールをデファインにしました。
 //	編集者：上月大地
+//--------------------------------------------------------------
+//	2022/01/16	モデルカラーを追加しました
+//	編集者：上月大地
 //**************************************************************
 
 //**************************************************************
@@ -78,6 +81,7 @@
 #define	VALUE_ROTATE_PLAYER	(4.5f)		// 回転速度
 #define	RATE_ROTATE_PLAYER	(0.1f)		// 回転慣性係数
 #define SCALE_PLAYER		(XMFLOAT3(1.0f, 1.5f, 1.0f))//(XMFLOAT3(2.0f, 1.5f, 1.0f)) //	プレイヤーのモデルスケール
+#define COLLAR_PLAYER		(XMFLOAT4(1.0f, 1.0f, 1.0f,1.0f))	// プレイヤーカラー(仮)ここをいじるとカラーが変わります
 
 #define	PLAYER_RADIUS		(10.0f)		// 境界球半径
 #define DAMAGE_TIMER		(120)		// ダメージ後の無敵時間
@@ -91,7 +95,7 @@ static XMFLOAT3		g_posModel;		// 現在の位置
 static XMFLOAT3		g_rotModel;		// 現在の向き
 static XMFLOAT3		g_rotDestModel;	// 目的の向き
 static XMFLOAT3		g_moveModel;	// 移動量
-
+static XMFLOAT3		g_sizeModel;	// サイズ
 static XMFLOAT4X4	g_mtxWorld;		// ワールドマトリックス
 
 //static int		g_nShadow;		// 丸影番号
@@ -118,16 +122,17 @@ HRESULT InitPlayer(void)
 	// 位置・回転・スケールの初期設定
 	g_posModel = XMFLOAT3(50.0f, -800.0f, 0.0f);
 	g_moveModel = XMFLOAT3(0.0f, 0.0f, 0.0f);
+	g_sizeModel = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	g_rotModel = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	g_rotDestModel = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	Stick = XMFLOAT2(0.0f, 0.0f);
 
 	// モデルデータの読み込み
+	g_model.SetDif(COLLAR_PLAYER); // モデルロード前にカラーを指定
 	if (!g_model.Load(pDevice, pDeviceContext, MODEL_PLAYER)) {
 		MessageBoxA(GetMainWnd(), "自機モデルデータ読み込みエラー", "InitModel", MB_OK);
 		return E_FAIL;
 	}
-
 	// 丸影の生成
 	//g_nShadow = CreateShadow(g_posModel, 12.0f);
 
@@ -443,8 +448,10 @@ void UpdatePlayer(void)
 		XMConvertToRadians(g_rotModel.y), XMConvertToRadians(g_rotModel.z));
 	mtxWorld = XMMatrixMultiply(mtxWorld, mtxRot);
 
+	
 	// モデルのサイズ
 	mtxWorld = XMMatrixScaling(SCALE_PLAYER.x, SCALE_PLAYER.y, SCALE_PLAYER.z);
+	//mtxWorld = XMMatrixScaling(SCALE_PLAYER.x, SCALE_PLAYER.y, SCALE_PLAYER.z);
 
 	// 移動を反映
 	mtxTranslate = XMMatrixTranslation(g_posModel.x, g_posModel.y, g_posModel.z);
@@ -572,11 +579,15 @@ XMFLOAT3& GetPlayerPos()
 //		プレイヤーのサイズ(球体)
 //
 //*******************************
-float GetPlayerSize()
+XMFLOAT3& GetPlayerSize()
+{
+	return g_sizeModel;
+}
+
+float GetPlayerRadSize()
 {
 	return PLAYER_RADIUS;
 }
-
 //*******************************
 //
 //		ジャンプ状態情報取得

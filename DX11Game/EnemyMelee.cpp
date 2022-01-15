@@ -121,7 +121,7 @@ void UpdateEnemyMelee(void)
 
 	//プレイヤーの座標・サイズ取得
 	XMFLOAT3 posPlayer = GetPlayerPos();
-	float sizePlayer = GetPlayerSize();
+	float sizePlayer = GetPlayerRadSize();
 
 	for (int i = 0; i < MAX_ENEMYMELEE; ++i)
 	{
@@ -220,7 +220,7 @@ void UpdateEnemyMelee(void)
 					}
 				}
 			}
-
+			
 			// 敵とプレイヤーの当たり判定
 			if (!g_EMelee[i].m_use)
 			{// 未使用なら次へ
