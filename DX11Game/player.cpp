@@ -48,6 +48,13 @@
 //	2021/12/30	モデルのスケールをデファインにしました。
 //	編集者：上月大地
 //--------------------------------------------------------------
+//	2021/12/30	当たり判定用、プレイヤーの境界球半径を取得する関数の名前を変更
+//	編集者：柴山凜太郎
+//--------------------------------------------------------------
+//	2022/01/07	プレイヤーのサイズを取得するための関数作成
+//				そのため、サイズ用の変数「g_sizeModel」をグローバル変数に宣言
+//	編集者：柴山凜太郎
+//--------------------------------------------------------------
 //	2022/01/16	モデルカラーを追加しました
 //	編集者：上月大地
 //**************************************************************
@@ -76,12 +83,13 @@
 #define MODEL_PLAYER	 "data/model/test.fbx"// "data/model/Character02.fbx"
 
 #define	VALUE_MOVE_PLAYER	(0.155f)	// 移動速度
-#define	SPEED_MOVE_PLAYER	(5)			// 跳躍速度
+#define	SPEED_MOVE_PLAYER	(30)		// 跳躍速度
 #define	RATE_MOVE_PLAYER	(0.025f)	// 移動慣性係数
 #define	VALUE_ROTATE_PLAYER	(4.5f)		// 回転速度
 #define	RATE_ROTATE_PLAYER	(0.1f)		// 回転慣性係数
 #define SCALE_PLAYER		(XMFLOAT3(1.0f, 1.5f, 1.0f))//(XMFLOAT3(2.0f, 1.5f, 1.0f)) //	プレイヤーのモデルスケール
 #define COLLAR_PLAYER		(XMFLOAT4(1.0f, 1.0f, 1.0f,1.0f))	// プレイヤーカラー(仮)ここをいじるとカラーが変わります
+#define SIZE_PLAYER			XMFLOAT3(110.5f, 16.5f, 1.0f)	// プレイヤーのモデルサイズ
 
 #define	PLAYER_RADIUS		(10.0f)		// 境界球半径
 #define DAMAGE_TIMER		(120)		// ダメージ後の無敵時間
@@ -95,7 +103,9 @@ static XMFLOAT3		g_posModel;		// 現在の位置
 static XMFLOAT3		g_rotModel;		// 現在の向き
 static XMFLOAT3		g_rotDestModel;	// 目的の向き
 static XMFLOAT3		g_moveModel;	// 移動量
-static XMFLOAT3		g_sizeModel;	// サイズ
+static XMFLOAT3		g_ScaleModel;	// 拡縮率量
+static XMFLOAT3		g_SizeModel;	// 当たり判定用サイズ
+
 static XMFLOAT4X4	g_mtxWorld;		// ワールドマトリックス
 
 //static int		g_nShadow;		// 丸影番号
@@ -122,7 +132,8 @@ HRESULT InitPlayer(void)
 	// 位置・回転・スケールの初期設定
 	g_posModel = XMFLOAT3(50.0f, -800.0f, 0.0f);
 	g_moveModel = XMFLOAT3(0.0f, 0.0f, 0.0f);
-	g_sizeModel = XMFLOAT3(0.0f, 0.0f, 0.0f);
+	g_ScaleModel = SCALE_PLAYER;
+	g_SizeModel = SIZE_PLAYER;
 	g_rotModel = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	g_rotDestModel = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	Stick = XMFLOAT2(0.0f, 0.0f);
@@ -445,13 +456,13 @@ void UpdatePlayer(void)
 
 	// 回転を反映
 	mtxRot = XMMatrixRotationRollPitchYaw(XMConvertToRadians(g_rotModel.x),
-		XMConvertToRadians(g_rotModel.y), XMConvertToRadians(g_rotModel.z));
+										  XMConvertToRadians(g_rotModel.y),
+										  XMConvertToRadians(g_rotModel.z));
 	mtxWorld = XMMatrixMultiply(mtxWorld, mtxRot);
 
 	
 	// モデルのサイズ
-	mtxWorld = XMMatrixScaling(SCALE_PLAYER.x, SCALE_PLAYER.y, SCALE_PLAYER.z);
-	//mtxWorld = XMMatrixScaling(SCALE_PLAYER.x, SCALE_PLAYER.y, SCALE_PLAYER.z);
+	mtxWorld = XMMatrixScaling(g_ScaleModel.x, g_ScaleModel.y, g_ScaleModel.z);
 
 	// 移動を反映
 	mtxTranslate = XMMatrixTranslation(g_posModel.x, g_posModel.y, g_posModel.z);
@@ -465,8 +476,8 @@ void UpdatePlayer(void)
 
 // -------エフェクト制御------------------------------------------
 	if ((g_moveModel.x * g_moveModel.x
-		+ g_moveModel.y * g_moveModel.y
-		+ g_moveModel.z * g_moveModel.z) > 1.0f) {
+	   + g_moveModel.y * g_moveModel.y
+	   + g_moveModel.z * g_moveModel.z) > 1.0f) {
 		XMFLOAT3 pos;
 
 		pos.x = g_posModel.x + SinDeg(g_rotModel.y) * 10.0f;
@@ -475,14 +486,14 @@ void UpdatePlayer(void)
 
 		// エフェクトの設定
 		SetEffect(pos, XMFLOAT3(0.0f, 0.0f, 0.0f),
-			XMFLOAT4(0.85f, 0.05f, 0.65f, 0.50f),
-			XMFLOAT2(14.0f, 14.0f), 20);
+					   XMFLOAT4(0.85f, 0.05f, 0.65f, 0.50f),
+					   XMFLOAT2(14.0f, 14.0f), 20);
 		SetEffect(pos, XMFLOAT3(0.0f, 0.0f, 0.0f),
-			XMFLOAT4(0.65f, 0.85f, 0.05f, 0.30f),
-			XMFLOAT2(10.0f, 10.0f), 20);
+					   XMFLOAT4(0.65f, 0.85f, 0.05f, 0.30f),
+					   XMFLOAT2(10.0f, 10.0f), 20);
 		SetEffect(pos, XMFLOAT3(0.0f, 0.0f, 0.0f),
-			XMFLOAT4(0.45f, 0.45f, 0.05f, 0.15f),
-			XMFLOAT2(5.0f, 5.0f), 20);
+					   XMFLOAT4(0.45f, 0.45f, 0.05f, 0.15f),
+					   XMFLOAT2(5.0f, 5.0f), 20);
 	}
 
 	// 弾発射
@@ -573,17 +584,25 @@ XMFLOAT3& GetPlayerPos()
 
 //*******************************
 //
+//		位置情報取得
+//	
+//	戻り値
+//		プレイヤーの位置
+//
+//*******************************
+XMFLOAT3& GetPlayerSize()
+{
+	return g_ScaleModel;
+}
+
+//*******************************
+//
 //		サイズ情報取得
 //	
 //	戻り値
 //		プレイヤーのサイズ(球体)
 //
 //*******************************
-XMFLOAT3& GetPlayerSize()
-{
-	return g_sizeModel;
-}
-
 float GetPlayerRadSize()
 {
 	return PLAYER_RADIUS;

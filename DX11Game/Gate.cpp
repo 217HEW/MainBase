@@ -12,6 +12,15 @@
 //	開発履歴
 //	2021/12/21	ゲートの作成開始
 //	編集者：柴山凜太郎
+//--------------------------------------------------------------
+//	2021/12/30	for文を回すための変数の初期値を0→1に変更
+//				そのためSetGateの戻り値の計算「Gate = cntGate + 1」
+//				から「+1」を削除
+//	編集者：柴山凜太郎
+//--------------------------------------------------------------
+//	2022/01/07	「for文を回すための変数の初期値を0→1に変更」の部分を
+//				元に戻しました
+//	編集者：柴山凜太郎
 //**************************************************************
 
 //**************************************************************
@@ -27,8 +36,9 @@
 // マクロ定義
 //**************************************************************
 #define MODEL_GATE		"data/model/Block.fbx"	// ゲートモデル
-#define GATE_SIZE		(XMFLOAT3(20.0f,40.0f,10.0f))	// ゲートの大きさ
+#define GATE_SIZE		(XMFLOAT3(40.0f,40.0f,10.0f))	// ゲートの大きさ
 #define MAX_GATE		(2)		// 
+#define POS_DIFFERENCE	(50.0f)
 
 
 //**************************************************************
@@ -50,18 +60,18 @@ HRESULT InitGate(void)
 	for (int i = 0; i < MAX_GATE; ++i)
 	{
 		//Xが二倍になる為、XをYの二分の一にしておく
-		g_gate[i].model3D = MODEL_GATE;
+		//g_gate[i].model3D = MODEL_GATE;
 		g_GateSize = GATE_SIZE;
 		g_gate[i].use = false;
 		g_gate[i].invincible = false;
-		// モデルデータの読み込み
-		if (!g_model.Load(pDevice, pDeviceContext, g_gate[i].model3D))
-		{
-			MessageBoxA(GetMainWnd(), "ゲートモデルデータ読み込みエラー", "InitGate", MB_OK);
-			return E_FAIL;
-		}
+		
 	}
-
+	// モデルデータの読み込み
+	if (!g_model.Load(pDevice, pDeviceContext, MODEL_GATE))
+	{
+		MessageBoxA(GetMainWnd(), "ゲートモデルデータ読み込みエラー", "InitGate", MB_OK);
+		return E_FAIL;
+	}
 	return hr;
 }
 
@@ -70,11 +80,7 @@ HRESULT InitGate(void)
 //=============================================================================
 void UninitGate(void)
 {
-	// モデルの解放
-	for (int i = 0; i < MAX_GATE; ++i)
-	{
-		g_model.Release();
-	}
+	g_model.Release();	
 }
 
 //=============================================================================
@@ -82,6 +88,17 @@ void UninitGate(void)
 //=============================================================================
 void UpdateGate(void)
 {
+	for (int i = 0; i < MAX_GATE; ++i)
+	{
+		if (!g_gate[i].use)
+			// 未使用なら次へ
+			continue;
+		if ((g_gate[i].pos.x - g_gate[i].savePos.x) <= POS_DIFFERENCE)
+		{
+			g_gate[i].pos.x++;
+		}
+	}
+
 	//------ワールドマトリクスにブロックのデータを反映----------------------------
 
 	XMMATRIX mtxWorld, mtxRot, mtxTranslate;
@@ -95,14 +112,14 @@ void UpdateGate(void)
 
 		// 箱のサイズ
 		mtxWorld = XMMatrixScaling(g_GateSize.x,
-			g_GateSize.y,
-			g_GateSize.z);
+								   g_GateSize.y,
+								   g_GateSize.z);
 
 		// 移動を反映
 		mtxTranslate = XMMatrixTranslation(
-			g_gate[i].pos.x,
-			g_gate[i].pos.y,
-			g_gate[i].pos.z);
+					   g_gate[i].pos.x,
+					   g_gate[i].pos.y,
+					   g_gate[i].pos.z);
 		mtxWorld = XMMatrixMultiply(mtxWorld, mtxTranslate);
 
 		// ワールドマトリックス設定
@@ -114,20 +131,10 @@ void UpdateGate(void)
 	for (int i = 0; i < MAX_GATE; ++i)
 	{
 		if (!g_gate[i].use)
-		{// 未使用なら次へ
+		// 未使用なら次へ
 			continue;
-		}
-
-		// 壁とプレイヤーが衝突していたら
-		if (CollisionAABB(g_gate[i].pos, g_GateSize, GetPlayerPos(), XMFLOAT3(5.0f, 5.0f, 10.0f)))
-		{
-			// プレイヤーがとんでいたら
-
-			ID3D11Device* pDevice = GetDevice();
-			ID3D11DeviceContext* pDeviceContext = GetDeviceContext();
-
-			g_model.Load(pDevice, pDeviceContext, g_gate[i].model3D);
-		}
+		// 接地状態ON
+		SetPlayerJump(true);
 	}
 
 
@@ -145,9 +152,7 @@ void DrawGate(void)
 	{
 		// 使っているブロックの描画
 		if (!g_gate[i].use)
-		{
 			continue;
-		}
 		// ブロックモデル描画
 		g_model.Draw(pDC, g_gate[i].mtxWorld, eOpacityOnly);
 	}
@@ -185,9 +190,10 @@ int SetGate(XMFLOAT3 pos)
 			continue;
 		}
 		g_gate[cntGate].use = true;	// 使用中
+		g_gate[cntGate].savePos =
 		g_gate[cntGate].pos = pos;	// 座標設定
 
-		Gate = cntGate + 1;
+		Gate = cntGate;
 		break;
 	}
 

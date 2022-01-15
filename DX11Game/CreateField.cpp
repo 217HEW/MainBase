@@ -259,6 +259,8 @@ HRESULT InitCField(AREA Area)
 					g_MapPosOrizin.y - (Height * BlockSize.y) *2,
 					g_MapPosOrizin.z), true);
 				break;
+			default:
+				break;
 			}
 
 			//if (Map[Height][Width] == 1)

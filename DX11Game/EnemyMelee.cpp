@@ -15,6 +15,9 @@
 //	2021/12/21 壁と当たったら止まる(全方位)処理の実装
 //	2021/12/13	エネミーベースを元に追加
 //	編集者：??
+//--------------------------------------------------------------
+//　2021/12/30	プレイヤーの境界球半径を取得する関数名の変更
+//	編集者：柴山凜太郎
 //
 //**************************************************************
 
@@ -119,6 +122,7 @@ void UpdateEnemyMelee(void)
 
 	XMMATRIX mtxWorld, mtxRot, mtxTranslate;
 
+	TBLOCK *Block = GetBlockArray();
 	//プレイヤーの座標・サイズ取得
 	XMFLOAT3 posPlayer = GetPlayerPos();
 	float sizePlayer = GetPlayerRadSize();
@@ -126,7 +130,6 @@ void UpdateEnemyMelee(void)
 	for (int i = 0; i < MAX_ENEMYMELEE; ++i)
 	{
 		//ブロック配列取得
-		TBLOCK *Block = GetBlockArray();
 
 		//敵とプレイヤーの距離が近づいたら
 		if (CollisionSphere(posPlayer, sizePlayer, g_EMelee[i].m_pos, SEARCH_ENEMY))

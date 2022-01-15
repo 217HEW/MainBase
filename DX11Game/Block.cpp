@@ -34,6 +34,9 @@
 //	2122/1/4	効果音を追加
 //	編集者：上月大地
 //--------------------------------------------------------------
+//	2122/01/07	ブロックのサイズの変数名の一部をsize→scaleに変更
+//	編集者：柴山凜太郎
+//--------------------------------------------------------------
 //	2122/1/8	サイズとスケールを分けました
 //				スケールだけY軸に2倍しています
 //				座標がズレている疑惑がある為補正
@@ -65,8 +68,8 @@
 //*****************************************************************************
 static CAssimpModel	g_model[MAX_BLOCK];	// モデル
 static TBLOCK		g_block[MAX_BLOCK];	// ブロック情報
-static XMFLOAT3		g_BlockSize;		// 現在のサイズ
-static XMFLOAT3		g_BlockHalfSize;	// ブロックの半分のサイズ
+static XMFLOAT3		g_BlockScale;		// 現在のサイズ
+static XMFLOAT3		g_BlockHalfScale;	// ブロックの半分のサイズ
 static XMMATRIX		mtxWorldinv;
 
 //=============================================================================
@@ -77,9 +80,9 @@ HRESULT InitBlock(void)
 	HRESULT hr = S_OK;
 	for (int i = 0; i < MAX_BLOCK; ++i)
 	{
-		//Yが二倍になる為Xの二分の一にしておく
-		g_BlockSize = XMFLOAT3(20.0f, 20.0f, 20.0f);
-		g_BlockHalfSize = XMFLOAT3(15.0f, 15.0f, 15.0f);
+		//Xが二倍になる為Yの二分の一にしておく
+		g_BlockScale = XMFLOAT3(20.0f, 40.0f, 20.0f);
+		g_BlockHalfScale = XMFLOAT3(15.0f, 28.0f, 10.0f);
 		// g_wall->m_pos = XMFLOAT3(0.0f, 50.0f, 150.0f);
 		g_block[i].m_3Dmodel = MODEL_BLOCK;
 		g_block[i].m_nLife = MAX_LIFE;
@@ -115,33 +118,6 @@ void UpdateBlock(void)
 	ID3D11Device* pDevice = GetDevice();
 	ID3D11DeviceContext* pDeviceContext = GetDeviceContext();
 
-	XMMATRIX mtxWorld, mtxRot, mtxTranslate;
-
-	for (int i = 0; i < MAX_BLOCK; ++i)
-	{
-		if (!g_block[i].m_use)
-		{// 未使用なら次へ
-			continue;
-		}
-		// ワールドマトリックスの初期化
-		mtxWorld = XMMatrixIdentity();
-
-		mtxWorld = XMMatrixMultiply(mtxWorld, mtxRot);
-
-		// 箱のサイズ
-		mtxWorld = XMMatrixScaling(BLOCK_SCALE, BLOCK_SCALE *2, BLOCK_SCALE);
-
-		// 移動を反映
-		mtxTranslate = XMMatrixTranslation(
-			g_block[i].m_pos.x,
-			g_block[i].m_pos.y + 10.0f,	// ブロックの座標がズレている疑惑がある為補正
-			g_block[i].m_pos.z);
-		mtxWorld = XMMatrixMultiply(mtxWorld, mtxTranslate);
-
-		// ワールドマトリックス設定
-		XMStoreFloat4x4(&g_block[i].m_mtxWorld, mtxWorld);
-	}
-
 	//------ブロックとプレイヤーの当たり判定処理-------------------------------
 	for (int i = 0; i < MAX_BLOCK; ++i)
 	{
@@ -151,7 +127,7 @@ void UpdateBlock(void)
 		}
 
 		// 壁とプレイヤーが衝突していたら
-		if (CollisionAABB(g_block[i].m_pos, g_BlockHalfSize, GetPlayerPos(), XMFLOAT3(3.0f, 15.0f, 0.5f)))
+		if (CollisionAABB(g_block[i].m_pos, g_BlockHalfScale, GetPlayerPos(), XMFLOAT3(3.0f, 7.0f, 0.5f)))//プレイヤーのサイズ 
 		{
 			// プレイヤーがとんでいたら
 			if (GetPlayerJump() == false)
@@ -187,6 +163,40 @@ void UpdateBlock(void)
 			}
 		}
 	}
+
+	XMMATRIX mtxWorld, mtxRot, mtxTranslate;
+
+	for (int i = 0; i < MAX_BLOCK; ++i)
+	{
+		if (!g_block[i].m_use)
+		{// 未使用なら次へ
+			continue;
+		}
+		// ワールドマトリックスの初期化
+		mtxWorld = XMMatrixIdentity();
+
+		mtxWorld = XMMatrixMultiply(mtxWorld, mtxRot);
+
+		// 箱のサイズ
+		mtxWorld = XMMatrixScaling(g_BlockScale.x,
+			g_BlockScale.y,
+			g_BlockScale.z);
+
+		// 移動を反映
+		mtxTranslate = XMMatrixTranslation(
+			g_block[i].m_pos.x,
+			g_block[i].m_pos.y,
+			g_block[i].m_pos.z);
+		mtxWorld = XMMatrixMultiply(mtxWorld, mtxTranslate);
+
+		// ワールドマトリックス設定
+		XMStoreFloat4x4(&g_block[i].m_mtxWorld, mtxWorld);
+
+	}
+
+	
+
+
 }
 
 //=============================================================================
@@ -281,7 +291,7 @@ int SetBlock(XMFLOAT3 pos, bool inv)
 //*******************************
 XMFLOAT3 GetBlockSize()
 {
-	return g_BlockSize;
+	return g_BlockScale;
 }
 
 //***********************************
