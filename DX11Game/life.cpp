@@ -36,7 +36,7 @@
 
 // ライフアイコン
 #define PATH_LIFETEXTURE L"data/texture/hart.tga"	//ライフアイコンテクスチャ
-#define MAX_LIFE (5)		// ライフ最大値
+#define MAX_LIFE (1)		// ライフ最大値
 #define LIFE_SIZE_X (40.0f)	// 横テクスチャサイズ
 #define LIFE_SIZE_Y (40.0f)	// 縦テクスチャサイズ
 #define LIFE_POS_X (LIFEFRAME_POS_X-LIFE_SIZE_X*(MAX_LIFE*0.5f-0.5f))	// ライフ横軸座標

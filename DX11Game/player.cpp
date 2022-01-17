@@ -83,7 +83,7 @@
 #define MODEL_PLAYER	 "data/model/test.fbx"// "data/model/Character02.fbx"
 
 #define	VALUE_MOVE_PLAYER	(0.155f)	// 移動速度
-#define	SPEED_MOVE_PLAYER	(30)		// 跳躍速度
+#define	SPEED_MOVE_PLAYER	(5)		// 跳躍速度
 #define	RATE_MOVE_PLAYER	(0.025f)	// 移動慣性係数
 #define	VALUE_ROTATE_PLAYER	(4.5f)		// 回転速度
 #define	RATE_ROTATE_PLAYER	(0.1f)		// 回転慣性係数
@@ -130,7 +130,7 @@ HRESULT InitPlayer(void)
 	g_nDamage = 0;
 
 	// 位置・回転・スケールの初期設定
-	g_posModel = XMFLOAT3(50.0f, -800.0f, 0.0f);
+	g_posModel = XMFLOAT3(50.0f, -790.0f, 0.0f);
 	g_moveModel = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	g_ScaleModel = SCALE_PLAYER;
 	g_SizeModel = SIZE_PLAYER;
@@ -428,9 +428,9 @@ void UpdatePlayer(void)
 			StartFadeOut(SCENE_AREA3);
 			break;
 		case AREA_3:
-			StartFadeOut(SCENE_AREA_BOSS);
+			StartFadeOut(SCENE_AREA_DEBUG);
 			break;
-		case AREA_BOSS:
+		case AREA_DEBUG:
 			StartFadeOut(SCENE_GAMECLEAR);
 			break;
 		default:
@@ -460,12 +460,11 @@ void UpdatePlayer(void)
 										  XMConvertToRadians(g_rotModel.z));
 	mtxWorld = XMMatrixMultiply(mtxWorld, mtxRot);
 
-	
 	// モデルのサイズ
 	mtxWorld = XMMatrixScaling(g_ScaleModel.x, g_ScaleModel.y, g_ScaleModel.z);
 
 	// 移動を反映
-	mtxTranslate = XMMatrixTranslation(g_posModel.x, g_posModel.y, g_posModel.z);
+	mtxTranslate = XMMatrixTranslation(g_posModel.x, g_posModel.y -16, g_posModel.z);
 	mtxWorld = XMMatrixMultiply(mtxWorld, mtxTranslate);
 
 	// ワールドマトリックス設定

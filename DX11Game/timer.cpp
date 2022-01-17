@@ -23,6 +23,7 @@
 #include "polygon.h"
 #include "number.h"
 #include "timer.h"
+#include "Sound.h"
 
 //**************************************************************
 // マクロ定義
@@ -93,7 +94,12 @@ void DrawTimer()
 {
 	ID3D11DeviceContext* pDC = GetDeviceContext();
 	// 白か赤に設定
-	if (g_nTimer < 10 * 60){
+	if (g_nTimer < 10 * 60)
+	{
+		if (g_nTimer == 9.7 * 60) 
+		{
+			CSound::Play(SE_BEEP);
+		}
 		SetPolygonColor(1.0f, 0.0f, 0.0f);//残り10秒で赤くなる
 	}
 	else{

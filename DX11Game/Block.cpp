@@ -57,9 +57,9 @@
 //*****************************************************************************
 // マクロ定義
 //*****************************************************************************
-#define MODEL_BLOCK		 "data/model/Block2.fbx"	// "data/model/Hew_3_3.fbx"		// 通常ブロック			テクスチャ名 Block1.jpg
-#define MODEL_CRACKS	 "data/model/Block.fbx"		// "data/model2/Hew_2.fbx"		// ひび割れたブロック	テクスチャ名 Block1.jpg※今はフォルダを変えて反映しています
-#define MODEL_INVINCIBLE "data/model/Hew_3_3.fbx"	// 無敵ブロック			テクスチャ無し
+#define MODEL_BLOCK		 "data/model/Hew_3_3.fbx"	// "data/model/Block.fbx"  通常ブロック			テクスチャ名 Block1.jpg
+#define MODEL_CRACKS	 "data/model/Block.fbx"		// "data/model2/Hew_2.fbx"	 ひび割れたブロック	テクスチャ名 Block1.jpg※今はフォルダを変えて反映しています
+#define MODEL_INVINCIBLE "data/model/Block.fbx"		// "data/model/Hew_3_3.fbx"	 無敵ブロック			テクスチャ無し
 #define MAX_LIFE		 (1)						// ブロック耐久値
 #define BLOCK_SCALE		 (20.0f)					// ブロックのスケールサイズ
 
@@ -81,8 +81,8 @@ HRESULT InitBlock(void)
 	for (int i = 0; i < MAX_BLOCK; ++i)
 	{
 		//Xが二倍になる為Yの二分の一にしておく
-		g_BlockScale = XMFLOAT3(20.0f, 40.0f, 20.0f);
-		g_BlockHalfScale = XMFLOAT3(15.0f, 28.0f, 10.0f);
+		g_block[i].m_size = g_BlockScale = XMFLOAT3(20.0f, 20.0f, 20.0f);
+		g_block[i].m_Halfsize = g_BlockHalfScale = XMFLOAT3(7.5f, 14.0f, 10.0f);
 		// g_wall->m_pos = XMFLOAT3(0.0f, 50.0f, 150.0f);
 		g_block[i].m_3Dmodel = MODEL_BLOCK;
 		g_block[i].m_nLife = MAX_LIFE;
@@ -118,6 +118,39 @@ void UpdateBlock(void)
 	ID3D11Device* pDevice = GetDevice();
 	ID3D11DeviceContext* pDeviceContext = GetDeviceContext();
 
+	for (int i = 0; i < MAX_BLOCK; ++i)
+	{
+		XMMATRIX mtxWorld, mtxRot, mtxTranslate;
+
+		if (!g_block[i].m_use)
+		{// 未使用なら次へ
+			continue;
+		}
+		// ワールドマトリックスの初期化
+		mtxWorld = XMMatrixIdentity();
+
+		mtxWorld = XMMatrixMultiply(mtxWorld, mtxRot);
+
+		//// 箱のサイズ
+		//mtxWorld = XMMatrixScaling(g_BlockScale.x,
+		//	g_BlockScale.y * 2,
+		//	g_BlockScale.z);
+		mtxWorld = XMMatrixScaling(g_block[i].m_size.x,
+			g_block[i].m_size.y * 2,
+			g_block[i].m_size.z);
+
+		// 移動を反映
+		mtxTranslate = XMMatrixTranslation(
+			g_block[i].m_pos.x,
+			g_block[i].m_pos.y,
+			g_block[i].m_pos.z);
+		mtxWorld = XMMatrixMultiply(mtxWorld, mtxTranslate);
+
+		// ワールドマトリックス設定
+		XMStoreFloat4x4(&g_block[i].m_mtxWorld, mtxWorld);
+
+	}
+
 	//------ブロックとプレイヤーの当たり判定処理-------------------------------
 	for (int i = 0; i < MAX_BLOCK; ++i)
 	{
@@ -127,7 +160,7 @@ void UpdateBlock(void)
 		}
 
 		// 壁とプレイヤーが衝突していたら
-		if (CollisionAABB(g_block[i].m_pos, g_BlockHalfScale, GetPlayerPos(), XMFLOAT3(3.0f, 7.0f, 0.5f)))//プレイヤーのサイズ 
+		if (CollisionAABB(g_block[i].m_pos, g_block[i].m_Halfsize, GetPlayerPos(), XMFLOAT3(3.0f, 7.0f, 0.5f)))//プレイヤーのサイズ 
 		{
 			// プレイヤーがとんでいたら
 			if (GetPlayerJump() == false)
@@ -153,9 +186,10 @@ void UpdateBlock(void)
 				}
 				// ブロックにひびが入る
 				g_block[i].m_3Dmodel = MODEL_CRACKS;
+				g_model[i].SetDif(XMFLOAT4(1.0f, 0.2f, 0.2f, 1.0f));	// モデルロード前にカラーを指定
 				g_model[i].Load(pDevice, pDeviceContext, g_block[i].m_3Dmodel);
 				g_block[i].m_nLife--;
-
+				g_model[i].SetDif(XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));	// カラーを戻す(他のも変わってしまうから)
 				// 接地状態ON
 				SetPlayerJump(true);
 
@@ -163,40 +197,6 @@ void UpdateBlock(void)
 			}
 		}
 	}
-
-	XMMATRIX mtxWorld, mtxRot, mtxTranslate;
-
-	for (int i = 0; i < MAX_BLOCK; ++i)
-	{
-		if (!g_block[i].m_use)
-		{// 未使用なら次へ
-			continue;
-		}
-		// ワールドマトリックスの初期化
-		mtxWorld = XMMatrixIdentity();
-
-		mtxWorld = XMMatrixMultiply(mtxWorld, mtxRot);
-
-		// 箱のサイズ
-		mtxWorld = XMMatrixScaling(g_BlockScale.x,
-			g_BlockScale.y,
-			g_BlockScale.z);
-
-		// 移動を反映
-		mtxTranslate = XMMatrixTranslation(
-			g_block[i].m_pos.x,
-			g_block[i].m_pos.y,
-			g_block[i].m_pos.z);
-		mtxWorld = XMMatrixMultiply(mtxWorld, mtxTranslate);
-
-		// ワールドマトリックス設定
-		XMStoreFloat4x4(&g_block[i].m_mtxWorld, mtxWorld);
-
-	}
-
-	
-
-
 }
 
 //=============================================================================
@@ -233,14 +233,15 @@ void DrawBlock(void)
 //		ブロックの配置処理
 //	
 //	引数:
-//		置きたい座標,無敵か？
-//						true:無敵
-//
+//		置きたい座標,
+//		無敵か？,true:無敵
+//		ブロックのサイズ
+//		座標補正値
 //	戻り値:
 //		使用したブロックの総数
 //
 //*******************************
-int SetBlock(XMFLOAT3 pos, bool inv)
+int SetBlock(XMFLOAT3 pos, bool inv,XMFLOAT2 size, XMFLOAT2 cpos)
 {
 	ID3D11Device* pDevice = GetDevice();
 	ID3D11DeviceContext* pDeviceContext = GetDeviceContext();
@@ -261,16 +262,42 @@ int SetBlock(XMFLOAT3 pos, bool inv)
 
 			// 無敵オン
 			g_block[cntBlock].m_invincible = true;
+			g_model[cntBlock].SetDif(XMFLOAT4(1.0f, 0.8f, 0.1f, 1.0f));	// モデルロード前にカラーを指定
 		}
 		else
 		{	// 通常ブロックのモデルデータ
 			g_block[cntBlock].m_3Dmodel = MODEL_BLOCK;
+			g_model[cntBlock].SetDif(XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
 		}
 		g_model[cntBlock].Load(pDevice, pDeviceContext, g_block[cntBlock].m_3Dmodel);
 
 		// 使用中ＯＮ
 		g_block[cntBlock].m_use = true;
 		g_block[cntBlock].m_pos = pos;
+		g_block[cntBlock].m_pos.x += cpos.x;
+		g_block[cntBlock].m_pos.y += cpos.y;
+
+		// 指定されたサイズに変更
+		g_block[cntBlock].m_size.x *= size.x;
+		g_block[cntBlock].m_size.y *= size.y;
+		if(((g_block[cntBlock].m_Halfsize.x * size.x) > g_BlockHalfScale.x))
+		{
+			g_block[cntBlock].m_Halfsize.x = (g_block[cntBlock].m_size.x /2);
+		}
+		else
+		{
+			g_block[cntBlock].m_Halfsize.x = g_BlockHalfScale.x;
+		}
+
+		if (((g_block[cntBlock].m_Halfsize.y * size.y) > g_BlockHalfScale.y))
+		{
+			g_block[cntBlock].m_Halfsize.y = (g_block[cntBlock].m_Halfsize.y * size.y) - (g_BlockHalfScale.y * 1.5f);
+		}
+		else
+		{
+			g_block[cntBlock].m_Halfsize.y *= size.y;
+
+		}
 
 		Block = cntBlock + 1;
 		break;

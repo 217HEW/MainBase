@@ -36,7 +36,15 @@ enum EScene
 	SCENE_GAME,			// ゲーム画面
 	SCENE_AREA2,		// ゲーム画面エリア2
 	SCENE_AREA3,		// ゲーム画面エリア3
-	SCENE_AREA_BOSS,	// ゲーム画面ボスエリア
+	SCENE_AREA4,		// ゲーム画面エリア4
+	SCENE_AREA5,		// ゲーム画面エリア5
+	SCENE_AREA6,		// ゲーム画面エリア6
+	SCENE_AREA7,		// ゲーム画面エリア7
+	SCENE_AREA8,		// ゲーム画面エリア8
+	SCENE_AREA9,		// ゲーム画面エリア9
+	SCENE_AREA10,		// ゲーム画面エリア10
+
+	SCENE_AREA_DEBUG,	// ゲーム画面デバッグエリア
 	
 // ↓シーン追加↓
 	SCENE_GAMEOVER,		// ゲームオーバー画面

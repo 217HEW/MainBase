@@ -91,7 +91,7 @@ void UpdateGameclear()
 		}
 		else if (GetKeyRelease(VK_5))
 		{
-			StartFadeOut(SCENE_AREA_BOSS);
+			StartFadeOut(SCENE_AREA_DEBUG);
 		}
 		else if (GetKeyRelease(VK_6))
 		{

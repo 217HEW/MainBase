@@ -26,10 +26,18 @@
 
 enum AREA
 {
-	AREA_1 = 0,			// エリア１
+	AREA_DEBUG = 0,	// デバッグエリア
+
+	AREA_1,			// エリア１
 	AREA_2,			// エリア２
 	AREA_3,			// エリア３
-	AREA_BOSS,		// ボスエリア
+	AREA_4,			// エリア４
+	AREA_5,			// エリア５
+	AREA_6,			// エリア６
+	AREA_7,			// エリア７
+	AREA_8,			// エリア８
+	AREA_9,			// エリア９
+	AREA_10,		// エリア１０
 
 	MAX_AREA		// エリアの最大数
 };
