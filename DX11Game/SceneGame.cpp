@@ -187,12 +187,12 @@ HRESULT InitGame(AREA Area)
 	SetEnemyMelee(XMFLOAT3(30.0f, 30.0f, 0.0f));
 
 	// エネミーエクスプロード初期化
-	hr = InitEnemyExplode();
-	if (FAILED(hr))
-		return hr;
+	//hr = InitEnemyExplode();
+	//if (FAILED(hr))
+	//	return hr;
 
 	// エクスプロード呼び出し
-	SetEnemyExplode(XMFLOAT3(60.0f, -790.0f, 0.0f));
+	//SetEnemyExplode(XMFLOAT3(60.0f, -790.0f, 0.0f));
 
 	// レンジ初期化
 	hr = InitEnemyRange();
@@ -287,7 +287,7 @@ void UninitGame()
 	UninitEnemyMelee();
 
 	// エネミーエクスプロード終了
-	UninitEnemyExplode();
+	//UninitEnemyExplode();
 
 	// ブロック終了
 	//UninitBlock();
@@ -405,7 +405,7 @@ void UpdateGame()
 		UpdateEnemyMelee();
 
 		// エネミーエクスプロード更新
-		UpdateEnemyExplode();
+		//UpdateEnemyExplode();
 
 		// エネミーレンジ更新
 		UpdateEnemyRange();
@@ -533,7 +533,7 @@ void DrawGame()
 	DrawEnemyMelee();
 
 	// エネミーエクスプロード
-	DrawEnemyExplode();
+	//DrawEnemyExplode();
 
 	// エネミーレンジ
 	DrawEnemyRange();
