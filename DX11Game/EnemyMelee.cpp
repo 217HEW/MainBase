@@ -223,7 +223,7 @@ void UpdateEnemyMelee(void)
 					}
 				}
 			}
-
+			
 			// 敵とプレイヤーの当たり判定
 			if (!g_EMelee[i].m_use)
 			{// 未使用なら次へ

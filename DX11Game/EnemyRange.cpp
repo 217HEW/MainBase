@@ -5,12 +5,19 @@
 //
 //--------------------------------------------------------------
 //	製作者：石原聖斗
-//--------------------------------------------------------------
+//**************************************************************
+
+//**************************************************************
 //	開発履歴
 //	2021/12/28	敵の範囲に入ったらタイマーでダメージを喰らう処理
 //				の実装
 //	2021/01/03	ジャンプ中は攻撃を喰らわない処理の実装
-//
+//	編集者：石原聖斗
+//--------------------------------------------------------------
+//	2022/01/14	正式遠距離エネミーモデルを導入しました。
+//				射撃までのクールタイムを多少ランダムにする処理を
+//				作成中
+//	編集者：上月大地
 //**************************************************************
 
 //**************************************************************
@@ -43,7 +50,7 @@ struct TEnemyRange {
 //**************************************************************
 // マクロ定義
 //**************************************************************
-#define MODEL_ENEMY			"data/model/helicopter000.fbx"
+#define MODEL_ENEMY			"data/model/Range/Range.fbx"	// "data/model/helicopter000.fbx"
 
 #define MAX_ENEMYRANGE			(10)		// 敵機最大数
 
@@ -51,11 +58,12 @@ struct TEnemyRange {
 
 #define ENEMY_TIMER				(3)			// 制限時間
 
+#define SCALE_E_RANGE		(XMFLOAT3(0.05f, 0.1f, 0.1f))
 //**************************************************************
 // グローバル変数
 //**************************************************************
 static CAssimpModel	g_model;			// モデル
-static TEnemyRange		g_ERange[MAX_ENEMYRANGE];	// 敵機情報
+static TEnemyRange	g_ERange[MAX_ENEMYRANGE];	// 敵機情報
 
 
 //**************************************************************
@@ -69,6 +77,7 @@ HRESULT InitEnemyRange(void)
 
 
 	// モデルデータの読み込み
+	g_model.SetDif(XMFLOAT4(0.2f,5.0f,0.2f,1.0f));
 	if (!g_model.Load(pDevice, pDeviceContext, MODEL_ENEMY))
 	{
 		MessageBoxA(GetMainWnd(), "モデルデータ読み込みエラー", "InitEnemy", MB_OK);
@@ -82,7 +91,8 @@ HRESULT InitEnemyRange(void)
 		g_ERange[i].m_rotDest = g_ERange[i].m_rot;
 		g_ERange[i].m_size = XMFLOAT3(5.0f, 5.0f, 5.0f);
 		g_ERange[i].m_use = false;
-		g_ERange[i].m_Time = ENEMY_TIMER * 60 + 59;
+		// g_ERange[i].m_Time = ENEMY_TIMER * 60 + 59;
+		g_ERange[i].m_Time = (ENEMY_TIMER + rand() % 3) * 60 + 59;	// 3～6秒のランダムで
 	}
 
 	return hr;
@@ -112,8 +122,8 @@ void UpdateEnemyRange(void)
 	{
 		//GetPlayerJump();
 		//敵とプレイヤーの距離が近づいたら
-		if (CollisionSphere(posPlayer, sizePlayer, g_ERange[i].m_pos, SEARCH_RANGE))
-		{
+		//if (CollisionSphere(posPlayer, sizePlayer, g_ERange[i].m_pos, SEARCH_RANGE))
+		//{
 			// 使用中ならスキップ
 			if (!g_ERange[i].m_use)
 			{
@@ -138,7 +148,7 @@ void UpdateEnemyRange(void)
 					{
 						continue;
 					}
-					g_ERange[i].m_Time += ENEMY_TIMER * 60 + 59;
+					g_ERange[i].m_Time += (ENEMY_TIMER + rand() % 3) * 60 + 59;	// もう一度3～6秒数える
 					
 				}
 			}
@@ -146,7 +156,6 @@ void UpdateEnemyRange(void)
 			{
 				g_ERange[i].m_Time;
 			}*/
-
 
 			// ワールドマトリックスの初期化
 			mtxWorld = XMMatrixIdentity();
@@ -158,6 +167,7 @@ void UpdateEnemyRange(void)
 				XMConvertToRadians(g_ERange[i].m_rot.z));
 			mtxWorld = XMMatrixMultiply(mtxWorld, mtxRot);
 
+			mtxWorld = XMMatrixScaling(SCALE_E_RANGE.x, SCALE_E_RANGE.y, SCALE_E_RANGE.z);
 			// 移動を反映
 			mtxTranslate = XMMatrixTranslation(
 				g_ERange[i].m_pos.x,
@@ -167,7 +177,7 @@ void UpdateEnemyRange(void)
 
 			// ワールドマトリックス設定
 			XMStoreFloat4x4(&g_ERange[i].m_mtxWorld, mtxWorld);
-		}
+		//}
 	}
 }
 
@@ -181,6 +191,11 @@ void DrawEnemyRange(void)
 
 	// 不透明部分を描画
 	for (int i = 0; i < MAX_ENEMYRANGE; ++i) {
+		// 使ってないならスキップ
+		if (!g_ERange[i].m_use)
+		{
+			continue;
+		}
 		g_model.Draw(pDC, g_ERange[i].m_mtxWorld, eOpacityOnly);
 	}
 

@@ -93,7 +93,28 @@ void UpdateScene()
 	case SCENE_AREA3:		// ゲーム画面
 		UpdateGame();
 		break;
-	case SCENE_AREA_BOSS:		// ゲーム画面
+	case SCENE_AREA4: // ゲーム画面エリア4
+		UpdateGame();
+		break;
+	case SCENE_AREA5: // ゲーム画面エリア5
+		UpdateGame();
+		break;
+	case SCENE_AREA6: // ゲーム画面エリア6
+		UpdateGame();
+		break;
+	case SCENE_AREA7: // ゲーム画面エリア7
+		UpdateGame();
+		break;
+	case SCENE_AREA8: // ゲーム画面エリア8
+		UpdateGame();
+		break;
+	case SCENE_AREA9: // ゲーム画面エリア9
+		UpdateGame();
+		break;
+	case SCENE_AREA10: // ゲーム画面エリア10
+		UpdateGame();
+		break;
+	case SCENE_AREA_DEBUG:		// ゲーム画面
 		UpdateGame();
 		break;
 	// 何かシーンを追加する場合はこちらに
@@ -128,7 +149,28 @@ void DrawScene()
 	case SCENE_AREA3:		// ゲーム画面
 		DrawGame();
 		break;
-	case SCENE_AREA_BOSS:		// ゲーム画面
+	case SCENE_AREA4: // ゲーム画面エリア4
+		DrawGame();
+		break;
+	case SCENE_AREA5: // ゲーム画面エリア5
+		DrawGame();
+		break;
+	case SCENE_AREA6: // ゲーム画面エリア6
+		DrawGame();
+		break;
+	case SCENE_AREA7: // ゲーム画面エリア7
+		DrawGame();
+		break;
+	case SCENE_AREA8: // ゲーム画面エリア8
+		DrawGame();
+		break;
+	case SCENE_AREA9: // ゲーム画面エリア9
+		DrawGame();
+		break;
+	case SCENE_AREA10: // ゲーム画面エリア10
+		DrawGame();
+		break;
+	case SCENE_AREA_DEBUG:		// ゲーム画面
 		DrawGame();
 		break;
 	// 追加シーンの描画
@@ -173,7 +215,28 @@ HRESULT SetScene(EScene eScene)
 	case SCENE_AREA3: // ゲーム画面
 		UninitGame();
 		break;
-	case SCENE_AREA_BOSS: // ゲーム画面
+	case SCENE_AREA4: // ゲーム画面エリア4
+		UninitGame();
+		break;
+	case SCENE_AREA5: // ゲーム画面エリア5
+		UninitGame();
+		break;
+	case SCENE_AREA6: // ゲーム画面エリア6
+		UninitGame();
+		break;
+	case SCENE_AREA7: // ゲーム画面エリア7
+		UninitGame();
+		break;
+	case SCENE_AREA8: // ゲーム画面エリア8
+		UninitGame();
+		break;
+	case SCENE_AREA9: // ゲーム画面エリア9
+		UninitGame();
+		break;
+	case SCENE_AREA10: // ゲーム画面エリア10
+		UninitGame();
+		break;
+	case SCENE_AREA_DEBUG: // ゲーム画面
 		UninitGame();
 		break;
 	case SCENE_GAMEOVER: // ゲームオーバー画面
@@ -202,8 +265,29 @@ HRESULT SetScene(EScene eScene)
 	case SCENE_AREA3: // ゲーム画面エリア3
 		InitGame(AREA_3);
 		break;
-	case SCENE_AREA_BOSS: // ゲーム画面エリア3
-		InitGame(AREA_BOSS);
+	case SCENE_AREA4: // ゲーム画面エリア4
+		InitGame(AREA_4);
+		break;
+	case SCENE_AREA5: // ゲーム画面エリア5
+		InitGame(AREA_5);
+		break;
+	case SCENE_AREA6: // ゲーム画面エリア6
+		InitGame(AREA_6);
+		break;
+	case SCENE_AREA7: // ゲーム画面エリア7
+		InitGame(AREA_7);
+		break;
+	case SCENE_AREA8: // ゲーム画面エリア8
+		InitGame(AREA_8);
+		break;
+	case SCENE_AREA9: // ゲーム画面エリア9
+		InitGame(AREA_9);
+		break;
+	case SCENE_AREA10: // ゲーム画面エリア10
+		InitGame(AREA_10);
+		break;
+	case SCENE_AREA_DEBUG: // ゲーム画面エリア3
+		InitGame(AREA_DEBUG);
 		break;
 	case SCENE_GAMEOVER: // ゲームオーバー画面
 		InitGameover();

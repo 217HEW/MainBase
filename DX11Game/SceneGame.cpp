@@ -68,15 +68,15 @@
 #include "effect.h"
 #include "smoke.h"
 #include "meshwall.h"
-//#include "polyline.h"
+// #include "polyline.h"
 #include "Sound.h"
 #include "timer.h"
 #include "life.h"
 #include "number.h"
-//#include "CreateField.h"
+// #include "CreateField.h"
 #include "Block.h"
 #include "EnemyMelee.h"
-#include "EnemyExplode.h"
+// #include "EnemyExplode.h"
 #include "EnemyRange.h"
 #include "Pause.h"
 
@@ -187,12 +187,12 @@ HRESULT InitGame(AREA Area)
 	SetEnemyMelee(XMFLOAT3(30.0f, 30.0f, 0.0f));
 
 	// エネミーエクスプロード初期化
-	//hr = InitEnemyExplode();
-	//if (FAILED(hr))
-	//	return hr;
+	// hr = InitEnemyExplode();
+	// if (FAILED(hr))
+	// 	return hr;
 
 	// エクスプロード呼び出し
-	//SetEnemyExplode(XMFLOAT3(60.0f, -790.0f, 0.0f));
+	// SetEnemyExplode(XMFLOAT3(60.0f, -790.0f, 0.0f));
 
 	// レンジ初期化
 	hr = InitEnemyRange();
@@ -200,7 +200,7 @@ HRESULT InitGame(AREA Area)
 		return hr;
 
 	// レンジ呼び出し
-	SetEnemyRange(XMFLOAT3(40.0f, -500.0f, 0.0f));
+	//SetEnemyRange(XMFLOAT3(40.0f, -500.0f, 0.0f));
 
 	// メッシュ壁初期化
 	hr = InitMeshWall();
@@ -287,7 +287,7 @@ void UninitGame()
 	UninitEnemyMelee();
 
 	// エネミーエクスプロード終了
-	//UninitEnemyExplode();
+	// UninitEnemyExplode();
 
 	// ブロック終了
 	//UninitBlock();
@@ -368,7 +368,7 @@ void UpdateGame()
 			}
 			else if (GetKeyRelease(VK_5))
 			{
-				StartFadeOut(SCENE_AREA_BOSS);
+				StartFadeOut(SCENE_AREA_DEBUG);
 			}
 			else if (GetKeyRelease(VK_6))
 			{
@@ -405,7 +405,7 @@ void UpdateGame()
 		UpdateEnemyMelee();
 
 		// エネミーエクスプロード更新
-		//UpdateEnemyExplode();
+		// UpdateEnemyExplode();
 
 		// エネミーレンジ更新
 		UpdateEnemyRange();
@@ -533,7 +533,7 @@ void DrawGame()
 	DrawEnemyMelee();
 
 	// エネミーエクスプロード
-	//DrawEnemyExplode();
+	// DrawEnemyExplode();
 
 	// エネミーレンジ
 	DrawEnemyRange();

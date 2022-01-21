@@ -57,6 +57,10 @@ struct SHADER_BONE {
 
 const aiMatrix4x4 IdentityMatrix;
 
+// 仮＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+static XMFLOAT4 m_vDif;
+// 仮＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+
 // コンストラクタ
 AnimEvaluator::AnimEvaluator(const aiAnimation *pAnim)
 	: mAnim(pAnim)
@@ -580,6 +584,7 @@ CAssimpModel::CAssimpModel() : m_pMaterial(nullptr), m_pScene(nullptr), m_pAnima
 	XMStoreFloat4x4(&m_mtxTexture, XMMatrixIdentity());
 	XMStoreFloat4x4(&m_mtxWorld, XMMatrixIdentity());
 	m_dCurrent = m_dLastPlaying = 0.0;
+	m_vDif = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 }
 
 // デストラクタ
@@ -702,12 +707,12 @@ void CAssimpModel::Draw(ID3D11DeviceContext* pDC, XMFLOAT4X4& mtxWorld, EByOpaci
 {
 	if (!m_pScene) return;
 	// アニメーション更新
-	//if (m_pAnimator) {
-	//	m_dCurrent += clock() / double(CLOCKS_PER_SEC) - m_dLastPlaying;
-	//	double time = m_dCurrent;
-	//	m_pAnimator->Calculate(time);
-	//	m_dLastPlaying = m_dCurrent;
-	//}
+	if (m_pAnimator) {
+		m_dCurrent += clock() / double(CLOCKS_PER_SEC) - m_dLastPlaying;
+		double time = m_dCurrent;
+		m_pAnimator->Calculate(time);
+		m_dLastPlaying = m_dCurrent;
+	}
 
 	m_mtxWorld = mtxWorld;
 	// 使用するシェーダーの登録	
@@ -867,6 +872,7 @@ CAssimpMesh CAssimpModel::processMesh(ID3D11Device* pDevice, aiMesh* mesh)
 		aiMaterial* pMaterial = m_pScene->mMaterials[mesh->mMaterialIndex];
 
 		material = loadMaterial(pDevice, pMaterial, mesh);
+		material.Kd = GetDif();
 	}
 
 	return CAssimpMesh(pDevice, this, aVertex, aIndex, material);
@@ -1168,3 +1174,17 @@ double CAssimpModel::GetAnimDuration(int nAnimIndex)
 	}
 	return 0.0;
 }
+
+// 追加＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+// 入力したカラーをセットする
+void CAssimpModel::SetDif(XMFLOAT4 Dif)
+{ 
+	m_vDif = Dif; 
+}
+
+// セット関数で入力されたカラーを呼び出す
+XMFLOAT4 CAssimpModel::GetDif()
+{
+	return m_vDif; 
+}
+// 追加＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝

@@ -54,6 +54,9 @@
 //	2022/01/07	プレイヤーのサイズを取得するための関数作成
 //				そのため、サイズ用の変数「g_sizeModel」をグローバル変数に宣言
 //	編集者：柴山凜太郎
+//--------------------------------------------------------------
+//	2022/01/16	モデルカラーを追加しました
+//	編集者：上月大地
 //**************************************************************
 
 //**************************************************************
@@ -77,15 +80,15 @@
 //**************************************************************
 // マクロ定義
 //**************************************************************
-//#define MODEL_PLAYER	 "data/model/Ninzin_Metersx25.fbx"
-#define MODEL_PLAYER	 "data/model/Character02.fbx"
+#define MODEL_PLAYER	 "data/model/test.fbx"// "data/model/Character02.fbx"
 
 #define	VALUE_MOVE_PLAYER	(0.155f)	// 移動速度
-#define	SPEED_MOVE_PLAYER	(30)		// 跳躍速度
+#define	SPEED_MOVE_PLAYER	(5)		// 跳躍速度
 #define	RATE_MOVE_PLAYER	(0.025f)	// 移動慣性係数
 #define	VALUE_ROTATE_PLAYER	(4.5f)		// 回転速度
 #define	RATE_ROTATE_PLAYER	(0.1f)		// 回転慣性係数
-#define SCALE_PLAYER		XMFLOAT3(1.0f, 1.5f, 1.0f)	// プレイヤーのモデルスケール
+#define SCALE_PLAYER		(XMFLOAT3(1.0f, 1.5f, 1.0f))//(XMFLOAT3(2.0f, 1.5f, 1.0f)) //	プレイヤーのモデルスケール
+#define COLLAR_PLAYER		(XMFLOAT4(1.0f, 1.0f, 1.0f,1.0f))	// プレイヤーカラー(仮)ここをいじるとカラーが変わります
 #define SIZE_PLAYER			XMFLOAT3(110.5f, 16.5f, 1.0f)	// プレイヤーのモデルサイズ
 
 #define	PLAYER_RADIUS		(10.0f)		// 境界球半径
@@ -127,20 +130,20 @@ HRESULT InitPlayer(void)
 	g_nDamage = 0;
 
 	// 位置・回転・スケールの初期設定
-	g_posModel = XMFLOAT3(50.0f, -800.0f, 0.0f);
+	g_posModel = XMFLOAT3(50.0f, -790.0f, 0.0f);
 	g_moveModel = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	g_ScaleModel = SCALE_PLAYER;
 	g_SizeModel = SIZE_PLAYER;
 	g_rotModel = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	g_rotDestModel = XMFLOAT3(0.0f, 0.0f, 0.0f);
-	 Stick = XMFLOAT2(0.0f, 0.0f);
+	Stick = XMFLOAT2(0.0f, 0.0f);
 
 	// モデルデータの読み込み
+	g_model.SetDif(COLLAR_PLAYER); // モデルロード前にカラーを指定
 	if (!g_model.Load(pDevice, pDeviceContext, MODEL_PLAYER)) {
 		MessageBoxA(GetMainWnd(), "自機モデルデータ読み込みエラー", "InitModel", MB_OK);
 		return E_FAIL;
 	}
-
 	// 丸影の生成
 	//g_nShadow = CreateShadow(g_posModel, 12.0f);
 
@@ -425,9 +428,9 @@ void UpdatePlayer(void)
 			StartFadeOut(SCENE_AREA3);
 			break;
 		case AREA_3:
-			StartFadeOut(SCENE_AREA_BOSS);
+			StartFadeOut(SCENE_AREA_DEBUG);
 			break;
-		case AREA_BOSS:
+		case AREA_DEBUG:
 			StartFadeOut(SCENE_GAMECLEAR);
 			break;
 		default:
@@ -461,7 +464,7 @@ void UpdatePlayer(void)
 	mtxWorld = XMMatrixScaling(g_ScaleModel.x, g_ScaleModel.y, g_ScaleModel.z);
 
 	// 移動を反映
-	mtxTranslate = XMMatrixTranslation(g_posModel.x, g_posModel.y, g_posModel.z);
+	mtxTranslate = XMMatrixTranslation(g_posModel.x, g_posModel.y -16, g_posModel.z);
 	mtxWorld = XMMatrixMultiply(mtxWorld, mtxTranslate);
 
 	// ワールドマトリックス設定
@@ -603,7 +606,6 @@ float GetPlayerRadSize()
 {
 	return PLAYER_RADIUS;
 }
-
 //*******************************
 //
 //		ジャンプ状態情報取得

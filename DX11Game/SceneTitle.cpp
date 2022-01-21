@@ -107,11 +107,11 @@ void UpdateTitle()
 	// キー入力でシーン遷移
 	if (GetFadeState() == FADE_NONE)
 	{
-		if (GetKeyRelease(VK_1))
+		if (GetKeyRelease(VK_T))
 		{
 			StartFadeOut(SCENE_TITLE);
 		}
-		else if (GetKeyRelease(VK_2) || GetKeyRelease(VK_SPACE) || GetKeyRelease(VK_RETURN)|| GetJoyTrigger(Joycon, JOYSTICKID2))
+		else if (GetKeyRelease(VK_1) || GetKeyRelease(VK_SPACE) || GetKeyRelease(VK_RETURN)|| GetJoyTrigger(Joycon, JOYSTICKID2))
 		{
 			// 決定音
 			CSound::Play(SE_DECISION);
@@ -119,7 +119,7 @@ void UpdateTitle()
 
 			StartFadeOut(SCENE_GAME);
 		}
-		else if (GetKeyRelease(VK_3))
+		else if (GetKeyRelease(VK_2))
 		{
 			// 決定音
 			CSound::Play(SE_DECISION);
@@ -127,7 +127,7 @@ void UpdateTitle()
 
 			StartFadeOut(SCENE_AREA2);
 		}
-		else if (GetKeyRelease(VK_4))
+		else if (GetKeyRelease(VK_3))
 		{
 			// 決定音
 			CSound::Play(SE_DECISION);
@@ -135,13 +135,21 @@ void UpdateTitle()
 
 			StartFadeOut(SCENE_AREA3);
 		}
-		else if (GetKeyRelease(VK_5))
+		else if (GetKeyRelease(VK_4))
 		{
 			// 決定音
 			CSound::Play(SE_DECISION);
 			CSound::SetVolume(SE_DECISION, 0.03f);
 			
-			StartFadeOut(SCENE_AREA_BOSS);
+			StartFadeOut(SCENE_AREA4);
+		}
+		else if (GetKeyRelease(VK_5))
+		{
+			// 決定音
+			CSound::Play(SE_DECISION);
+			CSound::SetVolume(SE_DECISION, 0.03f);
+
+			StartFadeOut(SCENE_AREA5);
 		}
 		else if (GetKeyRelease(VK_6))
 		{
@@ -149,7 +157,7 @@ void UpdateTitle()
 			CSound::Play(SE_DECISION);
 			CSound::SetVolume(SE_DECISION, 0.03f);
 
-			StartFadeOut(SCENE_GAMEOVER);
+			StartFadeOut(SCENE_AREA6);
 		}
 		else if (GetKeyRelease(VK_7))
 		{
@@ -157,9 +165,40 @@ void UpdateTitle()
 			CSound::Play(SE_DECISION);
 			CSound::SetVolume(SE_DECISION, 0.03f);
 
-			StartFadeOut(SCENE_GAMECLEAR);
+			StartFadeOut(SCENE_AREA7);
 		}
+		else if (GetKeyRelease(VK_8))
+		{
+			// 決定音
+			CSound::Play(SE_DECISION);
+			CSound::SetVolume(SE_DECISION, 0.03f);
 
+			StartFadeOut(SCENE_AREA8);
+		}
+		else if (GetKeyRelease(VK_9))
+		{
+			// 決定音
+			CSound::Play(SE_DECISION);
+			CSound::SetVolume(SE_DECISION, 0.03f);
+
+			StartFadeOut(SCENE_AREA9);
+		}
+		else if (GetKeyRelease(VK_0))
+		{
+			// 決定音
+			CSound::Play(SE_DECISION);
+			CSound::SetVolume(SE_DECISION, 0.03f);
+
+			StartFadeOut(SCENE_AREA10);
+		}
+		else if (GetKeyRelease(VK_D))
+		{
+			// 決定音
+			CSound::Play(SE_DECISION);
+			CSound::SetVolume(SE_DECISION, 0.03f);
+
+			StartFadeOut(SCENE_AREA_DEBUG);
+		}
 	}
 }
 

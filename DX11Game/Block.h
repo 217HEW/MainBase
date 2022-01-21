@@ -17,6 +17,9 @@
 //	2021/12/21	ブロックのサイズを取得する関数の追加	
 //	編集者：柴山凜太郎
 //--------------------------------------------------------------
+//	2022/01/16	エリア縮小により縦13x横21に変更	
+//	編集者：上月大地
+//--------------------------------------------------------------
 //**************************************************************
 #pragma once
 
@@ -43,7 +46,8 @@ enum MODEL
 //**************************************************************
 struct TBLOCK {
 	XMFLOAT3	m_pos;		// 現在の位置
-	//XMFLOAT3    m_size;	// 現在のサイズ
+	XMFLOAT3    m_size;		// 現在のサイズ
+	XMFLOAT3    m_Halfsize;		// ハーフサイズ
 	XMFLOAT4X4	m_mtxWorld;	// ワールドマトリックス
 	std::string	m_3Dmodel;	// モデル情報
 	int			m_nLife;	// 壁の耐久値
@@ -68,6 +72,6 @@ void UninitBlock(void);
 void UpdateBlock(void);
 void DrawBlock(void);
 
-int SetBlock(XMFLOAT3 pos, bool inv);	// ブロック配置 
+int SetBlock(XMFLOAT3 pos, bool inv, XMFLOAT2 size, XMFLOAT2 cpos);	// ブロック配置 
 XMFLOAT3 GetBlockSize();	// ブロックサイズ取得
 TBLOCK* GetBlockArray();	// ブロック配列取得
