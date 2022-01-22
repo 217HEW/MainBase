@@ -18,7 +18,11 @@
 //--------------------------------------------------------------
 //　2021/12/30	プレイヤーの境界球半径を取得する関数名の変更
 //	編集者：柴山凜太郎
-//
+//--------------------------------------------------------------
+//　2022/01/22	近接敵の情報を取得する関数の作成
+//				プレイヤーの体力が０になった時、ゲームオーバーに
+//				シーン遷移する処理はここでやるべきでないため削除
+//	編集者：柴山凜太郎
 //**************************************************************
 
 //**************************************************************
@@ -33,21 +37,7 @@
 #include "explosion.h"
 #include "life.h"
 #include "SceneManager.h"
-
-//**************************************************************
-// 構造体定義
-//**************************************************************
-struct TEnemyMelee {
-	XMFLOAT3	m_pos;		// 現在の位置
-	XMFLOAT3	m_rot;		// 現在の向き
-	XMFLOAT3	m_size;		// 現在のサイズ
-	XMFLOAT3	m_rotDest;	// 目的の向き
-	XMFLOAT3	m_move;		// 移動量
-	bool		m_use;		// 使用してるか否か	ON:使用中
-
-	XMFLOAT4X4	m_mtxWorld;	// ワールドマトリックス
-	int			m_speed;	// スピード
-};
+#include "PlayEffect.h"
 
 //**************************************************************
 // マクロ定義
@@ -56,7 +46,7 @@ struct TEnemyMelee {
 //#define MODEL_ENEMY			"data/model/enemy3.fbx"
 
 #define	VALUE_MOVE_ENEMY		(1.0f)		// 移動速度
-#define MAX_ENEMYMELEE			(10)		// 敵機最大数
+#define MAX_ENEMYMELEE			(10)		// 近接敵最大数
 
 #define	VALUE_ROTATE_ENEMY		(7.0f)		// 回転速度
 #define	RATE_ROTATE_ENEMY		(0.20f)		// 回転慣性係数
@@ -68,9 +58,10 @@ struct TEnemyMelee {
 // グローバル変数
 //**************************************************************
 static CAssimpModel		g_model;			// モデル情報
-static TEnemyMelee		g_EMelee[MAX_ENEMYMELEE];	// 敵機情報
+static TEnemyMelee		g_EMelee[MAX_ENEMYMELEE];	// 近接敵情報
 static XMFLOAT3			Blocksize;
-
+static int g_EffectTimer = 0;		// エフェクト制御用タイマー
+Effect g_MeleeEffect;
 //**************************************************************
 // 初期化処理
 //**************************************************************
@@ -223,7 +214,15 @@ void UpdateEnemyMelee(void)
 					}
 				}
 			}
-			
+
+			// エフェクトセット＆制御
+			if (g_EffectTimer == 0)
+			{
+				g_MeleeEffect.Set(0, g_EMelee[i].m_pos, XMFLOAT3(1.0f, 1.0f, 1.0f), 0.5f, XMFLOAT3(1.0f,1.0f,1.0f));
+				g_EffectTimer = 30;
+			}
+			--g_EffectTimer;
+
 			// 敵とプレイヤーの当たり判定
 			if (!g_EMelee[i].m_use)
 			{// 未使用なら次へ
@@ -232,10 +231,6 @@ void UpdateEnemyMelee(void)
 			if (CollisionSphere(g_EMelee[i].m_pos, g_EMelee[i].m_size.x, posPlayer, sizePlayer))
 			{
 				DelLife();
-				if (GetLife() == 0)
-				{
-					SetScene(SCENE_GAMEOVER);
-				}
 				g_EMelee[i].m_use = false;
 			}
 
@@ -314,7 +309,7 @@ void DrawEnemyMelee(void)
 
 //*****************************************************************
 //
-//	敵の配置処理
+//	敵の配置
 //	
 //	引数:配置したい座標 x y z
 //
@@ -342,4 +337,14 @@ int SetEnemyMelee(XMFLOAT3 pos)
 	}
 
 	return EnemyMelee;
+}
+
+//**************************************************************
+// 近接敵情報取得
+//
+// 戻り値：近接敵構造体変数
+//**************************************************************
+TEnemyMelee* GetEnemyMelee()
+{
+	return g_EMelee;
 }

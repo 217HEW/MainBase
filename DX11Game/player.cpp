@@ -516,6 +516,10 @@ void UpdatePlayer(void)
 		//g_nDamage = DAMAGE_TIMER;
 
 	}
+	if (GetLife() <= 0)
+	{
+		StartFadeOut(SCENE_GAMEOVER);
+	}
 	//} while (0);
 	//“–‚½‚è”»’è
 	//ƒeƒXƒg•Ç‚Æ‚Ì“–‚½‚è”»’è‚Ålife‚ªŒ¸‚é
