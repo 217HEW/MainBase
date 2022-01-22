@@ -50,17 +50,36 @@
 //**************************************************************
 // マクロ定義
 //**************************************************************
-#define PATH_BGTEXTURE "data/texture/Title.png"
+// 背景
 #define BG_POS_X 0.0f
 #define BG_POS_Y 0.0f
 #define BG_WIDTH SCREEN_WIDTH
 #define BG_HEIGHT SCREEN_HEIGHT
 
+// 決定アイコン
+#define ENTER_WIDTH	 550
+#define ENTER_HEIGHT 80
+#define ENTER_POS_X	 0.0f
+#define ENTER_POS_Y	 (SCREEN_HEIGHT-ENTER_HEIGHT) * -0.5f
+
+#define BLINK_TIMER 60
+#define BLINK_START_TIMER 5
 //**************************************************************
 // グローバル変数
 //**************************************************************
-static ID3D11ShaderResourceView* g_pTexture;
+
+// 画像ファイルネーム
+static LPCWSTR g_pszTexFName[TITLE_TEX_MAX] = {
+ L"data/texture/Title.png",			// タイトル背景テクスチャ
+ L"data/texture/Title.png",			// 決定アイコンテクスチャ
+};
+
+static ID3D11ShaderResourceView* g_pTexture[TITLE_TEX_MAX];
 static DWORD	Joycon;		// コントローラー情報
+
+// 点滅タイマー用
+static int g_nBlink;
+static bool g_bStart;
 
 //**************************************************************
 // 初期化処理
@@ -70,10 +89,19 @@ HRESULT InitTitle()
 	HRESULT hr = S_OK;
 	ID3D11Device* pDevice = GetDevice();
 
-	// テクスチャ読込
-	hr = CreateTextureFromFile(pDevice, PATH_BGTEXTURE, &g_pTexture);
-	if (FAILED(hr))
-		return hr;
+	// 複数のテクスチャ読込
+	for (int i = 0; i < TITLE_TEX_MAX; ++i)
+	{
+		hr = CreateTextureFromFile(pDevice, g_pszTexFName[i], &g_pTexture[i]);
+		if (FAILED(hr))
+		{
+			return hr;
+		}
+	}
+
+	// 変数初期化
+	g_nBlink = BLINK_TIMER;
+	g_bStart = false;
 
 	// タイトルBGM再生
 	CSound::Play(BGM_TITLE);
@@ -92,8 +120,11 @@ void UninitTitle()
 	// タイトルBGM終了
 	CSound::Stop(BGM_TITLE);
 
-	// テクスチャ解放
-	SAFE_RELEASE(g_pTexture);
+	// 複数のテクスチャ解放
+	for (int i = 0; i < TITLE_TEX_MAX; ++i)
+	{
+		SAFE_RELEASE(g_pTexture[i]);
+	}
 }
 
 //**************************************************************
@@ -104,6 +135,12 @@ void UpdateTitle()
 	// コントローラー情報
 	GetJoyState(Joycon);
 
+	// 点滅タイマー更新
+	--g_nBlink;
+	if (g_nBlink <= 0)
+	{
+		g_nBlink = (g_bStart) ? BLINK_START_TIMER : BLINK_TIMER;	}
+
 	// キー入力でシーン遷移
 	if (GetFadeState() == FADE_NONE)
 	{
@@ -111,8 +148,11 @@ void UpdateTitle()
 		{
 			StartFadeOut(SCENE_TITLE);
 		}
-		else if (GetKeyRelease(VK_1) || GetKeyRelease(VK_SPACE) || GetKeyRelease(VK_RETURN)|| GetJoyTrigger(Joycon, JOYSTICKID2))
+		else if (GetKeyRelease(VK_1) || GetKeyRelease(VK_SPACE) || GetKeyRelease(VK_RETURN)|| GetJoyTrigger(Joycon, JOYSTICKID1))
 		{
+			g_bStart = true;
+			g_nBlink = BLINK_START_TIMER;
+
 			// 決定音
 			CSound::Play(SE_DECISION);
 			CSound::SetVolume(SE_DECISION, 0.03f);	// まだ音量の全体ボリュームを下げるやり方がわかって無いので手打ち
@@ -211,9 +251,31 @@ void DrawTitle()
 	SetZBuffer(false);
 
 	ID3D11DeviceContext* pDC = GetDeviceContext();
+	SetPolygonUV(0.0f, 0.0f);
+	SetPolygonFrameSize(1.0f, 1.0f);
+
+	// タイトル背景描画
 	SetPolygonSize(BG_WIDTH, BG_HEIGHT);
 	SetPolygonPos(BG_POS_X, BG_POS_Y);
-	SetPolygonTexture(g_pTexture);
+	SetPolygonTexture(g_pTexture[TITLE_TEX_BG]);
+	DrawPolygon(pDC);
+
+	// 点滅タイマー用
+	if (g_bStart)
+	{
+		if (g_nBlink < BLINK_START_TIMER / 2)
+			return;
+	}
+	else
+	{
+		if (g_nBlink < BLINK_TIMER / 2)
+			return;
+	}
+
+	// 決定アイコン描画
+	SetPolygonSize(ENTER_WIDTH, ENTER_HEIGHT);
+	SetPolygonPos(ENTER_POS_X, ENTER_POS_Y);
+	SetPolygonTexture(g_pTexture[TITLE_TEX_ENTER]);
 	DrawPolygon(pDC);
 
 	// Zバッファ有効(Zチェック有&Z更新有)

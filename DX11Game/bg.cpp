@@ -10,8 +10,8 @@
 //	2021/12/22	bg.hにシーンごとに背景画像を切り替える処理追加
 //  2021/12/30	不必要なため切り替え処理削除
 //--------------------------------------------------------------
-//	2021/12/2
-//
+//	2022/1/222	背景を変更
+//	変更者：上月大地
 //**************************************************************
 
 //**************************************************************
@@ -25,7 +25,7 @@
 //**************************************************************
 // マクロ定義
 //**************************************************************
-#define PATH_BGTEXTURE	L"data/texture/sky001.jpg"	// 背景テクスチャ
+#define PATH_BGTEXTURE	L"data/texture/Bg002.png"	// 背景テクスチャ
 #define BG_POS_X		(0.0f)	// 背景X座標
 #define BG_POS_Y		(0.0f)	// 背景Y座標
 #define BG_WIDTH		SCREEN_WIDTH	// テクスチャの横幅
@@ -77,6 +77,7 @@ void DrawBG()
 	ID3D11DeviceContext* pDC = GetDeviceContext();
 	SetPolygonSize(BG_WIDTH, BG_HEIGHT);
 	SetPolygonPos(BG_POS_X, BG_POS_Y);
+	SetPolygonColor(0.3f, 0.3f, 0.3f);
 	SetPolygonTexture(g_pTexture);
 	SetPolygonUV(0.0f, 0.0f);
 	DrawPolygon(pDC);

@@ -130,7 +130,7 @@ HRESULT InitPlayer(void)
 	g_nDamage = 0;
 
 	// 位置・回転・スケールの初期設定
-	g_posModel = XMFLOAT3(50.0f, -790.0f, 0.0f);
+	g_posModel = XMFLOAT3(10.0f, -320.0f, 0.0f);
 	g_moveModel = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	g_ScaleModel = SCALE_PLAYER;
 	g_SizeModel = SIZE_PLAYER;
@@ -202,10 +202,10 @@ void UpdatePlayer(void)
 					// スティックの値－1～1で代入
 					Stick.x = static_cast<FLOAT>(GetJoyX(Joycon) / 32767.0);
 					Stick.y = -static_cast<FLOAT>(GetJoyY(Joycon) / 32767.0);
-					SetEffect(XMFLOAT3((g_posModel.x + (60.0f * (Stick.x /2))), (g_posModel.y + (60.0f * Stick.y)),0.0f),
+					/*SetEffect(XMFLOAT3((g_posModel.x + (60.0f * (Stick.x /2))), (g_posModel.y + (60.0f * Stick.y)),0.0f),
 						XMFLOAT3(0.0f, 0.0f, 0.0f),
 						XMFLOAT4(1.0f, 0.05f, 0.05f, 0.80f),
-						XMFLOAT2(9.0f, 18.0f), 5);
+						XMFLOAT2(9.0f, 18.0f), 5);*/
 					for (int i = 0; i < 5; i++)
 					{
 						SetEffect(XMFLOAT3((g_posModel.x + ((60.0f / 6 * i) * (Stick.x / 2))), (g_posModel.y + ((60.0f / 6 * i) * Stick.y)), 0.0f),
@@ -213,8 +213,8 @@ void UpdatePlayer(void)
 							XMFLOAT4(1.0f, 0.05f, 0.05f, 0.80f),
 							XMFLOAT2(4.5f, 9.0f), 5);
 					}
-					// Bボタンが押されたら
-					if (GetJoyTrigger(Joycon, JOYSTICKID2))
+					// Aボタンが押されたら
+					if (GetJoyTrigger(Joycon, JOYSTICKID1))
 					{
 						g_moveModel.x = Stick.x *7.5f;
 						g_moveModel.y = Stick.y *15;
