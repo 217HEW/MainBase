@@ -39,6 +39,7 @@ CSound::~CSound(void)
 void CSound::Init(void)
 {
 	HRESULT hr = S_OK;
+
 	if (!m_pXAudio2) {
 		UINT32 flags = 0;
 #if defined(_DEBUG)

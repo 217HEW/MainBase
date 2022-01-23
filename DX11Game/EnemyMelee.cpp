@@ -42,8 +42,8 @@
 //**************************************************************
 // マクロ定義
 //**************************************************************
-#define MODEL_ENEMY			"data/model/helicopter000.fbx"
-//#define MODEL_ENEMY			"data/model/enemy3.fbx"
+//#define MODEL_ENEMY			"data/model/helicopter000.fbx"
+#define MODEL_ENEMY			"data/model/Melee/Melee.fbx"
 
 #define	VALUE_MOVE_ENEMY		(1.0f)		// 移動速度
 #define MAX_ENEMYMELEE			(10)		// 近接敵最大数
@@ -75,18 +75,19 @@ HRESULT InitEnemyMelee(void)
 	Blocksize = GetBlockSize();
 
 	// モデルデータの読み込み
+	g_model.SetDif(XMFLOAT4(1.0f,0.2f, 0.2f, 1.0f));
 	if (!g_model.Load(pDevice, pDeviceContext, MODEL_ENEMY))
 	{
 		MessageBoxA(GetMainWnd(), "モデルデータ読み込みエラー", "InitEnemy", MB_OK);
 		return E_FAIL;
 	}
-
+	g_model.SetDif(XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
 	for (int i = 0; i < MAX_ENEMYMELEE; ++i)
 	{// 初期化したいモノがあればここに↓
 		g_EMelee[i].m_pos = (XMFLOAT3(0.0f, 0.0f, 0.0f));
 		g_EMelee[i].m_size = (XMFLOAT3(10.0f, 10.0f, 10.0f));
 		g_EMelee[i].m_move = (XMFLOAT3(0.0f, 0.0f, 0.0f));
-		g_EMelee[i].m_rot = (XMFLOAT3(90.0f, 0.0f, 0.0f));
+		g_EMelee[i].m_rot = (XMFLOAT3(90.0f, 90.0f, 0.0f));
 		g_EMelee[i].m_rotDest = g_EMelee[i].m_rot;
 		g_EMelee[i].m_use = false;
 	}
@@ -111,7 +112,7 @@ void UpdateEnemyMelee(void)
 	// カメラの向き取得
 	XMFLOAT3 rotCamera = CCamera::Get()->GetAngle();
 
-	XMMATRIX mtxWorld, mtxRot, mtxTranslate;
+	XMMATRIX mtxWorld, mtxRot, mtxTranslate, mtxScale;
 
 	TBLOCK *Block = GetBlockArray();
 	//プレイヤーの座標・サイズ取得
@@ -123,47 +124,47 @@ void UpdateEnemyMelee(void)
 		//ブロック配列取得
 
 		//敵とプレイヤーの距離が近づいたら
-		if (CollisionSphere(posPlayer, sizePlayer, g_EMelee[i].m_pos, SEARCH_ENEMY))
-		{
-			if (!g_EMelee[i].m_use)
-			{//未使用なら次へ
-				continue;
-			}
+		//if (CollisionSphere(posPlayer, sizePlayer, g_EMelee[i].m_pos, SEARCH_ENEMY))
+		//{
+		//	if (!g_EMelee[i].m_use)
+		//	{//未使用なら次へ
+		//		continue;
+		//	}
 
-			//常にプレイヤーの方向を向く
-			/*g_EMelee[i].m_rotDest = posPlayer;
-			g_EMelee[i].m_rot = g_EMelee[i].m_rotDest;
-			g_EMelee[i].m_rot = XMFLOAT3(posPlayer.x, posPlayer.y, posPlayer.z);*/
+		//	//常にプレイヤーの方向を向く
+		//	/*g_EMelee[i].m_rotDest = posPlayer;
+		//	g_EMelee[i].m_rot = g_EMelee[i].m_rotDest;
+		//	g_EMelee[i].m_rot = XMFLOAT3(posPlayer.x, posPlayer.y, posPlayer.z);*/
 
-			//敵のx座標がプレイヤーよりも大きかったら
-			if (g_EMelee[i].m_pos.x >= posPlayer.x)
-			{
-				g_EMelee[i].m_pos.x += -VALUE_MOVE_ENEMY;
-				g_EMelee[i].m_rot = (XMFLOAT3(90.0f, 0.0f, 0.0f) );
+		//	//敵のx座標がプレイヤーよりも大きかったら
+		//	if (g_EMelee[i].m_pos.x >= posPlayer.x)
+		//	{
+		//		g_EMelee[i].m_pos.x += -VALUE_MOVE_ENEMY;
+		//		g_EMelee[i].m_rot = (XMFLOAT3(90.0f, 0.0f, 0.0f) );
 
-				g_EMelee[i].m_rotDest.y = rotCamera.y - 90.0f;
-			}
-			//敵のx座標がプレイヤーよりも小さかったら
-			if (g_EMelee[i].m_pos.x <= posPlayer.x)
-			{
-				g_EMelee[i].m_pos.x += VALUE_MOVE_ENEMY;
-				g_EMelee[i].m_rot = (XMFLOAT3(90.0f, 0.0f, 90.0f));
-				g_EMelee[i].m_rotDest.y = rotCamera.y + 90.0f;
+		//		g_EMelee[i].m_rotDest.y = rotCamera.y - 90.0f;
+		//	}
+		//	//敵のx座標がプレイヤーよりも小さかったら
+		//	if (g_EMelee[i].m_pos.x <= posPlayer.x)
+		//	{
+		//		g_EMelee[i].m_pos.x += VALUE_MOVE_ENEMY;
+		//		g_EMelee[i].m_rot = (XMFLOAT3(90.0f, 0.0f, 90.0f));
+		//		g_EMelee[i].m_rotDest.y = rotCamera.y + 90.0f;
 
-			}
-			//敵のy座標がプレイヤーよりも大きかったら
-			if (g_EMelee[i].m_pos.y >= posPlayer.y)
-			{
-				g_EMelee[i].m_pos.y += -VALUE_MOVE_ENEMY;
+		//	}
+		//	//敵のy座標がプレイヤーよりも大きかったら
+		//	if (g_EMelee[i].m_pos.y >= posPlayer.y)
+		//	{
+		//		g_EMelee[i].m_pos.y += -VALUE_MOVE_ENEMY;
 
-			}
-			//敵のy座標がプレイヤーよりも小さかったら
-			if (g_EMelee[i].m_pos.y <= posPlayer.y)
-			{
-				g_EMelee[i].m_pos.y += VALUE_MOVE_ENEMY;
+		//	}
+		//	//敵のy座標がプレイヤーよりも小さかったら
+		//	if (g_EMelee[i].m_pos.y <= posPlayer.y)
+		//	{
+		//		g_EMelee[i].m_pos.y += VALUE_MOVE_ENEMY;
 
-			}
-			
+		//	}
+		//}
 			//**************************************************************************************
 			//		当たり判定
 			//**************************************************************************************
@@ -271,12 +272,14 @@ void UpdateEnemyMelee(void)
 				g_EMelee[i].m_pos.x,
 				g_EMelee[i].m_pos.y,
 				g_EMelee[i].m_pos.z);
+			mtxScale = XMMatrixScaling(4.0f, 8.0f, 4.0f);
+			mtxWorld = XMMatrixMultiply(mtxWorld, mtxScale);
 			mtxWorld = XMMatrixMultiply(mtxWorld, mtxTranslate);
 
 			// ワールドマトリックス設定
 			XMStoreFloat4x4(&g_EMelee[i].m_mtxWorld, mtxWorld);
 
-		}
+		
 	}
 }
 

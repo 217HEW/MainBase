@@ -112,7 +112,7 @@ void CCamera::Update()
 	m_vSrcPos.z = -CosDeg(m_vAngle.y) * m_fLengthInterval;
 
 	// 追跡カメラ&
-	XMFLOAT3 vModelPos = XMFLOAT3(140.0f, -210.0f, 0.0f);// GetPlayerPos();	// 自機座標
+	XMFLOAT3 vModelPos = XMFLOAT3(50.0f, -50.0f, 0.0f);// GetPlayerPos();	// 自機座標
 
 	// 視点座標移動先を算出
 	 m_vDestPos.x = m_vSrcPos.x + vModelPos.x;

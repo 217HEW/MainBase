@@ -148,11 +148,6 @@ HRESULT InitGame(AREA Area)
 	// if (FAILED(hr))
 	// 	return hr;
 
-	//二次元配列マップ
-	hr = InitCField(Area);
-	if (FAILED(hr))
-		return hr;
-
 	// 背景初期化
 	hr = InitBG();
 	if (FAILED(hr))
@@ -188,8 +183,10 @@ HRESULT InitGame(AREA Area)
 	if (FAILED(hr))
 		return hr;
 
-	// メレー呼び出し
-	SetEnemyMelee(XMFLOAT3(30.0f, 30.0f, 0.0f));
+	//二次元配列マップ
+	hr = InitCField(Area);
+	if (FAILED(hr))
+		return hr;
 
 	// エネミーエクスプロード初期化
 	// hr = InitEnemyExplode();
@@ -294,7 +291,7 @@ void UninitGame()
 	UninitEnemyRange();
 
 	// エネミーメレー終了
-	UninitEnemyMelee();
+	// UninitEnemyMelee();
 
 	// エネミーエクスプロード終了
 	// UninitEnemyExplode();
@@ -413,7 +410,7 @@ void UpdateGame()
 		UpdatePlayer();
 
 		// エネミーメレー更新
-		UpdateEnemyMelee();
+		// UpdateEnemyMelee();
 
 		// エネミーエクスプロード更新
 		// UpdateEnemyExplode();
