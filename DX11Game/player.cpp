@@ -57,6 +57,9 @@
 //--------------------------------------------------------------
 //	2022/01/16	モデルカラーを追加しました
 //	編集者：上月大地
+//--------------------------------------------------------------
+//	2022/01/23	エフェクト描画処理追加
+//	編集者：柴山凜太郎
 //**************************************************************
 
 //**************************************************************
@@ -75,6 +78,7 @@
 #include "Fade.h"
 #include "CreateField.h"
 #include "Sound.h"
+#include "PlayEffect.h"
 
 #pragma comment (lib, "xinput.lib")	// コントローラー情報取得に必要
 //**************************************************************
@@ -83,12 +87,12 @@
 #define MODEL_PLAYER	 "data/model/test.fbx"// "data/model/Character02.fbx"
 
 #define	VALUE_MOVE_PLAYER	(0.155f)	// 移動速度
-#define	SPEED_MOVE_PLAYER	(5)		// 跳躍速度
+#define	SPEED_MOVE_PLAYER	(5)			// 跳躍速度
 #define	RATE_MOVE_PLAYER	(0.025f)	// 移動慣性係数
 #define	VALUE_ROTATE_PLAYER	(4.5f)		// 回転速度
 #define	RATE_ROTATE_PLAYER	(0.1f)		// 回転慣性係数
 #define SCALE_PLAYER		(XMFLOAT3(1.0f, 1.5f, 1.0f))//(XMFLOAT3(2.0f, 1.5f, 1.0f)) //	プレイヤーのモデルスケール
-#define COLLAR_PLAYER		(XMFLOAT4(1.0f, 1.0f, 1.0f,1.0f))	// プレイヤーカラー(仮)ここをいじるとカラーが変わります
+#define COLLAR_PLAYER		(XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f))	// プレイヤーカラー(仮)ここをいじるとカラーが変わります
 #define SIZE_PLAYER			XMFLOAT3(110.5f, 16.5f, 1.0f)	// プレイヤーのモデルサイズ
 
 #define	PLAYER_RADIUS		(10.0f)		// 境界球半径
@@ -118,6 +122,8 @@ static DWORD	Joycon;		// コントローラー情報
 static DWORD	JoyState;	// 接続確認用
 static XMFLOAT2 Stick;		// スティックの傾き用	
 
+Effect g_PlayerEffect;		// プレイヤーのエフェクト
+int g_PEffectTimer = 0;		// プレイヤーエフェクト制御用タイマー
 //**************************************************************
 // 初期化処理
 //**************************************************************
@@ -144,6 +150,7 @@ HRESULT InitPlayer(void)
 		MessageBoxA(GetMainWnd(), "自機モデルデータ読み込みエラー", "InitModel", MB_OK);
 		return E_FAIL;
 	}
+	g_PlayerEffect.Load();
 	// 丸影の生成
 	//g_nShadow = CreateShadow(g_posModel, 12.0f);
 
@@ -474,6 +481,8 @@ void UpdatePlayer(void)
 	//MoveShadow(g_nShadow, g_posModel);
 
 // -------エフェクト制御------------------------------------------
+	g_PlayerEffect.Update();
+
 	if ((g_moveModel.x * g_moveModel.x
 	   + g_moveModel.y * g_moveModel.y
 	   + g_moveModel.z * g_moveModel.z) > 1.0f) {
@@ -482,7 +491,12 @@ void UpdatePlayer(void)
 		pos.x = g_posModel.x + SinDeg(g_rotModel.y) * 10.0f;
 		pos.y = g_posModel.y + 2.0f;
 		pos.z = g_posModel.z + CosDeg(g_rotModel.y) * 10.0f;
-
+		if (g_PEffectTimer == 0)
+		{	
+			g_PlayerEffect.Set(EFFECT_BURNING, g_posModel, XMFLOAT3(10.0f, 10.0f, 10.0f), 2.5f, XMFLOAT3(0.0f,0.0f,0.0f));
+			g_PEffectTimer = 1;
+		}
+		--g_PEffectTimer;
 		// エフェクトの設定
 		SetEffect(pos, XMFLOAT3(0.0f, 0.0f, 0.0f),
 					   XMFLOAT4(0.85f, 0.05f, 0.65f, 0.50f),
@@ -494,7 +508,6 @@ void UpdatePlayer(void)
 					   XMFLOAT4(0.45f, 0.45f, 0.05f, 0.15f),
 					   XMFLOAT2(5.0f, 5.0f), 20);
 	}
-
 	// 弾発射
 	//if (GetKeyRepeat(VK_SPACE)) {
 	//	FireBullet(g_posModel, XMFLOAT3(-g_mtxWorld._31, -g_mtxWorld._32, -g_mtxWorld._33),
@@ -563,6 +576,7 @@ void DrawPlayer(void)
 
 	// 不透明部分を描画
 	g_model.Draw(pDC, g_mtxWorld, eOpacityOnly);
+	g_PlayerEffect.Draw();
 
 	// // 半透明部分を描画
 	// SetBlendState(BS_ALPHABLEND);	// アルファブレンド有効

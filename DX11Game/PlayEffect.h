@@ -38,7 +38,18 @@
 
 #endif // _DEBUG
 
-#define MAX_EFFECT (10)
+//*************************
+// 列挙体宣言
+//-------------------------
+// ※EFFECT_〇〇で呼び出す
+//*************************
+enum eEffect
+{
+	EFFECT_FIRE = 0,	// 炎
+	EFFECT_BURNING,		// ジェット噴射
+
+	MAX_EFFECT			// 最大登録数
+};
 
 //*************************
 // エフェクトクラス
@@ -49,7 +60,7 @@ public:
 	Effect();
 	~Effect();
 	
-	// 読込
+	// エフェクト読込み
 	HRESULT Load();
 
 //**************************************************************************
@@ -58,10 +69,10 @@ public:
 // @no      ->使うエフェクト[MAX_EFFECT]
 // @pos     ->設置したい座標
 // @scale   ->大きさ
-// @speed ->再生速度
-// @rot	  ->角度
+// @speed ->再生速度(0.0f～)
+// @rot	  ->角度(0.0f～360.0f)
 //**************************************************************************
-	void Set(int no, XMFLOAT3 pos, XMFLOAT3 scale, float speed,XMFLOAT3 rot);
+	void Set(eEffect no, XMFLOAT3 pos, XMFLOAT3 scale, float speed,XMFLOAT3 rot);
 
 	// 更新
 	void Update();

@@ -453,12 +453,12 @@ void UpdateGame()
 		UpdateEffect();
 
 		// エフェクト(for Effekseer)更新
-		//if (g_EffectTimer == 0)
-		//{
-		//	g_Effect.Set(0, pEMelee->m_pos,XMFLOAT3(1.0f,1.0f,1.0f),0.5f,);
-		//	g_EffectTimer = 30;
-		//}
-		//--g_EffectTimer;
+		if (g_EffectTimer == 0)
+		{
+			g_Effect.Set(EFFECT_FIRE, XMFLOAT3(-50, -50, 0), XMFLOAT3(10.0f, 10.0f, 10.0f), 0.1f, XMFLOAT3(1.0f, 1.0f, 1.0f));
+			g_EffectTimer = 30;
+		}
+		--g_EffectTimer;
 		g_Effect.Update();
 		// ブロック更新
 		// UpdateBlock();

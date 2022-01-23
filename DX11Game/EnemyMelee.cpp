@@ -61,7 +61,7 @@ static CAssimpModel		g_model;			// モデル情報
 static TEnemyMelee		g_EMelee[MAX_ENEMYMELEE];	// 近接敵情報
 static XMFLOAT3			Blocksize;
 static int g_EffectTimer = 0;		// エフェクト制御用タイマー
-Effect g_MeleeEffect;
+Effect g_MeleeEffect[MAX_ENEMYMELEE];
 //**************************************************************
 // 初期化処理
 //**************************************************************
@@ -216,12 +216,12 @@ void UpdateEnemyMelee(void)
 			}
 
 			// エフェクトセット＆制御
-			if (g_EffectTimer == 0)
-			{
-				g_MeleeEffect.Set(0, g_EMelee[i].m_pos, XMFLOAT3(1.0f, 1.0f, 1.0f), 0.5f, XMFLOAT3(1.0f,1.0f,1.0f));
-				g_EffectTimer = 30;
-			}
-			--g_EffectTimer;
+			//if (g_EffectTimer == 0)
+			//{
+			//	g_MeleeEffect[i].Set(0, g_EMelee[i].m_pos, XMFLOAT3(1.0f, 1.0f, 1.0f), 0.5f, XMFLOAT3(1.0f,1.0f,1.0f));
+			//	g_EffectTimer = 30;
+			//}
+			//--g_EffectTimer;
 
 			// 敵とプレイヤーの当たり判定
 			if (!g_EMelee[i].m_use)

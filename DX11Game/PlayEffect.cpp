@@ -6,11 +6,20 @@
 //--------------------------------------------------------------
 //	製作者：柴山凜太郎
 //--------------------------------------------------------------
+//※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※
+// PlayEffect.cpp &.h の使い方はEffectテキストを見ること
+//※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※※
 //**************************************************************
 
 //**************************************************************
 //	開発履歴
 //	2022/01/21	　エフェクシアのエフェクトの組み込み完了
+//	編集者：柴山凜太郎
+//--------------------------------------------------------------
+//	2022/01/23	　エフェクトのデータを配列で管理できるようにしました
+//				  エフェクトのデータ呼び出し用の列挙体を追加しました
+//
+//	編集者：柴山凜太郎
 //--------------------------------------------------------------
 //**************************************************************
 
@@ -20,6 +29,13 @@
 #include "PlayEffect.h"
 #include "Camera.h"
 #include <string>
+
+
+// 使いたいエフェクトの登録
+const char16_t* g_EffectData[MAX_EFFECT] = {
+	u"data/effect/fire.efk",
+	u"data/effect/burning.efk",
+};
 
 Effect::Effect()
 {
@@ -52,11 +68,13 @@ HRESULT Effect::Load()
 	m_manager->SetTextureLoader(m_renderer->CreateTextureLoader());		// テクスチャ
 	m_manager->SetModelLoader(m_renderer->CreateModelLoader());			// モデル
 	m_manager->SetMaterialLoader(m_renderer->CreateMaterialLoader());	// マテリアル
-	m_manager->SetCurveLoader(Effekseer::MakeRefPtr<Effekseer::CurveLoader>());
+	m_manager->SetCurveLoader(Effekseer::MakeRefPtr<Effekseer::CurveLoader>());// カーブ
 
-	// 使うエフェクトの登録
-	m_effect[0] = Effekseer::Effect::Create(m_manager, u"data/effect/fire.efk");
-	m_effect[1] = Effekseer::Effect::Create(m_manager, u"data/effect/burning.efk");
+	// 使うエフェクトの読込み
+	for (int i = 0; i < MAX_EFFECT; i++)
+	{
+		m_effect[i] = Effekseer::Effect::Create(m_manager, g_EffectData[i]);
+	}
 
 	return S_OK;
 }
@@ -108,10 +126,10 @@ void Effect::Draw()
 // @no      ->使うエフェクト[MAX_EFFECT]
 // @pos     ->設置したい座標
 // @scale   ->大きさ
-// @speed ->再生速度
-// @rot	  ->角度
+// @speed ->再生速度(0.0f～)
+// @rot	  ->角度(0.0f～360.0f)
 //**************************************************************************
-void Effect::Set(int no,XMFLOAT3 pos,XMFLOAT3 scale,float speed,XMFLOAT3 rot)
+void Effect::Set(eEffect no,XMFLOAT3 pos,XMFLOAT3 scale,float speed,XMFLOAT3 rot)
 {
 	m_handle = m_manager->Play(m_effect[no], pos.x, pos.y, pos.z);
 	m_manager->SetScale(m_handle, scale.x, scale.y, scale.z);
