@@ -50,7 +50,7 @@
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -111,14 +111,14 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\..\DirectXTex;..\..\Assimp\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\DirectXTex;..\..\Assimp\include;..\..\EFF</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <SDLCheck>false</SDLCheck>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
-      <AdditionalLibraryDirectories>..\..\DirectXTex\$(PlatformTarget)\$(Configuration);..\..\Assimp\lib\$(PlatformTarget)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\DirectXTex\$(PlatformTarget)\$(Configuration);..\..\Assimp\lib\$(PlatformTarget);..\..\EFF\$(Configuration)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -148,15 +148,16 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\..\DirectXTex;..\..\Assimp\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\DirectXTex;..\..\Assimp\include;..\..\EFF</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <SDLCheck>false</SDLCheck>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
-      <AdditionalLibraryDirectories>..\..\DirectXTex\$(PlatformTarget)\$(Configuration);..\..\Assimp\lib\$(PlatformTarget)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\DirectXTex\$(PlatformTarget)\$(Configuration);..\..\Assimp\lib\$(PlatformTarget);..\..\EFF\$(Configuration)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -186,6 +187,7 @@
     <ClCompile Include="meshwall.cpp" />
     <ClCompile Include="number.cpp" />
     <ClCompile Include="Pause.cpp" />
+    <ClCompile Include="PlayEffect.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="polygon.cpp" />
     <ClCompile Include="polyline.cpp" />
@@ -230,6 +232,7 @@
     <ClInclude Include="meshwall.h" />
     <ClInclude Include="number.h" />
     <ClInclude Include="Pause.h" />
+    <ClInclude Include="PlayEffect.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="polygon.h" />
     <ClInclude Include="polyline.h" />

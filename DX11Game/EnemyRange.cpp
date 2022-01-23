@@ -18,12 +18,16 @@
 //				射撃までのクールタイムを多少ランダムにする処理を
 //				作成中
 //	編集者：上月大地
+//--------------------------------------------------------------
+//	2022/01/22	遠隔敵の情報を取得する関数の作成
+//				プレイヤーのライフ処理はここで屋あるべきでないため削除
+//	編集者：柴山凜太郎
 //**************************************************************
 
 //**************************************************************
 // インクルード部
 //**************************************************************
-#include "EnemyBase.h"
+#include "EnemyRange.h"
 #include "AssimpModel.h"
 #include "debugproc.h"
 #include "collision.h"
@@ -31,21 +35,9 @@
 #include "explosion.h"
 #include "life.h"
 #include "timer.h"
-#include "SceneManager.h"
+//#include "SceneManager.h"
 
-//**************************************************************
-// 構造体定義
-//**************************************************************
-struct TEnemyRange {
-	XMFLOAT3	m_pos;		// 現在の位置
-	XMFLOAT3	m_rot;		// 現在の向き
-	XMFLOAT3	m_rotDest;	// 目的の向き
-	XMFLOAT3	m_size;		// 現在のサイズ
-	bool		m_use;		// 使用してるか否か	ON:使用中
-	int			m_Time;		// 敵のタイマー
 
-	XMFLOAT4X4	m_mtxWorld;	// ワールドマトリックス
-};
 
 //**************************************************************
 // マクロ定義
@@ -139,10 +131,6 @@ void UpdateEnemyRange(void)
 					{
 						DelLife();
 						StartExplosion(posPlayer, XMFLOAT2(40.0f, 40.0f));
-						if (GetLife() == 0)
-						{
-							SetScene(SCENE_GAMEOVER);
-						}
 					}
 					else
 					{
@@ -239,4 +227,9 @@ int SetEnemyRange(XMFLOAT3 pos)
 	}
 
 	return Enemy;
+}
+
+TEnemyRange* GetEnemyRange()
+{
+	return g_ERange;
 }

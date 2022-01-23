@@ -40,6 +40,10 @@
 #define MAX_BUFFER_COUNT		3	// ストリーム再生用バッファ数
 #define MAX_DUP					16	// 最大多重再生数
 
+#define BGM_VOL		(1.0f)		// 初期BGM音量
+#define SE_VOL		(1.0f)		// 初期SE音量
+
+
 enum SoundStatus {
 	SS_STOP = 0,
 	SS_PLAY,
