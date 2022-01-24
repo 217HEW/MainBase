@@ -386,6 +386,10 @@ void UpdateGame()
 			{
 				StartFadeOut(SCENE_GAMECLEAR);
 			}
+			else if (GetKeyRelease(VK_8))
+			{
+				StartFadeOut(SCENE_SELECT);
+			}
 #endif
 			int Timer = GetTimer();
 			if (Timer <= 0)

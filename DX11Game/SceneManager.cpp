@@ -49,6 +49,7 @@
 #include "SceneArea3.h"
 #include "SceneGameover.h"
 #include "SceneGameclear.h"
+#include "StageSelect.h"
 #include "Fade.h"
 #include "bg.h"
 //**************************************************************
@@ -129,6 +130,9 @@ void UpdateScene()
 	case SCENE_GAMECLEAR:	// ゲームクリア画面
 		UpdateGameclear();
 		break;
+	case SCENE_SELECT:		// セレクト画面
+		UpdateSelect();
+		break;
 	}
 
 	//フェード更新
@@ -184,6 +188,9 @@ void DrawScene()
 		break;
 	case SCENE_GAMECLEAR:		// ゲームクリア画面
 		DrawGameclear();
+		break;
+	case SCENE_SELECT:		// セレクト画面
+		DrawSelect();
 		break;
 	}
 
@@ -250,6 +257,9 @@ HRESULT SetScene(EScene eScene)
 	case SCENE_GAMECLEAR: // ゲームクリア画面
 		UninitGameclear();
 		break;
+	case SCENE_SELECT:	// セレクト画面
+		UninitSelect();
+		break;
 	}
 
 	// 画面を入れ替え
@@ -299,6 +309,9 @@ HRESULT SetScene(EScene eScene)
 		break;
 	case SCENE_GAMECLEAR: // ゲームクリア画面
 		InitGameclear();
+		break;
+	case SCENE_SELECT:	// セレクト画面
+		InitSelect();
 		break;
 	}
 	return hr;
