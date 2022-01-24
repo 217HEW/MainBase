@@ -67,7 +67,7 @@ struct TEnemyMelee {
 //**************************************************************
 // グローバル変数
 //**************************************************************
-static CAssimpModel		g_model;			// モデル情報
+static CAssimpModel		g_model;					// モデル情報
 static TEnemyMelee		g_EMelee[MAX_ENEMYMELEE];	// 敵機情報
 static XMFLOAT3			Blocksize;
 

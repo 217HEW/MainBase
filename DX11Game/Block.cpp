@@ -86,7 +86,7 @@ HRESULT InitBlock(void)
 	{
 		//Xが二倍になる為Yの二分の一にしておく
 		g_block[i].m_size = g_BlockScale = XMFLOAT3(10.0f, 10.0f, 10.0f);
-		g_block[i].m_Halfsize = g_BlockHalfScale = XMFLOAT3(7.5f, 14.0f, 10.0f);
+		g_block[i].m_Halfsize = g_BlockHalfScale = XMFLOAT3(5.0f, 10.0f, 10.0f);
 		// g_wall->m_pos = XMFLOAT3(0.0f, 50.0f, 150.0f);
 		g_block[i].m_3Dmodel = MODEL_BLOCK;
 		g_block[i].m_nLife = MAX_LIFE;
@@ -164,7 +164,7 @@ void UpdateBlock(void)
 		}
 
 		// 壁とプレイヤーが衝突していたら
-		if (CollisionAABB(g_block[i].m_pos, g_block[i].m_Halfsize, GetPlayerPos(), XMFLOAT3(3.0f, 7.0f, 0.5f)))//プレイヤーのサイズ 
+		if (CollisionAABB(g_block[i].m_pos, g_block[i].m_Halfsize, GetPlayerPos(), XMFLOAT3(7.0f, 10.0f, 0.5f)))//プレイヤーのサイズ 
 		{
 			// プレイヤーがとんでいたら
 			if (GetPlayerJump() == false)
@@ -172,6 +172,8 @@ void UpdateBlock(void)
 				// 体力が無くなったら使わない
 				if (g_block[i].m_nLife <= 0)
 				{
+					StartExplosion(GetPlayerPos(), XMFLOAT2(80.0f, 80.0f));
+
 					CSound::Play(SE_WALLBREAK);
 					CSound::SetVolume(SE_WALLBREAK, 0.04f);
 					g_block[i].m_use = false;
@@ -184,6 +186,7 @@ void UpdateBlock(void)
 				// 無敵ブロックだったら出る
 				if (g_block[i].m_invincible)
 				{
+					StartExplosion(GetPlayerPos(), XMFLOAT2(80.0f, 80.0f));
 					// 接地状態ON
 					SetPlayerJump(true);
 					break;
@@ -198,6 +201,26 @@ void UpdateBlock(void)
 				SetPlayerJump(true);
 
 				StartExplosion(GetPlayerPos(), XMFLOAT2(80.0f, 80.0f));
+			}
+			//右
+			if (g_block[i].m_pos.x + g_block[i].m_Halfsize.x <= GetPlayerPos().x - (7.0f / 2))
+			{
+				SetPlayerDir(1);
+			}
+			//左
+			else if (g_block[i].m_pos.x - g_block[i].m_Halfsize.x >= GetPlayerPos().x + (7.0f / 2))
+			{
+				SetPlayerDir(2);
+			}
+			//上
+			else if (g_block[i].m_pos.y - g_block[i].m_Halfsize.y >= GetPlayerPos().y + (10.0f / 2))
+			{
+				SetPlayerDir(3);
+			}
+			//下
+			else if (g_block[i].m_pos.y + g_block[i].m_Halfsize.y <= GetPlayerPos().y - (10.0f / 2))
+			{
+				SetPlayerDir(4);
 			}
 		}
 	}
@@ -295,7 +318,7 @@ int SetBlock(XMFLOAT3 pos, bool inv,XMFLOAT2 size, XMFLOAT2 cpos)
 
 		if (((g_block[cntBlock].m_Halfsize.y * size.y) > g_BlockHalfScale.y))
 		{
-			g_block[cntBlock].m_Halfsize.y = (g_block[cntBlock].m_Halfsize.y * size.y) - (g_BlockHalfScale.y * 1.5f);
+			g_block[cntBlock].m_Halfsize.y = (g_block[cntBlock].m_Halfsize.y * size.y) - (g_BlockHalfScale.y * 2.0f);
 		}
 		else
 		{

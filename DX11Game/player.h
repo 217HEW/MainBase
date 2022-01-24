@@ -34,6 +34,6 @@ XMFLOAT3& GetPlayerSize();	// プレイヤー位置情報取得
 float GetPlayerRadSize();		// プライヤーサイズ情報取得
 bool GetPlayerJump();		// 飛んでいるかのboolを取得する	true:飛んでいない
 void SetPlayerJump(bool jump);		// 飛んでいるかのboolをセットする	
-
+void SetPlayerDir(int dir);
 
 bool CollisionPlayer(XMFLOAT3 pos, float radius, float damage);

@@ -124,6 +124,10 @@ void UninitTitle()
 	// タイトルBGM終了
 	CSound::Stop(BGM_TITLE);
 
+	// 変数初期化
+	g_nBlink = BLINK_TIMER;
+	g_bStart = false;
+
 	// 複数のテクスチャ解放
 	for (int i = 0; i < TITLE_TEX_MAX; ++i)
 	{
@@ -281,7 +285,7 @@ void DrawTitle()
 	SetPolygonPos(ENTER_POS_X, ENTER_POS_Y);
 	SetPolygonTexture(g_pTexture[TITLE_TEX_ENTER]);
 	DrawPolygon(pDC);
-
+	
 	// Zバッファ有効(Zチェック有&Z更新有)
 	SetZBuffer(true);
 }
