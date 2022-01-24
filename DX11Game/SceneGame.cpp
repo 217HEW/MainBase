@@ -46,6 +46,9 @@
 //	2021/12/30	フィールド生成をコメントアウトしてしまっていたので
 //				元に戻しました。
 //														変更者：上月大地
+//--------------------------------------------------------------
+//	2022/01/22	Effekseerで作成したエフェクトを再生する処理の追加
+//														変更者：柴山凜太郎
 //**************************************************************
 
 //**************************************************************
@@ -79,6 +82,7 @@
 // #include "EnemyExplode.h"
 #include "EnemyRange.h"
 #include "Pause.h"
+#include "PlayEffect.h"
 
 //**************************************************************
 // マクロ定義
@@ -92,7 +96,8 @@
 //TPolyline					g_polyline[MAX_POLYLINE];	// ポリライン情報
 
 static bool g_bPause;		//一時停止中
-
+Effect g_Effect;			// エフェクト変数
+static int g_EffectTimer = 0;	// エフェクト制御用タイマー
 //**************************************************************
 // 初期化処理
 //	引数：遷移先のエリア
@@ -201,6 +206,11 @@ HRESULT InitGame(AREA Area)
 
 	// メッシュ壁初期化
 	hr = InitMeshWall();
+	if (FAILED(hr))
+		return hr;
+
+	// エフェクト(for Effekseer)初期化
+	hr = g_Effect.Load();
 	if (FAILED(hr))
 		return hr;
 
@@ -334,6 +344,7 @@ void UninitGame()
 //**************************************************************
 void UpdateGame()
 {
+	TEnemyMelee* pEMelee = GetEnemyMelee();
 	// 入力処理更新
 	//UpdateInput();	// 必ずUpdate関数の先頭で実行.
 
@@ -374,6 +385,10 @@ void UpdateGame()
 			else if (GetKeyRelease(VK_7))
 			{
 				StartFadeOut(SCENE_GAMECLEAR);
+			}
+			else if (GetKeyRelease(VK_8))
+			{
+				StartFadeOut(SCENE_SELECT);
 			}
 #endif
 			int Timer = GetTimer();
@@ -438,6 +453,14 @@ void UpdateGame()
 		// エフェクト更新
 		UpdateEffect();
 
+		// エフェクト(for Effekseer)更新
+		if (g_EffectTimer == 0)
+		{
+			g_Effect.Set(EFFECT_FIRE, XMFLOAT3(-50, -50, 0), XMFLOAT3(10.0f, 10.0f, 10.0f), 0.1f, XMFLOAT3(1.0f, 1.0f, 1.0f));
+			g_EffectTimer = 30;
+		}
+		--g_EffectTimer;
+		g_Effect.Update();
 		// ブロック更新
 		// UpdateBlock();
 
