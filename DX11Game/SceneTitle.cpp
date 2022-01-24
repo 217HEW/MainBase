@@ -67,7 +67,8 @@
 #define ENTER_POS_Y	 (SCREEN_HEIGHT-ENTER_HEIGHT) * -0.5f
 
 #define BLINK_TIMER 60
-#define BLINK_START_TIMER 5
+#define BLINK_START_TIMER 5
+
 //**************************************************************
 // グローバル変数
 //**************************************************************
@@ -84,6 +85,7 @@ static DWORD	Joycon;		// コントローラー情報
 // 点滅タイマー用
 static int g_nBlink;
 static bool g_bStart;
+
 
 //**************************************************************
 // 初期化処理
@@ -143,7 +145,8 @@ void UpdateTitle()
 	--g_nBlink;
 	if (g_nBlink <= 0)
 	{
-		g_nBlink = (g_bStart) ? BLINK_START_TIMER : BLINK_TIMER;	}
+		g_nBlink = (g_bStart) ? BLINK_START_TIMER : BLINK_TIMER;
+	}
 
 	// キー入力でシーン遷移
 	if (GetFadeState() == FADE_NONE)

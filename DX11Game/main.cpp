@@ -18,6 +18,11 @@
 //--------------------------------------------------------------
 //	2022/01/14	Updateにランド関数をよりランダムにする処理を追加
 //	編集者：上月大地
+//--------------------------------------------------------------
+//	2022/01/23	デバッグ表示のコメントアウト部分を解除しました
+//				デバッグ表示をデバッグの時だけ表示するようにしました
+//				「上月へ：変更したことはちゃんと開発履歴に書くこと」
+//	編集者：柴山凜太郎
 //**************************************************************
 
 //**************************************************************
@@ -527,13 +532,13 @@ HRESULT Init(HWND hWnd, BOOL bWindow)
 	// サウンド初期化
 	CSound::Init();
 
-	// デバッグ文字列表示初期化
-	hr = InitDebugProc();
+	// 入力処理初期化
+	hr = InitInput();
 	if (FAILED(hr))
 		return hr;
 
-	// 入力処理初期化
-	hr = InitInput();
+	// デバッグ文字列表示初期化
+	hr = InitDebugProc();
 	if (FAILED(hr))
 		return hr;
 
@@ -660,23 +665,27 @@ void Update(void)
 	// ランド関数の種
 	srand((unsigned int)time(NULL));	// こうすると毎回ランド関数の中身が変わる
 
-	// シーン遷移更新
-	UpdateScene();
 
 	// デバッグ文字列表示更新
 	UpdateDebugProc();
 
 	// デバッグ文字列設定
 	StartDebugProc();
-	//PrintDebugProc("FPS:%d\n\n\n\n\n", g_nCountFPS);
-	// PrintDebugProc("< ｼｰﾝ ｾﾝｲｻｷ >\n");
-	// PrintDebugProc("1:[   ﾀｲﾄﾙ  ]\n");
-	// PrintDebugProc("2:[   ｴﾘｱ1  ]\n");
-	// PrintDebugProc("3:[   ｴﾘｱ2  ]\n");
-	// PrintDebugProc("4:[   ｴﾘｱ3  ]\n");
-	// PrintDebugProc("5:[ ｴﾘｱﾎﾞｽ  ]\n");
-	// PrintDebugProc("6:[ｹﾞｰﾑｵｰﾊﾞｰ]\n");
-	// PrintDebugProc("7:[ ｹﾞｰﾑｸﾘｱ ]\n\n");
+#ifdef _DEBUG
+	PrintDebugProc("FPS:%d\n\n\n\n\n", g_nCountFPS);
+	PrintDebugProc("< ｼｰﾝ ｾﾝｲｻｷ >\n");
+	PrintDebugProc("1:[   ﾀｲﾄﾙ  ]\n");
+	PrintDebugProc("2:[   ｴﾘｱ1  ]\n");
+	PrintDebugProc("3:[   ｴﾘｱ2  ]\n");
+	PrintDebugProc("4:[   ｴﾘｱ3  ]\n");
+	PrintDebugProc("5:[ ｴﾘｱﾎﾞｽ  ]\n");
+	PrintDebugProc("6:[ｹﾞｰﾑｵｰﾊﾞｰ]\n");
+	PrintDebugProc("7:[ ｹﾞｰﾑｸﾘｱ ]\n\n");
+#endif // _DEBUG
+
+	// シーン遷移更新
+	UpdateScene();
+
 	// サウンド更新
 	CSound::Update();
 
