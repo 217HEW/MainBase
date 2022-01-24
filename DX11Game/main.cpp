@@ -665,13 +665,8 @@ void Update(void)
 	// ランド関数の種
 	srand((unsigned int)time(NULL));	// こうすると毎回ランド関数の中身が変わる
 
-
-	// デバッグ文字列表示更新
-	UpdateDebugProc();
-
 	// デバッグ文字列設定
 	StartDebugProc();
-#ifdef _DEBUG
 	PrintDebugProc("FPS:%d\n\n\n\n\n", g_nCountFPS);
 	PrintDebugProc("< ｼｰﾝ ｾﾝｲｻｷ >\n");
 	PrintDebugProc("1:[   ﾀｲﾄﾙ  ]\n");
@@ -681,10 +676,12 @@ void Update(void)
 	PrintDebugProc("5:[ ｴﾘｱﾎﾞｽ  ]\n");
 	PrintDebugProc("6:[ｹﾞｰﾑｵｰﾊﾞｰ]\n");
 	PrintDebugProc("7:[ ｹﾞｰﾑｸﾘｱ ]\n\n");
-#endif // _DEBUG
 
 	// シーン遷移更新
 	UpdateScene();
+
+	// デバッグ文字列表示更新
+	UpdateDebugProc();
 
 	// サウンド更新
 	CSound::Update();

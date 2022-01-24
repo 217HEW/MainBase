@@ -39,7 +39,6 @@ CSound::~CSound(void)
 void CSound::Init(void)
 {
 	HRESULT hr = S_OK;
-
 	if (!m_pXAudio2) {
 		UINT32 flags = 0;
 #if defined(_DEBUG)
@@ -134,6 +133,21 @@ void CSound::Play(eSE se)
 	if (!m_pSe || se < 0 || se >= MAX_SE) return;
 	m_pSe[se].Play();
 }
+
+// ‰¹—Ê’²®Œã‚ÉBGM‚ğÄ¶
+void CSound::SetPlayVol(eBGM bgm, float vol)
+{
+	CSound::Play(bgm);
+	CSound::SetVolume(bgm, vol);
+}
+
+// ‰¹—Ê’²®Œã‚ÉSE‚ğÄ¶
+void CSound::SetPlayVol(eSE se, float vol)
+{
+	CSound::Play(se);
+	CSound::SetVolume(se, vol);
+}
+
 
 // BGMÄ¶’†H
 bool CSound::IsPlaying(eBGM bgm)

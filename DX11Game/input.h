@@ -64,11 +64,22 @@
 #define JOYSTICKID16	15
 #define JOYSTICK_DEADZONE 20000	// スティックのデッドゾーン	 追加：上月大地
 
+// 新たに追加されたもの
+#define JOY_DPAD_CENTER	0
+#define JOY_DPAD_DOWN	1
+#define JOY_DPAD_RIGHT	2
+#define JOY_DPAD_LEFT	4
+#define JOY_DPAD_UP		8
+
 #define MOUSEBUTTON_L	0
 #define MOUSEBUTTON_R	1
 #define MOUSEBUTTON_M	2
 #define MOUSEBUTTON_X1	3
 #define MOUSEBUTTON_X2	4
+
+#ifndef INPUT_DEADZONE
+#define INPUT_DEADZONE	(0.24f*float(0x7FFF))	// Default to 24% of the +/- 32767 range. This is a reasonable default value but can be altered if needed.
+#endif
 
 //*****************************************************************************
 // プロトタイプ宣言
@@ -90,6 +101,10 @@ LONG GetJoyZ(DWORD dwJoy);
 bool GetJoyButton(DWORD dwJoy, DWORD dwBtn);
 bool GetJoyTrigger(DWORD dwJoy, DWORD dwBtn);
 bool GetJoyRelease(DWORD dwJoy, DWORD dwBtn);
+bool GetJoyDpadUp(DWORD dwJoy);
+bool GetJoyDpadLeft(DWORD dwJoy);
+bool GetJoyDpadRight(DWORD dwJoy);
+bool GetJoyDpadDown(DWORD dwJoy);
 
 POINT *GetMousePosition();
 bool GetMouseButton(DWORD dwBtn);

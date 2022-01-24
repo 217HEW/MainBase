@@ -47,7 +47,7 @@
 // グローバル変数
 //**************************************************************
 static ID3D11ShaderResourceView* g_pTexture;	// テクスチャ用変数
-static int g_nTimer;		// 時間をカウントする
+int g_nTimer;		// 時間をカウントする
 
 //**************************************************************
 // 初期化処理
@@ -98,7 +98,7 @@ void DrawTimer()
 	{
 		if (g_nTimer == 9.7 * 60) 
 		{
-			CSound::Play(SE_BEEP);
+			CSound::SetPlayVol(SE_BEEP, 0.07f); // 警告音
 		}
 		SetPolygonColor(1.0f, 0.0f, 0.0f);//残り10秒で赤くなる
 	}

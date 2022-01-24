@@ -264,8 +264,7 @@ HRESULT InitGame(AREA Area)
 
 	// BGM再生開始
 	// エリア毎にBGMを変えたい時はここをswitch文で切り替えるようにする
-	CSound::Play(BGM_GAME000);
-	CSound::SetVolume(BGM_GAME000, 0.02f);
+	CSound::SetPlayVol(BGM_GAME000, 0.06f); // ゲーム本編BGM
 
 	return hr;
 }
@@ -385,6 +384,10 @@ void UpdateGame()
 			else if (GetKeyRelease(VK_7))
 			{
 				StartFadeOut(SCENE_GAMECLEAR);
+			}
+			else if (GetKeyRelease(VK_8))
+			{
+				StartFadeOut(SCENE_SELECT);
 			}
 #endif
 			int Timer = GetTimer();

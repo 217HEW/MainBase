@@ -57,8 +57,8 @@
 //**************************************************************
 // グローバル変数
 //**************************************************************
-static CAssimpModel		g_model;			// モデル情報
-static TEnemyMelee		g_EMelee[MAX_ENEMYMELEE];	// 近接敵情報
+static CAssimpModel		g_model;					// モデル情報
+static TEnemyMelee		g_EMelee[MAX_ENEMYMELEE];	// 敵機情報
 static XMFLOAT3			Blocksize;
 static int g_EffectTimer = 0;		// エフェクト制御用タイマー
 Effect g_MeleeEffect[MAX_ENEMYMELEE];
@@ -312,7 +312,7 @@ void DrawEnemyMelee(void)
 
 //*****************************************************************
 //
-//	敵の配置
+//	敵の配置処理
 //	
 //	引数:配置したい座標 x y z
 //

@@ -60,6 +60,10 @@
 //--------------------------------------------------------------
 //	2022/01/23	エフェクト描画処理追加
 //	編集者：柴山凜太郎
+//--------------------------------------------------------------
+//	2022/01/24	プレイヤーの移動制限を実装しましたが完ぺきではありません
+//				コントローラーの方は良い感じです。
+//	編集者：上月大地
 //**************************************************************
 
 //**************************************************************
@@ -77,6 +81,7 @@
 #include "life.h"
 #include "Fade.h"
 #include "CreateField.h"
+#include "Block.h"
 #include "Sound.h"
 #include "PlayEffect.h"
 
@@ -92,8 +97,8 @@
 #define	VALUE_ROTATE_PLAYER	(4.5f)		// 回転速度
 #define	RATE_ROTATE_PLAYER	(0.1f)		// 回転慣性係数
 #define SCALE_PLAYER		(XMFLOAT3(1.0f, 1.5f, 1.0f))//(XMFLOAT3(2.0f, 1.5f, 1.0f)) //	プレイヤーのモデルスケール
-#define COLLAR_PLAYER		(XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f))	// プレイヤーカラー(仮)ここをいじるとカラーが変わります
-#define SIZE_PLAYER			XMFLOAT3(110.5f, 16.5f, 1.0f)	// プレイヤーのモデルサイズ
+#define COLLAR_PLAYER		(XMFLOAT4(1.0f, 1.0f, 1.0f,1.0f))	// プレイヤーカラー(仮)ここをいじるとカラーが変わります
+#define SIZE_PLAYER			XMFLOAT3(6.0f, 10.0f, 0.5f)//(110.5f, 16.5f, 1.0f)	// プレイヤーのモデルサイズ
 
 #define	PLAYER_RADIUS		(10.0f)		// 境界球半径
 #define DAMAGE_TIMER		(120)		// ダメージ後の無敵時間
@@ -112,10 +117,11 @@ static XMFLOAT3		g_SizeModel;	// 当たり判定用サイズ
 
 static XMFLOAT4X4	g_mtxWorld;		// ワールドマトリックス
 
-//static int		g_nShadow;		// 丸影番号
-static int			g_nDamage;		// 点滅中
-static bool			g_bInv;			// ダメージ時の無敵判定	true:無敵
-static bool			g_bLand;		// 地面判定	true:飛んでない
+int	g_nDamage;		// 点滅中
+int	g_nDir;			// 壁と接している方向	0:当ってない 1:右,2:左,3:上,4:下
+bool g_bInv;		// ダメージ時の無敵判定	true:無敵
+bool g_bLand;		// 地面判定	true:飛んでない
+bool g_bkabe;		// 壁に触れてます true触れてます
 
 // コントローラー
 static DWORD	Joycon;		// コントローラー情報
@@ -141,8 +147,9 @@ HRESULT InitPlayer(void)
 	g_ScaleModel = SCALE_PLAYER;
 	g_SizeModel = SIZE_PLAYER;
 	g_rotModel = XMFLOAT3(0.0f, 0.0f, 0.0f);
-	g_rotDestModel = XMFLOAT3(0.0f, 0.0f, 0.0f);
+	g_rotDestModel = XMFLOAT3(0.0f, 0.0f, 0.0f); 
 	Stick = XMFLOAT2(0.0f, 0.0f);
+	
 
 	// モデルデータの読み込み
 	g_model.SetDif(COLLAR_PLAYER); // モデルロード前にカラーを指定
@@ -157,6 +164,9 @@ HRESULT InitPlayer(void)
 	// 壁接触,無敵判定初期化
 	g_bLand = true;
 	g_bInv = false;
+	g_bkabe = true;
+
+	g_nDir = 4;	// 下と接している
 
 	return hr;
 }
@@ -184,18 +194,26 @@ void UpdatePlayer(void)
 	// カメラの向き取得
 	XMFLOAT3 rotCamera = CCamera::Get()->GetAngle();
 
+	// 壁の配列取得
+	TBLOCK *Block = GetBlockArray();
+
 	// -------コントローラー操作------------------------------------------
 	GetJoyState(Joycon);
 	// コントローラーの接続状況確認
 	JoyState = XInputGetState(0, &state);
 
+	g_bkabe = true;
 	if (JoyState == ERROR_SUCCESS)
 	{	// 接続有り↓
-		if (g_bLand)
+		if (g_bLand && g_bkabe)
 		{
 			// スティック入力時処理
 			if (GetJoyX(Joycon) != 0 || GetJoyY(Joycon) != 0)
 			{
+				// スティックの値－1～1で代入
+				Stick.x = static_cast<FLOAT>(GetJoyX(Joycon) / 32767.0);
+				Stick.y = -static_cast<FLOAT>(GetJoyY(Joycon) / 32767.0);
+
 				// スティックのデッドゾーン処理
 				if ((GetJoyX(Joycon) < JOYSTICK_DEADZONE && GetJoyX(Joycon) > -JOYSTICK_DEADZONE) &&
 					(GetJoyY(Joycon) < JOYSTICK_DEADZONE && GetJoyY(Joycon) > -JOYSTICK_DEADZONE))
@@ -206,28 +224,37 @@ void UpdatePlayer(void)
 				}
 				else
 				{	// 大きく傾けた場合↓
-					// スティックの値－1～1で代入
-					Stick.x = static_cast<FLOAT>(GetJoyX(Joycon) / 32767.0);
-					Stick.y = -static_cast<FLOAT>(GetJoyY(Joycon) / 32767.0);
-					/*SetEffect(XMFLOAT3((g_posModel.x + (60.0f * (Stick.x /2))), (g_posModel.y + (60.0f * Stick.y)),0.0f),
-						XMFLOAT3(0.0f, 0.0f, 0.0f),
-						XMFLOAT4(1.0f, 0.05f, 0.05f, 0.80f),
-						XMFLOAT2(9.0f, 18.0f), 5);*/
+					// 方向指定(コントローラ用)
+					switch (g_nDir)
+					{
+					case 1: if (Stick.x < 0.4f) {g_bkabe = false;}
+						break;
+					case 2: if (Stick.x > -0.4f) { g_bkabe = false; }
+						break;
+					case 3: if (Stick.y > 0.4f) { g_bkabe = false; }
+						break;
+					case 4: if (Stick.y < -0.4f) { g_bkabe = false; }
+						break;
+					default:
+						break;
+					}
+
+					// ガイド用
 					for (int i = 0; i < 5; i++)
 					{
-						SetEffect(XMFLOAT3((g_posModel.x + ((60.0f / 6 * i) * (Stick.x / 2))), (g_posModel.y + ((60.0f / 6 * i) * Stick.y)), 0.0f),
+						if(g_bkabe == true)
+						SetEffect(XMFLOAT3((g_posModel.x + ((60.0f / 6 * i) * (Stick.x / 2))), (g_posModel.y + (60.0f / 6 * i) * Stick.y), 0.0f),
 							XMFLOAT3(0.0f, 0.0f, 0.0f),
-							XMFLOAT4(1.0f, 0.05f, 0.05f, 0.80f),
+							XMFLOAT4(1.0f, 0.0f, 0.0f, 0.80f),
 							XMFLOAT2(4.5f, 9.0f), 5);
 					}
 					// Aボタンが押されたら
-					if (GetJoyTrigger(Joycon, JOYSTICKID1))
+					if (GetJoyTrigger(Joycon, JOYSTICKID1) && g_bkabe)
 					{
-						g_moveModel.x = Stick.x *7.5f;
-						g_moveModel.y = Stick.y *15;
-						g_bLand = false;
-						CSound::Play(SE_JUMP);
-						CSound::SetVolume(SE_JUMP, 0.01f);
+						g_moveModel.x = Stick.x *3.0f;
+						g_moveModel.y = Stick.y *6.0f;
+						g_bLand = false;				 // 設置判定オフ
+						CSound::SetPlayVol(SE_JUMP,0.1); // ジャンプ音
 					}
 				}
 			}
@@ -260,19 +287,17 @@ void UpdatePlayer(void)
 		g_moveModel.z = 0;
 
 		// 上下移動
-		if (GetKeyTrigger(VK_UP)) {
+		if (GetKeyTrigger(VK_UP) && !(g_nDir == 3)) {
 			StartExplosion(g_posModel, XMFLOAT2(40.0f, 40.0f));
 			g_moveModel.y += SPEED_MOVE_PLAYER;
-			CSound::Play(SE_JUMP);
-			CSound::SetVolume(SE_JUMP, 0.01f);
-			g_bLand = false;
+			CSound::SetPlayVol(SE_JUMP, 0.1); // ジャンプ音
+			g_bLand = false;	// 設置判定オフ
 		}
-		else if (GetKeyTrigger(VK_DOWN)) {
+		else if (GetKeyTrigger(VK_DOWN) && !(g_nDir == 4)) {
 			StartExplosion(g_posModel, XMFLOAT2(40.0f, 40.0f));
 			g_moveModel.y -= SPEED_MOVE_PLAYER;
-			CSound::Play(SE_JUMP);
-			CSound::SetVolume(SE_JUMP, 0.01f);
-			g_bLand = false;
+			CSound::SetPlayVol(SE_JUMP, 0.1); // ジャンプ音
+			g_bLand = false;	// 設置判定オフ
 		}
 
 		//現在横方向の壁に振れていると逆側には飛べない
@@ -280,10 +305,10 @@ void UpdatePlayer(void)
 		if (!g_bLand)
 		{
 			// 左右移動
-			if (GetKeyPress(VK_LEFT)) {
+			if (GetKeyPress(VK_LEFT) && !(g_nDir == 1)) {
 				g_moveModel.x -= SPEED_MOVE_PLAYER;
 			}
-			else if (GetKeyPress(VK_RIGHT)) {
+			else if (GetKeyPress(VK_RIGHT) && !(g_nDir == 2)) {
 				g_moveModel.x += SPEED_MOVE_PLAYER;
 			}
 			// 奥手前移動
@@ -453,32 +478,37 @@ void UpdatePlayer(void)
 		g_rotDestModel = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	}
 
-	// -------ワールドマトリクス制御------------------------------------------
-
-		// 1.ワールドマトリクス、2.回転移動、3.平行移動
-	XMMATRIX mtxWorld, mtxRot, mtxTranslate;
-
-	// ワールドマトリックスの初期化
-	mtxWorld = XMMatrixIdentity();
-
-	// 回転を反映
-	mtxRot = XMMatrixRotationRollPitchYaw(XMConvertToRadians(g_rotModel.x),
-										  XMConvertToRadians(g_rotModel.y),
-										  XMConvertToRadians(g_rotModel.z));
-	mtxWorld = XMMatrixMultiply(mtxWorld, mtxRot);
-
-	// モデルのサイズ
-	mtxWorld = XMMatrixScaling(g_ScaleModel.x, g_ScaleModel.y, g_ScaleModel.z);
-
-	// 移動を反映
-	mtxTranslate = XMMatrixTranslation(g_posModel.x, g_posModel.y -16, g_posModel.z);
-	mtxWorld = XMMatrixMultiply(mtxWorld, mtxTranslate);
-
-	// ワールドマトリックス設定
-	XMStoreFloat4x4(&g_mtxWorld, mtxWorld);
-
-	// 丸影の移動
-	//MoveShadow(g_nShadow, g_posModel);
+	// 壁との接地判定
+	//for (int j = 0; j < MAX_BLOCK; ++j, ++Block)
+	//{
+	//	if (!Block->m_use)
+	//	{// 未使用なら次へ
+	//		continue;
+	//	}
+	//	if (CollisionAABB(g_posModel, g_SizeModel, Block->m_pos, Block->m_Halfsize))
+	//	{
+	//		//右
+	//		if (Block->m_pos.x + Block->m_Halfsize.x <= g_posModel.x - g_SizeModel.x / 2)
+	//		{
+	//			g_nDir = 1;
+	//		}
+	//		//左
+	//		else if (Block->m_pos.x - Block->m_Halfsize.x >= g_posModel.x + g_SizeModel.x / 2)
+	//		{
+	//			g_nDir = 2;
+	//		}
+	//		//上
+	//		else if (Block->m_pos.y - Block->m_Halfsize.y >= g_posModel.y + g_SizeModel.y / 2)
+	//		{
+	//			g_nDir = 3;
+	//		}
+	//		//下
+	//		else if (Block->m_pos.y + Block->m_Halfsize.y <= g_posModel.y - g_SizeModel.y / 2)
+	//		{
+	//			g_nDir = 4;
+	//		}
+	//	}
+	//}
 
 // -------エフェクト制御------------------------------------------
 	g_PlayerEffect.Update();
@@ -559,7 +589,35 @@ void UpdatePlayer(void)
 	// PrintDebugProc("ﾋﾀﾞﾘ ｾﾝｶｲ : J\n");
 	// PrintDebugProc("ﾐｷﾞ  ｾﾝｶｲ : L\n");
 	// PrintDebugProc("ﾀﾏ   ﾊｯｼｬ : Space\n");
-	// PrintDebugProc("\n");
+	PrintDebugProc("StickX : %f\n",Stick.x);
+	PrintDebugProc("StickY : %f\n", Stick.y);
+	PrintDebugProc("Dir : %d\n",g_nDir);
+
+	// -------ワールドマトリクス制御------------------------------------------
+
+	// 1.ワールドマトリクス、2.回転移動、3.平行移動、4.拡縮
+	XMMATRIX mtxWorld, mtxRot, mtxTranslate, mtxScale;
+
+	// ワールドマトリックスの初期化
+	mtxWorld = XMMatrixIdentity();
+
+	// 回転を反映
+	mtxRot = XMMatrixRotationRollPitchYaw(XMConvertToRadians(g_rotModel.x),
+		XMConvertToRadians(g_rotModel.y),
+		XMConvertToRadians(g_rotModel.z));
+	mtxWorld = XMMatrixMultiply(mtxWorld, mtxRot);
+
+	// モデルのサイズ
+	mtxScale = XMMatrixScaling(g_ScaleModel.x, g_ScaleModel.y, g_ScaleModel.z);
+	mtxWorld = XMMatrixMultiply(mtxWorld, mtxScale);
+
+	// 移動を反映
+	mtxTranslate = XMMatrixTranslation(g_posModel.x, g_posModel.y - 10, g_posModel.z);
+	mtxWorld = XMMatrixMultiply(mtxWorld, mtxTranslate);
+
+	// ワールドマトリックス設定
+	XMStoreFloat4x4(&g_mtxWorld, mtxWorld);
+
 }
 
 //**************************************************************
@@ -579,11 +637,11 @@ void DrawPlayer(void)
 	g_PlayerEffect.Draw();
 
 	// // 半透明部分を描画
-	// SetBlendState(BS_ALPHABLEND);	// アルファブレンド有効
-	// SetZWrite(false);				// Zバッファ更新しない
-	// g_model.Draw(pDC, g_mtxWorld, eTransparentOnly);
-	// SetZWrite(true);				// Zバッファ更新する
-	// SetBlendState(BS_NONE);			// アルファブレンド無効
+	 SetBlendState(BS_ALPHABLEND);	// アルファブレンド有効
+	 SetZWrite(false);				// Zバッファ更新しない
+	 g_model.Draw(pDC, g_mtxWorld, eTransparentOnly);
+	 SetZWrite(true);				// Zバッファ更新する
+	 SetBlendState(BS_NONE);			// アルファブレンド無効
 }
 
 //*******************************
@@ -666,7 +724,7 @@ void SetPlayerJump(bool jump)
 //		bool:当たったかどうか
 //		true:飛んでいない
 //
-//***********************************************************
+//*******************************
 bool CollisionPlayer(XMFLOAT3 pos, float radius, float damage)
 {
 	bool hit = CollisionSphere(g_posModel, PLAYER_RADIUS, pos, radius);
@@ -685,4 +743,20 @@ bool CollisionPlayer(XMFLOAT3 pos, float radius, float damage)
 	}
 
 	return hit;
+}
+
+//*******************************
+//
+//		プレイヤー移動制限用関数
+//	
+//	引数:
+//		int dir : どの方角に当っているか
+//
+//	戻り値
+//		無し
+//
+//*******************************
+void SetPlayerDir(int dir)
+{
+	g_nDir = dir;
 }

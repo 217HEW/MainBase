@@ -202,6 +202,7 @@
     <ClCompile Include="shadow.cpp" />
     <ClCompile Include="smoke.cpp" />
     <ClCompile Include="Sound.cpp" />
+    <ClCompile Include="StageSelect.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="timer.cpp" />
   </ItemGroup>
@@ -250,6 +251,7 @@
     <ClInclude Include="Sound.h" />
     <ClInclude Include="SoundData.h" />
     <ClInclude Include="SoundData.hpp" />
+    <ClInclude Include="StageSelect.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="timer.h" />
   </ItemGroup>
