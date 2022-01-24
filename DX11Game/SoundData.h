@@ -4,6 +4,7 @@ enum eBGM {
 	BGM_TITLE,		// タイトル
 	BGM_GAME000,	// ゲーム0番
 	BGM_BOSS,		// ボスバトル
+	BGM_SELECT,
 
 	MAX_BGM	
 };
@@ -22,5 +23,6 @@ enum eSE {
 	SE_ENEMYBREAK,	// 敵破壊音
 	SE_LASER,		// レーザー音
 	SE_GAMEOVER,	// ジングル(ゲームオーバー)
+	SE_GAMECLEAR,   // ジングル(ゲームクリア)
 	MAX_SE
 };

@@ -30,6 +30,19 @@ static HRESULT UpdateMouse();
 //*****************************************************************************
 // グローバル変数
 //*****************************************************************************
+// ハットスイッチ(角度)→十字キー入力変換
+static const DWORD g_dwPOVBit[16] = {
+	JOY_DPAD_UP,					//   0度
+	JOY_DPAD_UP | JOY_DPAD_RIGHT,	//  45度	
+	JOY_DPAD_RIGHT,					//  90度
+	JOY_DPAD_RIGHT | JOY_DPAD_DOWN,	// 135度
+	JOY_DPAD_DOWN,					// 180度
+	JOY_DPAD_DOWN | JOY_DPAD_LEFT,	// 225度
+	JOY_DPAD_LEFT,					// 270度
+	JOY_DPAD_LEFT | JOY_DPAD_UP,	// 315度
+	0 // 8～15は0に(実際は65535/4500≒14だけを使用)
+};
+
 static WORD				g_wKeyState[NUM_KEY_MAX];			// キーボードの押下状態を保持するワーク
 static WORD				g_wKeyStateTrigger[NUM_KEY_MAX];	// キーボードのトリガ状態を保持するワーク
 static WORD				g_wKeyStateRelease[NUM_KEY_MAX];	// キーボードのリリース状態を保持するワーク
@@ -326,6 +339,50 @@ bool GetJoyRelease(DWORD dwJoy, DWORD dwBtn)
 {
 	if (dwJoy >= NUM_JOY_MAX) return false;
 	return (g_dwJoyButtonRelease[dwJoy] & (1 << dwBtn)) ? true : false;
+}
+//=============================================================================
+// ゲームパッド 十字キー取得
+//=============================================================================
+DWORD GetJoyDpad(DWORD dwJoy)
+{
+	if (dwJoy >= NUM_JOY_MAX) return JOY_DPAD_CENTER;
+	return g_dwPOVBit[g_joyState[dwJoy].dwPOV / 4500];
+}
+
+//=============================================================================
+// ゲームパッド 十字キー↑取得
+//=============================================================================
+bool GetJoyDpadUp(DWORD dwJoy)
+{
+	if (dwJoy >= NUM_JOY_MAX) return false;
+	return (g_dwPOVBit[g_joyState[dwJoy].dwPOV / 4500] & JOY_DPAD_UP) != 0;
+}
+
+//=============================================================================
+// ゲームパッド 十字キー→取得
+//=============================================================================
+bool GetJoyDpadRight(DWORD dwJoy)
+{
+	if (dwJoy >= NUM_JOY_MAX) return false;
+	return (g_dwPOVBit[g_joyState[dwJoy].dwPOV / 4500] & JOY_DPAD_RIGHT) != 0;
+}
+
+//=============================================================================
+// ゲームパッド 十字キー↓取得
+//=============================================================================
+bool GetJoyDpadDown(DWORD dwJoy)
+{
+	if (dwJoy >= NUM_JOY_MAX) return false;
+	return (g_dwPOVBit[g_joyState[dwJoy].dwPOV / 4500] & JOY_DPAD_DOWN) != 0;
+}
+
+//=============================================================================
+// ゲームパッド 十字キー←取得
+//=============================================================================
+bool GetJoyDpadLeft(DWORD dwJoy)
+{
+	if (dwJoy >= NUM_JOY_MAX) return false;
+	return (g_dwPOVBit[g_joyState[dwJoy].dwPOV / 4500] & JOY_DPAD_LEFT) != 0;
 }
 
 //=============================================================================

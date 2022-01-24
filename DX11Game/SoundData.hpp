@@ -13,6 +13,7 @@ LPCWSTR g_pszFileBGM[MAX_BGM] = {
 	L"BGM_Title000.mp3",	// タイトル		※仮
 	L"BGM_Game000.mp3",		// ゲーム		※仮
 	L"BGM_Boss000.mp3",		// ボスバトル	※仮
+	L"BGM_Select000.mp3",		// ボスバトル	※仮
 	// L"BGM_Nostalgic.mp3",	// ノスタルジック
 	// L"BGM_minmin.mp3",		// セミの鳴き声
 
@@ -31,5 +32,5 @@ LPCWSTR g_pszFileSE[MAX_SE] = {
 	L"SE_EnemyBreak000.mp3",// 敵破壊		※仮
 	L"SE_Laser000.mp3",		// レーザー
 	L"SE_GameOver000.mp3",	// ジングル(ゲームオーバー)
-
+	L"SE_GameClear000.mp3",	// ジングル(ゲームクリア)
 };

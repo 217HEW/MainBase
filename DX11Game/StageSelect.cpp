@@ -13,6 +13,10 @@
 //	2022/01/21	計10ステージのセレクトボタンの配置とシーン遷移の実装
 //	2022/01/23	タイトルに戻るボタンの設置
 //	2022/01/24	選択中の画像の差し替えと大きさの調整
+//--------------------------------------------------------------
+//	2021/1/24	コントローラーの制御を追加、選択待機時間を追加
+//				必要最低限の音を追加しました
+//	編集者：上月大地
 //**************************************************************
 
 #include "StageSelect.h"
@@ -22,6 +26,8 @@
 #include "polygon.h"
 #include "Texture.h"
 #include "Sound.h"
+#include "debugproc.h"
+#include "input.h"
 
 //*****************************************************************************
 // マクロ定義
@@ -32,9 +38,6 @@
 #define BG_WIDTH		SCREEN_WIDTH	// テクスチャの横幅
 #define BG_HEIGHT		SCREEN_HEIGHT	// テクスチャの縦幅
 
-
-
-
 #define	NUM_SELECT_MENU		(12)			// セレクトメニュー数
 #define	SELECT_MENU_WIDTH	(150.0f)		// セレクトメニュー幅
 #define	SELECT_MENU_HEIGHT	(150.0f)		// セレクトメニュー高さ
@@ -42,12 +45,12 @@
 #define	SELECT_MENU_POS_Y	(130.0f)		// セレクトメニュー位置(Y座標)
 #define	SELECT_MENU_INTERVAL (180.0f)		// セレクトメニュー間隔
 
-
-
 #define	PLATE_WIDTH			(150.0f)		// プレートの幅
 #define	PLATE_HEIGHT		(100.0f)		// プレートの幅
 #define	PLATE_POS_X			(-500.0f)		// プレートの位置(X座標)
 #define	PLATE_POS_Y			(300.0f)		// プレートの位置(Y座標)
+
+#define WAIT_TIME			(15)			// 選択待機時間
 
 //*****************************************************************************
 // グローバル変数
@@ -55,10 +58,15 @@
 static ID3D11ShaderResourceView*	g_pTextures[12] = { nullptr };	// テクスチャへのポインタ
 static ID3D11ShaderResourceView*	g_pBGTexture; // 背景
 
-
+static DWORD	Joycon;		// コントローラー情報
 static SELECT_MENU g_nSelectMenu = STAGE_1;		// 選択中のメニューNo.
-static float g_fCurve = 0.0f;
-static float g_fCol = 0.0f;
+float g_fCurve = 0.0f;
+float g_fCol = 0.0f;
+
+bool g_bTime;	// 待機用
+
+// 待機タイマーカウントダウン
+int g_nTime;
 
 static LPCWSTR c_aFileNameStageMenu[NUM_SELECT_MENU] =
 {
@@ -93,9 +101,13 @@ HRESULT InitSelect(void)
 
 	g_nSelectMenu = STAGE_1;
 	g_fCurve = 0.0f;
+	g_bTime = false;
+	g_nTime = WAIT_TIME;
 
 	// 効果音初期化
 	//g_pSE_Select = CreateSound(SE_SELECT_PATH);
+
+	CSound::SetPlayVol(BGM_SELECT, 0.1f); // セレクトシーンBGM
 
 	// 背景テクスチャ読込
 	hr = CreateTextureFromFile(pDevice, PATH_BGTEXTURE, &g_pBGTexture);
@@ -108,6 +120,8 @@ HRESULT InitSelect(void)
 //=============================================================================
 void UninitSelect(void)
 {
+	CSound::Stop(BGM_SELECT);
+
 	// テクスチャの開放
 	for (int nCntStageMenu = 0; nCntStageMenu < NUM_SELECT_MENU; ++nCntStageMenu)
 	{
@@ -123,37 +137,52 @@ void UninitSelect(void)
 //=============================================================================
 void UpdateSelect(void)
 {
-	if (GetKeyRepeat(VK_UP))
+	// コントローラー情報
+	GetJoyState(Joycon);
+
+	if (g_nTime < 0)
 	{
-		CSound::Play(SE_SELECT);
-		CSound::SetVolume(SE_SELECT, 0.02f);
+		g_bTime = true;
+	}
+
+	if(g_bTime == true){
+	if (GetKeyRepeat(VK_UP)||GetJoyDpadUp(Joycon))
+	{
+		// カーソル音
+		CSound::SetPlayVol(SE_SELECT, 0.3f);
 		g_nSelectMenu = (SELECT_MENU)((g_nSelectMenu + (NUM_SELECT_MENU - 2) - 5) % (NUM_SELECT_MENU - 2));
 		SetSelectMenu();
+		g_bTime = false;
+		g_nTime = WAIT_TIME;
 	}
-	else if (GetKeyRepeat(VK_DOWN))
+	else if (GetKeyRepeat(VK_DOWN)||GetJoyDpadDown(Joycon))
 	{
-		CSound::Play(SE_SELECT);
-		CSound::SetVolume(SE_SELECT, 0.02f);
+		// カーソル音
+		CSound::SetPlayVol(SE_SELECT, 0.3f);
 		g_nSelectMenu = (SELECT_MENU)((g_nSelectMenu + 5) % (NUM_SELECT_MENU - 2));
 		SetSelectMenu();
+		g_bTime = false;
+		g_nTime = WAIT_TIME;
 	}
-	else if (GetKeyRepeat(VK_RIGHT))
+	else if (GetKeyRepeat(VK_RIGHT)||GetJoyDpadRight(Joycon))
 	{
-		CSound::Play(SE_SELECT);
-		CSound::SetVolume(SE_SELECT, 0.02f);
-		g_nSelectMenu = (SELECT_MENU)((g_nSelectMenu + 1) % (NUM_SELECT_MENU - 1));
+		// カーソル音
+		CSound::SetPlayVol(SE_SELECT, 0.3f);
+		g_nSelectMenu = (SELECT_MENU)((g_nSelectMenu + 1) % (NUM_SELECT_MENU - 2));
 		SetSelectMenu();
+		g_bTime = false;
+		g_nTime = WAIT_TIME;
 	}
-	else if (GetKeyRepeat(VK_LEFT))
+	else if (GetKeyRepeat(VK_LEFT)||GetJoyDpadLeft(Joycon))
 	{
-		CSound::Play(SE_SELECT);
-		CSound::SetVolume(SE_SELECT, 0.02f);
+		// カーソル音
+		CSound::SetPlayVol(SE_SELECT, 0.3f);
 		g_nSelectMenu = (SELECT_MENU)((g_nSelectMenu + NUM_SELECT_MENU - 1) % (NUM_SELECT_MENU));
-		
 		SetSelectMenu();
+		g_bTime = false;
+		g_nTime = WAIT_TIME;
 	}
 	
-
 	//g_fCurve += XM_PI * 0.01f;//ピカピカの原因
 	//if (g_fCurve > XM_PI) {
 	//	g_fCurve -= XM_2PI;
@@ -162,10 +191,10 @@ void UpdateSelect(void)
 	// 反射光の設定
 	g_fCol = cosf(g_fCurve) * 0.2f + 0.8f;
 
-
 	//[ENTER]が押された
 	if (GetKeyTrigger(VK_RETURN))
 	{
+		CSound::SetPlayVol(SE_DECISION, 0.7f);
 		//選択中のメニュー項目により分岐
 		switch (GetSelectMenu())
 		{
@@ -204,6 +233,8 @@ void UpdateSelect(void)
 			break;
 		}
 	}
+	}
+	--g_nTime;
 }
 
 //=============================================================================
@@ -212,7 +243,9 @@ void UpdateSelect(void)
 void DrawSelect(void)
 {
 	int nCntStageMenu;
-
+	// Zバッファ無効(Zチェック無&Z更新無)
+	SetZBuffer(false);
+	SetBlendState(BS_ALPHABLEND);
 	// 背景
 	ID3D11DeviceContext* pDC = GetDeviceContext();
 	SetPolygonSize(BG_WIDTH, BG_HEIGHT);
@@ -221,9 +254,6 @@ void DrawSelect(void)
 	SetPolygonUV(0.0f, 0.0f);
 	DrawPolygon(pDC);
 
-	// Zバッファ無効(Zチェック無&Z更新無)
-	SetZBuffer(false);
-	SetBlendState(BS_ALPHABLEND);
 	ID3D11DeviceContext* pDeviceContext = GetDeviceContext();
 
 	// プレート
@@ -247,7 +277,6 @@ void DrawSelect(void)
 		}
 		else if(!nCntStageMenu <= 4)
 		{
-			
 			SetPolygonPos(SELECT_MENU_POS_X + (nCntStageMenu-5) * SELECT_MENU_INTERVAL,
 				SELECT_MENU_POS_Y - SELECT_MENU_INTERVAL * 1.5);
 		}
@@ -270,6 +299,7 @@ void DrawSelect(void)
 			SetPolygonTexture(g_pTextures[nCntStageMenu]);
 			SetPolygonSize(SELECT_MENU_WIDTH, SELECT_MENU_HEIGHT);
 		}
+
 		// ポリゴンの描画
 		DrawPolygon(pDeviceContext);
 	}
@@ -285,8 +315,7 @@ void DrawSelect(void)
 	}
 	SetPolygonTexture(g_pTextures[SELECT_TITLE]);
 	DrawPolygon(pDeviceContext);
-
-
+	
 	// Zバッファ有効(Zチェック有&Z更新有)
 	SetZBuffer(true);
 	SetBlendState(BS_NONE);

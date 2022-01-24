@@ -174,14 +174,12 @@ void UpdateBlock(void)
 				{
 					StartExplosion(GetPlayerPos(), XMFLOAT2(80.0f, 80.0f));
 
-					CSound::Play(SE_WALLBREAK);
-					CSound::SetVolume(SE_WALLBREAK, 0.04f);
+					CSound::SetPlayVol(SE_WALLBREAK, 0.05f); // 壁破壊音
 					g_block[i].m_use = false;
 					//g_model[i].Release();
 					break;
 				}
-				CSound::Play(SE_LANDING);
-				CSound::SetVolume(SE_LANDING, 0.08f);
+				CSound::SetPlayVol(SE_LANDING, 0.1f); // 着地音
 
 				// 無敵ブロックだったら出る
 				if (g_block[i].m_invincible)

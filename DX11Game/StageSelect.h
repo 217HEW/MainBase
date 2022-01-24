@@ -22,6 +22,7 @@ typedef enum {
 	STAGE_10,
 	SELECT_TITLE,
 	SELECT,
+
 	STAGE_MENU_MAX
 } SELECT_MENU;
 

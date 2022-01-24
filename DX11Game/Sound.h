@@ -40,10 +40,6 @@
 #define MAX_BUFFER_COUNT		3	// ストリーム再生用バッファ数
 #define MAX_DUP					16	// 最大多重再生数
 
-#define BGM_VOL		(1.0f)		// 初期BGM音量
-#define SE_VOL		(1.0f)		// 初期SE音量
-
-
 enum SoundStatus {
 	SS_STOP = 0,
 	SS_PLAY,
@@ -75,6 +71,7 @@ public:
 	void Resume();
 	bool IsPlaying();
 	void SetVolume(float fVol);
+	void SetPlayVol(float vol);
 	float GetVolume();
 	void Loop();
 };
@@ -99,6 +96,7 @@ public:
 	void Resume();
 	bool IsPlaying();
 	void SetVolume(float fVol);
+	void SetPlayVol(float vol);
 	float GetVolume();
 };
 
@@ -128,8 +126,10 @@ public:
 	static void SetVolume(float fVol);
 	static float GetVolume();
 	static void SetVolume(eBGM bgm, float fVol);
+	static void SetPlayVol(eBGM bgm, float vol);	// 追加
 	static float GetVolume(eBGM bgm);
 	static void SetVolume(eSE se, float fVol);
+	static void SetPlayVol(eSE se, float vol);	// 追加
 	static float GetVolume(eSE se);
 
 };

@@ -253,9 +253,8 @@ void UpdatePlayer(void)
 					{
 						g_moveModel.x = Stick.x *3.0f;
 						g_moveModel.y = Stick.y *6.0f;
-						g_bLand = false;
-						CSound::Play(SE_JUMP);
-						CSound::SetVolume(SE_JUMP, 0.01f);
+						g_bLand = false;				 // 設置判定オフ
+						CSound::SetPlayVol(SE_JUMP,0.1); // ジャンプ音
 					}
 				}
 			}
@@ -291,16 +290,14 @@ void UpdatePlayer(void)
 		if (GetKeyTrigger(VK_UP) && !(g_nDir == 3)) {
 			StartExplosion(g_posModel, XMFLOAT2(40.0f, 40.0f));
 			g_moveModel.y += SPEED_MOVE_PLAYER;
-			CSound::Play(SE_JUMP);
-			CSound::SetVolume(SE_JUMP, 0.01f);
-			g_bLand = false;
+			CSound::SetPlayVol(SE_JUMP, 0.1); // ジャンプ音
+			g_bLand = false;	// 設置判定オフ
 		}
 		else if (GetKeyTrigger(VK_DOWN) && !(g_nDir == 4)) {
 			StartExplosion(g_posModel, XMFLOAT2(40.0f, 40.0f));
 			g_moveModel.y -= SPEED_MOVE_PLAYER;
-			CSound::Play(SE_JUMP);
-			CSound::SetVolume(SE_JUMP, 0.01f);
-			g_bLand = false;
+			CSound::SetPlayVol(SE_JUMP, 0.1); // ジャンプ音
+			g_bLand = false;	// 設置判定オフ
 		}
 
 		//現在横方向の壁に振れていると逆側には飛べない
