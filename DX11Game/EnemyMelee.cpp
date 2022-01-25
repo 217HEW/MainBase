@@ -185,8 +185,8 @@ void UpdateEnemyMelee(void)
 	XMMATRIX mtxWorld, mtxRot, mtxTranslate,mtxScale;
 
 	//ブロック配列取得
-
 	TBLOCK *Block = GetBlockArray();
+	
 	//プレイヤーの座標・サイズ取得
 	XMFLOAT3 posPlayer = GetPlayerPos();
 	float sizePlayer = GetPlayerRadSize();
@@ -290,7 +290,7 @@ void UpdateEnemyMelee(void)
 					}
 				}
 			}
-			Block = Block-MAX_BLOCK;
+			for (int k = 0; k < MAX_BLOCK; ++k, --Block)
 			//// エフェクトセット＆制御
 			//if (g_EffectTimer == 0)
 			//{
@@ -440,28 +440,28 @@ void UpdateEnemyMelee(void)
 				{
 					//壁に当たると止まる
 					//右
-					if (Block->m_pos.x + Block->m_Halfsize.x / 2 <= g_EMelee1[i].m_pos.x - g_EMelee1[i].m_size.x / 2)
+					if (Block->m_pos.x + Block->m_Halfsize.x <= g_EMelee1[i].m_pos.x - g_EMelee1[i].m_size.x / 2)
 					{
 						g_EMelee1[i].m_pos.x = (Block->m_pos.x + Block->m_Halfsize.x + g_EMelee1[i].m_size.x);
 					}
 					//左
-					else if (Block->m_pos.x - Block->m_Halfsize.x / 2 >= g_EMelee1[i].m_pos.x + g_EMelee1[i].m_size.x / 2)
+					else if (Block->m_pos.x - Block->m_Halfsize.x >= g_EMelee1[i].m_pos.x + g_EMelee1[i].m_size.x / 2)
 					{
 						g_EMelee1[i].m_pos.x = (Block->m_pos.x - Block->m_Halfsize.x - g_EMelee1[i].m_size.x);
 					}
 					//上
-					else if (Block->m_pos.y - Block->m_Halfsize.y / 2 >= g_EMelee1[i].m_pos.y + g_EMelee1[i].m_size.y / 2)
+					else if (Block->m_pos.y - Block->m_Halfsize.y >= g_EMelee1[i].m_pos.y + g_EMelee1[i].m_size.y / 2)
 					{
 						g_EMelee1[i].m_pos.y = (Block->m_pos.y - Block->m_Halfsize.y - g_EMelee1[i].m_size.y);
 					}
 					//下
-					else if (Block->m_pos.y + Block->m_Halfsize.y / 2 <= g_EMelee1[i].m_pos.y - g_EMelee1[i].m_size.y / 2)
+					else if (Block->m_pos.y + Block->m_Halfsize.y <= g_EMelee1[i].m_pos.y - g_EMelee1[i].m_size.y / 2)
 					{
 						g_EMelee1[i].m_pos.y = (Block->m_pos.y + Block->m_Halfsize.y + g_EMelee1[i].m_size.y);
 					}
 				}
 			}
-			Block = Block - MAX_BLOCK;
+			for (int k = 0; k < MAX_BLOCK; ++k, --Block)
 			// エフェクトセット＆制御
 			//if (g_EffectTimer1 == 0)
 			//{
@@ -533,6 +533,8 @@ void UpdateEnemyMelee(void)
 	}
 
 
+	//ブロック配列取得
+	TBLOCK *Block2 = GetBlockArray();
 
 	for (int i = 0; i < MAX_ENEMYMELEE2; ++i)
 	{
@@ -602,37 +604,38 @@ void UpdateEnemyMelee(void)
 			}
 
 			// 敵と壁の当たり判定
-			for (int j = 0; j < MAX_BLOCK; ++j, ++Block)
+			for (int j = 0; j < MAX_BLOCK; ++j, ++Block2)
 			{
 				if (!Block->m_use)
 				{// 未使用なら次へ
 					continue;
 				}
-				if (CollisionAABB(g_EMelee2[i].m_pos, g_EMelee2[i].m_size, Block->m_pos, Block->m_Halfsize))
+				if (CollisionAABB(g_EMelee2[i].m_pos, g_EMelee2[i].m_size, Block2->m_pos, Block2->m_Halfsize))
 				{
 					//壁に当たると止まる
 					//右
-					if (Block->m_pos.x + Block->m_Halfsize.x / 2 <= g_EMelee2[i].m_pos.x - g_EMelee2[i].m_size.x / 2)
+					if (Block2->m_pos.x + Block2->m_Halfsize.x <= g_EMelee2[i].m_pos.x - g_EMelee2[i].m_size.x / 2)
 					{
-						g_EMelee2[i].m_pos.x = (Block->m_pos.x + Block->m_Halfsize.x + g_EMelee2[i].m_size.x);
+						g_EMelee2[i].m_pos.x = (Block2->m_pos.x + Block2->m_Halfsize.x + g_EMelee2[i].m_size.x);
 					}
 					//左
-					else if (Block->m_pos.x - Block->m_Halfsize.x / 2 >= g_EMelee2[i].m_pos.x + g_EMelee2[i].m_size.x / 2)
+					else if (Block2->m_pos.x - Block2->m_Halfsize.x >= g_EMelee2[i].m_pos.x + g_EMelee2[i].m_size.x / 2)
 					{
-						g_EMelee2[i].m_pos.x = (Block->m_pos.x - Block->m_Halfsize.x - g_EMelee2[i].m_size.x);
+						g_EMelee2[i].m_pos.x = (Block2->m_pos.x - Block2->m_Halfsize.x - g_EMelee2[i].m_size.x);
 					}
 					//上
-					else if (Block->m_pos.y - Block->m_Halfsize.y / 2 >= g_EMelee2[i].m_pos.y + g_EMelee2[i].m_size.y / 2)
+					else if (Block2->m_pos.y - Block2->m_Halfsize.y >= g_EMelee2[i].m_pos.y + g_EMelee2[i].m_size.y / 2)
 					{
-						g_EMelee2[i].m_pos.y = (Block->m_pos.y - Block->m_Halfsize.y - g_EMelee2[i].m_size.y);
+						g_EMelee2[i].m_pos.y = (Block2->m_pos.y - Block2->m_Halfsize.y - g_EMelee2[i].m_size.y);
 					}
 					//下
-					else if (Block->m_pos.y + Block->m_Halfsize.y / 2 <= g_EMelee2[i].m_pos.y - g_EMelee2[i].m_size.y / 2)
+					else if (Block2->m_pos.y + Block2->m_Halfsize.y <= g_EMelee2[i].m_pos.y - g_EMelee2[i].m_size.y / 2)
 					{
-						g_EMelee2[i].m_pos.y = (Block->m_pos.y + Blocksize.y + g_EMelee2[i].m_size.y);
+						g_EMelee2[i].m_pos.y = (Block2->m_pos.y + Block2->m_Halfsize.y + g_EMelee2[i].m_size.y);
 					}
 				}
 			}
+			for (int k = 0; k < MAX_BLOCK; ++k, --Block2)
 
 			// エフェクトセット＆制御
 			//if (g_EffectTimer == 0)
