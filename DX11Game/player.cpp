@@ -64,6 +64,14 @@
 //	2022/01/24	プレイヤーの移動制限を実装しましたが完ぺきではありません
 //				コントローラーの方は良い感じです。
 //	編集者：上月大地
+//--------------------------------------------------------------
+//	2022/01/25	プレイヤーの位置をリセットする処理の削除
+//				プレイヤーの一部移動処理の削除(コメントアウト)
+//				プレイヤーの移動制限(下端)を追加
+//				プレイヤーの位置リセット処理の削除
+//				一部コメントの追加
+//				コメントアウトされたいらないであろう一部デバッグ表示処理の削除
+//	編集者：柴山凜太郎
 //**************************************************************
 
 //**************************************************************
@@ -374,33 +382,33 @@ void UpdatePlayer(void)
 	//	g_rotDestModel.y = rotCamera.y;
 	//}
 
-	if (GetKeyPress(VK_I)) {
-		// 上に移動
-		g_moveModel.y += VALUE_MOVE_PLAYER;
-	}
-	if (GetKeyPress(VK_K)) {
-		// 下に移動
-		g_moveModel.y -= VALUE_MOVE_PLAYER;
-	}
-
-	if (GetKeyPress(VK_J)) {
-		// 左回転
-		g_rotDestModel.y -= VALUE_ROTATE_PLAYER;
-		if (g_rotDestModel.y < -180.0f) {
-			g_rotDestModel.y += 360.0f;
-		}
-	}
-	if (GetKeyPress(VK_L)) {
-		// 右回転
-		g_rotDestModel.y += VALUE_ROTATE_PLAYER;
-		if (g_rotDestModel.y >= 180.0f) {
-			g_rotDestModel.y -= 360.0f;
-		}
-	}
+	//if (GetKeyPress(VK_I)) {
+	//	// 上に移動
+	//	g_moveModel.y += VALUE_MOVE_PLAYER;
+	//}
+	//if (GetKeyPress(VK_K)) {
+	//	// 下に移動
+	//	g_moveModel.y -= VALUE_MOVE_PLAYER;
+	//}
+	//
+	//if (GetKeyPress(VK_J)) {
+	//	// 左回転
+	//	g_rotDestModel.y -= VALUE_ROTATE_PLAYER;
+	//	if (g_rotDestModel.y < -180.0f) {
+	//		g_rotDestModel.y += 360.0f;
+	//	}
+	//}
+	//if (GetKeyPress(VK_L)) {
+	//	// 右回転
+	//	g_rotDestModel.y += VALUE_ROTATE_PLAYER;
+	//	if (g_rotDestModel.y >= 180.0f) {
+	//		g_rotDestModel.y -= 360.0f;
+	//	}
+	//}
 
 	// -------移動の制限&制御------------------------------------------
 
-		// 目的の角度までの差分
+	// 目的の角度までの差分
 	float fDiffRotY = g_rotDestModel.y - g_rotModel.y;
 	if (fDiffRotY >= 180.0f) {
 		fDiffRotY -= 360.0f;
@@ -427,12 +435,14 @@ void UpdatePlayer(void)
 	// g_moveModel.x += (0.0f - g_moveModel.x) * RATE_MOVE_PLAYER;
 	// g_moveModel.y += (0.0f - g_moveModel.y) * RATE_MOVE_PLAYER;
 	// //g_moveModel.z += (0.0f - g_moveModel.z) * RATE_MOVE_PLAYER;
-	// 
+	
+	// 左端
 	if (g_posModel.x < -630.0f) {
 		g_posModel.x = -630.0f;
 
 		StartFadeOut(SCENE_GAMEOVER);
 	}
+	// 右端
 	if (g_posModel.x > 1630.0f) {
 		g_posModel.x = 1630.0f;
 
@@ -448,6 +458,15 @@ void UpdatePlayer(void)
 	//  	g_posModel.y = -200.0f;
 	//	StartFadeOut(SCENE_GAMEOVER);
 	//  }
+
+	// 下端
+	if (g_posModel.y > -800.0f) {
+		g_posModel.y = -800.0f;
+
+		StartFadeOut(SCENE_GAMEOVER);
+	}
+
+	// 上端
 	if (g_posModel.y > 800.0f) {
 		g_posModel.y = 800.0f;
 		// 今のエリアから次のエリアへ
@@ -468,14 +487,6 @@ void UpdatePlayer(void)
 		default:
 			break;
 		}
-	}
-	// 
-	if (GetKeyPress(VK_RETURN)) {
-		// リセット
-		g_posModel = XMFLOAT3(0.0f, -800.0f, 0.0f);
-		g_moveModel = XMFLOAT3(0.0f, 0.0f, 0.0f);
-		g_rotModel = XMFLOAT3(0.0f, 0.0f, 0.0f);
-		g_rotDestModel = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	}
 
 	// 壁との接地判定
@@ -518,15 +529,19 @@ void UpdatePlayer(void)
 	   + g_moveModel.z * g_moveModel.z) > 1.0f) {
 		XMFLOAT3 pos;
 
+		// エフェクト出現座標の調整
 		pos.x = g_posModel.x + SinDeg(g_rotModel.y) * 10.0f;
 		pos.y = g_posModel.y + 2.0f;
 		pos.z = g_posModel.z + CosDeg(g_rotModel.y) * 10.0f;
+		
+		// エフェクシアのサンプルエフェクト再生処理
 		if (g_PEffectTimer == 0)
 		{	
 			g_PlayerEffect.Set(EFFECT_BURNING, g_posModel, XMFLOAT3(10.0f, 10.0f, 10.0f), 2.5f, XMFLOAT3(0.0f,0.0f,0.0f));
 			g_PEffectTimer = 1;
 		}
 		--g_PEffectTimer;
+
 		// エフェクトの設定
 		SetEffect(pos, XMFLOAT3(0.0f, 0.0f, 0.0f),
 					   XMFLOAT4(0.85f, 0.05f, 0.65f, 0.50f),
@@ -538,57 +553,16 @@ void UpdatePlayer(void)
 					   XMFLOAT4(0.45f, 0.45f, 0.05f, 0.15f),
 					   XMFLOAT2(5.0f, 5.0f), 20);
 	}
-	// 弾発射
-	//if (GetKeyRepeat(VK_SPACE)) {
-	//	FireBullet(g_posModel, XMFLOAT3(-g_mtxWorld._31, -g_mtxWorld._32, -g_mtxWorld._33),
-	//		BULLETTYPE_PLAYER);
-	//}
-// -------テスト操作------------------------------------------
-	// ダメージテスト
-	if (GetKeyRepeat(VK_D))
-	{
-		g_bInv = true;
-		DelLife();
-		g_nDamage = DAMAGE_TIMER;
-
-	}
-	// 回復テスト
-	if (GetKeyRepeat(VK_H))
-	{
-		AddLife();
-		//g_nDamage = DAMAGE_TIMER;
-
-	}
+	
+	// 体力が0ならゲームオーバーへ
 	if (GetLife() <= 0)
 	{
 		StartFadeOut(SCENE_GAMEOVER);
 	}
-	//} while (0);
-	//当たり判定
-	//テスト壁との当たり判定でlifeが減る
-	//XMFLOAT2 vRect(COLLISION_WIDTH, COLLISION_HEIGHT);
-	//if (CollisionEnemy(g_vPos, vRect, 0.0f) >= 0)
-	//{
-	//	//lifeを減算
-	//	DelLife();
-	//	g_nDamage = DAMAGE_TIMER;
-	//	CSound::Play(SE_HIT);
-	//}
-
 	// PrintDebugProc("[ﾋｺｳｷ ｲﾁ : (%f : %f : %f)]\n", g_posModel.x, g_posModel.y, g_posModel.z);
 	// PrintDebugProc("[ﾋｺｳｷ ﾑｷ : (%f) < ﾓｸﾃｷ ｲﾁ:(%f) >]\n", g_rotModel.y, g_rotDestModel.y);
 	// PrintDebugProc("\n");
 
-	// PrintDebugProc("*** ﾋｺｳｷ ｿｳｻ ***\n");
-	// PrintDebugProc("ﾏｴ   ｲﾄﾞｳ : \x1e\n");//↑
-	// PrintDebugProc("ｳｼﾛ  ｲﾄﾞｳ : \x1f\n");//↓
-	// PrintDebugProc("ﾋﾀﾞﾘ ｲﾄﾞｳ : \x1d\n");//←
-	// PrintDebugProc("ﾐｷﾞ  ｲﾄﾞｳ : \x1c\n");//→
-	// PrintDebugProc("ｼﾞｮｳｼｮｳ   : I\n");
-	// PrintDebugProc("ｶｺｳ       : K\n");
-	// PrintDebugProc("ﾋﾀﾞﾘ ｾﾝｶｲ : J\n");
-	// PrintDebugProc("ﾐｷﾞ  ｾﾝｶｲ : L\n");
-	// PrintDebugProc("ﾀﾏ   ﾊｯｼｬ : Space\n");
 	PrintDebugProc("StickX : %f\n",Stick.x);
 	PrintDebugProc("StickY : %f\n", Stick.y);
 	PrintDebugProc("Dir : %d\n",g_nDir);

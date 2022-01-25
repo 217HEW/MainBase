@@ -49,6 +49,11 @@
 //--------------------------------------------------------------
 //	2022/01/22	Effekseerで作成したエフェクトを再生する処理の追加
 //														変更者：柴山凜太郎
+//--------------------------------------------------------------
+//	2022/01/25	エフェクトクラス用の変数の名前を変更
+//				いらない終了処理(MeshuField,MeshWall,Bullet,Smoke)をコメントアウト＆削除しました
+//				UpdateBGの呼び出す順番を変更しました
+//														変更者：柴山凜太郎
 //**************************************************************
 
 //**************************************************************
@@ -95,8 +100,8 @@
 //**************************************************************
 //TPolyline					g_polyline[MAX_POLYLINE];	// ポリライン情報
 
-static bool g_bPause;		//一時停止中
-Effect g_Effect;			// エフェクト変数
+static bool g_bPause;			// 一時停止中
+Effect g_GameEffect;			// エフェクト変数
 static int g_EffectTimer = 0;	// エフェクト制御用タイマー
 //**************************************************************
 // 初期化処理
@@ -210,7 +215,7 @@ HRESULT InitGame(AREA Area)
 		return hr;
 
 	// エフェクト(for Effekseer)初期化
-	hr = g_Effect.Load();
+	hr = g_GameEffect.Load();
 	if (FAILED(hr))
 		return hr;
 
@@ -284,7 +289,7 @@ void UninitGame()
 	//UninitPolyline();
 
 	// 壁終了
-	UninitMeshWall();
+	//UninitMeshWall();
 
 	// レンジ終了
 	UninitEnemyRange();
@@ -298,23 +303,17 @@ void UninitGame()
 	// ブロック終了
 	//UninitBlock();
 
-	// 煙終了
-	//UninitSmoke();
-
 	// エフェクト終了
 	UninitEffect();
 
 	// 爆発終了
 	UninitExplosion();
 
-	// ビルボード弾終了
-	UninitBullet();
-
 	// 背景終了
 	UninitBG();
 
 	// フィールド終了
-	UninitMeshField();
+	//UninitMeshField();
 
 	// 二次元配列マップ終了
 	UninitCField();
@@ -398,8 +397,6 @@ void UpdateGame()
 		}
 
 
-
-
 		// デバッグ文字列表示更新
 		//UpdateDebugProc();
 
@@ -408,6 +405,9 @@ void UpdateGame()
 
 		// ポリゴン表示更新
 		//UpdatePolygon();
+
+		// 背景更新
+		UpdateBG();
 
 		// 自機更新
 		UpdatePlayer();
@@ -420,9 +420,6 @@ void UpdateGame()
 
 		// エネミーレンジ更新
 		UpdateEnemyRange();
-
-		// 背景更新
-		UpdateBG();
 
 		// 壁更新
 		//UpdateMeshWall();
@@ -455,11 +452,11 @@ void UpdateGame()
 		// エフェクト(for Effekseer)更新
 		if (g_EffectTimer == 0)
 		{
-			g_Effect.Set(EFFECT_FIRE, XMFLOAT3(-50, -50, 0), XMFLOAT3(10.0f, 10.0f, 10.0f), 0.1f, XMFLOAT3(1.0f, 1.0f, 1.0f));
+			g_GameEffect.Set(EFFECT_FIRE, XMFLOAT3(-50, -50, 0), XMFLOAT3(10.0f, 10.0f, 10.0f), 0.1f, XMFLOAT3(1.0f, 1.0f, 1.0f));
 			g_EffectTimer = 30;
 		}
 		--g_EffectTimer;
-		g_Effect.Update();
+		g_GameEffect.Update();
 		// ブロック更新
 		// UpdateBlock();
 
