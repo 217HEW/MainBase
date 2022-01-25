@@ -72,6 +72,10 @@
 //				一部コメントの追加
 //				コメントアウトされたいらないであろう一部デバッグ表示処理の削除
 //	編集者：柴山凜太郎
+//--------------------------------------------------------------
+//	2022/01/25	プレイヤーの方向を変える処理を追加しました
+//				ゲーム開始時はジャンプするまで10秒間無敵にしました
+//	編集者：上月大地
 //**************************************************************
 
 //**************************************************************
@@ -147,7 +151,7 @@ HRESULT InitPlayer(void)
 	ID3D11Device* pDevice = GetDevice();
 	ID3D11DeviceContext* pDeviceContext = GetDeviceContext();
 
-	g_nDamage = 0;
+	g_nDamage = 10 * 60 +59;
 
 	// 位置・回転・スケールの初期設定
 	g_posModel = XMFLOAT3(10.0f, -320.0f, 0.0f);
@@ -235,7 +239,7 @@ void UpdatePlayer(void)
 					// 方向指定(コントローラ用)
 					switch (g_nDir)
 					{
-					case 1: if (Stick.x < 0.4f) {g_bkabe = false;}
+					case 1: if (Stick.x < 0.4f)	{ g_bkabe = false; }
 						break;
 					case 2: if (Stick.x > -0.4f) { g_bkabe = false; }
 						break;
@@ -262,7 +266,7 @@ void UpdatePlayer(void)
 						g_moveModel.x = Stick.x *3.0f;
 						g_moveModel.y = Stick.y *6.0f;
 						g_bLand = false;				 // 設置判定オフ
-						CSound::SetPlayVol(SE_JUMP,0.1); // ジャンプ音
+						CSound::SetPlayVol(SE_JUMP,0.1f); // ジャンプ音
 					}
 				}
 			}
@@ -298,13 +302,13 @@ void UpdatePlayer(void)
 		if (GetKeyTrigger(VK_UP) && !(g_nDir == 3)) {
 			StartExplosion(g_posModel, XMFLOAT2(40.0f, 40.0f));
 			g_moveModel.y += SPEED_MOVE_PLAYER;
-			CSound::SetPlayVol(SE_JUMP, 0.1); // ジャンプ音
+			CSound::SetPlayVol(SE_JUMP, 0.1f); // ジャンプ音
 			g_bLand = false;	// 設置判定オフ
 		}
 		else if (GetKeyTrigger(VK_DOWN) && !(g_nDir == 4)) {
 			StartExplosion(g_posModel, XMFLOAT2(40.0f, 40.0f));
 			g_moveModel.y -= SPEED_MOVE_PLAYER;
-			CSound::SetPlayVol(SE_JUMP, 0.1); // ジャンプ音
+			CSound::SetPlayVol(SE_JUMP, 0.1f); // ジャンプ音
 			g_bLand = false;	// 設置判定オフ
 		}
 
@@ -442,37 +446,20 @@ void UpdatePlayer(void)
 	if (g_posModel.y > 0.0f)	{ StartFadeOut(SCENE_GAMEOVER); }	// 上
 	if (g_posModel.y < -400.0f) { StartFadeOut(SCENE_GAMEOVER); }	// 下
 
-	// 壁との接地判定
-	//for (int j = 0; j < MAX_BLOCK; ++j, ++Block)
-	//{
-	//	if (!Block->m_use)
-	//	{// 未使用なら次へ
-	//		continue;
-	//	}
-	//	if (CollisionAABB(g_posModel, g_SizeModel, Block->m_pos, Block->m_Halfsize))
-	//	{
-	//		//右
-	//		if (Block->m_pos.x + Block->m_Halfsize.x <= g_posModel.x - g_SizeModel.x / 2)
-	//		{
-	//			g_nDir = 1;
-	//		}
-	//		//左
-	//		else if (Block->m_pos.x - Block->m_Halfsize.x >= g_posModel.x + g_SizeModel.x / 2)
-	//		{
-	//			g_nDir = 2;
-	//		}
-	//		//上
-	//		else if (Block->m_pos.y - Block->m_Halfsize.y >= g_posModel.y + g_SizeModel.y / 2)
-	//		{
-	//			g_nDir = 3;
-	//		}
-	//		//下
-	//		else if (Block->m_pos.y + Block->m_Halfsize.y <= g_posModel.y - g_SizeModel.y / 2)
-	//		{
-	//			g_nDir = 4;
-	//		}
-	//	}
-	//}
+	// プレイヤー向き調整
+	switch (g_nDir)
+	{
+	case 1: g_rotModel.y = -90.0f;
+		break;
+	case 2: g_rotModel.y = 90.0f;
+		break;
+	case 3: g_rotModel.z = 180.0f;
+		break;
+	case 4: g_rotModel.z = 0.0f;
+		break;
+	default:
+		break;
+	}
 
 // -------エフェクト制御------------------------------------------
 	g_PlayerEffect.Update();
@@ -539,12 +526,12 @@ void UpdatePlayer(void)
 	mtxWorld = XMMatrixMultiply(mtxWorld, mtxScale);
 
 	// 移動を反映
-	mtxTranslate = XMMatrixTranslation(g_posModel.x, g_posModel.y - 10, g_posModel.z);
+	if(g_nDir == 3) { mtxTranslate = XMMatrixTranslation(g_posModel.x, g_posModel.y + 10, g_posModel.z); } // 天井に当っていたらモデル座標修正
+	else { mtxTranslate = XMMatrixTranslation(g_posModel.x, g_posModel.y - 10, g_posModel.z); }
 	mtxWorld = XMMatrixMultiply(mtxWorld, mtxTranslate);
 
 	// ワールドマトリックス設定
 	XMStoreFloat4x4(&g_mtxWorld, mtxWorld);
-
 }
 
 //**************************************************************
@@ -553,10 +540,15 @@ void UpdatePlayer(void)
 void DrawPlayer(void)
 {
 	// モデル点滅処理
-	if (g_nDamage > 0) {
+	if (g_nDamage > 0 && g_bLand == true) {
 		if (g_nDamage & 4)	// 4フレーム毎ごとに描画しない
 			return;
 	}
+	else
+	{
+		g_nDamage = 0;
+	}
+
 	ID3D11DeviceContext* pDC = GetDeviceContext();
 
 	// 不透明部分を描画
