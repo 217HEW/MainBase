@@ -207,7 +207,7 @@ void UpdatePlayer(void)
 	XMFLOAT3 rotCamera = CCamera::Get()->GetAngle();
 
 	// 壁の配列取得
-	TBLOCK *Block = GetBlockArray();
+	//TBLOCK *Block = GetBlockArray();
 
 	// -------コントローラー操作------------------------------------------
 	GetJoyState(Joycon);
