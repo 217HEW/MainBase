@@ -184,6 +184,8 @@ void UpdateEnemyMelee(void)
 
 	XMMATRIX mtxWorld, mtxRot, mtxTranslate,mtxScale;
 
+	//ブロック配列取得
+
 	TBLOCK *Block = GetBlockArray();
 	//プレイヤーの座標・サイズ取得
 	XMFLOAT3 posPlayer = GetPlayerPos();
