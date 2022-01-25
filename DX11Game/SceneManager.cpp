@@ -124,9 +124,9 @@ void UpdateScene()
 		UpdateGame();
 		break;
 	// 何かシーンを追加する場合はこちらに
-	case SCENE_GAMEOVER:
-		UpdateGameover();
-		break;
+	//case SCENE_GAMEOVER:
+	//	UpdateGameover();
+	//	break;
 	case SCENE_GAMECLEAR:	// ゲームクリア画面
 		UpdateGameclear();
 		break;
@@ -183,9 +183,9 @@ void DrawScene()
 		DrawGame();
 		break;
 	// 追加シーンの描画
-	case SCENE_GAMEOVER:
-		DrawGameover();
-		break;
+	//case SCENE_GAMEOVER:
+	//	DrawGameover();
+	//	break;
 	case SCENE_GAMECLEAR:		// ゲームクリア画面
 		DrawGameclear();
 		break;
@@ -251,9 +251,9 @@ HRESULT SetScene(EScene eScene)
 	case SCENE_AREA_DEBUG: // ゲーム画面
 		UninitGame();
 		break;
-	case SCENE_GAMEOVER: // ゲームオーバー画面
-		UninitGameover();
-		break;
+	//case SCENE_GAMEOVER: // ゲームオーバー画面
+	//	UninitGameover();
+	//	break;
 	case SCENE_GAMECLEAR: // ゲームクリア画面
 		UninitGameclear();
 		break;
@@ -304,9 +304,9 @@ HRESULT SetScene(EScene eScene)
 	case SCENE_AREA_DEBUG: // ゲーム画面エリア3
 		InitGame(AREA_DEBUG);
 		break;
-	case SCENE_GAMEOVER: // ゲームオーバー画面
-		InitGameover();
-		break;
+	//case SCENE_GAMEOVER: // ゲームオーバー画面
+	//	InitGameover();
+	//	break;
 	case SCENE_GAMECLEAR: // ゲームクリア画面
 		InitGameclear();
 		break;

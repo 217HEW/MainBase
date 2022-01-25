@@ -46,6 +46,17 @@
 //**************************************************************
 // マクロ定義
 //**************************************************************
+#define	NUM_GAMEOVER		 (3)		// ポーズメニュー数
+#define	GAMEOVER_MENU_WIDTH	 (320.0f)	// ポーズメニュー幅
+#define	GAMEOVER_MENU_HEIGHT (60.0f)	// ポーズメニュー高さ
+#define	GAMEOVER_INTERVAL	 (100.0f)	// ポーズメニュー間隔
+#define	GAMEOVER_MENU_POS_X	 (-450.0f)	// ポーズメニュー位置(X座標)
+#define	GAMEOVER_MENU_POS_Y	 (GAMEOVER_INTERVAL)	// ポーズメニュー位置(Y座標)
+#define	PLATE_WIDTH			 (360.0f)	// プレートの幅
+#define	PLATE_HEIGHT		 (320.0f)	// プレートの幅
+#define	PLATE_POS_X			 (-450.0f)	// プレートの位置(X座標)
+#define	PLATE_POS_Y			 (0.0f)		// プレートの位置(Y座標)
+
 #define PATH_BGTEXTURE "data/texture/Gameover.png"	//ゲームオーバーテクスチャ
 #define BG_POS_X (0.0f)	// シーン背景の横軸座標
 #define BG_POS_Y (0.0f)	// シーン背景の横軸座標
@@ -55,6 +66,13 @@
 // グローバル変数
 //**************************************************************
 static ID3D11ShaderResourceView* g_pTexture;	// テクスチャ用変数
+
+static LPCWSTR c_aFileNameGameover[NUM_GAMEOVER] =
+{
+	L"data/texture/pause000.png",	// ROGO
+	L"data/texture/pause001.png",	// リトライ
+	L"data/texture/pause002.png",	// クイット
+};
 //**************************************************************
 // 初期化処理
 //**************************************************************

@@ -16,6 +16,10 @@
 //	2022/01/03	プレイヤーのサイズを取得する関数の作成
 //	編集者：柴山凜太郎
 //--------------------------------------------------------------
+//	2022/01/25	死亡フラグの情報を取得する関数の作成
+//				死亡フラグ建設用関数作成
+//	編集者：柴山凜太郎
+//--------------------------------------------------------------
 //**************************************************************
 #pragma once
 
@@ -29,11 +33,29 @@ void UninitPlayer(void);	// 終了
 void UpdatePlayer(void);	// 更新
 void DrawPlayer(void);		// 描画
 
-XMFLOAT3& GetPlayerPos();	// プレイヤー位置情報取得
-XMFLOAT3& GetPlayerSize();	// プレイヤー位置情報取得
-float GetPlayerRadSize();		// プライヤーサイズ情報取得
-bool GetPlayerJump();		// 飛んでいるかのboolを取得する	true:飛んでいない
-void SetPlayerJump(bool jump);		// 飛んでいるかのboolをセットする	
+// プレイヤー位置情報取得
+XMFLOAT3& GetPlayerPos();
+
+// プレイヤー位置情報取得
+XMFLOAT3& GetPlayerSize();
+
+// プライヤーサイズ情報取得
+float GetPlayerRadSize();
+
+// 飛んでいるかのboolを取得する	true:飛んでいない
+bool GetPlayerJump();
+
+// 飛んでいるかのboolをセットする
+void SetPlayerJump(bool jump);
+
+// プレイヤーの向いてる方向を設定
 void SetPlayerDir(int dir);
 
+// プレイヤーとの当たり判定
 bool CollisionPlayer(XMFLOAT3 pos, float radius, float damage);
+
+// 死亡フラグ取得
+bool GetDeadFlg();
+
+// 死亡フラグ建設
+void SetDeadFlg(bool DeadFlg);

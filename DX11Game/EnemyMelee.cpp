@@ -351,3 +351,27 @@ TEnemyMelee* GetEnemyMelee()
 {
 	return g_EMelee;
 }
+
+//**************************************************************
+// 近接敵との当たり判定を行う関数
+//
+//引数：pos 座標
+//		radius	半径
+//
+// 戻り値：近接敵構造体変数
+//**************************************************************
+bool CollisionEnemyMelee(XMFLOAT3 pos,float radius)
+{
+	bool hit = 0;
+	for (int i = 0; i < MAX_ENEMYMELEE; i++)
+	{
+		if (!g_EMelee[i].m_use)
+			continue;
+		hit = CollisionSphere(g_EMelee[i].m_pos, g_EMelee[i].m_size.x, pos, radius);
+		if (hit) {
+			g_EMelee[i].m_use = false;
+			return true;
+		}
+	}
+	return false;
+}

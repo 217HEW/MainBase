@@ -71,6 +71,9 @@
 //				プレイヤーの位置リセット処理の削除
 //				一部コメントの追加
 //				コメントアウトされたいらないであろう一部デバッグ表示処理の削除
+//				プレイヤーの死亡フラグ作成
+//				死亡フラグ取得関数作成
+//				死亡フラグ建設用関数作成
 //	編集者：柴山凜太郎
 //**************************************************************
 
@@ -92,6 +95,7 @@
 #include "Block.h"
 #include "Sound.h"
 #include "PlayEffect.h"
+#include "EnemyMelee.h"
 
 #pragma comment (lib, "xinput.lib")	// コントローラー情報取得に必要
 //**************************************************************
@@ -130,6 +134,7 @@ int	g_nDir;			// 壁と接している方向	0:当ってない 1:右,2:左,3:上,4:下
 bool g_bInv;		// ダメージ時の無敵判定	true:無敵
 bool g_bLand;		// 地面判定	true:飛んでない
 bool g_bkabe;		// 壁に触れてます true触れてます
+bool g_bDead;		// 死亡フラグ
 
 // コントローラー
 static DWORD	Joycon;		// コントローラー情報
@@ -174,6 +179,7 @@ HRESULT InitPlayer(void)
 	g_bInv = false;
 	g_bkabe = true;
 
+	g_bDead = false;
 	g_nDir = 4;	// 下と接している
 
 	return hr;
@@ -406,7 +412,7 @@ void UpdatePlayer(void)
 	//	}
 	//}
 
-	// -------移動の制限&制御------------------------------------------
+// -------移動の制限&制御------------------------------------------
 
 	// 目的の角度までの差分
 	float fDiffRotY = g_rotDestModel.y - g_rotModel.y;
@@ -440,13 +446,13 @@ void UpdatePlayer(void)
 	if (g_posModel.x < -630.0f) {
 		g_posModel.x = -630.0f;
 
-		StartFadeOut(SCENE_GAMEOVER);
+		g_bDead = true;
 	}
 	// 右端
 	if (g_posModel.x > 1630.0f) {
 		g_posModel.x = 1630.0f;
 
-		StartFadeOut(SCENE_GAMEOVER);
+		g_bDead = true;
 	}
 	//  if (g_posModel.z < 0.0f) {
 	//  	g_posModel.z = 0.0f;
@@ -463,7 +469,7 @@ void UpdatePlayer(void)
 	if (g_posModel.y > -800.0f) {
 		g_posModel.y = -800.0f;
 
-		StartFadeOut(SCENE_GAMEOVER);
+		g_bDead = true;
 	}
 
 	// 上端
@@ -554,15 +560,17 @@ void UpdatePlayer(void)
 					   XMFLOAT2(5.0f, 5.0f), 20);
 	}
 	
-	// 体力が0ならゲームオーバーへ
-	if (GetLife() <= 0)
+//----------敵との当たり判定-----------------------
+	if (CollisionEnemyMelee(g_posModel, PLAYER_RADIUS))
 	{
-		StartFadeOut(SCENE_GAMEOVER);
+		// 死亡フラグを立てる
+		g_bDead = true;
 	}
+
+//--------------デバッグ表示-----------------------
 	// PrintDebugProc("[ﾋｺｳｷ ｲﾁ : (%f : %f : %f)]\n", g_posModel.x, g_posModel.y, g_posModel.z);
 	// PrintDebugProc("[ﾋｺｳｷ ﾑｷ : (%f) < ﾓｸﾃｷ ｲﾁ:(%f) >]\n", g_rotModel.y, g_rotDestModel.y);
 	// PrintDebugProc("\n");
-
 	PrintDebugProc("StickX : %f\n",Stick.x);
 	PrintDebugProc("StickY : %f\n", Stick.y);
 	PrintDebugProc("Dir : %d\n",g_nDir);
@@ -733,4 +741,24 @@ bool CollisionPlayer(XMFLOAT3 pos, float radius, float damage)
 void SetPlayerDir(int dir)
 {
 	g_nDir = dir;
+}
+
+//*******************************
+//
+//		死亡フラグ取得関数
+//	戻り値；死んだかどうか
+//*******************************
+bool GetDeadFlg()
+{
+	return g_bDead;
+}
+
+//*******************************
+//
+//		死亡フラグ建設関数
+//	引数：DeadFlg	フラグの切り替え
+//*******************************
+void SetDeadFlg(bool DeadFlg)
+{
+	g_bDead = DeadFlg;
 }

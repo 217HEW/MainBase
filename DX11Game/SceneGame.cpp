@@ -53,6 +53,7 @@
 //	2022/01/25	エフェクトクラス用の変数の名前を変更
 //				いらない終了処理(MeshuField,MeshWall,Bullet,Smoke)をコメントアウト＆削除しました
 //				UpdateBGの呼び出す順番を変更しました
+//				SceneGameOverのヘッダ＆4大処理のを挿入
 //														変更者：柴山凜太郎
 //**************************************************************
 
@@ -87,6 +88,7 @@
 // #include "EnemyExplode.h"
 #include "EnemyRange.h"
 #include "Pause.h"
+#include "SceneGameover.h"
 #include "PlayEffect.h"
 
 //**************************************************************
@@ -224,6 +226,12 @@ HRESULT InitGame(AREA Area)
 	g_bPause = false;
 	if (FAILED(hr))
 		return hr;
+
+	// ゲームオーバー初期化
+	hr = InitGameover();
+	g_bPause = false;
+	if (FAILED(hr))
+		return hr;
 	// SetMeshWall(XMFLOAT3(0.0f, 0.0f, 640.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), 16, 2, XMFLOAT2(40.0f, 40.0f));
 	// SetMeshWall(XMFLOAT3(-640.0f, 0.0f, 0.0f), XMFLOAT3(0.0f, -90.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), 16, 2, XMFLOAT2(80.0f, 80.0f));
 	// SetMeshWall(XMFLOAT3(640.0f, 0.0f, 0.0f), XMFLOAT3(0.0f, 90.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), 16, 2, XMFLOAT2(80.0f, 80.0f));
@@ -281,6 +289,9 @@ void UninitGame()
 {
 	// BGM再生停止
 	CSound::Stop(BGM_GAME000);
+
+	//ゲームオーバー終了処理
+	UninitGameover();
 
 	//ポーズ終了処理
 	UninitPause();
@@ -342,181 +353,163 @@ void UninitGame()
 //**************************************************************
 void UpdateGame()
 {
-	TEnemyMelee* pEMelee = GetEnemyMelee();
-	// 入力処理更新
-	//UpdateInput();	// 必ずUpdate関数の先頭で実行.
-
-	//一時停止中?
-	if (g_bPause) {
-		//一時停止更新
-		UpdatePause();
+	// ゲームオーバー？
+	if (GetDeadFlg())
+	{
+		// ゲームオーバー更新
+		UpdateGameover();
 	}
 	else
 	{
-		if (GetFadeState() == FADE_NONE)
+		//一時停止中?
+		if (g_bPause) {
+			//一時停止更新
+			UpdatePause();
+		}
+		else
 		{
+			if (GetFadeState() == FADE_NONE)
+			{
 #ifdef _DEBUG
-			if (GetKeyRelease(VK_1))
-			{
-				StartFadeOut(SCENE_TITLE);
-			}
-			else if (GetKeyRelease(VK_2))
-			{
-				StartFadeOut(SCENE_GAME);
-			}
-			else if (GetKeyRelease(VK_3))
-			{
-				StartFadeOut(SCENE_AREA2);
-			}
-			else if (GetKeyRelease(VK_4))
-			{
-				StartFadeOut(SCENE_AREA3);
-			}
-			else if (GetKeyRelease(VK_5))
-			{
-				StartFadeOut(SCENE_AREA_DEBUG);
-			}
-			else if (GetKeyRelease(VK_6))
-			{
-				StartFadeOut(SCENE_GAMEOVER);
-			}
-			else if (GetKeyRelease(VK_7))
-			{
-				StartFadeOut(SCENE_GAMECLEAR);
-			}
-			else if (GetKeyRelease(VK_8))
-			{
-				StartFadeOut(SCENE_SELECT);
-			}
+				if (GetKeyRelease(VK_1))
+				{
+					StartFadeOut(SCENE_TITLE);
+				}
+				else if (GetKeyRelease(VK_2))
+				{
+					StartFadeOut(SCENE_GAME);
+				}
+				else if (GetKeyRelease(VK_3))
+				{
+					StartFadeOut(SCENE_AREA2);
+				}
+				else if (GetKeyRelease(VK_4))
+				{
+					StartFadeOut(SCENE_AREA3);
+				}
+				else if (GetKeyRelease(VK_5))
+				{
+					StartFadeOut(SCENE_AREA_DEBUG);
+				}
+				else if (GetKeyRelease(VK_6))
+				{
+					StartFadeOut(SCENE_GAMEOVER);
+				}
+				else if (GetKeyRelease(VK_7))
+				{
+					StartFadeOut(SCENE_GAMECLEAR);
+				}
+				else if (GetKeyRelease(VK_8))
+				{
+					StartFadeOut(SCENE_SELECT);
+				}
 #endif
-			int Timer = GetTimer();
-			if (Timer <= 0)
+				int Timer = GetTimer();
+				if (Timer <= 0)
+				{
+					// ここにタイムアップのカットを入れるかも
+					// 死亡フラグ(仮)
+					SetDeadFlg(true);
+				}
+			}
+	
+			// 背景更新
+			UpdateBG();
+	
+			// 自機更新
+			UpdatePlayer();
+	
+			// エネミーメレー更新
+			// UpdateEnemyMelee();
+	
+			// エネミーエクスプロード更新
+			// UpdateEnemyExplode();
+	
+			// エネミーレンジ更新
+			UpdateEnemyRange();
+	
+			// 壁更新
+			//UpdateMeshWall();
+	
+			// フィールド更新
+			//UpdateMeshField();
+	
+			// 二次元配列マップ更新
+			UpdateCField();
+	
+			//*12/17澤村瑠人追加
+			// タイマー更新
+			UpdateTimer();
+	
+			// 丸影更新
+			//UpdateShadow();
+	
+			// カメラ更新
+			CCamera::Get()->Update();
+	
+			// ビルボード弾更新
+			//UpdateBullet();
+	
+			// 爆発更新
+			UpdateExplosion();
+	
+			// エフェクト更新
+			UpdateEffect();
+	
+			// エフェクト(for Effekseer)更新
+			if (g_EffectTimer == 0)
 			{
-				StartFadeOut(SCENE_GAMEOVER);
+				g_GameEffect.Set(EFFECT_FIRE, XMFLOAT3(-50, -50, 0), XMFLOAT3(10.0f, 10.0f, 10.0f), 0.1f, XMFLOAT3(1.0f, 1.0f, 1.0f));
+				g_EffectTimer = 30;
+			}
+			--g_EffectTimer;
+			g_GameEffect.Update();
+		}
+		//一時停止ON/OFF
+		if (GetKeyTrigger(VK_P))
+		{
+			if (GetFadeState() == FADE_NONE)
+			{
+				g_bPause = !g_bPause;
+				if (g_bPause) {
+					CSound::Pause();
+					CSound::Play(SE_SELECT);
+					CSound::SetVolume(SE_SELECT, 0.02f);
+					ResetPauseMenu();
+				}else{
+					CSound::Play(SE_CANCEL);
+					CSound::SetVolume(SE_CANCEL, 0.02f);
+					CSound::Resume();
+				}
 			}
 		}
-
-
-		// デバッグ文字列表示更新
-		//UpdateDebugProc();
-
-		// デバッグ文字列設定
-		//StartDebugProc();
-
-		// ポリゴン表示更新
-		//UpdatePolygon();
-
-		// 背景更新
-		UpdateBG();
-
-		// 自機更新
-		UpdatePlayer();
-
-		// エネミーメレー更新
-		// UpdateEnemyMelee();
-
-		// エネミーエクスプロード更新
-		// UpdateEnemyExplode();
-
-		// エネミーレンジ更新
-		UpdateEnemyRange();
-
-		// 壁更新
-		//UpdateMeshWall();
-
-		// フィールド更新
-		//UpdateMeshField();
-
-		// 二次元配列マップ更新
-		UpdateCField();
-
-		//*12/17澤村瑠人追加
-		// タイマー更新
-		UpdateTimer();
-
-		// 丸影更新
-		//UpdateShadow();
-
-		// カメラ更新
-		CCamera::Get()->Update();
-
-		// ビルボード弾更新
-		//UpdateBullet();
-
-		// 爆発更新
-		UpdateExplosion();
-
-		// エフェクト更新
-		UpdateEffect();
-
-		// エフェクト(for Effekseer)更新
-		if (g_EffectTimer == 0)
+	
+		//一時停止メニューの選択
+		if (g_bPause && GetFadeState() == FADE_NONE)
 		{
-			g_GameEffect.Set(EFFECT_FIRE, XMFLOAT3(-50, -50, 0), XMFLOAT3(10.0f, 10.0f, 10.0f), 0.1f, XMFLOAT3(1.0f, 1.0f, 1.0f));
-			g_EffectTimer = 30;
-		}
-		--g_EffectTimer;
-		g_GameEffect.Update();
-		// ブロック更新
-		// UpdateBlock();
-
-		// 煙更新
-		// UpdateSmoke();
-
-		// ブロック更新
-		// ポリライン更新
-		// for (int i = 0; i < MAX_POLYLINE; ++i) {
-		// 	UpdatePolyline(&g_polyline[i]);
-		// }
-
-
-	}
-	//一時停止ON/OFF
-	if (GetKeyTrigger(VK_P))
-	{
-		if (GetFadeState() == FADE_NONE)
-		{
-			g_bPause = !g_bPause;
-			if (g_bPause) {
-				CSound::Pause();
-				CSound::Play(SE_SELECT);
-				CSound::SetVolume(SE_SELECT, 0.02f);
-				ResetPauseMenu();
-			}
-			else
+			//[ENTER]が押された?
+			if (GetKeyTrigger(VK_RETURN))
 			{
-				CSound::Play(SE_CANCEL);
-				CSound::SetVolume(SE_CANCEL, 0.02f);
-				CSound::Resume();
-			}
-		}
-	}
-
-	//一時停止メニューの選択
-	if (g_bPause && GetFadeState() == FADE_NONE)
-	{
-		//[ENTER]が押された?
-		if (GetKeyTrigger(VK_RETURN))
-		{
-			//選択中のメニュー項目により分岐
-			switch (GetPauseMenu())
-			{
-			case PAUSE_MENU_CONTINUE:	// コンテニュー
-				g_bPause = false;
-				CSound::Play(SE_CANCEL);
-				CSound::SetVolume(SE_CANCEL, 0.03f);
-				CSound::Resume();
-				break;
-			case PAUSE_MENU_RETRY:		// リトライ
-				StartFadeOut(SCENE_GAME);
-				CSound::Play(SE_SELECT);
-				CSound::SetVolume(SE_SELECT, 0.03f);
-				break;
-			case PAUSE_MENU_QUIT:		// ゲームを辞める
-				StartFadeOut(SCENE_TITLE);
-				CSound::Play(SE_SELECT);
-				CSound::SetVolume(SE_SELECT, 0.03f);
-				break;
+				//選択中のメニュー項目により分岐
+				switch (GetPauseMenu())
+				{
+				case PAUSE_MENU_CONTINUE:	// コンテニュー
+					g_bPause = false;
+					CSound::Play(SE_CANCEL);
+					CSound::SetVolume(SE_CANCEL, 0.03f);
+					CSound::Resume();
+					break;
+				case PAUSE_MENU_RETRY:		// リトライ
+					StartFadeOut(SCENE_GAME);
+					CSound::Play(SE_SELECT);
+					CSound::SetVolume(SE_SELECT, 0.03f);
+					break;
+				case PAUSE_MENU_QUIT:		// ゲームを辞める
+					StartFadeOut(SCENE_TITLE);
+					CSound::Play(SE_SELECT);
+					CSound::SetVolume(SE_SELECT, 0.03f);
+					break;
+				}
 			}
 		}
 	}
@@ -589,6 +582,11 @@ void DrawGame()
 	//一時停止描画
 	if (g_bPause) {
 		DrawPause();
+	}
+
+	if (GetDeadFlg())
+	{
+		DrawGameover();
 	}
 
 	// Zバッファ無効(Zチェック無&Z更新無)
