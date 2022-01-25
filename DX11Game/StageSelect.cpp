@@ -17,6 +17,9 @@
 //	2021/1/24	コントローラーの制御を追加、選択待機時間を追加
 //				必要最低限の音を追加しました
 //	編集者：上月大地
+//--------------------------------------------------------------
+//	2021/1/25	コントローラーが無い場合に起きる不具合を無くしました
+//	編集者：上月大地
 //**************************************************************
 
 #include "StageSelect.h"
@@ -28,6 +31,20 @@
 #include "Sound.h"
 #include "debugproc.h"
 #include "input.h"
+#include <xinput.h>		// コントローラー情報取得に必要
+
+#pragma comment (lib, "xinput.lib")	// コントローラー情報取得に必要
+
+// コントローラ十字キー用
+typedef enum {
+	NOT = 0,	// 何も押してない
+	UP,			// 上
+	DOWN,		// 下
+	RIGHT,		// 右
+	LEFT,		// 左
+
+	CROSS_MAX
+} CROSS;
 
 //*****************************************************************************
 // マクロ定義
@@ -58,12 +75,14 @@
 static ID3D11ShaderResourceView*	g_pTextures[12] = { nullptr };	// テクスチャへのポインタ
 static ID3D11ShaderResourceView*	g_pBGTexture; // 背景
 
+static DWORD	Joystate;	// 接続確認用
 static DWORD	Joycon;		// コントローラー情報
 static SELECT_MENU g_nSelectMenu = STAGE_1;		// 選択中のメニューNo.
 float g_fCurve = 0.0f;
 float g_fCol = 0.0f;
 
 bool g_bTime;	// 待機用
+int g_bJoySelect;	// コントローラ選択用
 
 // 待機タイマーカウントダウン
 int g_nTime;
@@ -103,9 +122,7 @@ HRESULT InitSelect(void)
 	g_fCurve = 0.0f;
 	g_bTime = false;
 	g_nTime = WAIT_TIME;
-
-	// 効果音初期化
-	//g_pSE_Select = CreateSound(SE_SELECT_PATH);
+	g_bJoySelect = NOT;	// 何も選択していない
 
 	CSound::SetPlayVol(BGM_SELECT, 0.1f); // セレクトシーンBGM
 
@@ -137,102 +154,124 @@ void UninitSelect(void)
 //=============================================================================
 void UpdateSelect(void)
 {
+	//ゲームパッドの状態を取得
+	XINPUT_STATE state;
+
 	// コントローラー情報
 	GetJoyState(Joycon);
 
+	// 選択待機時間
 	if (g_nTime < 0)
 	{
 		g_bTime = true;
 	}
+	g_bJoySelect = NOT;	// コントローラ用選択初期化
+
+	// -------コントローラー操作------------------------------------------
+	GetJoyState(Joycon);
+	// コントローラーの接続状況確認
+	Joystate = XInputGetState(0, &state);
+
+	if (Joystate == ERROR_SUCCESS)
+	{	// 接続有り↓
+		if (GetJoyDpadUp(Joycon))	{ g_bJoySelect = UP; }
+		if (GetJoyDpadDown(Joycon)) { g_bJoySelect = DOWN; }
+		if (GetJoyDpadRight(Joycon)){ g_bJoySelect = RIGHT;}
+		if (GetJoyDpadLeft(Joycon)) { g_bJoySelect = LEFT; }
+	}
+	else
+	{	// 接続無し↓
+		g_bJoySelect = NOT;
+	}
 
 	if(g_bTime == true){
-	if (GetKeyRepeat(VK_UP)||GetJoyDpadUp(Joycon))
-	{
-		// カーソル音
-		CSound::SetPlayVol(SE_SELECT, 0.3f);
-		g_nSelectMenu = (SELECT_MENU)((g_nSelectMenu + (NUM_SELECT_MENU - 2) - 5) % (NUM_SELECT_MENU - 2));
-		SetSelectMenu();
-		g_bTime = false;
-		g_nTime = WAIT_TIME;
-	}
-	else if (GetKeyRepeat(VK_DOWN)||GetJoyDpadDown(Joycon))
-	{
-		// カーソル音
-		CSound::SetPlayVol(SE_SELECT, 0.3f);
-		g_nSelectMenu = (SELECT_MENU)((g_nSelectMenu + 5) % (NUM_SELECT_MENU - 2));
-		SetSelectMenu();
-		g_bTime = false;
-		g_nTime = WAIT_TIME;
-	}
-	else if (GetKeyRepeat(VK_RIGHT)||GetJoyDpadRight(Joycon))
-	{
-		// カーソル音
-		CSound::SetPlayVol(SE_SELECT, 0.3f);
-		g_nSelectMenu = (SELECT_MENU)((g_nSelectMenu + 1) % (NUM_SELECT_MENU - 2));
-		SetSelectMenu();
-		g_bTime = false;
-		g_nTime = WAIT_TIME;
-	}
-	else if (GetKeyRepeat(VK_LEFT)||GetJoyDpadLeft(Joycon))
-	{
-		// カーソル音
-		CSound::SetPlayVol(SE_SELECT, 0.3f);
-		g_nSelectMenu = (SELECT_MENU)((g_nSelectMenu + NUM_SELECT_MENU - 1) % (NUM_SELECT_MENU));
-		SetSelectMenu();
-		g_bTime = false;
-		g_nTime = WAIT_TIME;
-	}
-	
-	//g_fCurve += XM_PI * 0.01f;//ピカピカの原因
+		if (GetKeyRepeat(VK_UP)|| (g_bJoySelect == UP))
+		{
+			// カーソル音
+			CSound::SetPlayVol(SE_SELECT, 0.3f);
+			g_nSelectMenu = (SELECT_MENU)((g_nSelectMenu + (NUM_SELECT_MENU - 2) - 5) % (NUM_SELECT_MENU - 2));
+			SetSelectMenu();
+			g_bTime = false;
+			g_nTime = WAIT_TIME;
+		}
+		else if (GetKeyRepeat(VK_DOWN)|| (g_bJoySelect == DOWN))
+		{
+			// カーソル音
+			CSound::SetPlayVol(SE_SELECT, 0.3f);
+			g_nSelectMenu = (SELECT_MENU)((g_nSelectMenu + 5) % (NUM_SELECT_MENU - 2));
+			SetSelectMenu();
+			g_bTime = false;
+			g_nTime = WAIT_TIME;
+		}
+		else if (GetKeyRepeat(VK_RIGHT)|| (g_bJoySelect == RIGHT))
+		{
+			// カーソル音
+			CSound::SetPlayVol(SE_SELECT, 0.3f);
+			g_nSelectMenu = (SELECT_MENU)((g_nSelectMenu + 1) % (NUM_SELECT_MENU - 2));
+			SetSelectMenu();
+			g_bTime = false;
+			g_nTime = WAIT_TIME;
+		}
+		else if (GetKeyRepeat(VK_LEFT)|| (g_bJoySelect == LEFT))
+		{
+			// カーソル音
+			CSound::SetPlayVol(SE_SELECT, 0.3f);
+			g_nSelectMenu = (SELECT_MENU)((g_nSelectMenu + NUM_SELECT_MENU - 1) % (NUM_SELECT_MENU));
+			SetSelectMenu();
+			g_bTime = false;
+			g_nTime = WAIT_TIME;
+		}
+		
+		//g_fCurve += XM_PI * 0.01f;//ピカピカの原因
 	//if (g_fCurve > XM_PI) {
 	//	g_fCurve -= XM_2PI;
 	//}
 
-	// 反射光の設定
-	g_fCol = cosf(g_fCurve) * 0.2f + 0.8f;
+		// 反射光の設定
+		g_fCol = cosf(g_fCurve) * 0.2f + 0.8f;
 
-	//[ENTER]が押された
-	if (GetKeyTrigger(VK_RETURN))
-	{
-		CSound::SetPlayVol(SE_DECISION, 0.7f);
-		//選択中のメニュー項目により分岐
-		switch (GetSelectMenu())
+		//[ENTER]が押された
+		if (GetKeyTrigger(VK_RETURN)||GetJoyTrigger(Joycon, JOYSTICKID1))
 		{
-		case STAGE_1:	// スレージ1
-			StartFadeOut(SCENE_GAME);
-			break;
-		case STAGE_2:	// ステージ2
-			StartFadeOut(SCENE_AREA2);
-			break;
-		case STAGE_3:	// ステージ3
-			StartFadeOut(SCENE_AREA3);
-			break;
-		case STAGE_4:	// ステージ4
-			StartFadeOut(SCENE_AREA4);
-			break;
-		case STAGE_5:	// ステージ5
-			StartFadeOut(SCENE_AREA5);
-			break;
-		case STAGE_6:	// ステージ6
-			StartFadeOut(SCENE_AREA6);
-			break;
-		case STAGE_7:	// ステージ7
-			StartFadeOut(SCENE_AREA7);
-			break;
-		case STAGE_8:	// ステージ8
-			StartFadeOut(SCENE_AREA8);
-			break;
-		case STAGE_9:	// ステージ9
-			StartFadeOut(SCENE_AREA9);
-			break;
-		case STAGE_10:	// ステージ10
-			StartFadeOut(SCENE_AREA10);
-			break;
-		case SELECT_TITLE:
-			StartFadeOut(SCENE_TITLE); // タイトルへ
-			break;
+			CSound::SetPlayVol(SE_DECISION, 0.7f);
+			//選択中のメニュー項目により分岐
+			switch (GetSelectMenu())
+			{
+			case STAGE_1:	// スレージ1
+				StartFadeOut(SCENE_GAME);
+				break;
+			case STAGE_2:	// ステージ2
+				StartFadeOut(SCENE_AREA2);
+				break;
+			case STAGE_3:	// ステージ3
+				StartFadeOut(SCENE_AREA3);
+				break;
+			case STAGE_4:	// ステージ4
+				StartFadeOut(SCENE_AREA4);
+				break;
+			case STAGE_5:	// ステージ5
+				StartFadeOut(SCENE_AREA5);
+				break;
+			case STAGE_6:	// ステージ6
+				StartFadeOut(SCENE_AREA6);
+				break;
+			case STAGE_7:	// ステージ7
+				StartFadeOut(SCENE_AREA7);
+				break;
+			case STAGE_8:	// ステージ8
+				StartFadeOut(SCENE_AREA8);
+				break;
+			case STAGE_9:	// ステージ9
+				StartFadeOut(SCENE_AREA9);
+				break;
+			case STAGE_10:	// ステージ10
+				StartFadeOut(SCENE_AREA10);
+				break;
+			case SELECT_TITLE:
+				StartFadeOut(SCENE_TITLE); // タイトルへ
+				break;
+			}
 		}
-	}
 	}
 	--g_nTime;
 }
