@@ -95,7 +95,7 @@
 //**************************************************************
 //TPolyline					g_polyline[MAX_POLYLINE];	// ポリライン情報
 
-static bool g_bPause;		//一時停止中
+bool g_bPause;				//一時停止中
 Effect g_Effect;			// エフェクト変数
 static int g_EffectTimer = 0;	// エフェクト制御用タイマー
 //**************************************************************
@@ -264,7 +264,7 @@ HRESULT InitGame(AREA Area)
 
 	// BGM再生開始
 	// エリア毎にBGMを変えたい時はここをswitch文で切り替えるようにする
-	CSound::SetPlayVol(BGM_GAME000, 0.06f); // ゲーム本編BGM
+	CSound::SetPlayVol(BGM_GAME000, 0.1f); // ゲーム本編BGM
 
 	return hr;
 }
@@ -481,16 +481,17 @@ void UpdateGame()
 		{
 			g_bPause = !g_bPause;
 			if (g_bPause) {
-				CSound::Pause();
-				CSound::Play(SE_SELECT);
-				CSound::SetVolume(SE_SELECT, 0.02f);
+				//CSound::Pause();
+				CSound::SetVolume(BGM_GAME000, 0.06f);
+				CSound::SetPlayVol(SE_SELECT, 0.1f); // セレクト
+
 				ResetPauseMenu();
 			}
 			else
 			{
-				CSound::Play(SE_CANCEL);
-				CSound::SetVolume(SE_CANCEL, 0.02f);
-				CSound::Resume();
+				CSound::SetVolume(BGM_GAME000, 0.1f);
+				CSound::SetPlayVol(SE_CANCEL, 0.1f); // キャンセル
+				//CSound::Resume();
 			}
 		}
 	}
@@ -506,19 +507,17 @@ void UpdateGame()
 			{
 			case PAUSE_MENU_CONTINUE:	// コンテニュー
 				g_bPause = false;
-				CSound::Play(SE_CANCEL);
-				CSound::SetVolume(SE_CANCEL, 0.03f);
-				CSound::Resume();
+				CSound::SetVolume(BGM_GAME000, 0.1f);
+				CSound::SetPlayVol(SE_CANCEL, 0.1f); // キャンセル
+				//CSound::Resume();
 				break;
 			case PAUSE_MENU_RETRY:		// リトライ
 				StartFadeOut(SCENE_GAME);
-				CSound::Play(SE_SELECT);
-				CSound::SetVolume(SE_SELECT, 0.03f);
+				CSound::SetPlayVol(SE_SELECT, 0.1f); // セレクト
 				break;
 			case PAUSE_MENU_QUIT:		// ゲームを辞める
 				StartFadeOut(SCENE_TITLE);
-				CSound::Play(SE_SELECT);
-				CSound::SetVolume(SE_SELECT, 0.03f);
+				CSound::SetPlayVol(SE_SELECT, 0.1f); // セレクト
 				break;
 			}
 		}

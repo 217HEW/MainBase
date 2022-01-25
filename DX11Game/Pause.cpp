@@ -113,15 +113,15 @@ void UpdatePause(void)
 {
 	if (GetKeyRepeat(VK_W) || GetKeyRepeat(VK_UP)) 
 	{
-		CSound::Play(SE_SELECT);
-		CSound::SetVolume(SE_SELECT, 0.02f);
+		CSound::SetPlayVol(SE_SELECT, 0.1f); // セレクト音
+
 		g_nSelectMenu = (PAUSE_MENU)((g_nSelectMenu + NUM_PAUSE_MENU - 1) % NUM_PAUSE_MENU);
 		SetPauseMenu();
 	}
 	else if (GetKeyRepeat(VK_S) || GetKeyRepeat(VK_DOWN))
 	{
-		CSound::Play(SE_SELECT);
-		CSound::SetVolume(SE_SELECT, 0.02f);
+		CSound::SetPlayVol(SE_SELECT, 0.1f); // セレクト音
+
 		g_nSelectMenu = (PAUSE_MENU)((g_nSelectMenu + 1) % NUM_PAUSE_MENU);
 		SetPauseMenu();
 	}

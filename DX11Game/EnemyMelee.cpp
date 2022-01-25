@@ -71,9 +71,6 @@ HRESULT InitEnemyMelee(void)
 	ID3D11Device* pDevice = GetDevice();
 	ID3D11DeviceContext* pDeviceContext = GetDeviceContext();
 
-	// ブロックのサイズ取得
-	Blocksize = GetBlockSize();
-
 	// モデルデータの読み込み
 	g_model.SetDif(XMFLOAT4(1.0f,0.2f, 0.2f, 1.0f));
 	if (!g_model.Load(pDevice, pDeviceContext, MODEL_ENEMY))
@@ -114,6 +111,8 @@ void UpdateEnemyMelee(void)
 
 	XMMATRIX mtxWorld, mtxRot, mtxTranslate, mtxScale;
 
+	//ブロック配列取得
+
 	TBLOCK *Block = GetBlockArray();
 	//プレイヤーの座標・サイズ取得
 	XMFLOAT3 posPlayer = GetPlayerPos();
@@ -121,50 +120,52 @@ void UpdateEnemyMelee(void)
 
 	for (int i = 0; i < MAX_ENEMYMELEE; ++i)
 	{
-		//ブロック配列取得
-
+		if (!g_EMelee[i].m_use)
+		{//未使用なら次へ
+			continue;
+		}
 		//敵とプレイヤーの距離が近づいたら
-		//if (CollisionSphere(posPlayer, sizePlayer, g_EMelee[i].m_pos, SEARCH_ENEMY))
-		//{
-		//	if (!g_EMelee[i].m_use)
-		//	{//未使用なら次へ
-		//		continue;
-		//	}
+		if (CollisionSphere(posPlayer, sizePlayer, g_EMelee[i].m_pos, SEARCH_ENEMY))
+		{
+			if (!g_EMelee[i].m_use)
+			{//未使用なら次へ
+				continue;
+			}
 
-		//	//常にプレイヤーの方向を向く
-		//	/*g_EMelee[i].m_rotDest = posPlayer;
-		//	g_EMelee[i].m_rot = g_EMelee[i].m_rotDest;
-		//	g_EMelee[i].m_rot = XMFLOAT3(posPlayer.x, posPlayer.y, posPlayer.z);*/
+			//常にプレイヤーの方向を向く
+			/*g_EMelee[i].m_rotDest = posPlayer;
+			g_EMelee[i].m_rot = g_EMelee[i].m_rotDest;
+			g_EMelee[i].m_rot = XMFLOAT3(posPlayer.x, posPlayer.y, posPlayer.z);*/
 
-		//	//敵のx座標がプレイヤーよりも大きかったら
-		//	if (g_EMelee[i].m_pos.x >= posPlayer.x)
-		//	{
-		//		g_EMelee[i].m_pos.x += -VALUE_MOVE_ENEMY;
-		//		g_EMelee[i].m_rot = (XMFLOAT3(90.0f, 0.0f, 0.0f) );
+			//敵のx座標がプレイヤーよりも大きかったら
+			if (g_EMelee[i].m_pos.x >= posPlayer.x)
+			{
+				g_EMelee[i].m_pos.x += -VALUE_MOVE_ENEMY;
+				g_EMelee[i].m_rot = (XMFLOAT3(90.0f, 0.0f, 0.0f) );
 
-		//		g_EMelee[i].m_rotDest.y = rotCamera.y - 90.0f;
-		//	}
-		//	//敵のx座標がプレイヤーよりも小さかったら
-		//	if (g_EMelee[i].m_pos.x <= posPlayer.x)
-		//	{
-		//		g_EMelee[i].m_pos.x += VALUE_MOVE_ENEMY;
-		//		g_EMelee[i].m_rot = (XMFLOAT3(90.0f, 0.0f, 90.0f));
-		//		g_EMelee[i].m_rotDest.y = rotCamera.y + 90.0f;
+				g_EMelee[i].m_rotDest.y = rotCamera.y - 90.0f;
+			}
+			//敵のx座標がプレイヤーよりも小さかったら
+			if (g_EMelee[i].m_pos.x <= posPlayer.x)
+			{
+				g_EMelee[i].m_pos.x += VALUE_MOVE_ENEMY;
+				g_EMelee[i].m_rot = (XMFLOAT3(90.0f, 0.0f, 90.0f));
+				g_EMelee[i].m_rotDest.y = rotCamera.y + 90.0f;
 
-		//	}
-		//	//敵のy座標がプレイヤーよりも大きかったら
-		//	if (g_EMelee[i].m_pos.y >= posPlayer.y)
-		//	{
-		//		g_EMelee[i].m_pos.y += -VALUE_MOVE_ENEMY;
+			}
+			//敵のy座標がプレイヤーよりも大きかったら
+			if (g_EMelee[i].m_pos.y >= posPlayer.y)
+			{
+				g_EMelee[i].m_pos.y += -VALUE_MOVE_ENEMY;
 
-		//	}
-		//	//敵のy座標がプレイヤーよりも小さかったら
-		//	if (g_EMelee[i].m_pos.y <= posPlayer.y)
-		//	{
-		//		g_EMelee[i].m_pos.y += VALUE_MOVE_ENEMY;
+			}
+			//敵のy座標がプレイヤーよりも小さかったら
+			if (g_EMelee[i].m_pos.y <= posPlayer.y)
+			{
+				g_EMelee[i].m_pos.y += VALUE_MOVE_ENEMY;
 
-		//	}
-		//}
+			}
+		}
 			//**************************************************************************************
 			//		当たり判定
 			//**************************************************************************************
@@ -190,32 +191,32 @@ void UpdateEnemyMelee(void)
 				{// 未使用なら次へ
 					continue;
 				}
-				if (CollisionAABB(g_EMelee[i].m_pos, g_EMelee[i].m_size, Block->m_pos,Blocksize))
+				if (CollisionAABB(g_EMelee[i].m_pos, g_EMelee[i].m_size, Block->m_pos,Block->m_Halfsize))
 				{
 					//壁に当たると止まる
 					//右
-					if (Block->m_pos.x + Blocksize.x / 2 <= g_EMelee[i].m_pos.x - g_EMelee[i].m_size.x / 2)
+					if (Block->m_pos.x + Block->m_Halfsize.x <= g_EMelee[i].m_pos.x - g_EMelee[i].m_size.x / 2)
 					{
-					 	g_EMelee[i].m_pos.x = (Block->m_pos.x + Blocksize.x + g_EMelee[i].m_size.x);
+					 	g_EMelee[i].m_pos.x = (Block->m_pos.x + Block->m_Halfsize.x + g_EMelee[i].m_size.x);
 					}
 					//左
-					else if (Block->m_pos.x - Blocksize.x / 2 >= g_EMelee[i].m_pos.x + g_EMelee[i].m_size.x / 2)
+					else if (Block->m_pos.x - Block->m_Halfsize.x >= g_EMelee[i].m_pos.x + g_EMelee[i].m_size.x / 2)
 					{
-					 	g_EMelee[i].m_pos.x = (Block->m_pos.x - Blocksize.x - g_EMelee[i].m_size.x);
+					 	g_EMelee[i].m_pos.x = (Block->m_pos.x - Block->m_Halfsize.x - g_EMelee[i].m_size.x);
 					}
 					//上
-					else if (Block->m_pos.y - Blocksize.y / 2 >= g_EMelee[i].m_pos.y + g_EMelee[i].m_size.y / 2)
+					else if (Block->m_pos.y - Block->m_Halfsize.y >= g_EMelee[i].m_pos.y + g_EMelee[i].m_size.y / 2)
 					{
-						g_EMelee[i].m_pos.y = (Block->m_pos.y - Blocksize.y - g_EMelee[i].m_size.y);
+						g_EMelee[i].m_pos.y = (Block->m_pos.y - Block->m_Halfsize.y - g_EMelee[i].m_size.y);
 					}
 					//下
-					else if (Block->m_pos.y + Blocksize.y / 2 <= g_EMelee[i].m_pos.y - g_EMelee[i].m_size.y / 2)
+					else if (Block->m_pos.y + Block->m_Halfsize.y <= g_EMelee[i].m_pos.y - g_EMelee[i].m_size.y / 2)
 					{
-						g_EMelee[i].m_pos.y = (Block->m_pos.y + Blocksize.y + g_EMelee[i].m_size.y);
+						g_EMelee[i].m_pos.y = (Block->m_pos.y + Block->m_Halfsize.y + g_EMelee[i].m_size.y);
 					}
 				}
 			}
-
+			
 			// エフェクトセット＆制御
 			//if (g_EffectTimer == 0)
 			//{

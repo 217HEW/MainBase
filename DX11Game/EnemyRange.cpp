@@ -48,7 +48,7 @@
 
 #define SEARCH_RANGE			(200)		// ’Tõ”ÍˆÍ
 
-#define ENEMY_TIMER				(3)			// §ŒÀŠÔ
+#define ENEMY_TIMER				(5)			// §ŒÀŠÔ
 
 #define SCALE_E_RANGE		(XMFLOAT3(0.05f, 0.1f, 0.1f))
 //**************************************************************

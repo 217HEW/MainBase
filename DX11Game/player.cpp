@@ -231,9 +231,9 @@ void UpdatePlayer(void)
 						break;
 					case 2: if (Stick.x > -0.4f) { g_bkabe = false; }
 						break;
-					case 3: if (Stick.y > 0.4f) { g_bkabe = false; }
+					case 3: if (Stick.y > -0.3f) { g_bkabe = false; }
 						break;
-					case 4: if (Stick.y < -0.4f) { g_bkabe = false; }
+					case 4: if (Stick.y < 0.4f) { g_bkabe = false; }
 						break;
 					default:
 						break;
@@ -427,56 +427,12 @@ void UpdatePlayer(void)
 	// g_moveModel.x += (0.0f - g_moveModel.x) * RATE_MOVE_PLAYER;
 	// g_moveModel.y += (0.0f - g_moveModel.y) * RATE_MOVE_PLAYER;
 	// //g_moveModel.z += (0.0f - g_moveModel.z) * RATE_MOVE_PLAYER;
-	// 
-	if (g_posModel.x < -630.0f) {
-		g_posModel.x = -630.0f;
 
-		StartFadeOut(SCENE_GAMEOVER);
-	}
-	if (g_posModel.x > 1630.0f) {
-		g_posModel.x = 1630.0f;
-
-		StartFadeOut(SCENE_GAMEOVER);
-	}
-	//  if (g_posModel.z < 0.0f) {
-	//  	g_posModel.z = 0.0f;
-	//  }
-	//  if (g_posModel.z > 0.0f) {
-	//  	g_posModel.z = 0.0f;
-	//  }
-	//  if (g_posModel.y < -199.0f) {
-	//  	g_posModel.y = -200.0f;
-	//	StartFadeOut(SCENE_GAMEOVER);
-	//  }
-	if (g_posModel.y > 800.0f) {
-		g_posModel.y = 800.0f;
-		// 今のエリアから次のエリアへ
-		switch (GetAreaState())
-		{
-		case AREA_1:
-			StartFadeOut(SCENE_AREA2);
-			break;
-		case AREA_2:
-			StartFadeOut(SCENE_AREA3);
-			break;
-		case AREA_3:
-			StartFadeOut(SCENE_AREA_DEBUG);
-			break;
-		case AREA_DEBUG:
-			StartFadeOut(SCENE_GAMECLEAR);
-			break;
-		default:
-			break;
-		}
-	}
-	// 
-	if (GetKeyPress(VK_RETURN)) {
-		// リセット
-		g_posModel = XMFLOAT3(0.0f, -800.0f, 0.0f);
-		g_moveModel = XMFLOAT3(0.0f, 0.0f, 0.0f);
-		g_rotModel = XMFLOAT3(0.0f, 0.0f, 0.0f);
-		g_rotDestModel = XMFLOAT3(0.0f, 0.0f, 0.0f);
-	}
+	// ゲームオーバー用制限
+	if (g_posModel.x > 630.0f)	{ StartFadeOut(SCENE_GAMEOVER); }	// 右
+	if (g_posModel.x < -430.0f) { StartFadeOut(SCENE_GAMEOVER); }	// 左
+	if (g_posModel.y > 0.0f)	{ StartFadeOut(SCENE_GAMEOVER); }	// 上
+	if (g_posModel.y < -400.0f) { StartFadeOut(SCENE_GAMEOVER); }	// 下
 
 	// 壁との接地判定
 	//for (int j = 0; j < MAX_BLOCK; ++j, ++Block)
