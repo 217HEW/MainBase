@@ -100,8 +100,8 @@
 //**************************************************************
 //TPolyline					g_polyline[MAX_POLYLINE];	// ポリライン情報
 
-static bool g_bPause;			// 一時停止中
-Effect g_GameEffect;			// エフェクト変数
+bool g_bPause;				//一時停止中
+Effect g_Effect;			// エフェクト変数
 static int g_EffectTimer = 0;	// エフェクト制御用タイマー
 //**************************************************************
 // 初期化処理
@@ -215,7 +215,7 @@ HRESULT InitGame(AREA Area)
 		return hr;
 
 	// エフェクト(for Effekseer)初期化
-	hr = g_GameEffect.Load();
+	//hr = g_GameEffect.Load();
 	if (FAILED(hr))
 		return hr;
 
@@ -269,7 +269,7 @@ HRESULT InitGame(AREA Area)
 
 	// BGM再生開始
 	// エリア毎にBGMを変えたい時はここをswitch文で切り替えるようにする
-	CSound::SetPlayVol(BGM_GAME000, 0.06f); // ゲーム本編BGM
+	CSound::SetPlayVol(BGM_GAME000, 0.1f); // ゲーム本編BGM
 
 	return hr;
 }
@@ -450,13 +450,15 @@ void UpdateGame()
 		UpdateEffect();
 
 		// エフェクト(for Effekseer)更新
-		if (g_EffectTimer == 0)
-		{
-			g_GameEffect.Set(EFFECT_FIRE, XMFLOAT3(-50, -50, 0), XMFLOAT3(10.0f, 10.0f, 10.0f), 0.1f, XMFLOAT3(1.0f, 1.0f, 1.0f));
-			g_EffectTimer = 30;
-		}
-		--g_EffectTimer;
-		g_GameEffect.Update();
+		// if (g_EffectTimer == 0)
+		// {
+		// 	g_GameEffect.Set(EFFECT_FIRE, XMFLOAT3(-50, -50, 0), XMFLOAT3(10.0f, 10.0f, 10.0f), 0.1f, XMFLOAT3(1.0f, 1.0f, 1.0f));
+		// 	g_EffectTimer = 30;
+		// }
+		// --g_EffectTimer;
+		// g_GameEffect.Update();
+
+
 		// ブロック更新
 		// UpdateBlock();
 
@@ -478,16 +480,17 @@ void UpdateGame()
 		{
 			g_bPause = !g_bPause;
 			if (g_bPause) {
-				CSound::Pause();
-				CSound::Play(SE_SELECT);
-				CSound::SetVolume(SE_SELECT, 0.02f);
+				//CSound::Pause();
+				CSound::SetVolume(BGM_GAME000, 0.06f);
+				CSound::SetPlayVol(SE_SELECT, 0.1f); // セレクト
+
 				ResetPauseMenu();
 			}
 			else
 			{
-				CSound::Play(SE_CANCEL);
-				CSound::SetVolume(SE_CANCEL, 0.02f);
-				CSound::Resume();
+				CSound::SetVolume(BGM_GAME000, 0.1f);
+				CSound::SetPlayVol(SE_CANCEL, 0.1f); // キャンセル
+				//CSound::Resume();
 			}
 		}
 	}
@@ -503,19 +506,17 @@ void UpdateGame()
 			{
 			case PAUSE_MENU_CONTINUE:	// コンテニュー
 				g_bPause = false;
-				CSound::Play(SE_CANCEL);
-				CSound::SetVolume(SE_CANCEL, 0.03f);
-				CSound::Resume();
+				CSound::SetVolume(BGM_GAME000, 0.1f);
+				CSound::SetPlayVol(SE_CANCEL, 0.1f); // キャンセル
+				//CSound::Resume();
 				break;
 			case PAUSE_MENU_RETRY:		// リトライ
 				StartFadeOut(SCENE_GAME);
-				CSound::Play(SE_SELECT);
-				CSound::SetVolume(SE_SELECT, 0.03f);
+				CSound::SetPlayVol(SE_SELECT, 0.1f); // セレクト
 				break;
 			case PAUSE_MENU_QUIT:		// ゲームを辞める
 				StartFadeOut(SCENE_TITLE);
-				CSound::Play(SE_SELECT);
-				CSound::SetVolume(SE_SELECT, 0.03f);
+				CSound::SetPlayVol(SE_SELECT, 0.1f); // セレクト
 				break;
 			}
 		}

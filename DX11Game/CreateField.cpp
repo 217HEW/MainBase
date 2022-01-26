@@ -104,7 +104,8 @@ enum CBLOCK
 	O,				// X_4.5_右
 	Q,				// X_5_右
 	e,				// 近接敵
-
+	m,
+	r,
 	MAX
 };
 
@@ -201,12 +202,12 @@ int g_Map[MAX_AREA][MAP_WIDTH][MAP_HEIGHT] =
 	 0,0,0,0,H,0,0,0,0,0,0,0,0,0,J,0,0,0,0,0,0,0,0,0,0,//
 	 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,//
 	 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,//
-	 4,0,0,0,e,0,0,0,0,4,0,0,e,0,0,0,0,0,4,0,0,0,0,0,0,//
+	 4,0,0,0,0,e,0,0,0,4,0,0,0,m,0,0,0,0,4,0,0,0,0,0,0,//
 	 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,//
 	 0,0,0,0,0,G,0,0,0,0,0,0,0,0,G,0,0,0,0,0,0,0,0,0,0,//
+	 0,0,0,0,0,0,0,0,0,0,0,0,0,r,0,0,0,0,0,0,0,0,0,0,0,//
 	 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,//
-	 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,//
-	 P,0,0,0,0,0,0,0,0,3,0,0,e,0,0,0,0,0,3,0,0,0,0,0,0,//
+	 P,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,//
 	 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,//
 	 0,0,0,0,X,0,0,0,0,0,0,0,0,0,J,0,0,0,0,0,0,0,0,0,0,//
 	},
@@ -274,7 +275,7 @@ int g_Map[MAX_AREA][MAP_WIDTH][MAP_HEIGHT] =
 	//--------------------------------------------------
 	//					エリア５
 	//--------------------------------------------------
-	 { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,//
+	 {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,//
 	  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,//
 	  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,//
 	  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,//
@@ -293,7 +294,7 @@ int g_Map[MAX_AREA][MAP_WIDTH][MAP_HEIGHT] =
 	  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,//
 	  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,//
 	  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,//
-	  6,0,0,0,0,0,6,0,0,0,0,0,6,0,0,0,0,0,6,0,0,0,0,0,0,//
+	  6,0,0,0,0,0,0,6,0,0,0,6,0,0,0,0,0,0,6,0,0,0,0,0,0,//
 	  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,//
 	  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,//
 	  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,//
@@ -351,12 +352,12 @@ int g_Map[MAX_AREA][MAP_WIDTH][MAP_HEIGHT] =
 	  0,0,0,8,0,0,0,0,0,0,0,0,M,0,0,0,0,0,0,0,0,0,0,0,0,//
 	  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,//
 	  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4,0,0,0,0,0,0,//
-	  R,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,//
+	  R,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,//
 	  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,//
 	  0,0,0,8,0,0,0,0,0,0,0,0,M,0,0,0,0,0,0,0,0,0,0,0,0,//
 	  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,//
 	  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,//
-	  4,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,R,0,0,0,0,0,0,//
+	  4,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,R,0,0,0,0,0,0,//
 	  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,//
 	  0,0,0,0,0,0,L,0,0,0,0,0,0,0,0,9,0,0,0,0,0,0,0,0,0,//
 	 },
@@ -612,7 +613,7 @@ HRESULT InitCField(AREA Area)
 				// 通常ブロック
 				SetBlock(XMFLOAT3(g_MapPosOrizin.x + (Width  * BlockSize.x),
 					g_MapPosOrizin.y - (Height * BlockSize.y) * 2,
-					g_MapPosOrizin.z), false, XMFLOAT2(6.5f, 1.0f), XMFLOAT2(16.0f, 1.0f));
+					g_MapPosOrizin.z), false, XMFLOAT2(6.5f, 1.0f), XMFLOAT2(8.25f, 1.0f));
 				break; }
 			//	通常X_6.5(右)
 			case C:{
@@ -621,7 +622,7 @@ HRESULT InitCField(AREA Area)
 				// 通常ブロック
 				SetBlock(XMFLOAT3(g_MapPosOrizin.x + (Width  * BlockSize.x),
 					g_MapPosOrizin.y - (Height * BlockSize.y) * 2,
-					g_MapPosOrizin.z), false, XMFLOAT2(6.5f, 1.0f), XMFLOAT2(-16.0f, 1.0f));
+					g_MapPosOrizin.z), false, XMFLOAT2(6.5f, 1.0f), XMFLOAT2(-6.25f, 1.0f));
 				break; }
 			//	通常X_7.0
 			case D:{
@@ -832,7 +833,7 @@ HRESULT InitCField(AREA Area)
 				// 通常ブロック
 				SetBlock(XMFLOAT3(g_MapPosOrizin.x + (Width  * BlockSize.x),
 					g_MapPosOrizin.y - (Height * BlockSize.y) * 2,
-					g_MapPosOrizin.z), false, XMFLOAT2(4.5f, 1.0f), XMFLOAT2(16.0f, 1.0f));
+					g_MapPosOrizin.z), false, XMFLOAT2(4.5f, 1.0f), XMFLOAT2(8.0f, 1.0f));
 				break;}
 			//	通常X_4.5(右)
 			case O:{
@@ -841,7 +842,7 @@ HRESULT InitCField(AREA Area)
 				// 通常ブロック
 				SetBlock(XMFLOAT3(g_MapPosOrizin.x + (Width  * BlockSize.x),
 					g_MapPosOrizin.y - (Height * BlockSize.y) * 2,
-					g_MapPosOrizin.z), false, XMFLOAT2(4.5f, 1.0f), XMFLOAT2(-14.0f, 1.0f));
+					g_MapPosOrizin.z), false, XMFLOAT2(4.5f, 1.0f), XMFLOAT2(-6.25f, 1.0f));
 				break; }
 			//	通常X_5.0(右)
 			case Q:{
@@ -850,7 +851,7 @@ HRESULT InitCField(AREA Area)
 				// 通常ブロック
 				SetBlock(XMFLOAT3(g_MapPosOrizin.x + (Width  * BlockSize.x),
 					g_MapPosOrizin.y - (Height * BlockSize.y) * 2,
-					g_MapPosOrizin.z), false, XMFLOAT2(5.0f, 1.0f), XMFLOAT2(-9.0f, 1.0f));
+					g_MapPosOrizin.z), false, XMFLOAT2(5.0f, 1.0f), XMFLOAT2(-4.0f, 1.0f));
 				break; }
 			//	近接敵
 			case e: {
@@ -859,7 +860,23 @@ HRESULT InitCField(AREA Area)
 				// 通常ブロック
 				SetEnemyMelee(XMFLOAT3(g_MapPosOrizin.x + (Width * BlockSize.x),
 					g_MapPosOrizin.y - (Height * BlockSize.y) * 2,
-					g_MapPosOrizin.z));
+					g_MapPosOrizin.z),0);
+				break; }
+			case m: {
+				//マップチップ"e"の場所に描画するもの
+
+				// 通常ブロック
+				SetEnemyMelee(XMFLOAT3(g_MapPosOrizin.x + (Width * BlockSize.x),
+					g_MapPosOrizin.y - (Height * BlockSize.y) * 2,
+					g_MapPosOrizin.z), 1);
+				break; }
+			case r: {
+				//マップチップ"e"の場所に描画するもの
+
+				// 通常ブロック
+				SetEnemyMelee(XMFLOAT3(g_MapPosOrizin.x + (Width * BlockSize.x),
+					g_MapPosOrizin.y - (Height * BlockSize.y) * 2,
+					g_MapPosOrizin.z), 2);
 				break; }
 
 			default:

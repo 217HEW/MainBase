@@ -68,8 +68,7 @@ HRESULT InitGameover()
 	if (FAILED(hr))
 		return hr;
 
-	CSound::Play(SE_GAMEOVER);
-	CSound::SetVolume(SE_GAMEOVER, 0.03f);
+	CSound::SetPlayVol(SE_GAMEOVER, 0.1f);
 
 	return hr;
 }
@@ -79,6 +78,7 @@ HRESULT InitGameover()
 //**************************************************************
 void UninitGameover()
 {
+	CSound::Stop(SE_GAMEOVER);
 	// テクスチャ解放
 	SAFE_RELEASE(g_pTexture);
 }
