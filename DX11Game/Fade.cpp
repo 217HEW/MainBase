@@ -28,6 +28,9 @@
 //	編集者：柴山凜太郎
 //--------------------------------------------------------------
 //	2021/12/22	コメントの編集&追加
+//--------------------------------------------------------------
+//	2022/1/27	正式な画像に変更しました
+//	編集者：上月大地
 //**************************************************************
 
 //**************************************************************
@@ -35,12 +38,15 @@
 //**************************************************************
 #include "Fade.h"
 #include "polygon.h"
+#include "Texture.h"
 #include "Sound.h"
 
 //**************************************************************
 // マクロ定義
 //**************************************************************
 #define FADE_RATE 0.02f // フェードイン/アウトの刻み
+#define FADE_TEX	
+#define FADE_TEX_2	
 
 //**************************************************************
 // グローバル変数
@@ -50,6 +56,13 @@ static float g_fGreen;		// 緑:0.0f~255.0f
 static float g_fBlue;		// 青:0.0f~255.0f
 static float g_fAlpha;		// α値:0.0f~1.0f
 
+// 画像ファイルネーム
+static LPCWSTR g_pszTexFName[FADE_TEX_MAX] = {
+	L"data/texture/NowLoading.png",
+	L"data/texture/Logo.png",
+};
+
+static ID3D11ShaderResourceView* g_pTexture[FADE_TEX_MAX];
 static E_FADE_STATE g_eState;	// フェード状態
 static EScene g_eNext;			// 次のシーン
 
@@ -59,11 +72,20 @@ static EScene g_eNext;			// 次のシーン
 HRESULT InitFade()
 {
 	HRESULT hr = S_OK;
+	ID3D11Device* pDevice = GetDevice();
 
+	for (int i = 0; i < FADE_TEX_MAX; ++i)
+	{
+		hr = CreateTextureFromFile(pDevice, g_pszTexFName[i], &g_pTexture[i]);
+		if (FAILED(hr))
+		{
+			return hr;
+		}
+	}
 	// 変数の初期化
-	g_fRed = 0.0f;
-	g_fGreen = 0.0f;
-	g_fBlue = 0.0f;
+	g_fRed = 1.0f;
+	g_fGreen = 1.0f;
+	g_fBlue = 1.0f;
 	g_fAlpha = 1.0f;
 	g_eState = FADE_IN;
 	g_eNext = SCENE_TITLE;
@@ -76,6 +98,12 @@ HRESULT InitFade()
 //**************************************************************
 void UninitFade()
 {
+	// 複数のテクスチャ解放
+	for (int i = 0; i < FADE_TEX_MAX; ++i)
+	{
+		SAFE_RELEASE(g_pTexture[i]);
+	}
+
 	// 終了時に初期化
 	g_fAlpha = 0.0f;
 	g_eState = FADE_NONE;
@@ -142,9 +170,16 @@ void DrawFade()
 	 SetPolygonSize(SCREEN_WIDTH, SCREEN_HEIGHT);	// 額縁サイズ設定
 	 SetPolygonUV(0.0f, 0.0f);			// テクスチャ座標設定
 	 SetPolygonFrameSize(1.0f, 1.0f);	// テクスチャサイズ設定
-	 SetPolygonTexture(nullptr);		// テクスチャ情報設定
-	 SetPolygonColor(g_fRed, g_fGreen, g_fBlue);	// 色情報設定
-	 SetPolygonAlpha(g_fAlpha);		// 透明度設定
+	 if(g_eNext == SCENE_TITLE)
+	 {
+		SetPolygonTexture(g_pTexture[LOGO]);	// テクスチャ情報設定
+	 }
+	 else
+	 {
+		SetPolygonTexture(g_pTexture[LOAD]);	// テクスチャ情報設定
+	 }
+	 SetPolygonColor(g_fRed, g_fGreen, g_fBlue);// 色情報設定
+	 SetPolygonAlpha(g_fAlpha);			// 透明度設定
 	 DrawPolygon(pDC);
 	 
 	  // 元に戻す
