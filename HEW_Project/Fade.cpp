@@ -156,6 +156,23 @@ void UpdateFade()
 		break;
 		// -----------------------------------------------------
 	}
+	if (g_fRed <= 0.0f)
+	{
+		g_fRed = g_fGreen = g_fBlue += FADE_RATE;
+	}
+	else
+	{
+		g_fRed = g_fGreen = g_fBlue -= FADE_RATE;
+	}
+
+	if (g_eNext == SCENE_GAMECLEAR || g_eNext == SCENE_GAMEOVER)
+	{
+		g_fRed = g_fGreen = g_fBlue = 0.0f;
+	}
+	else
+	{
+		g_fRed = g_fGreen = g_fBlue = 1.0f;
+	}
 }
 
 //**************************************************************
@@ -166,20 +183,15 @@ void DrawFade()
 	// 画面全体に半透明の矩形を描画
 	SetBlendState(BS_ALPHABLEND);
 	 ID3D11DeviceContext* pDC = GetDeviceContext();
-	 SetPolygonPos(0.0f, 0.0f);			// 座標設定
+	 SetPolygonPos(0.0f, 0.0f);		// 座標設定
 	 SetPolygonSize(SCREEN_WIDTH, SCREEN_HEIGHT);	// 額縁サイズ設定
-	 SetPolygonUV(0.0f, 0.0f);			// テクスチャ座標設定
+	 SetPolygonUV(0.0f, 0.0f);		// テクスチャ座標設定
 	 SetPolygonFrameSize(1.0f, 1.0f);	// テクスチャサイズ設定
-	 if(g_eNext == SCENE_TITLE)
-	 {
-		SetPolygonTexture(g_pTexture[LOGO]);	// テクスチャ情報設定
-	 }
-	 else
-	 {
-		SetPolygonTexture(g_pTexture[LOAD]);	// テクスチャ情報設定
-	 }
+	 if(g_eNext == SCENE_TITLE)		// テクスチャ情報設定
+	 { SetPolygonTexture(g_pTexture[LOGO]);} 
+	 else {SetPolygonTexture(g_pTexture[LOAD]);}
 	 SetPolygonColor(g_fRed, g_fGreen, g_fBlue);// 色情報設定
-	 SetPolygonAlpha(g_fAlpha);			// 透明度設定
+	 SetPolygonAlpha(g_fAlpha);		// 透明度設定
 	 DrawPolygon(pDC);
 	 
 	  // 元に戻す
