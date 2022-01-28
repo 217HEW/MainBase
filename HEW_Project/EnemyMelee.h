@@ -44,7 +44,7 @@ void UpdateEnemyMelee(void);	// XV
 void DrawEnemyMelee(void);		// •`‰æ
 
 // ‹ßÚ“Gİ’u
-int SetEnemyMelee(XMFLOAT3 pos,int id);
+int SetEnemyMelee(XMFLOAT3 pos);
 
 // ‹ßÚ“Gî•ñæ“¾
 TEnemyMelee* GetEnemyMelee();

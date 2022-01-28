@@ -48,8 +48,7 @@
 //				追加しました
 //	編集者：上月大地
 //--------------------------------------------------------------
-//　2022/01/28	近接敵が正常に動作しないので一時的に
-//				コメントアウトします
+//　2022/01/28	近接敵が現環境で動くように引数(ID)を削除しました。
 //	編集者：柴山凜太郎
 //**************************************************************
 
@@ -868,33 +867,33 @@ HRESULT InitCField(AREA Area)
 				//マップチップ"e"の場所に描画するもの
 
 				// 通常ブロック
-				//SetEnemyMelee(XMFLOAT3(g_MapPosOrizin.x + (Width * BlockSize.x),
-				//	g_MapPosOrizin.y - (Height * BlockSize.y) * 2,
-				//	g_MapPosOrizin.z),0);
+				SetEnemyMelee(XMFLOAT3(g_MapPosOrizin.x + (Width * BlockSize.x),
+					g_MapPosOrizin.y - (Height * BlockSize.y) * 2,
+					g_MapPosOrizin.z));
 				break; }
 			case m: {
 				//マップチップ"e"の場所に描画するもの
 
 				// 通常ブロック
-				//SetEnemyMelee(XMFLOAT3(g_MapPosOrizin.x + (Width * BlockSize.x),
-				//	g_MapPosOrizin.y - (Height * BlockSize.y) * 2,
-				//	g_MapPosOrizin.z), 1);
+				SetEnemyMelee(XMFLOAT3(g_MapPosOrizin.x + (Width * BlockSize.x),
+					g_MapPosOrizin.y - (Height * BlockSize.y) * 2,
+					g_MapPosOrizin.z));
 				break; }
 			case r: {
 				//マップチップ"e"の場所に描画するもの
 
 				// 通常ブロック
-				//SetEnemyMelee(XMFLOAT3(g_MapPosOrizin.x + (Width * BlockSize.x),
-				//	g_MapPosOrizin.y - (Height * BlockSize.y) * 2,
-				//	g_MapPosOrizin.z), 2);
+				SetEnemyMelee(XMFLOAT3(g_MapPosOrizin.x + (Width * BlockSize.x),
+					g_MapPosOrizin.y - (Height * BlockSize.y) * 2,
+					g_MapPosOrizin.z));
 				break; }
 			case p: {
 				//マップチップ"p"の場所に描画するもの
 
 				// プレイヤー
-			//	SetPlayer(XMFLOAT3(g_MapPosOrizin.x + (Width * BlockSize.x),
-			//		(g_MapPosOrizin.y - (Height * BlockSize.y) * 2) -3.0f,
-			//		0.0f));
+				SetPlayer(XMFLOAT3(g_MapPosOrizin.x + (Width * BlockSize.x),
+					(g_MapPosOrizin.y - (Height * BlockSize.y) * 2) -3.0f,
+					0.0f));
 				break; }
 
 			default:
