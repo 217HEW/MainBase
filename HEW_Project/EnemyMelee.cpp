@@ -314,13 +314,15 @@ void DrawEnemyMelee(void)
 //
 //	敵の配置処理
 //	
-//	引数:配置したい座標 x y z
+//	引数:
+//	pos -> 配置したい座標 
+//	id  -> 敵の種類
 //
 //	戻り値
 //		:使用している敵の最大数
 //
 //****************************************************************
-int SetEnemyMelee(XMFLOAT3 pos)
+int SetEnemyMelee(XMFLOAT3 pos, int id)
 {
 	// 戻り値の初期化
 	int EnemyMelee = -1;
