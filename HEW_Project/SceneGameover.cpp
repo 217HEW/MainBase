@@ -73,6 +73,7 @@ static LPCWSTR c_aFileNameGameover[NUM_GAMEOVER] =
 	L"data/texture/pause001.png",	// リトライ
 	L"data/texture/pause002.png",	// クイット
 };
+static DWORD	Joycon;		// コントローラー情報
 //**************************************************************
 // 初期化処理
 //**************************************************************
@@ -106,10 +107,13 @@ void UninitGameover()
 //**************************************************************
 void UpdateGameover()
 {
+	// コントローラー情報
+	GetJoyState(Joycon);
+
 	// フェード処理していなかったら
 	if (GetFadeState() == FADE_NONE)
 	{
-		if (GetKeyRelease(VK_1) || GetKeyTrigger(VK_RETURN) || GetKeyTrigger(VK_SPACE))
+		if (GetKeyRelease(VK_1) || GetKeyTrigger(VK_RETURN) || GetKeyTrigger(VK_SPACE)||GetJoyTrigger(Joycon, JOYSTICKID1))
 		{
 			// タイトルへ
 			StartFadeOut(SCENE_TITLE);

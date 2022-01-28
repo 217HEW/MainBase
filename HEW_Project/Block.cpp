@@ -62,7 +62,7 @@
 // マクロ定義
 //*****************************************************************************
 #define MODEL_BLOCK		 "data/model/Hew_3_3.fbx"	// "data/model/Block.fbx"  通常ブロック			テクスチャ名 Block1.jpg
-#define MODEL_CRACKS	 "data/model/Block.fbx"		// "data/model2/Hew_2.fbx"	 ひび割れたブロック	テクスチャ名 Block1.jpg※今はフォルダを変えて反映しています
+#define MODEL_CRACKS	 "data/model2/Hew_2.fbx"	// ひび割れたブロック	テクスチャ名 Block1.jpg※今はフォルダを変えて反映しています
 #define MODEL_INVINCIBLE "data/model/Block.fbx"		// "data/model/Hew_3_3.fbx"	 無敵ブロック			テクスチャ無し
 #define MAX_LIFE		 (1)						// ブロック耐久値
 #define BLOCK_SCALE		 (20.0f)					// ブロックのスケールサイズ
@@ -172,8 +172,7 @@ void UpdateBlock(void)
 				// 体力が無くなったら使わない
 				if (g_block[i].m_nLife <= 0)
 				{
-					StartExplosion(GetPlayerPos(), XMFLOAT2(80.0f, 80.0f));
-
+					SetExplosionColor(StartExplosion(g_block[i].m_pos, XMFLOAT2(80.0f, 80.0f)),XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f));
 					CSound::SetPlayVol(SE_WALLBREAK, 0.05f); // 壁破壊音
 					g_block[i].m_use = false;
 					//g_model[i].Release();
@@ -184,39 +183,39 @@ void UpdateBlock(void)
 				// 無敵ブロックだったら出る
 				if (g_block[i].m_invincible)
 				{
-					StartExplosion(GetPlayerPos(), XMFLOAT2(80.0f, 80.0f));
+					StartExplosion(GetPlayerPos(), XMFLOAT2(60.0f, 30.0f));
 					// 接地状態ON
 					SetPlayerJump(true);
 					break;
 				}
 				// ブロックにひびが入る
 				g_block[i].m_3Dmodel = MODEL_CRACKS;
-				g_model[i].SetDif(XMFLOAT4(1.0f, 0.2f, 0.2f, 1.0f));	// モデルロード前にカラーを指定
+				g_model[i].SetDif(XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));	// モデルロード前にカラーを指定
 				g_model[i].Load(pDevice, pDeviceContext, g_block[i].m_3Dmodel);
 				g_block[i].m_nLife--;
 				g_model[i].SetDif(XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));	// カラーを戻す(他のも変わってしまうから)
 				// 接地状態ON
 				SetPlayerJump(true);
 
-				StartExplosion(GetPlayerPos(), XMFLOAT2(80.0f, 80.0f));
+				StartExplosion(GetPlayerPos(), XMFLOAT2(50.0f, 30.0f));
 			}
 			//右
-			if (g_block[i].m_pos.x + g_block[i].m_Halfsize.x <= GetPlayerPos().x - (7.0f / 2))
+			if (g_block[i].m_pos.x + g_block[i].m_Halfsize.x <= GetPlayerPos().x - (3.0f / 2))
 			{
 				SetPlayerDir(1);
 			}
 			//左
-			else if (g_block[i].m_pos.x - g_block[i].m_Halfsize.x >= GetPlayerPos().x + (7.0f / 2))
+			else if (g_block[i].m_pos.x - g_block[i].m_Halfsize.x >= GetPlayerPos().x + (3.0f / 2))
 			{
 				SetPlayerDir(2);
 			}
 			//上
-			else if (g_block[i].m_pos.y - g_block[i].m_Halfsize.y >= GetPlayerPos().y + (10.0f / 2))
+			else if (g_block[i].m_pos.y - g_block[i].m_Halfsize.y >= GetPlayerPos().y + (5.0f / 2))
 			{
 				SetPlayerDir(3);
 			}
 			//下
-			else if (g_block[i].m_pos.y + g_block[i].m_Halfsize.y <= GetPlayerPos().y - (10.0f / 2))
+			else if (g_block[i].m_pos.y + g_block[i].m_Halfsize.y <= GetPlayerPos().y - (5.0f / 2))
 			{
 				SetPlayerDir(4);
 			}
@@ -309,18 +308,19 @@ int SetBlock(XMFLOAT3 pos, bool inv,XMFLOAT2 size, XMFLOAT2 cpos)
 		{
 			g_block[cntBlock].m_Halfsize.x = (g_block[cntBlock].m_size.x /2);
 		}
-		else
+		else if (((g_block[cntBlock].m_Halfsize.x * size.x) < g_BlockHalfScale.x))
 		{
-			g_block[cntBlock].m_Halfsize.x = g_BlockHalfScale.x;
+			g_block[cntBlock].m_Halfsize.x = (g_block[cntBlock].m_size.x / 2);
 		}
+		else{ g_block[cntBlock].m_Halfsize.x = g_BlockHalfScale.x; }
 
 		if (((g_block[cntBlock].m_Halfsize.y * size.y) > g_BlockHalfScale.y))
 		{
-			g_block[cntBlock].m_Halfsize.y = (g_block[cntBlock].m_Halfsize.y * size.y) - (g_BlockHalfScale.y * 2.0f);
+			g_block[cntBlock].m_Halfsize.y = (g_block[cntBlock].m_Halfsize.y * size.y);// -(g_BlockHalfScale.y * 2.0f) + g_BlockHalfScale.y;
 		}
 		else
 		{
-			g_block[cntBlock].m_Halfsize.y *= size.y;
+			g_block[cntBlock].m_Halfsize.y = g_BlockHalfScale.y;
 
 		}
 

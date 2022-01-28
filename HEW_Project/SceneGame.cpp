@@ -103,7 +103,7 @@
 //TPolyline					g_polyline[MAX_POLYLINE];	// ポリライン情報
 
 bool g_bPause;				//一時停止中
-Effect g_Effect;			// エフェクト変数
+Effect g_GameEffect;			// エフェクト変数
 static int g_EffectTimer = 0;	// エフェクト制御用タイマー
 //**************************************************************
 // 初期化処理
@@ -217,7 +217,7 @@ HRESULT InitGame(AREA Area)
 		return hr;
 
 	// エフェクト(for Effekseer)初期化
-	//hr = g_GameEffect.Load();
+	hr = g_GameEffect.Load();
 	if (FAILED(hr))
 		return hr;
 
