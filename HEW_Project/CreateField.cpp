@@ -47,6 +47,9 @@
 //　2022/01/27	プレイヤーをエリアごとに設置出来るように関数を
 //				追加しました
 //	編集者：上月大地
+//--------------------------------------------------------------
+//　2022/01/28	近接敵が現環境で動くように引数(ID)を削除しました。
+//	編集者：柴山凜太郎
 //**************************************************************
 
 //**************************************************************
@@ -866,7 +869,7 @@ HRESULT InitCField(AREA Area)
 				// 通常ブロック
 				SetEnemyMelee(XMFLOAT3(g_MapPosOrizin.x + (Width * BlockSize.x),
 					g_MapPosOrizin.y - (Height * BlockSize.y) * 2,
-					g_MapPosOrizin.z),0);
+					g_MapPosOrizin.z));
 				break; }
 			case m: {
 				//マップチップ"e"の場所に描画するもの
@@ -874,7 +877,7 @@ HRESULT InitCField(AREA Area)
 				// 通常ブロック
 				SetEnemyMelee(XMFLOAT3(g_MapPosOrizin.x + (Width * BlockSize.x),
 					g_MapPosOrizin.y - (Height * BlockSize.y) * 2,
-					g_MapPosOrizin.z), 1);
+					g_MapPosOrizin.z));
 				break; }
 			case r: {
 				//マップチップ"e"の場所に描画するもの
@@ -882,7 +885,7 @@ HRESULT InitCField(AREA Area)
 				// 通常ブロック
 				SetEnemyMelee(XMFLOAT3(g_MapPosOrizin.x + (Width * BlockSize.x),
 					g_MapPosOrizin.y - (Height * BlockSize.y) * 2,
-					g_MapPosOrizin.z), 2);
+					g_MapPosOrizin.z));
 				break; }
 			case p: {
 				//マップチップ"p"の場所に描画するもの
