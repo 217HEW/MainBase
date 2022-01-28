@@ -177,34 +177,34 @@
       <Filter>ヘッダーファイル\Object[.h]</Filter>
     </ClInclude>
     <ClInclude Include="Pause.h">
-      <Filter>ヘッダーファイル\Scene</Filter>
+      <Filter>ヘッダーファイル\Scene[.h]</Filter>
     </ClInclude>
     <ClInclude Include="SceneArea2.h">
-      <Filter>ヘッダーファイル\Scene</Filter>
+      <Filter>ヘッダーファイル\Scene[.h]</Filter>
     </ClInclude>
     <ClInclude Include="SceneArea3.h">
-      <Filter>ヘッダーファイル\Scene</Filter>
+      <Filter>ヘッダーファイル\Scene[.h]</Filter>
     </ClInclude>
     <ClInclude Include="SceneGame.h">
-      <Filter>ヘッダーファイル\Scene</Filter>
+      <Filter>ヘッダーファイル\Scene[.h]</Filter>
     </ClInclude>
     <ClInclude Include="SceneGameclear.h">
-      <Filter>ヘッダーファイル\Scene</Filter>
+      <Filter>ヘッダーファイル\Scene[.h]</Filter>
     </ClInclude>
     <ClInclude Include="SceneGameover.h">
-      <Filter>ヘッダーファイル\Scene</Filter>
+      <Filter>ヘッダーファイル\Scene[.h]</Filter>
     </ClInclude>
     <ClInclude Include="SceneManager.h">
-      <Filter>ヘッダーファイル\Scene</Filter>
+      <Filter>ヘッダーファイル\Scene[.h]</Filter>
     </ClInclude>
     <ClInclude Include="SceneTitle.h">
-      <Filter>ヘッダーファイル\Scene</Filter>
+      <Filter>ヘッダーファイル\Scene[.h]</Filter>
     </ClInclude>
     <ClInclude Include="Fade.h">
-      <Filter>ヘッダーファイル\Scene</Filter>
+      <Filter>ヘッダーファイル\Scene[.h]</Filter>
     </ClInclude>
     <ClInclude Include="StageSelect.h">
-      <Filter>ヘッダーファイル\Scene</Filter>
+      <Filter>ヘッダーファイル\Scene[.h]</Filter>
     </ClInclude>
     <ClInclude Include="effect.h">
       <Filter>ヘッダーファイル\Effect[.h]</Filter>
@@ -355,9 +355,6 @@
     <Filter Include="ヘッダーファイル\Object[.h]">
       <UniqueIdentifier>{9ef034cb-fb07-47e6-a1c8-aa361c778a31}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダーファイル\Scene">
-      <UniqueIdentifier>{dd531ca0-bc44-4e59-b5ee-77ea0df15a5b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ヘッダーファイル\Object[.h]\UI">
       <UniqueIdentifier>{5576382d-0687-4357-add7-0c300db480d0}</UniqueIdentifier>
     </Filter>
@@ -369,6 +366,9 @@
     </Filter>
     <Filter Include="ヘッダーファイル\System[.h]\Sound">
       <UniqueIdentifier>{d753ba45-569d-4bc5-abb2-0aa972b80007}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダーファイル\Scene[.h]">
+      <UniqueIdentifier>{dd531ca0-bc44-4e59-b5ee-77ea0df15a5b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
