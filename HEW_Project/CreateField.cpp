@@ -869,7 +869,7 @@ HRESULT InitCField(AREA Area)
 				// 通常ブロック
 				SetEnemyMelee(XMFLOAT3(g_MapPosOrizin.x + (Width * BlockSize.x),
 					g_MapPosOrizin.y - (Height * BlockSize.y) * 2,
-					g_MapPosOrizin.z));
+					g_MapPosOrizin.z),0);
 				break; }
 			case m: {
 				//マップチップ"e"の場所に描画するもの
@@ -877,7 +877,7 @@ HRESULT InitCField(AREA Area)
 				// 通常ブロック
 				SetEnemyMelee(XMFLOAT3(g_MapPosOrizin.x + (Width * BlockSize.x),
 					g_MapPosOrizin.y - (Height * BlockSize.y) * 2,
-					g_MapPosOrizin.z));
+					g_MapPosOrizin.z),1);
 				break; }
 			case r: {
 				//マップチップ"e"の場所に描画するもの
@@ -885,7 +885,7 @@ HRESULT InitCField(AREA Area)
 				// 通常ブロック
 				SetEnemyMelee(XMFLOAT3(g_MapPosOrizin.x + (Width * BlockSize.x),
 					g_MapPosOrizin.y - (Height * BlockSize.y) * 2,
-					g_MapPosOrizin.z));
+					g_MapPosOrizin.z),0);
 				break; }
 			case p: {
 				//マップチップ"p"の場所に描画するもの

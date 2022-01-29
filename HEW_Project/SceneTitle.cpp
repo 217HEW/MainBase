@@ -89,7 +89,7 @@
 static LPCWSTR g_pszTexFName[TITLE_TEX_MAX] = {
  L"data/texture/TitleBG000.png",	// タイトル背景テクスチャ
  L"data/texture/Title000.png",		// タイトル名テクスチャ
- L"data/texture/Title.png",			// 決定アイコンテクスチャ
+ L"data/texture/Push.png",			// 決定アイコンテクスチャ
 };
 
 static ID3D11ShaderResourceView* g_pTexture[TITLE_TEX_MAX];
