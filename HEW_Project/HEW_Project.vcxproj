@@ -347,7 +347,7 @@
     <Image Include="res\directx9.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="DX11Game.rc" />
+    <ResourceCompile Include="HEW_Project.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
