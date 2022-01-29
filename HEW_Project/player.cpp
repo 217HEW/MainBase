@@ -511,10 +511,13 @@ void UpdatePlayer(void)
 	// PrintDebugProc("[ﾋｺｳｷ ｲﾁ : (%f : %f : %f)]\n", g_posModel.x, g_posModel.y, g_posModel.z);
 	// PrintDebugProc("[ﾋｺｳｷ ﾑｷ : (%f) < ﾓｸﾃｷ ｲﾁ:(%f) >]\n", g_rotModel.y, g_rotDestModel.y);
 	// PrintDebugProc("\n");
+#ifdef _DEBUG
+	PrintDebugProc("StickX : %f\n", Stick.x);
+	PrintDebugProc("StickY : %f\n", Stick.y);
+	PrintDebugProc("Dir : %d\n", g_nDir);
+#endif // _DEBUG
 
-	 PrintDebugProc("StickX : %f\n",Stick.x);
-	 PrintDebugProc("StickY : %f\n", Stick.y);
-	 PrintDebugProc("Dir : %d\n",g_nDir);
+	
 
 	// -------モデルアニメーション制御------------------------------------------
 	switch (g_nDir)
