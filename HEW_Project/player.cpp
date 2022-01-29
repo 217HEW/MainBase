@@ -74,7 +74,9 @@
 //	編集者：柴山凜太郎
 //--------------------------------------------------------------
 //	2022/01/25	プレイヤーの方向を変える処理を追加しました
-//				ゲーム開始時はジャンプするまで10秒間無敵にしました
+//	編集者：上月大地
+//--------------------------------------------------------------
+//	2022/01/29	操作するまで無敵、と判断する処理を追加しました
 //	編集者：上月大地
 //**************************************************************
 
@@ -176,7 +178,7 @@ HRESULT InitPlayer(void)
 
 	// 壁接触,無敵判定初期化
 	g_bLand = true;
-	g_bInv = false;
+	g_bInv = true;
 	g_bkabe = true;
 
 	g_nDir = 4;	// 下と接している
@@ -207,8 +209,17 @@ void UpdatePlayer(void)
 	// カメラの向き取得
 	XMFLOAT3 rotCamera = CCamera::Get()->GetAngle();
 
-	// 壁の配列取得
-	//TBLOCK *Block = GetBlockArray();
+	// 体力が0ならゲームオーバーへ
+	if (GetLife() <= 0)
+	{
+		StartFadeOut(SCENE_GAMEOVER);
+	}
+
+	// 操作したら無敵を解除
+	if (g_bLand == false)
+	{
+		g_bInv = false;
+	}
 
 	// -------コントローラー操作------------------------------------------
 	GetJoyState(Joycon);
@@ -503,11 +514,6 @@ void UpdatePlayer(void)
 					   XMFLOAT2(5.0f, 5.0f), 20);
 	}
 	
-	// 体力が0ならゲームオーバーへ
-	if (GetLife() <= 0)
-	{
-		StartFadeOut(SCENE_GAMEOVER);
-	}
 	// PrintDebugProc("[ﾋｺｳｷ ｲﾁ : (%f : %f : %f)]\n", g_posModel.x, g_posModel.y, g_posModel.z);
 	// PrintDebugProc("[ﾋｺｳｷ ﾑｷ : (%f) < ﾓｸﾃｷ ｲﾁ:(%f) >]\n", g_rotModel.y, g_rotDestModel.y);
 	// PrintDebugProc("\n");
@@ -515,6 +521,7 @@ void UpdatePlayer(void)
 	 PrintDebugProc("StickX : %f\n",Stick.x);
 	 PrintDebugProc("StickY : %f\n", Stick.y);
 	 PrintDebugProc("Dir : %d\n",g_nDir);
+	 PrintDebugProc("inv : %d\n", g_bInv);
 
 	// -------モデルアニメーション制御------------------------------------------
 	switch (g_nDir)
@@ -573,7 +580,7 @@ void UpdatePlayer(void)
 void DrawPlayer(void)
 {
 	ID3D11DeviceContext* pDC = GetDeviceContext();
-	ID3D11DeviceContext* pDCguide = GetDeviceContext();
+
 	// 不透明部分を描画
 	g_model.Draw(pDC, g_mtxWorld, eOpacityOnly);
 	g_PlayerEffect.Draw();
@@ -624,6 +631,7 @@ float GetPlayerRadSize()
 {
 	return PLAYER_RADIUS;
 }
+
 //*******************************
 //
 //		ジャンプ状態情報取得
@@ -655,6 +663,21 @@ void SetPlayerJump(bool jump)
 {
 	g_bLand = jump;
 }
+
+//*******************************
+//
+//		無敵状態情報取得
+//	 無敵のboolを取得する
+//	ゲーム開始時、触るまで無敵にする為
+//	戻り値
+//		true:無敵
+//
+//*******************************
+bool GetPlayerInv()
+{
+	return g_bInv;
+}
+
 //*******************************
 //
 //		プレイヤーとの衝突判定
