@@ -666,6 +666,7 @@ void Update(void)
 	srand((unsigned int)time(NULL));	// こうすると毎回ランド関数の中身が変わる
 
 	// デバッグ文字列設定
+#ifdef _DEBUG
 	StartDebugProc();
 	PrintDebugProc("FPS:%d\n\n\n\n\n", g_nCountFPS);
 	PrintDebugProc("< ｼｰﾝ ｾﾝｲｻｷ >\n");
@@ -676,6 +677,9 @@ void Update(void)
 	PrintDebugProc("5:[ ｴﾘｱﾎﾞｽ  ]\n");
 	PrintDebugProc("6:[ｹﾞｰﾑｵｰﾊﾞｰ]\n");
 	PrintDebugProc("7:[ ｹﾞｰﾑｸﾘｱ ]\n\n");
+#endif // DEBUG
+
+	
 
 	// シーン遷移更新
 	UpdateScene();

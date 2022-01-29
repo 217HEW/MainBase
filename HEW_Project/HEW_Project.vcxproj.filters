@@ -377,7 +377,7 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="DX11Game.rc">
+    <ResourceCompile Include="HEW_Project.rc">
       <Filter>リソースファイル</Filter>
     </ResourceCompile>
   </ItemGroup>
