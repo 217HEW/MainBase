@@ -74,7 +74,9 @@
 //	編集者：柴山凜太郎
 //--------------------------------------------------------------
 //	2022/01/25	プレイヤーの方向を変える処理を追加しました
-//				ゲーム開始時はジャンプするまで10秒間無敵にしました
+//	編集者：上月大地
+//--------------------------------------------------------------
+//	2022/01/29	操作するまで無敵、と判断する処理を追加しました
 //	編集者：上月大地
 //**************************************************************
 
@@ -96,12 +98,14 @@
 #include "Block.h"
 #include "Sound.h"
 #include "PlayEffect.h"
+#include "Texture.h"
+#include "polygon.h"
 
 #pragma comment (lib, "xinput.lib")	// コントローラー情報取得に必要
 //**************************************************************
 // マクロ定義
 //**************************************************************
-#define MODEL_PLAYER	 "data/model/test.fbx"// "data/model/Character02.fbx"
+#define MODEL_PLAYER	"data/model/Hero/NewAllMotion02.fbx"	// "data/model/test.fbx"
 
 #define	VALUE_MOVE_PLAYER	(0.155f)	// 移動速度
 #define	SPEED_MOVE_PLAYER	(5)			// 跳躍速度
@@ -142,6 +146,7 @@ static XMFLOAT2 Stick;		// スティックの傾き用
 
 Effect g_PlayerEffect;		// プレイヤーのエフェクト
 int g_PEffectTimer = 0;		// プレイヤーエフェクト制御用タイマー
+
 //**************************************************************
 // 初期化処理
 //**************************************************************
@@ -149,9 +154,8 @@ HRESULT InitPlayer(void)
 {
 	HRESULT hr = S_OK;
 	ID3D11Device* pDevice = GetDevice();
+	
 	ID3D11DeviceContext* pDeviceContext = GetDeviceContext();
-
-	g_nDamage = 10 * 60 +59;
 
 	// 位置・回転・スケールの初期設定
 	g_posModel = XMFLOAT3(10.0f, -320.0f, 0.0f);
@@ -161,7 +165,6 @@ HRESULT InitPlayer(void)
 	g_rotModel = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	g_rotDestModel = XMFLOAT3(0.0f, 0.0f, 0.0f); 
 	Stick = XMFLOAT2(0.0f, 0.0f);
-	
 
 	// モデルデータの読み込み
 	g_model.SetDif(COLLAR_PLAYER); // モデルロード前にカラーを指定
@@ -175,7 +178,7 @@ HRESULT InitPlayer(void)
 
 	// 壁接触,無敵判定初期化
 	g_bLand = true;
-	g_bInv = false;
+	g_bInv = true;
 	g_bkabe = true;
 
 	g_nDir = 4;	// 下と接している
@@ -206,8 +209,17 @@ void UpdatePlayer(void)
 	// カメラの向き取得
 	XMFLOAT3 rotCamera = CCamera::Get()->GetAngle();
 
-	// 壁の配列取得
-	//TBLOCK *Block = GetBlockArray();
+	// 体力が0ならゲームオーバーへ
+	if (GetLife() <= 0)
+	{
+		StartFadeOut(SCENE_GAMEOVER);
+	}
+
+	// 操作したら無敵を解除
+	if (g_bLand == false)
+	{
+		g_bInv = false;
+	}
 
 	// -------コントローラー操作------------------------------------------
 	GetJoyState(Joycon);
@@ -243,7 +255,7 @@ void UpdatePlayer(void)
 						break;
 					case 2: if (Stick.x > -0.4f) { g_bkabe = false; }
 						break;
-					case 3: if (Stick.y > -0.3f) { g_bkabe = false; }
+					case 3: if (Stick.y > -0.4f) { g_bkabe = false; }
 						break;
 					case 4: if (Stick.y < 0.4f) { g_bkabe = false; }
 						break;
@@ -263,8 +275,11 @@ void UpdatePlayer(void)
 					// Aボタンが押されたら
 					if (GetJoyTrigger(Joycon, JOYSTICKID1) && g_bkabe)
 					{
-						g_moveModel.x = Stick.x *3.0f;
-						g_moveModel.y = Stick.y *6.0f;
+						g_moveModel.x += SPEED_MOVE_PLAYER *Stick.x;
+						g_moveModel.y += SPEED_MOVE_PLAYER *Stick.y*1.5;
+						g_nDir = 0;
+						g_rotModel.z = Stick.x * -90;
+						g_rotModel.y = Stick.y * -90;
 						g_bLand = false;				 // 設置判定オフ
 						CSound::SetPlayVol(SE_JUMP,0.1f); // ジャンプ音
 					}
@@ -276,17 +291,6 @@ void UpdatePlayer(void)
 	{	// 接続無し↓
 		Stick.x = 0.0f;
 		Stick.y = 0.0f;
-	}
-	
-	/*do
-	{*/
-	if (g_nDamage > 0) {
-		--g_nDamage;
-		if (g_nDamage <= 0) {
-			g_bInv = false;
-			g_nDamage = 0;
-		}
-		//break;
 	}
 
 	// -------プレイヤー操作------------------------------------------
@@ -301,13 +305,13 @@ void UpdatePlayer(void)
 		// 上下移動
 		if (GetKeyTrigger(VK_UP) && !(g_nDir == 3)) {
 			StartExplosion(g_posModel, XMFLOAT2(40.0f, 40.0f));
-			g_moveModel.y += SPEED_MOVE_PLAYER;
+			g_moveModel.y += SPEED_MOVE_PLAYER * 1.5;
 			CSound::SetPlayVol(SE_JUMP, 0.1f); // ジャンプ音
 			g_bLand = false;	// 設置判定オフ
 		}
 		else if (GetKeyTrigger(VK_DOWN) && !(g_nDir == 4)) {
 			StartExplosion(g_posModel, XMFLOAT2(40.0f, 40.0f));
-			g_moveModel.y -= SPEED_MOVE_PLAYER;
+			g_moveModel.y -= SPEED_MOVE_PLAYER * 1.5f;
 			CSound::SetPlayVol(SE_JUMP, 0.1f); // ジャンプ音
 			g_bLand = false;	// 設置判定オフ
 		}
@@ -413,22 +417,22 @@ void UpdatePlayer(void)
 	// -------移動の制限&制御------------------------------------------
 
 	// 目的の角度までの差分
-	float fDiffRotY = g_rotDestModel.y - g_rotModel.y;
-	if (fDiffRotY >= 180.0f) {
-		fDiffRotY -= 360.0f;
-	}
-	if (fDiffRotY < -180.0f) {
-		fDiffRotY += 360.0f;
-	}
+	//float fDiffRotY = g_rotDestModel.y - g_rotModel.y;
+	//if (fDiffRotY >= 180.0f) {
+	//	fDiffRotY -= 360.0f;
+	//}
+	//if (fDiffRotY < -180.0f) {
+	//	fDiffRotY += 360.0f;
+	//}
 
 	// 目的の角度まで慣性をかける
-	g_rotModel.y += fDiffRotY * RATE_ROTATE_PLAYER;
-	if (g_rotModel.y >= 180.0f) {
-		g_rotModel.y -= 360.0f;
-	}
-	if (g_rotModel.y < -180.0f) {
-		g_rotModel.y += 360.0f;
-	}
+	// g_rotModel.y += fDiffRotY * RATE_ROTATE_PLAYER *3;
+	// if (g_rotModel.y >= 180.0f) {
+	// 	g_rotModel.y -= 360.0f;
+	// }
+	// if (g_rotModel.y < -180.0f) {
+	// 	g_rotModel.y += 360.0f;
+	// }
 
 	// 位置移動
 	g_posModel.x += g_moveModel.x;
@@ -449,13 +453,25 @@ void UpdatePlayer(void)
 	// プレイヤー向き調整
 	switch (g_nDir)
 	{
-	case 1: g_rotModel.y = -90.0f;
+	case 0: g_rotModel.x = 0.0f;
+			//g_rotModel.y = 0.0f;
 		break;
-	case 2: g_rotModel.y = 90.0f;
+
+	case 1: g_rotModel.x = 90.0f;
+			g_rotModel.y = 90.0f;
+			g_rotModel.z = 0.0f;
 		break;
-	case 3: g_rotModel.z = 180.0f;
+	case 2:	g_rotModel.x = 90.0f;
+			g_rotModel.y = -90.0f;
+			g_rotModel.z = 0.0f;
 		break;
-	case 4: g_rotModel.z = 0.0f;
+	case 3: g_rotModel.x = 0.0f;
+			g_rotModel.y = 0.0f;
+			g_rotModel.z = 180.0f;
+		break;
+	case 4: g_rotModel.x = 0.0f;
+			g_rotModel.y = 0.0f; 
+			g_rotModel.z = 0.0f;
 		break;
 	default:
 		break;
@@ -470,42 +486,66 @@ void UpdatePlayer(void)
 		XMFLOAT3 pos;
 
 		// エフェクト出現座標の調整
-		pos.x = g_posModel.x + SinDeg(g_rotModel.y) * 10.0f;
-		pos.y = g_posModel.y + 2.0f;
-		pos.z = g_posModel.z + CosDeg(g_rotModel.y) * 10.0f;
+		// pos.x = g_posModel.x + SinDeg(g_rotModel.y) * 10.0f;
+		// pos.y = g_posModel.y + 2.0f;
+		// pos.z = g_posModel.z + CosDeg(g_rotModel.y) * 10.0f;
 		
+		pos.x = g_posModel.x;
+		pos.y = g_posModel.y - 10.0f;
+		pos.z = g_posModel.z;
+
 		// エフェクシアのサンプルエフェクト再生処理
-		if (g_PEffectTimer == 0)
-		{	
-			g_PlayerEffect.Set(EFFECT_BURNING, g_posModel, XMFLOAT3(10.0f, 10.0f, 10.0f), 2.5f, XMFLOAT3(0.0f,0.0f,0.0f));
-			g_PEffectTimer = 1;
-		}
-		--g_PEffectTimer;
+		// if (g_PEffectTimer == 0)
+		// {	
+		// 	g_PlayerEffect.Set(EFFECT_FIRE, pos, XMFLOAT3(10.0f, 10.0f, 0.0f), 2.5f, XMFLOAT3(0.0f,0.0f,0.0f));
+		// 	g_PEffectTimer = 1;
+		// }
+		// --g_PEffectTimer;
 
 		// エフェクトの設定
 		SetEffect(pos, XMFLOAT3(0.0f, 0.0f, 0.0f),
-					   XMFLOAT4(0.85f, 0.05f, 0.65f, 0.50f),
+					   XMFLOAT4(0.85f, 0.85f, 0.05f, 0.50f),
 					   XMFLOAT2(14.0f, 14.0f), 20);
 		SetEffect(pos, XMFLOAT3(0.0f, 0.0f, 0.0f),
-					   XMFLOAT4(0.65f, 0.85f, 0.05f, 0.30f),
+					   XMFLOAT4(0.65f, 0.65f, 0.05f, 0.30f),
 					   XMFLOAT2(10.0f, 10.0f), 20);
 		SetEffect(pos, XMFLOAT3(0.0f, 0.0f, 0.0f),
 					   XMFLOAT4(0.45f, 0.45f, 0.05f, 0.15f),
 					   XMFLOAT2(5.0f, 5.0f), 20);
 	}
 	
-	// 体力が0ならゲームオーバーへ
-	if (GetLife() <= 0)
-	{
-		StartFadeOut(SCENE_GAMEOVER);
-	}
 	// PrintDebugProc("[ﾋｺｳｷ ｲﾁ : (%f : %f : %f)]\n", g_posModel.x, g_posModel.y, g_posModel.z);
 	// PrintDebugProc("[ﾋｺｳｷ ﾑｷ : (%f) < ﾓｸﾃｷ ｲﾁ:(%f) >]\n", g_rotModel.y, g_rotDestModel.y);
 	// PrintDebugProc("\n");
-
-	PrintDebugProc("StickX : %f\n",Stick.x);
+#ifdef _DEBUG
+	PrintDebugProc("StickX : %f\n", Stick.x);
 	PrintDebugProc("StickY : %f\n", Stick.y);
-	PrintDebugProc("Dir : %d\n",g_nDir);
+	PrintDebugProc("Dir : %d\n", g_nDir);
+#endif // _DEBUG
+
+	
+
+	// -------モデルアニメーション制御------------------------------------------
+	switch (g_nDir)
+	{
+	case 0: g_model.SetAnimIndex(2);
+			g_model.SetAnimTime(0.4);
+			break;
+	case 1: g_model.SetAnimIndex(4);
+			g_model.SetAnimTime(0.4);
+			break;
+	case 2: g_model.SetAnimIndex(4);
+			g_model.SetAnimTime(0.4);
+			break;
+	case 3: g_model.SetAnimIndex(2);
+			g_model.SetAnimTime(10);
+			break;
+	case 4: g_model.SetAnimIndex(2);
+			g_model.SetAnimTime(10);
+			break;
+	default:
+		break;
+	}
 
 	// -------ワールドマトリクス制御------------------------------------------
 
@@ -527,7 +567,9 @@ void UpdatePlayer(void)
 
 	// 移動を反映
 	if(g_nDir == 3) { mtxTranslate = XMMatrixTranslation(g_posModel.x, g_posModel.y + 10, g_posModel.z); } // 天井に当っていたらモデル座標修正
-	else { mtxTranslate = XMMatrixTranslation(g_posModel.x, g_posModel.y - 10, g_posModel.z); }
+	else if(g_nDir == 1) { mtxTranslate = XMMatrixTranslation(g_posModel.x -6, g_posModel.y - 10, g_posModel.z); }
+	else if(g_nDir == 2) { mtxTranslate = XMMatrixTranslation(g_posModel.x +3, g_posModel.y - 10, g_posModel.z); }
+	else{ mtxTranslate = XMMatrixTranslation(g_posModel.x, g_posModel.y - 10, g_posModel.z); }
 	mtxWorld = XMMatrixMultiply(mtxWorld, mtxTranslate);
 
 	// ワールドマトリックス設定
@@ -539,16 +581,6 @@ void UpdatePlayer(void)
 //**************************************************************
 void DrawPlayer(void)
 {
-	// モデル点滅処理
-	if (g_nDamage > 0 && g_bLand == true) {
-		if (g_nDamage & 4)	// 4フレーム毎ごとに描画しない
-			return;
-	}
-	else
-	{
-		g_nDamage = 0;
-	}
-
 	ID3D11DeviceContext* pDC = GetDeviceContext();
 
 	// 不透明部分を描画
@@ -560,7 +592,7 @@ void DrawPlayer(void)
 	 SetZWrite(false);				// Zバッファ更新しない
 	 g_model.Draw(pDC, g_mtxWorld, eTransparentOnly);
 	 SetZWrite(true);				// Zバッファ更新する
-	 SetBlendState(BS_NONE);			// アルファブレンド無効
+	 SetBlendState(BS_NONE);		// アルファブレンド無効
 }
 
 //*******************************
@@ -601,6 +633,7 @@ float GetPlayerRadSize()
 {
 	return PLAYER_RADIUS;
 }
+
 //*******************************
 //
 //		ジャンプ状態情報取得
@@ -632,6 +665,21 @@ void SetPlayerJump(bool jump)
 {
 	g_bLand = jump;
 }
+
+//*******************************
+//
+//		無敵状態情報取得
+//	 無敵のboolを取得する
+//	ゲーム開始時、触るまで無敵にする為
+//	戻り値
+//		true:無敵
+//
+//*******************************
+bool GetPlayerInv()
+{
+	return g_bInv;
+}
+
 //*******************************
 //
 //		プレイヤーとの衝突判定
@@ -678,4 +726,20 @@ bool CollisionPlayer(XMFLOAT3 pos, float radius, float damage)
 void SetPlayerDir(int dir)
 {
 	g_nDir = dir;
+}
+
+//*******************************
+//
+//		プレイヤー設置関数
+//	
+//	引数:
+//		設置したい座標
+//
+//	戻り値
+//		無し
+//
+//*******************************
+void SetPlayer(XMFLOAT3 pos)
+{
+	g_posModel = pos;
 }

@@ -16,6 +16,8 @@
 //	2022/01/03	プレイヤーのサイズを取得する関数の作成
 //	編集者：柴山凜太郎
 //--------------------------------------------------------------
+//	2022/01/29	無敵かを判断する関数を追加しました
+//	編集者：上月大地
 //**************************************************************
 #pragma once
 
@@ -33,7 +35,9 @@ XMFLOAT3& GetPlayerPos();	// プレイヤー位置情報取得
 XMFLOAT3& GetPlayerSize();	// プレイヤー位置情報取得
 float GetPlayerRadSize();		// プライヤーサイズ情報取得
 bool GetPlayerJump();		// 飛んでいるかのboolを取得する	true:飛んでいない
-void SetPlayerJump(bool jump);		// 飛んでいるかのboolをセットする	
-void SetPlayerDir(int dir);
+void SetPlayerJump(bool jump);	// 飛んでいるかのboolをセットする	
+bool GetPlayerInv();		// 無敵情報取得
+void SetPlayerDir(int dir);		// プレイヤーの向いてる方向をセット
+void SetPlayer(XMFLOAT3 pos);	// プレイヤーを設置するための関数
 
 bool CollisionPlayer(XMFLOAT3 pos, float radius, float damage);

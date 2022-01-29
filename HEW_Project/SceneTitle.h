@@ -22,8 +22,9 @@
 
 // タイトル画面テクスチャ
 typedef enum {
-	TITLE_TEX_BG = 0,	// コンティニュー
-	TITLE_TEX_ENTER,	// リトライ
+	TITLE_TEX_BG = 0,	// タイトル背景
+	TITLE_TEX_NAME,		// タイトル名
+	TITLE_TEX_ENTER,	// エンター
 
 	TITLE_TEX_MAX		// 最大数
 } TITLE_TEX;

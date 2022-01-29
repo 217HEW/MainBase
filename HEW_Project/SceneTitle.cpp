@@ -32,15 +32,18 @@
 //	2021/12/28	デバッグ操作で遷移できるシーンの追加(AREA2,3,BOSS)
 //	編集者：柴山凜太郎
 //--------------------------------------------------------------
-//	2021/1/5	コントローラーでもシーン遷移出来るようにしました
+//	2022/1/5	コントローラーでもシーン遷移出来るようにしました
 //	編集者：上月大地
 //--------------------------------------------------------------
-//	2021/1/22	「OOを押して下さい！」を追加できるようにしました
+//	2022/1/22	「OOを押して下さい！」を追加できるようにしました
 //				画像入れれば描画出来ます
 //	編集者：上月大地
 //
 //	2022/01/24	タイトルからセレクト画面に行くようにしました
 //	編集者: 石原聖斗
+//--------------------------------------------------------------
+//	2022/1/27	タイトルを正式な画像に変更しました
+//	編集者：上月大地
 //**************************************************************
 
 //**************************************************************
@@ -63,6 +66,12 @@
 #define BG_WIDTH SCREEN_WIDTH
 #define BG_HEIGHT SCREEN_HEIGHT
 
+// タイトル名
+#define TITLE_POS_X 0.0f
+#define TITLE_POS_Y 70.0f
+#define TITLE_WIDTH 1040
+#define TITLE_HEIGHT 560
+
 // 決定アイコン
 #define ENTER_WIDTH	 550
 #define ENTER_HEIGHT 80
@@ -78,8 +87,9 @@
 
 // 画像ファイルネーム
 static LPCWSTR g_pszTexFName[TITLE_TEX_MAX] = {
- L"data/texture/Title.png",			// タイトル背景テクスチャ
- L"data/texture/Title.png",			// 決定アイコンテクスチャ
+ L"data/texture/TitleBG000.png",	// タイトル背景テクスチャ
+ L"data/texture/Title000.png",		// タイトル名テクスチャ
+ L"data/texture/Push.png",			// 決定アイコンテクスチャ
 };
 
 static ID3D11ShaderResourceView* g_pTexture[TITLE_TEX_MAX];
@@ -88,7 +98,6 @@ static DWORD	Joycon;		// コントローラー情報
 // 点滅タイマー用
 static int g_nBlink;
 static bool g_bStart;
-
 
 //**************************************************************
 // 初期化処理
@@ -244,6 +253,7 @@ void DrawTitle()
 {
 	// Zバッファ無効(Zチェック無&Z更新無)
 	SetZBuffer(false);
+	SetBlendState(BS_ALPHABLEND);	// アルファブレンド有効
 
 	ID3D11DeviceContext* pDC = GetDeviceContext();
 	SetPolygonUV(0.0f, 0.0f);
@@ -253,6 +263,12 @@ void DrawTitle()
 	SetPolygonSize(BG_WIDTH, BG_HEIGHT);
 	SetPolygonPos(BG_POS_X, BG_POS_Y);
 	SetPolygonTexture(g_pTexture[TITLE_TEX_BG]);
+	DrawPolygon(pDC);
+	
+	// タイトル名描画
+	SetPolygonSize(TITLE_WIDTH, TITLE_HEIGHT);
+	SetPolygonPos(TITLE_POS_X, TITLE_POS_Y);
+	SetPolygonTexture(g_pTexture[TITLE_TEX_NAME]);
 	DrawPolygon(pDC);
 
 	// 点滅タイマー用
@@ -275,4 +291,6 @@ void DrawTitle()
 	
 	// Zバッファ有効(Zチェック有&Z更新有)
 	SetZBuffer(true);
+	SetBlendState(BS_NONE);	// アルファブレンド無効
+
 }

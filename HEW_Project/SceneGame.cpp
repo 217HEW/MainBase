@@ -101,7 +101,7 @@
 //TPolyline					g_polyline[MAX_POLYLINE];	// ポリライン情報
 
 bool g_bPause;				//一時停止中
-Effect g_Effect;			// エフェクト変数
+Effect g_GameEffect;			// エフェクト変数
 static int g_EffectTimer = 0;	// エフェクト制御用タイマー
 //**************************************************************
 // 初期化処理
@@ -215,7 +215,7 @@ HRESULT InitGame(AREA Area)
 		return hr;
 
 	// エフェクト(for Effekseer)初期化
-	//hr = g_GameEffect.Load();
+	hr = g_GameEffect.Load();
 	if (FAILED(hr))
 		return hr;
 
@@ -450,13 +450,13 @@ void UpdateGame()
 		UpdateEffect();
 
 		// エフェクト(for Effekseer)更新
-		// if (g_EffectTimer == 0)
-		// {
-		// 	g_GameEffect.Set(EFFECT_FIRE, XMFLOAT3(-50, -50, 0), XMFLOAT3(10.0f, 10.0f, 10.0f), 0.1f, XMFLOAT3(1.0f, 1.0f, 1.0f));
-		// 	g_EffectTimer = 30;
-		// }
-		// --g_EffectTimer;
-		// g_GameEffect.Update();
+		if (g_EffectTimer == 0)
+		{
+			g_GameEffect.Set(EFFECT_FIRE, XMFLOAT3(-50, -50, 0), XMFLOAT3(10.0f, 10.0f, 10.0f), 0.1f, XMFLOAT3(1.0f, 1.0f, 1.0f));
+			g_EffectTimer = 30;
+		}
+		--g_EffectTimer;
+		g_GameEffect.Update();
 
 
 		// ブロック更新
