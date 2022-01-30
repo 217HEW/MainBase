@@ -30,6 +30,7 @@ struct TEnemyRange {
 	XMFLOAT3	m_rotDest;	// 目的の向き
 	XMFLOAT3	m_size;		// 現在のサイズ
 	bool		m_use;		// 使用してるか否か	ON:使用中
+	float ReticleSize;		// レティクルのサイズ
 	int			m_Time;		// 敵のタイマー
 
 	XMFLOAT4X4	m_mtxWorld;	// ワールドマトリックス
