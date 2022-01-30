@@ -185,9 +185,8 @@ void UninitEnemyRange(void)
 //**************************************************************
 void UpdateEnemyRange(void)
 {
-	XMMATRIX mtxWorld, mtxRot, mtxTranslate, mtxSize;
+	XMMATRIX mtxWorld, mtxRot, mtxTranslate, mtxSize, mtxScale;
 	ID3D11DeviceContext* pDC = GetDeviceContext();
-	XMMATRIX mtxWorld, mtxRot, mtxTranslate, mtxScale;
 
 	//プレイヤーの座標・サイズ取得
 	XMFLOAT3 posPlayer = GetPlayerPos();
