@@ -214,6 +214,10 @@ void UpdateSelect(void)
 		}
 		else if (GetKeyRepeat(VK_LEFT)|| (g_bJoySelect == LEFT))
 		{
+			if (g_nSelectMenu == STAGE_1)
+			{
+				g_nSelectMenu = SELECT;
+			}
 			// ÉJÅ[É\Éãâπ
 			CSound::SetPlayVol(SE_SELECT, 0.3f);
 			g_nSelectMenu = (SELECT_MENU)((g_nSelectMenu + NUM_SELECT_MENU - 1) % (NUM_SELECT_MENU));

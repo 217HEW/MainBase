@@ -35,6 +35,8 @@
 #include "explosion.h"
 #include "life.h"
 #include "timer.h"
+#include "Texture.h"
+#include "polygon.h"
 //#include "SceneManager.h"
 
 
@@ -43,6 +45,7 @@
 // マクロ定義
 //**************************************************************
 #define MODEL_ENEMY			"data/model/Range/Range.fbx"	// "data/model/helicopter000.fbx"
+#define RETICLE_TEXTURE		L"data/texture/reticle000.png"
 
 #define MAX_ENEMYRANGE			(10)		// 敵機最大数
 
@@ -56,7 +59,7 @@
 //**************************************************************
 static CAssimpModel	g_model;			// モデル
 static TEnemyRange	g_ERange[MAX_ENEMYRANGE];	// 敵機情報
-
+static ID3D11ShaderResourceView* g_pTexture;
 
 //**************************************************************
 // 初期化処理
@@ -67,6 +70,13 @@ HRESULT InitEnemyRange(void)
 	ID3D11Device* pDevice = GetDevice();
 	ID3D11DeviceContext* pDeviceContext = GetDeviceContext();
 
+
+	// テクスチャ読込
+	hr = CreateTextureFromFile(pDevice, RETICLE_TEXTURE, &g_pTexture);
+	if (FAILED(hr))
+	{
+		return hr;
+	}
 
 	// モデルデータの読み込み
 	g_model.SetDif(XMFLOAT4(0.2f,5.0f,0.2f,1.0f));
@@ -85,6 +95,7 @@ HRESULT InitEnemyRange(void)
 		g_ERange[i].m_use = false;
 		// g_ERange[i].m_Time = ENEMY_TIMER * 60 + 59;
 		g_ERange[i].m_Time = (ENEMY_TIMER + rand() % 3) * 60 + 59;	// 3～6秒のランダムで
+		g_ERange[i].ReticleSize = g_ERange[i].m_Time / 3;
 	}
 
 	return hr;
@@ -97,6 +108,9 @@ void UninitEnemyRange(void)
 {
 	// モデルの解放
 	g_model.Release();
+
+	// テクスチャ解放
+	SAFE_RELEASE(g_pTexture);
 }
 
 //**************************************************************
@@ -105,6 +119,7 @@ void UninitEnemyRange(void)
 void UpdateEnemyRange(void)
 {
 	XMMATRIX mtxWorld, mtxRot, mtxTranslate;
+	ID3D11DeviceContext* pDC = GetDeviceContext();
 
 	//プレイヤーの座標・サイズ取得
 	XMFLOAT3 posPlayer = GetPlayerPos();
@@ -125,6 +140,7 @@ void UpdateEnemyRange(void)
 			if (g_ERange[i].m_Time > 0)
 			{
 				--g_ERange[i].m_Time;
+				g_ERange[i].ReticleSize -= 0.25f;
 				if (g_ERange[i].m_Time == 0)
 				{
 					if (GetPlayerJump())
@@ -137,7 +153,7 @@ void UpdateEnemyRange(void)
 						continue;
 					}
 					g_ERange[i].m_Time += (ENEMY_TIMER + rand() % 3) * 60 + 59;	// もう一度3～6秒数える
-					
+					g_ERange[i].ReticleSize = g_ERange[i].m_Time / 3;
 				}
 			}
 			/*else
@@ -179,6 +195,7 @@ void DrawEnemyRange(void)
 
 	// 不透明部分を描画
 	for (int i = 0; i < MAX_ENEMYRANGE; ++i) {
+
 		// 使ってないならスキップ
 		if (!g_ERange[i].m_use)
 		{
@@ -189,9 +206,21 @@ void DrawEnemyRange(void)
 
 	// 半透明部分を描画
 	for (int i = 0; i < MAX_ENEMYRANGE; ++i) {
+
+		if (!g_ERange[i].m_use)
+		{
+			continue;
+		}
 		SetBlendState(BS_ALPHABLEND);	// アルファブレンド有効
 		SetZWrite(false);				// Zバッファ更新しない
 		g_model.Draw(pDC, g_ERange[i].m_mtxWorld, eTransparentOnly);
+		SetPolygonColor(1.0f, 1.0f, 1.0f);
+
+		SetPolygonSize(g_ERange[i].ReticleSize * 2, g_ERange[i].ReticleSize * 2);
+		//SetPolygonPos(posPlayer.x, posPlayer.y);
+		SetPolygonPos(0, -70);
+		SetPolygonTexture(g_pTexture);
+		DrawPolygon(pDC);
 		SetZWrite(true);				// Zバッファ更新する
 		SetBlendState(BS_NONE);			// アルファブレンド無効
 	}
