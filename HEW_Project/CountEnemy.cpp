@@ -28,6 +28,7 @@
 #include "Sound.h"
 #include "SceneGameclear.h"
 #include "SceneManager.h"
+#include "Fade.h"
 //**************************************************************
 // É}ÉNÉçíËã`
 //**************************************************************
@@ -148,7 +149,7 @@ void DelCountEnemy(int nCount)
 	if (g_nCountEnemy == 0)
 	{
 		GameclearFlag();
-		SetScene(SCENE_GAMECLEAR);
+		StartFadeOut(SCENE_GAMECLEAR);
 	}
 }
 //**************************************************************
