@@ -27,7 +27,7 @@ HRESULT InitCountEnemy(); // 初期化
 void UninitCountEnemy(); // 終了処理
 void UpdateCountEnemy(); // 更新
 void DrawCountEnemy(); // 描画
-
-void AddCountEnemy(int nSec = 30);// 切替_使ってない
+void AddCountEnemy(int nCount = 1);
+void DelCountEnemy(int nCount = 1);
 int GetCountEnemy();
 #endif // !__COUNTENEMY_H__

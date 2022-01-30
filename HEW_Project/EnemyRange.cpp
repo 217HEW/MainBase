@@ -39,6 +39,7 @@
 #include "polygon.h"
 #include "Reticle.h"
 #include "Sound.h"
+#include "CountEnemy.h"
 //#include "SceneManager.h"
 
 
@@ -203,6 +204,16 @@ void UpdateEnemyRange(void)
 			{
 				continue;
 			}
+			if (CollisionSphere(g_ERange[i].m_pos, g_ERange[i].m_size.x, posPlayer, sizePlayer))
+			{
+				//DelLife();
+				//if (GetLife() == 0)
+				//{
+				//	SetScene(SCENE_GAMEOVER);
+				//}
+				DelCountEnemy();
+				g_ERange[i].m_use = false;
+			}
 			//常にプレイヤーの方向を向く
 			/*g_ERange[i].m_rotDest = posPlayer;
 			g_ERange[i].m_rot = g_ERange[i].m_rotDest;
@@ -267,6 +278,16 @@ void UpdateEnemyRange(void)
 		{
 			continue;
 		}
+		if (CollisionSphere(g_ERange1[i].m_pos, g_ERange1[i].m_size.x, posPlayer, sizePlayer))
+		{
+			//DelLife();
+			//if (GetLife() == 0)
+			//{
+			//	SetScene(SCENE_GAMEOVER);
+			//}
+			DelCountEnemy();
+			g_ERange1[i].m_use = false;
+		}
 		//常にプレイヤーの方向を向く
 		/*g_ERange1[i].m_rotDest = posPlayer;
 		g_ERange1[i].m_rot = g_ERange1[i].m_rotDest;
@@ -327,6 +348,16 @@ void UpdateEnemyRange(void)
 		if (!g_ERange2[i].m_use)
 		{
 			continue;
+		}
+		if (CollisionSphere(g_ERange2[i].m_pos, g_ERange2[i].m_size.x, posPlayer, sizePlayer))
+		{
+			//DelLife();
+			//if (GetLife() == 0)
+			//{
+			//	SetScene(SCENE_GAMEOVER);
+			//}
+			DelCountEnemy();
+			g_ERange2[i].m_use = false;
 		}
 		//常にプレイヤーの方向を向く
 		/*g_ERange2[i].m_rotDest = posPlayer;

@@ -69,7 +69,7 @@
 #include "EnemyMelee.h"
 #include "EnemyRange.h"
 #include "player.h"
-
+#include "CountEnemy.h"
 //**************************************************************
 // 列挙体宣言
 //**************************************************************
@@ -867,7 +867,7 @@ HRESULT InitCField(AREA Area)
 			//	近接敵
 			case e: {
 				//マップチップ"e"の場所に描画するもの
-
+				AddCountEnemy();
 				//	近接敵
 				SetEnemyMelee(XMFLOAT3(g_MapPosOrizin.x + (Width * BlockSize.x),
 					g_MapPosOrizin.y - (Height * BlockSize.y) * 2,
@@ -875,7 +875,7 @@ HRESULT InitCField(AREA Area)
 				break; }
 			case m: {
 				//マップチップ"e"の場所に描画するもの
-
+				AddCountEnemy();
 				//	近接敵
 				SetEnemyMelee(XMFLOAT3(g_MapPosOrizin.x + (Width * BlockSize.x),
 					g_MapPosOrizin.y - (Height * BlockSize.y) * 2,
@@ -883,7 +883,7 @@ HRESULT InitCField(AREA Area)
 				break; }
 			case r: {
 				//マップチップ"r"の場所に描画するもの
-
+				AddCountEnemy();
 				// 遠距離敵にする
 				SetEnemyRange(XMFLOAT3(g_MapPosOrizin.x + (Width * BlockSize.x),
 					g_MapPosOrizin.y - (Height * BlockSize.y) * 2,
@@ -900,6 +900,7 @@ HRESULT InitCField(AREA Area)
 			//遠距離敵
 			//case f: {
 			//	//マップチップ"f"の場所に描画するもの
+					AddCountEnemy();
 
 			//	//遠距離敵
 			//	SetEnemyRange(XMFLOAT3(g_MapPosOrizin.x + (Width * BlockSize.x),
@@ -908,6 +909,7 @@ HRESULT InitCField(AREA Area)
 			//	break; }
 			//case h: {
 			//	//マップチップ"h"の場所に描画するもの
+					AddCountEnemy();
 
 			//	//遠距離敵
 			//	SetEnemyRange(XMFLOAT3(g_MapPosOrizin.x + (Width * BlockSize.x),
@@ -916,6 +918,7 @@ HRESULT InitCField(AREA Area)
 			//	break; }
 			//case i: {
 			//	//マップチップ"i"の場所に描画するもの
+					AddCountEnemy();
 
 			//	//遠距離敵
 			//	SetEnemyRange(XMFLOAT3(g_MapPosOrizin.x + (Width * BlockSize.x),
@@ -984,7 +987,6 @@ void UpdateCField(void)
 	UpdateEnemyMelee();
 
 	UpdateEnemyRange();
-	
 }
 
 //=============================================================================

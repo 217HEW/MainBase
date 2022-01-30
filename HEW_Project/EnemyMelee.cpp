@@ -30,7 +30,7 @@
 #include "life.h"
 #include "SceneManager.h"
 #include "PlayEffect.h"
-
+#include "CountEnemy.h"
 //**************************************************************
 // É}ÉNÉçíËã`
 //**************************************************************
@@ -312,6 +312,7 @@ void UpdateEnemyMelee(void)
 				//{
 				//	SetScene(SCENE_GAMEOVER);
 				//}
+				DelCountEnemy();
 				g_EMelee[i].m_use = false;
 			}
 
@@ -476,7 +477,8 @@ void UpdateEnemyMelee(void)
 				}
 			if (CollisionSphere(g_EMelee1[i].m_pos, g_EMelee1[i].m_size.x, posPlayer, sizePlayer))
 			{
-				DelLife();
+				//DelLife();
+				DelCountEnemy();
 				//if (GetLife() == 0)
 				//{
 				//	SetScene(SCENE_GAMEOVER);
@@ -654,6 +656,7 @@ void UpdateEnemyMelee(void)
 				//{
 				//	SetScene(SCENE_GAMEOVER);
 				//}
+				DelCountEnemy();
 				g_EMelee2[i].m_use = false;
 			}
 

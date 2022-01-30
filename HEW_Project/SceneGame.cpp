@@ -94,6 +94,7 @@
 #include "Pause.h"
 #include "PlayEffect.h"
 #include "StageSelect.h"
+#include "CountEnemy.h"
 
 //**************************************************************
 // マクロ定義
@@ -140,6 +141,13 @@ HRESULT InitGame(AREA Area)
 	if (FAILED(hr))
 	{
 		MessageBox(GetMainWnd(), _T("タイマー表示初期化失敗"), NULL, MB_OK | MB_ICONSTOP);
+		return hr;
+	}
+	// カウントエネミー表示初期化
+	hr = InitCountEnemy();
+	if (FAILED(hr))
+	{
+		MessageBox(GetMainWnd(), _T("カウントエネミー表示初期化失敗"), NULL, MB_OK | MB_ICONSTOP);
 		return hr;
 	}
 
@@ -348,6 +356,9 @@ void UninitGame()
 	//タイマー終了
 	UninitTimer();
 
+	//カウントエネミー終了
+	UninitCountEnemy();
+
 	// メッシュ終了
 	UninitMesh();
 }
@@ -443,6 +454,10 @@ void UpdateGame()
 		// タイマー更新
 		if (!GetPlayerInv())
 		UpdateTimer();
+
+		// タイマー更新
+		if (!GetPlayerInv())
+			UpdateCountEnemy();
 
 		// 丸影更新
 		//UpdateShadow();
@@ -614,6 +629,8 @@ void DrawGame()
 
 	// タイマー表示
 	DrawTimer();
+
+	DrawCountEnemy();
 
 	// ライフ表示(完了)
 	//DrawLife();
