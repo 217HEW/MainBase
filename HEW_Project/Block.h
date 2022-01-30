@@ -34,11 +34,12 @@
 //**************************************************************
 enum MODEL
 {
-	MODEL_NONE = 0,
-	MODEL_BLOCK,	// 通常ブロック
-	MODEL_CRACKS,		// ひび割れブロック
+	BLOCK_NORMAL,		// 通常ブロック
+	BLOCK_CRACKS,		// ひび割れブロック
+	BLOCK_INVINCIBLE,	// 無敵ブロック
 
-	MAX_MODEL			// 使うモデルの最大数
+
+	MAX_BLOCK_TYPE		// 使うモデルの最大数
 };
 
 //**************************************************************
@@ -49,7 +50,7 @@ struct TBLOCK {
 	XMFLOAT3    m_size;		// 現在のサイズ
 	XMFLOAT3    m_Halfsize;		// ハーフサイズ
 	XMFLOAT4X4	m_mtxWorld;	// ワールドマトリックス
-	std::string	m_3Dmodel;	// モデル情報
+	//std::string	m_3Dmodel;	// モデル情報
 	int			m_nLife;	// 壁の耐久値
 	bool		m_use;		// 使用しているか
 	//bool		cracks;		// 使用しているか

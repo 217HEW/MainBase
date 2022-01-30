@@ -16,10 +16,32 @@
 //	2022/01/03	プレイヤーのサイズを取得する関数の作成
 //	編集者：柴山凜太郎
 //--------------------------------------------------------------
+//	2022/01/29	プレイヤーの方向指定をする列挙体を作成
+//	編集者：柴山凜太郎
+//--------------------------------------------------------------
 //**************************************************************
 #pragma once
 
+//*****************************************************************************
+// インクルード部
+//*****************************************************************************
 #include "main.h"
+
+//*****************************************************************************
+// 列挙体宣言
+//*****************************************************************************
+
+// プレイヤーがブロックに当たっている方向
+enum PlayerDir
+{
+	DIR_NONE,	// 壁に触れていない
+	DIR_RIGHT,	// 右
+	DIR_LEFT,	// 左
+	DIR_UP,		// 上
+	DIR_DOWN,	// 下
+
+	MAX_DIR		// 最大方向数
+};
 
 //*****************************************************************************
 // プロトタイプ宣言
@@ -29,12 +51,19 @@ void UninitPlayer(void);	// 終了
 void UpdatePlayer(void);	// 更新
 void DrawPlayer(void);		// 描画
 
-XMFLOAT3& GetPlayerPos();	// プレイヤー位置情報取得
-XMFLOAT3& GetPlayerSize();	// プレイヤー位置情報取得
-float GetPlayerRadSize();		// プライヤーサイズ情報取得
-bool GetPlayerJump();		// 飛んでいるかのboolを取得する	true:飛んでいない
-void SetPlayerJump(bool jump);	// 飛んでいるかのboolをセットする	
-void SetPlayerDir(int dir);		// プレイヤーの向いてる方向をセット
-void SetPlayer(XMFLOAT3 pos);	// プレイヤーを設置するための関数
-
+// プレイヤー位置情報取得
+XMFLOAT3& GetPlayerPos();
+// プレイヤーサイズ情報取得
+XMFLOAT3& GetPlayerSize();
+// プレイヤー当たり判定用サイズ情報取得
+float GetPlayerRadSize();
+// 飛んでいるかのboolを取得する	true:飛んでいない
+bool GetPlayerJump();
+// 飛んでいるかのboolをセットする	
+void SetPlayerJump(bool jump);
+// プレイヤーの向いてる方向をセット
+void SetPlayerDir(PlayerDir dir);
+// プレイヤーを設置するための関数
+void SetPlayer(XMFLOAT3 pos);
+// プレイヤーとの当たり判定取得
 bool CollisionPlayer(XMFLOAT3 pos, float radius, float damage);
