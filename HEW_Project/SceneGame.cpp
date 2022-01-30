@@ -54,6 +54,10 @@
 //				いらない終了処理(MeshuField,MeshWall,Bullet,Smoke)をコメントアウト＆削除しました
 //				UpdateBGの呼び出す順番を変更しました
 //														変更者：柴山凜太郎
+//--------------------------------------------------------------
+//	2022/01/30	ポーズ中にリトライを押すと変なエリアに飛ぶ
+//				不具合をなくしました
+//														変更者：上月大地
 //**************************************************************
 
 //**************************************************************
@@ -88,6 +92,7 @@
 #include "EnemyRange.h"
 #include "Pause.h"
 #include "PlayEffect.h"
+#include "StageSelect.h"
 
 //**************************************************************
 // マクロ定義
@@ -98,9 +103,11 @@
 //**************************************************************
 // グローバル変数
 //**************************************************************
-//TPolyline					g_polyline[MAX_POLYLINE];	// ポリライン情報
+//TPolyline			g_polyline[MAX_POLYLINE];	// ポリライン情報
 
-bool g_bPause;				//一時停止中
+bool g_bPause;		// 一時停止中
+int	 g_nNowScene;	// 現在のシーン		
+
 Effect g_GameEffect;			// エフェクト変数
 static int g_EffectTimer = 0;	// エフェクト制御用タイマー
 //**************************************************************
@@ -267,6 +274,9 @@ HRESULT InitGame(AREA Area)
 	// 	AddPolylinePoint(&g_polyline[i], pos);
 	// }
 
+	// シーン番号取得
+	g_nNowScene = GetScene();
+
 	// BGM再生開始
 	// エリア毎にBGMを変えたい時はここをswitch文で切り替えるようにする
 	CSound::SetPlayVol(BGM_GAME000, 0.1f); // ゲーム本編BGM
@@ -372,10 +382,10 @@ void UpdateGame()
 			{
 				StartFadeOut(SCENE_AREA3);
 			}
-			else if (GetKeyRelease(VK_5))
-			{
-				StartFadeOut(SCENE_AREA_DEBUG);
-			}
+		// 	else if (GetKeyRelease(VK_5))
+		// 	{
+		// 		StartFadeOut(SCENE_AREA_DEBUG);
+		// 	}
 			else if (GetKeyRelease(VK_6))
 			{
 				StartFadeOut(SCENE_GAMEOVER);
@@ -511,7 +521,7 @@ void UpdateGame()
 				//CSound::Resume();
 				break;
 			case PAUSE_MENU_RETRY:		// リトライ
-				StartFadeOut(SCENE_GAME);
+				StartFadeOut(g_nNowScene);
 				CSound::SetPlayVol(SE_SELECT, 0.1f); // セレクト
 				break;
 			case PAUSE_MENU_QUIT:		// ゲームを辞める

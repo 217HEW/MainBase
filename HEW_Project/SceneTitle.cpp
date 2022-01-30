@@ -241,7 +241,7 @@ void UpdateTitle()
 			// Œˆ’è‰¹
 				// Œˆ’è‰¹
 			CSound::SetPlayVol(SE_DECISION, 1.0f);
-			StartFadeOut(SCENE_AREA_DEBUG);
+			//StartFadeOut(SCENE_AREA_DEBUG);
 		}
 	}
 }

@@ -44,12 +44,12 @@ enum EScene
 	SCENE_AREA9,		// ゲーム画面エリア9
 	SCENE_AREA10,		// ゲーム画面エリア10
 
-	SCENE_AREA_DEBUG,	// ゲーム画面デバッグエリア
+	//SCENE_AREA_DEBUG,	// ゲーム画面デバッグエリア
 	
 // ↓シーン追加↓
+	SCENE_SELECT,		// セレクト画面
 	SCENE_GAMEOVER,		// ゲームオーバー画面
 	SCENE_GAMECLEAR,	//ゲームクリア画面
-	SCENE_SELECT,		// セレクト画面
 	MAX_SCENE			// シーン総数
 };
 
@@ -61,7 +61,7 @@ void UninitScene();		// 終了処理
 void UpdateScene();		// 更新
 void DrawScene();		// 描画
 
-HRESULT SetScene(EScene eScene); // 切替処理
-HRESULT GetScene(); // シーン情報取得
+HRESULT SetScene(int eScene); // 切替処理
+int GetScene(); // シーン情報取得
 
 
