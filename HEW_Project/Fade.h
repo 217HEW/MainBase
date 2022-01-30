@@ -64,6 +64,6 @@ void UninitFade();	// 終了処理
 void UpdateFade();	// 更新
 void DrawFade();	// 描画
 
-void StartFadeOut(EScene eNext);// フェードアウト開始
+void StartFadeOut(int eNext);// フェードアウト開始
 E_FADE_STATE GetFadeState();	//フェード状態取得
 

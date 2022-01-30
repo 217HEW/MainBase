@@ -37,6 +37,8 @@
 //				もしかしたらもっと短くなるかもです
 //	編集者：上月大地
 //--------------------------------------------------------------
+//	2022/01/30	シーン用の引数をintに変更しました
+//	編集者：上月大地
 //**************************************************************
 
 //**************************************************************
@@ -55,7 +57,7 @@
 //**************************************************************
 // グローバル宣言
 //**************************************************************
-static EScene g_eScene;	// シーン設定用変数
+static int g_eScene;	// シーン設定用変数
 
 //**************************************************************
 // 初期化処理
@@ -120,9 +122,9 @@ void UpdateScene()
 	case SCENE_AREA10: // ゲーム画面エリア10
 		UpdateGame();
 		break;
-	case SCENE_AREA_DEBUG:		// ゲーム画面
-		UpdateGame();
-		break;
+	// case SCENE_AREA_DEBUG:		// ゲーム画面
+	// 	UpdateGame();
+	// 	break;
 	// 何かシーンを追加する場合はこちらに
 	case SCENE_GAMEOVER:
 		UpdateGameover();
@@ -179,9 +181,9 @@ void DrawScene()
 	case SCENE_AREA10: // ゲーム画面エリア10
 		DrawGame();
 		break;
-	case SCENE_AREA_DEBUG:		// ゲーム画面
-		DrawGame();
-		break;
+	// case SCENE_AREA_DEBUG:		// ゲーム画面
+	// 	DrawGame();
+	// 	break;
 	// 追加シーンの描画
 	case SCENE_GAMEOVER:
 		DrawGameover();
@@ -209,7 +211,7 @@ void DrawScene()
 //			:エラーかどうか
 //
 //*******************************
-HRESULT SetScene(EScene eScene)
+HRESULT SetScene(int eScene)
 {
 	HRESULT hr = S_OK;
 	// 現在の画面を終了
@@ -248,9 +250,9 @@ HRESULT SetScene(EScene eScene)
 	case SCENE_AREA10: // ゲーム画面エリア10
 		UninitGame();
 		break;
-	case SCENE_AREA_DEBUG: // ゲーム画面
-		UninitGame();
-		break;
+	//case SCENE_AREA_DEBUG: // ゲーム画面
+		//UninitGame();
+		//break;
 	case SCENE_GAMEOVER: // ゲームオーバー画面
 		UninitGameover();
 		break;
@@ -301,8 +303,8 @@ HRESULT SetScene(EScene eScene)
 	case SCENE_AREA10: // ゲーム画面エリア10
 		InitGame(AREA_10);
 		break;
-	case SCENE_AREA_DEBUG: // ゲーム画面エリア3
-		InitGame(AREA_DEBUG);
+	// case SCENE_AREA_DEBUG: // ゲーム画面エリア3
+		//InitGame(AREA_DEBUG);
 		break;
 	case SCENE_GAMEOVER: // ゲームオーバー画面
 		InitGameover();
@@ -315,4 +317,10 @@ HRESULT SetScene(EScene eScene)
 		break;
 	}
 	return hr;
+}
+
+// 現在のシーン取得
+int GetScene()
+{
+	return g_eScene;
 }

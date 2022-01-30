@@ -64,7 +64,7 @@ static LPCWSTR g_pszTexFName[FADE_TEX_MAX] = {
 
 static ID3D11ShaderResourceView* g_pTexture[FADE_TEX_MAX];
 static E_FADE_STATE g_eState;	// フェード状態
-static EScene g_eNext;			// 次のシーン
+static int g_eNext;			// 次のシーン
 
 //**************************************************************
 // 初期化処理
@@ -212,7 +212,7 @@ void DrawFade()
 //		無し
 //
 //*******************************
-void StartFadeOut(EScene eNext)
+void StartFadeOut(int eNext)
 {
 	// フェードアウトしていなければ処理
 	if (g_eState != FADE_OUT)

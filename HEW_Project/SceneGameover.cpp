@@ -113,10 +113,10 @@ void UpdateGameover()
 		{
 			StartFadeOut(SCENE_AREA3);
 		}
-		else if (GetKeyRelease(VK_5))
-		{
-			StartFadeOut(SCENE_AREA_DEBUG);
-		}
+		//else if (GetKeyRelease(VK_5))
+		//{
+		//	StartFadeOut(SCENE_AREA_DEBUG);
+		//}
 		else if (GetKeyRelease(VK_6))
 		{
 			StartFadeOut(SCENE_GAMEOVER);

@@ -26,7 +26,7 @@
 
 enum AREA
 {
-	AREA_DEBUG = 0,	// デバッグエリア
+	//AREA_DEBUG = 0,	// デバッグエリア
 
 	AREA_1,			// エリア１
 	AREA_2,			// エリア２
