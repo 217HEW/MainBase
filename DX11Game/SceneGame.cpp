@@ -188,6 +188,11 @@ HRESULT InitGame(AREA Area)
 	if (FAILED(hr))
 		return hr;
 
+	// レンジ初期化
+	hr = InitEnemyRange();
+	if (FAILED(hr))
+		return hr;
+
 	//二次元配列マップ
 	hr = InitCField(Area);
 	if (FAILED(hr))
@@ -201,10 +206,6 @@ HRESULT InitGame(AREA Area)
 	// エクスプロード呼び出し
 	// SetEnemyExplode(XMFLOAT3(60.0f, -790.0f, 0.0f));
 
-	// レンジ初期化
-	hr = InitEnemyRange();
-	if (FAILED(hr))
-		return hr;
 
 	// レンジ呼び出し
 	//SetEnemyRange(XMFLOAT3(40.0f, -500.0f, 0.0f));

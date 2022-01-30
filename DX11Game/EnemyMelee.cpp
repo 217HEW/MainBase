@@ -34,7 +34,7 @@
 //**************************************************************
 // マクロ定義
 //**************************************************************
-#define MODEL_ENEMY			"data/model/Melee/Melee.fbx"
+#define MODEL_ENEMY			"data/model/Melee/Melee.fbx"//
 #define	VALUE_MOVE_ENEMY		(1.0f)		// 移動速度
 #define	VALUE_SCALE_ENEMY		4.0f, 8.0f, 4.0f
 #define MAX_ENEMYMELEE			(10)		// 敵機最大数
@@ -43,10 +43,10 @@
 #define	RATE_ROTATE_ENEMY		(0.20f)		// 回転慣性係数
 
 #define SEARCH_ENEMY			(250)		// 探索範囲
-#define COLLAR_ENEMY		(XMFLOAT4(1.0f, 0.5f, 0.0f,1.0f))	// プレイヤーカラー(仮)ここをいじるとカラーが変わります
+#define COLLAR_ENEMY		(XMFLOAT4(1.0f, 0.5f, 0.0f,1.0f))	//橙 プレイヤーカラー(仮)ここをいじるとカラーが変わります
 
 ////////////////////////////////////////////////////////////////
-#define MODEL_ENEMY1			"data/model/Melee/Melee.fbx"
+#define MODEL_ENEMY1			"data/model/Melee/Melee.fbx"//
 #define	VALUE_MOVE_ENEMY1		(1.0f)		// 移動速度
 #define	VALUE_SCALE_ENEMY1		4.0f, 8.0f, 4.0f
 #define MAX_ENEMYMELEE1			(10)		// 敵機最大数
@@ -55,7 +55,7 @@
 #define	RATE_ROTATE_ENEMY1		(0.20f)		// 回転慣性係数
 
 #define SEARCH_ENEMY1			(250)		// 探索範囲
-#define COLLAR_ENEMY1		(XMFLOAT4(100.0f, 100.0f, 100.0f,1.0f))	// プレイヤーカラー(仮)ここをいじるとカラーが変わります
+#define COLLAR_ENEMY1		(XMFLOAT4(10.0f, 10.0f, 10.0f,1.0f))	//白 プレイヤーカラー(仮)ここをいじるとカラーが変わります
 
 ////////////////////////////////////////////////////////////////
 #define MODEL_ENEMY2			"data/model/Melee/Melee.fbx"
@@ -67,7 +67,7 @@
 #define	RATE_ROTATE_ENEMY2		(0.20f)		// 回転慣性係数
 
 #define SEARCH_ENEMY2			(250)		// 探索範囲
-#define COLLAR_ENEMY2		(XMFLOAT4(1.0f, 0.0f, 1.0f,1.0f))	// プレイヤーカラー(仮)ここをいじるとカラーが変わります
+#define COLLAR_ENEMY2		(XMFLOAT4(1.0f, 1.0f, 0.0f,1.0f))	//黄色プレイヤーカラー(仮)ここをいじるとカラーが変わります
 
 
 #define DEFAULT_COLLAR		(XMFLOAT4(1.0f, 1.0f, 0.0f,1.0f))
@@ -109,7 +109,7 @@ HRESULT InitEnemyMelee(void)
 		MessageBoxA(GetMainWnd(), "モデルデータ読み込みエラー", "InitEnemy", MB_OK);
 		return E_FAIL;
 	}
-	g_model.SetDif(XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
+	g_model.SetDif(DEFAULT_COLLAR);
 	for (int i = 0; i < MAX_ENEMYMELEE; ++i)
 	{// 初期化したいモノがあればここに↓
 		g_EMelee[i].m_pos = (XMFLOAT3(0.0f, 0.0f, 0.0f));
@@ -121,13 +121,13 @@ HRESULT InitEnemyMelee(void)
 	}
 	////////////////////////////////////////////////////////////////////////////////
 	// モデルデータの読み込み
-	g_model.SetDif(COLLAR_ENEMY1); // モデルロード前にカラーを指定
+	g_model1.SetDif(COLLAR_ENEMY1); // モデルロード前にカラーを指定
 	if (!g_model1.Load(pDevice, pDeviceContext, MODEL_ENEMY1))
 	{
 		MessageBoxA(GetMainWnd(), "モデルデータ読み込みエラー", "InitEnemy", MB_OK);
 		return E_FAIL;
 	}
-	g_model.SetDif(XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
+	g_model1.SetDif(DEFAULT_COLLAR);
 	for (int i = 0; i < MAX_ENEMYMELEE1; ++i)
 	{// 初期化したいモノがあればここに↓
 		g_EMelee1[i].m_pos = (XMFLOAT3(0.0f, 0.0f, 0.0f));
@@ -139,13 +139,13 @@ HRESULT InitEnemyMelee(void)
 	}
 	////////////////////////////////////////////////////////////////////////////////
 	// モデルデータの読み込み
-	g_model.SetDif(COLLAR_ENEMY2); // モデルロード前にカラーを指定
+	g_model2.SetDif(COLLAR_ENEMY2); // モデルロード前にカラーを指定
 	if (!g_model2.Load(pDevice, pDeviceContext, MODEL_ENEMY2))
 	{
 		MessageBoxA(GetMainWnd(), "モデルデータ読み込みエラー", "InitEnemy", MB_OK);
 		return E_FAIL;
 	}
-	g_model.SetDif(XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
+	g_model2.SetDif(DEFAULT_COLLAR);
 	for (int i = 0; i < MAX_ENEMYMELEE2; ++i)
 	{// 初期化したいモノがあればここに↓
 		g_EMelee2[i].m_pos = (XMFLOAT3(0.0f, 0.0f, 0.0f));
@@ -762,7 +762,7 @@ void DrawEnemyMelee(void)
 //		:使用している敵の最大数
 //
 //****************************************************************
-int SetEnemyMelee(XMFLOAT3(pos), int(id))
+int SetEnemyMelee(XMFLOAT3 pos, int id)
 {
 	if (id == 0)
 	{

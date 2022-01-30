@@ -60,6 +60,7 @@
 #include "AssimpModel.h"
 #include "Block.h"
 #include "EnemyMelee.h"
+#include "EnemyRange.h"
 //**************************************************************
 // 列挙体宣言
 //**************************************************************
@@ -106,6 +107,9 @@ enum CBLOCK
 	e,				// 近接敵
 	m,
 	r,
+	f,				// 遠距離敵
+	h,
+	i,
 	MAX
 };
 
@@ -200,13 +204,13 @@ int g_Map[MAX_AREA][MAP_WIDTH][MAP_HEIGHT] =
 	 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,//
 	 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,//
 	 0,0,0,0,H,0,0,0,0,0,0,0,0,0,J,0,0,0,0,0,0,0,0,0,0,//
-	 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,//
+	 0,0,0,0,0,0,0,f,0,0,0,0,0,0,0,i,0,0,0,0,0,0,0,0,//
 	 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,//
 	 4,0,0,0,0,e,0,0,0,4,0,0,0,m,0,0,0,0,4,0,0,0,0,0,0,//
 	 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,//
 	 0,0,0,0,0,G,0,0,0,0,0,0,0,0,G,0,0,0,0,0,0,0,0,0,0,//
 	 0,0,0,0,0,0,0,0,0,0,0,0,0,r,0,0,0,0,0,0,0,0,0,0,0,//
-	 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,//
+	 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,h,0,0,0,0,0,0,0,0,0,//
 	 P,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,//
 	 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,//
 	 0,0,0,0,X,0,0,0,0,0,0,0,0,0,J,0,0,0,0,0,0,0,0,0,0,//
@@ -857,7 +861,7 @@ HRESULT InitCField(AREA Area)
 			case e: {
 				//マップチップ"e"の場所に描画するもの
 
-				// 通常ブロック
+				//	近接敵
 				SetEnemyMelee(XMFLOAT3(g_MapPosOrizin.x + (Width * BlockSize.x),
 					g_MapPosOrizin.y - (Height * BlockSize.y) * 2,
 					g_MapPosOrizin.z),0);
@@ -865,7 +869,7 @@ HRESULT InitCField(AREA Area)
 			case m: {
 				//マップチップ"e"の場所に描画するもの
 
-				// 通常ブロック
+				//	近接敵
 				SetEnemyMelee(XMFLOAT3(g_MapPosOrizin.x + (Width * BlockSize.x),
 					g_MapPosOrizin.y - (Height * BlockSize.y) * 2,
 					g_MapPosOrizin.z), 1);
@@ -873,8 +877,33 @@ HRESULT InitCField(AREA Area)
 			case r: {
 				//マップチップ"e"の場所に描画するもの
 
-				// 通常ブロック
+				//	近接敵
 				SetEnemyMelee(XMFLOAT3(g_MapPosOrizin.x + (Width * BlockSize.x),
+					g_MapPosOrizin.y - (Height * BlockSize.y) * 2,
+					g_MapPosOrizin.z), 2);
+				break; }
+			//遠距離敵
+			case f: {
+				//マップチップ"f"の場所に描画するもの
+
+				//遠距離敵
+				SetEnemyRange(XMFLOAT3(g_MapPosOrizin.x + (Width * BlockSize.x),
+					g_MapPosOrizin.y - (Height * BlockSize.y) * 2,
+					g_MapPosOrizin.z), 0);
+				break; }
+			case h: {
+				//マップチップ"h"の場所に描画するもの
+
+				//遠距離敵
+				SetEnemyRange(XMFLOAT3(g_MapPosOrizin.x + (Width * BlockSize.x),
+					g_MapPosOrizin.y - (Height * BlockSize.y) * 2,
+					g_MapPosOrizin.z), 1);
+				break; }
+			case i: {
+				//マップチップ"i"の場所に描画するもの
+
+				//遠距離敵
+				SetEnemyRange(XMFLOAT3(g_MapPosOrizin.x + (Width * BlockSize.x),
 					g_MapPosOrizin.y - (Height * BlockSize.y) * 2,
 					g_MapPosOrizin.z), 2);
 				break; }
@@ -912,6 +941,7 @@ void UninitCField(void)
 	UninitBlock();
 
 	UninitEnemyMelee();
+	UninitEnemyRange();
 }
 
 //=============================================================================
@@ -936,7 +966,7 @@ void UpdateCField(void)
 	UpdateBlock();
 
 	UpdateEnemyMelee();
-
+	UpdateEnemyRange();
 }
 
 //=============================================================================
@@ -952,6 +982,8 @@ void DrawCField(void)
 	DrawBlock();
 
 	DrawEnemyMelee();
+	DrawEnemyRange();
+
 }
 
 //=============================================================================

@@ -169,6 +169,7 @@
     <ClCompile Include="bullet.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="collision.cpp" />
+    <ClCompile Include="CountEnemy.cpp" />
     <ClCompile Include="CreateField.cpp" />
     <ClCompile Include="debugproc.cpp" />
     <ClCompile Include="effect.cpp" />
@@ -215,6 +216,7 @@
     <ClInclude Include="bullet.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="collision.h" />
+    <ClInclude Include="CountEnemy.h" />
     <ClInclude Include="CreateField.h" />
     <ClInclude Include="debugproc.h" />
     <ClInclude Include="effect.h" />
