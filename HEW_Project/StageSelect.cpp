@@ -238,6 +238,9 @@ void UpdateSelect(void)
 		if (GetKeyTrigger(VK_RETURN)||GetJoyTrigger(Joycon, JOYSTICKID1))
 		{
 			CSound::SetPlayVol(SE_DECISION, 0.7f);
+			g_bTime = false;
+			g_nTime = WAIT_TIME * WAIT_TIME;
+
 			//‘I‘ğ’†‚Ìƒƒjƒ…[€–Ú‚É‚æ‚è•ªŠò
 			switch (GetSelectMenu())
 			{
