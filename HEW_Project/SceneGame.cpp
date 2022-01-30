@@ -78,6 +78,7 @@
 #include "bullet.h"
 #include "explosion.h"
 #include "effect.h"
+#include "Reticle.h"
 #include "smoke.h"
 #include "meshwall.h"
 // #include "polyline.h"
@@ -180,6 +181,11 @@ HRESULT InitGame(AREA Area)
 	if (FAILED(hr))
 		return hr;
 
+	// レティクル初期化
+	hr = InitReticle();
+	if (FAILED(hr))
+		return hr;
+
 	// 煙初期化
 	hr = InitSmoke();
 	if (FAILED(hr))
@@ -195,6 +201,11 @@ HRESULT InitGame(AREA Area)
 	if (FAILED(hr))
 		return hr;
 
+	// レンジ初期化
+	hr = InitEnemyRange();
+	if (FAILED(hr))
+		return hr;
+
 	//二次元配列マップ
 	hr = InitCField(Area);
 	if (FAILED(hr))
@@ -207,14 +218,6 @@ HRESULT InitGame(AREA Area)
 
 	// エクスプロード呼び出し
 	// SetEnemyExplode(XMFLOAT3(60.0f, -790.0f, 0.0f));
-
-	// レンジ初期化
-	hr = InitEnemyRange();
-	if (FAILED(hr))
-		return hr;
-
-	// レンジ呼び出し
-	//SetEnemyRange(XMFLOAT3(40.0f, -500.0f, 0.0f));
 
 	// メッシュ壁初期化
 	hr = InitMeshWall();
@@ -297,24 +300,22 @@ void UninitGame()
 
 	// ポリライン終了処理
 	//UninitPolyline();
-
 	// 壁終了
 	//UninitMeshWall();
-
 	// レンジ終了
-	UninitEnemyRange();
-
+	//UninitEnemyRange();
 	// エネミーメレー終了
 	// UninitEnemyMelee();
-
 	// エネミーエクスプロード終了
 	// UninitEnemyExplode();
-
 	// ブロック終了
 	//UninitBlock();
 
 	// エフェクト終了
 	UninitEffect();
+
+	// レティクル終了
+	UninitReticle();
 
 	// 爆発終了
 	UninitExplosion();
@@ -409,10 +410,8 @@ void UpdateGame()
 
 		// デバッグ文字列表示更新
 		//UpdateDebugProc();
-
 		// デバッグ文字列設定
 		//StartDebugProc();
-
 		// ポリゴン表示更新
 		//UpdatePolygon();
 
@@ -424,16 +423,12 @@ void UpdateGame()
 
 		// エネミーメレー更新
 		// UpdateEnemyMelee();
-
 		// エネミーエクスプロード更新
 		// UpdateEnemyExplode();
-
 		// エネミーレンジ更新
-		UpdateEnemyRange();
-
+		//UpdateEnemyRange();
 		// 壁更新
 		//UpdateMeshWall();
-
 		// フィールド更新
 		//UpdateMeshField();
 
@@ -442,6 +437,7 @@ void UpdateGame()
 
 		//*12/17澤村瑠人追加
 		// タイマー更新
+		if (!GetPlayerInv())
 		UpdateTimer();
 
 		// 丸影更新
@@ -458,6 +454,7 @@ void UpdateGame()
 
 		// エフェクト更新
 		UpdateEffect();
+		UpdateReticle();
 
 		// エフェクト(for Effekseer)更新
 		if (g_EffectTimer == 0)
@@ -557,13 +554,13 @@ void DrawGame()
 	DrawPlayer();
 
 	// エネミーメレー
-	DrawEnemyMelee();
+	//DrawEnemyMelee();
+
+	// エネミーレンジ
+	//DrawEnemyRange();
 
 	// エネミーエクスプロード
 	// DrawEnemyExplode();
-
-	// エネミーレンジ
-	DrawEnemyRange();
 
 	// 丸影描画
 	//DrawShadow();
@@ -596,6 +593,8 @@ void DrawGame()
 
 	// エフェクト描画
 	DrawEffect();
+	DrawReticle();
+
 	SetZBuffer(true);
 	//一時停止描画
 	if (g_bPause) {
@@ -611,8 +610,9 @@ void DrawGame()
 
 	// タイマー表示
 	DrawTimer();
+
 	// ライフ表示(完了)
-	DrawLife();
+	//DrawLife();
 	//DrawDebugProc();
 	SetBlendState(BS_NONE);
 }

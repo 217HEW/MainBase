@@ -524,6 +524,8 @@ void UpdatePlayer(void)
 #ifdef _DEBUG
 	PrintDebugProc("StickX : %f\n", Stick.x);
 	PrintDebugProc("StickY : %f\n", Stick.y);
+	PrintDebugProc("PosX : %f\n", g_posModel.x);
+	PrintDebugProc("PosY : %f\n", g_posModel.y);
 	PrintDebugProc("Dir : %d\n", g_eDir);
 #endif // _DEBUG
 

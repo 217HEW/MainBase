@@ -67,7 +67,9 @@
 #include "AssimpModel.h"
 #include "Block.h"
 #include "EnemyMelee.h"
+#include "EnemyRange.h"
 #include "player.h"
+
 //**************************************************************
 // 列挙体宣言
 //**************************************************************
@@ -883,9 +885,9 @@ HRESULT InitCField(AREA Area)
 				//マップチップ"r"の場所に描画するもの
 
 				// 遠距離敵にする
-				SetEnemyMelee(XMFLOAT3(g_MapPosOrizin.x + (Width * BlockSize.x),
+				SetEnemyRange(XMFLOAT3(g_MapPosOrizin.x + (Width * BlockSize.x),
 					g_MapPosOrizin.y - (Height * BlockSize.y) * 2,
-					g_MapPosOrizin.z),0);
+					g_MapPosOrizin.z));
 				break; }
 			case p: {
 				//マップチップ"p"の場所に描画するもの
@@ -929,6 +931,8 @@ void UninitCField(void)
 	UninitBlock();
 
 	UninitEnemyMelee();
+
+	UninitEnemyRange();
 }
 
 //=============================================================================
@@ -954,6 +958,8 @@ void UpdateCField(void)
 
 	UpdateEnemyMelee();
 
+	UpdateEnemyRange();
+	
 }
 
 //=============================================================================
@@ -969,6 +975,8 @@ void DrawCField(void)
 	DrawBlock();
 
 	DrawEnemyMelee();
+
+	DrawEnemyRange();
 }
 
 //=============================================================================

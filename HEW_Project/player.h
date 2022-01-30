@@ -63,6 +63,8 @@ float GetPlayerRadSize();
 bool GetPlayerJump();
 // 飛んでいるかのboolをセットする	
 void SetPlayerJump(bool jump);
+// プレイヤー操作してるか
+bool GetPlayerInv();
 // プレイヤーの向いてる方向をセット
 void SetPlayerDir(PlayerDir dir);
 // プレイヤーを設置するための関数

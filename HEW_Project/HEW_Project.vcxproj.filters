@@ -153,6 +153,9 @@
     <ClCompile Include="Sound.cpp">
       <Filter>ソースファイル\System\Sound</Filter>
     </ClCompile>
+    <ClCompile Include="Reticle.cpp">
+      <Filter>ソースファイル\Effect</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -295,6 +298,9 @@
     </ClInclude>
     <ClInclude Include="meshwall.h">
       <Filter>ヘッダーファイル\System[.h]\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Reticle.h">
+      <Filter>ヘッダーファイル\Effect[.h]</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

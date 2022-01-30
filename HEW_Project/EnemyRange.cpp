@@ -37,6 +37,8 @@
 #include "timer.h"
 #include "Texture.h"
 #include "polygon.h"
+#include "Reticle.h"
+#include "Sound.h"
 //#include "SceneManager.h"
 
 
@@ -71,12 +73,12 @@ HRESULT InitEnemyRange(void)
 	ID3D11DeviceContext* pDeviceContext = GetDeviceContext();
 
 
-	// テクスチャ読込
-	hr = CreateTextureFromFile(pDevice, RETICLE_TEXTURE, &g_pTexture);
-	if (FAILED(hr))
-	{
-		return hr;
-	}
+	//// テクスチャ読込
+	//hr = CreateTextureFromFile(pDevice, RETICLE_TEXTURE, &g_pTexture);
+	//if (FAILED(hr))
+	//{
+	//	return hr;
+	//}
 
 	// モデルデータの読み込み
 	g_model.SetDif(XMFLOAT4(0.2f,5.0f,0.2f,1.0f));
@@ -118,7 +120,7 @@ void UninitEnemyRange(void)
 //**************************************************************
 void UpdateEnemyRange(void)
 {
-	XMMATRIX mtxWorld, mtxRot, mtxTranslate;
+	XMMATRIX mtxWorld, mtxRot, mtxTranslate, mtxSize;
 	ID3D11DeviceContext* pDC = GetDeviceContext();
 
 	//プレイヤーの座標・サイズ取得
@@ -137,29 +139,24 @@ void UpdateEnemyRange(void)
 				continue;
 			}
 			// タイマーカウントダウン
-			if (g_ERange[i].m_Time > 0)
+			if ((g_ERange[i].m_Time > 0) && (!GetPlayerInv()))
 			{
 				--g_ERange[i].m_Time;
 				g_ERange[i].ReticleSize -= 0.25f;
+				SetReticle(posPlayer, XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),
+					XMFLOAT2(g_ERange[i].ReticleSize, g_ERange[i].ReticleSize), 2);
 				if (g_ERange[i].m_Time == 0)
 				{
+					CSound::SetPlayVol(SE_LASER, 0.1f);
+					StartExplosion(posPlayer, XMFLOAT2(40.0f, 40.0f));
 					if (GetPlayerJump())
 					{
 						DelLife();
-						StartExplosion(posPlayer, XMFLOAT2(40.0f, 40.0f));
-					}
-					else
-					{
-						continue;
 					}
 					g_ERange[i].m_Time += (ENEMY_TIMER + rand() % 3) * 60 + 59;	// もう一度3～6秒数える
 					g_ERange[i].ReticleSize = g_ERange[i].m_Time / 3;
 				}
 			}
-			/*else
-			{
-				g_ERange[i].m_Time;
-			}*/
 
 			// ワールドマトリックスの初期化
 			mtxWorld = XMMatrixIdentity();
@@ -171,7 +168,8 @@ void UpdateEnemyRange(void)
 				XMConvertToRadians(g_ERange[i].m_rot.z));
 			mtxWorld = XMMatrixMultiply(mtxWorld, mtxRot);
 
-			mtxWorld = XMMatrixScaling(SCALE_E_RANGE.x, SCALE_E_RANGE.y, SCALE_E_RANGE.z);
+			mtxSize = XMMatrixScaling(SCALE_E_RANGE.x, SCALE_E_RANGE.y, SCALE_E_RANGE.z);
+			mtxWorld = XMMatrixMultiply(mtxWorld, mtxSize);
 			// 移動を反映
 			mtxTranslate = XMMatrixTranslation(
 				g_ERange[i].m_pos.x,
@@ -217,10 +215,6 @@ void DrawEnemyRange(void)
 		SetPolygonColor(1.0f, 1.0f, 1.0f);
 
 		SetPolygonSize(g_ERange[i].ReticleSize * 2, g_ERange[i].ReticleSize * 2);
-		//SetPolygonPos(posPlayer.x, posPlayer.y);
-		SetPolygonPos(0, -70);
-		SetPolygonTexture(g_pTexture);
-		DrawPolygon(pDC);
 		SetZWrite(true);				// Zバッファ更新する
 		SetBlendState(BS_NONE);			// アルファブレンド無効
 	}

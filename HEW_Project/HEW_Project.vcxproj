@@ -193,6 +193,7 @@
     <ClCompile Include="player.cpp" />
     <ClCompile Include="polygon.cpp" />
     <ClCompile Include="polyline.cpp" />
+    <ClCompile Include="Reticle.cpp" />
     <ClCompile Include="SceneArea2.cpp" />
     <ClCompile Include="SceneArea3.cpp" />
     <ClCompile Include="SceneGame.cpp" />
@@ -240,6 +241,7 @@
     <ClInclude Include="polygon.h" />
     <ClInclude Include="polyline.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="Reticle.h" />
     <ClInclude Include="SceneArea2.h" />
     <ClInclude Include="SceneArea3.h" />
     <ClInclude Include="SceneGame.h" />
