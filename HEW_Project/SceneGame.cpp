@@ -491,7 +491,7 @@ void UpdateGame()
 			g_bPause = !g_bPause;
 			if (g_bPause) {
 				//CSound::Pause();
-				CSound::SetVolume(BGM_GAME000, 0.06f);
+				CSound::SetVolume(BGM_GAME000, 0.03f);
 				CSound::SetPlayVol(SE_SELECT, 0.1f); // ÉZÉåÉNÉg
 
 				ResetPauseMenu();
