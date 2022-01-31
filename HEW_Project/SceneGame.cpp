@@ -568,7 +568,7 @@ void DrawGame()
 	//DrawSmoke();
 
 	// 壁描画 (不透明部分)
-	DrawMeshWall(DRAWPART_OPAQUE);
+	//DrawMeshWall(DRAWPART_OPAQUE);
 
 	// ブロック描画
 	//DrawBlock();
@@ -583,7 +583,7 @@ void DrawGame()
 	// }
 
 	// 壁描画 (半透明部分)
-	DrawMeshWall(DRAWPART_TRANSLUCENT);
+	//DrawMeshWall(DRAWPART_TRANSLUCENT);
 
 	SetZBuffer(false);
 
