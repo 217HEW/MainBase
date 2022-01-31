@@ -32,6 +32,7 @@
 #include "PlayEffect.h"
 #include "Sound.h"
 
+#include "CountEnemy.h"
 //**************************************************************
 // マクロ定義
 //**************************************************************
@@ -317,6 +318,7 @@ void UpdateEnemyMelee(void)
 				}
 				CSound::SetPlayVol(SE_ENEMYBREAK, 0.3f);
 				StartExplosion(g_EMelee[i].m_pos, XMFLOAT2(25.0f, 25.0f));
+				DelCountEnemy();
 				g_EMelee[i].m_use = false;
 			}
 
@@ -481,7 +483,8 @@ void UpdateEnemyMelee(void)
 				}
 			if (CollisionSphere(g_EMelee1[i].m_pos, g_EMelee1[i].m_size.x, posPlayer, sizePlayer))
 			{
-				DelLife();
+				//DelLife();
+				DelCountEnemy();
 				//if (GetLife() == 0)
 				//{
 				//	SetScene(SCENE_GAMEOVER);
@@ -659,6 +662,7 @@ void UpdateEnemyMelee(void)
 				//{
 				//	SetScene(SCENE_GAMEOVER);
 				//}
+				DelCountEnemy();
 				g_EMelee2[i].m_use = false;
 			}
 
@@ -763,7 +767,7 @@ void DrawEnemyMelee(void)
 //		:使用している敵の最大数
 //
 //****************************************************************
-int SetEnemyMelee(XMFLOAT3(pos), int(id))
+int SetEnemyMelee(XMFLOAT3 pos, int id)
 {
 	if (id == 0)
 	{

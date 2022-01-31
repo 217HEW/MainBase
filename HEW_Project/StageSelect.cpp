@@ -31,6 +31,7 @@
 #include "Sound.h"
 #include "debugproc.h"
 #include "input.h"
+#include "number.h"
 #include <xinput.h>		// コントローラー情報取得に必要
 
 #pragma comment (lib, "xinput.lib")	// コントローラー情報取得に必要
@@ -110,6 +111,7 @@ HRESULT InitSelect(void)
 {
 	ID3D11Device* pDevice = GetDevice();
 	HRESULT hr = S_OK;
+	InitNumber();
 
 	for (int nCntStageMenu = 0; nCntStageMenu < NUM_SELECT_MENU; ++nCntStageMenu) {
 		// テクスチャの読み込み
@@ -138,6 +140,7 @@ HRESULT InitSelect(void)
 void UninitSelect(void)
 {
 	CSound::Stop(BGM_SELECT);
+	UninitNumber();
 
 	// テクスチャの開放
 	for (int nCntStageMenu = 0; nCntStageMenu < NUM_SELECT_MENU; ++nCntStageMenu)
@@ -349,7 +352,17 @@ void DrawSelect(void)
 		// ポリゴンの描画
 		DrawPolygon(pDeviceContext);
 	}
+	SetPolygonColor(10.0f, 10.0f, 0.0f);
+	for (int i = 1; i < 6; i++)
+	{
+		DrawNumber(XMFLOAT2(-585 + (180 * i), 175), i, 2,50.0f,100.0f);
 
+	}
+	for (int i = 6; i < 11; i++)
+	{
+		DrawNumber(XMFLOAT2(-585 + (180 * (i-5)), -95), i, 2, 50.0f, 100.0f);
+
+	}
 	// タイトル
 	SetPolygonSize(SELECT_MENU_WIDTH / 2, SELECT_MENU_HEIGHT);
 	SetPolygonPos(-500.0f, 0.0f);

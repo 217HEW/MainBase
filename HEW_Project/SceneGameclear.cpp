@@ -45,6 +45,8 @@
 // グローバル変数
 //**************************************************************
 static ID3D11ShaderResourceView* g_pTexture;	// テクスチャ用変数
+
+int SceneClearFlag=0;//シーンクリアフラグ
 //**************************************************************
 // 初期化処理
 //**************************************************************
@@ -124,4 +126,41 @@ void DrawGameclear()
 	SetPolygonTexture(g_pTexture);
 	DrawPolygon(pDC);
 
+}
+void GameclearFlag()
+{
+	switch (GetScene())
+	{
+	case SCENE_GAME:  // ゲーム画面エリア1
+		SceneClearFlag = 1;
+		break;
+	case SCENE_AREA2: // ゲーム画面エリア2
+		SceneClearFlag = 2;
+		break;
+	case SCENE_AREA3: // ゲーム画面エリア3
+		SceneClearFlag = 3;
+		break;
+	case SCENE_AREA4: // ゲーム画面エリア4
+		SceneClearFlag = 4;
+		break;
+	case SCENE_AREA5: // ゲーム画面エリア5
+		SceneClearFlag = 5;
+		break;
+	case SCENE_AREA6: // ゲーム画面エリア6
+		SceneClearFlag = 6;
+		break;
+	case SCENE_AREA7: // ゲーム画面エリア7
+		SceneClearFlag = 7;
+		break;
+	case SCENE_AREA8: // ゲーム画面エリア8
+		SceneClearFlag = 8;
+		break;
+	case SCENE_AREA9: // ゲーム画面エリア9
+		SceneClearFlag = 9;
+		break;
+	case SCENE_AREA10: // ゲーム画面エリア10
+		SceneClearFlag = 10;
+		break;
+	}
+	StartFadeOut(SCENE_GAMECLEAR);
 }
