@@ -169,6 +169,7 @@
     <ClCompile Include="Boss.cpp" />
     <ClCompile Include="bullet.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="ClearPause.cpp" />
     <ClCompile Include="collision.cpp" />
     <ClCompile Include="CountEnemy.cpp" />
     <ClCompile Include="CreateField.cpp" />
@@ -217,6 +218,7 @@
     <ClInclude Include="Boss.h" />
     <ClInclude Include="bullet.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="ClearPause.h" />
     <ClInclude Include="collision.h" />
     <ClInclude Include="CountEnemy.h" />
     <ClInclude Include="CreateField.h" />
