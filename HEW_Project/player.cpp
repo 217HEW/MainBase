@@ -216,7 +216,7 @@ void UpdatePlayer(void)
 	// 体力が0ならゲームオーバーへ
 	if (GetLife() <= 0)
 	{
-		StartFadeOut(SCENE_GAMEOVER);
+		StartFadeOut(GetScene());
 	}
 
 	// 操作したら無敵を解除

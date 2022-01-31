@@ -312,7 +312,7 @@ void UpdateEnemyMelee(void)
 			}
 			if (CollisionSphere(g_EMelee[i].m_pos, g_EMelee[i].m_size.x, posPlayer, sizePlayer))
 			{
-				if (GetPlayerJump())
+				if (!GetPlayerJump())
 				{
 					DelLife();
 				}
