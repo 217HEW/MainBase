@@ -45,7 +45,7 @@
 #define	VALUE_ROTATE_ENEMY		(7.0f)		// 回転速度
 #define	RATE_ROTATE_ENEMY		(0.20f)		// 回転慣性係数
 
-#define SEARCH_ENEMY			(250)		// 探索範囲
+#define SEARCH_ENEMY			(200)		// 探索範囲
 #define COLLAR_ENEMY		(XMFLOAT4(1.0f, 0.5f, 0.0f,1.0f))	//橙 プレイヤーカラー(仮)ここをいじるとカラーが変わります
 
 ////////////////////////////////////////////////////////////////

@@ -26,6 +26,20 @@
 #include "Fade.h"
 #include "SceneManager.h"
 #include "StageSelect.h"
+#include <xinput.h>		// コントローラー情報取得に必要
+
+#pragma comment (lib, "xinput.lib")	// コントローラー情報取得に必要
+
+// コントローラ十字キー用
+typedef enum {
+	NOT = 0,	// 何も押してない
+	UP,			// 上
+	DOWN,		// 下
+	RIGHT,		// 右
+	LEFT,		// 左
+
+	CROSS_MAX
+} C_PCROSS;
 
 //*****************************************************************************
 // マクロ定義
@@ -40,6 +54,8 @@
 #define	PLATE_HEIGHT		(420.0f)	// プレートの幅
 #define	PLATE_POS_X			(0.0f)		// プレートの位置(X座標)
 #define	PLATE_POS_Y			(0.0f)		// プレートの位置(Y座標)
+
+#define WAIT_CPTIME			(15)			// 選択待機時間
 
 //説明用
 //#define PATH_STEXTURE "data/texture/pause003.png"//説明画像
@@ -56,6 +72,14 @@ static C_PAUSE_MENU g_nSelectMenu = C_PAUSE_MENU_NEXTSTAGE;		// 選択中のメニュー
 static float g_fCurve = 0.0f;
 static float g_fCol = 0.0f;
 //int scene = C_PAUSE_MENU_NEXTSTAGE;
+static DWORD	Joystate;	// 接続確認用
+static DWORD	Joycon;		// コントローラー情報
+
+bool g_bcPTime;	// 待機用
+int g_bcPJoySelect;	// コントローラ選択用
+
+// 待機タイマーカウントダウン
+int g_ncPTime;
 
 bool g_SetClearPause;
 
@@ -82,7 +106,8 @@ HRESULT InitC_Pause(void)
 			c_aFileNameC_PauseMenu[nCntC_PauseMenu],	// ファイルの名前
 			&g_pTextures[nCntC_PauseMenu]);			// 読み込むメモリー
 	}
-
+	g_bcPTime = false;
+	g_ncPTime = WAIT_CPTIME;
 	g_nSelectMenu = C_PAUSE_MENU_NEXTSTAGE;
 	g_fCurve = 0.0f;
 
@@ -120,26 +145,56 @@ void UninitC_Pause(void)
 //=============================================================================
 void UpdateC_Pause(void)
 {
-	
-		if (GetKeyRepeat(VK_W) || GetKeyRepeat(VK_UP)) 
+	//ゲームパッドの状態を取得
+	XINPUT_STATE state;
+
+	// コントローラー情報
+	GetJoyState(Joycon);
+
+	// 選択待機時間
+	if (g_ncPTime < 0)
+	{
+		g_bcPTime = true;
+	}
+	g_bcPJoySelect = NOT;	// コントローラ用選択初期化
+	// -------コントローラー操作------------------------------------------
+	GetJoyState(Joycon);
+	// コントローラーの接続状況確認
+	Joystate = XInputGetState(0, &state);
+
+	if (Joystate == ERROR_SUCCESS)
+	{	// 接続有り↓
+		if (GetJoyDpadUp(Joycon)) {		g_bcPJoySelect = UP; }
+		if (GetJoyDpadDown(Joycon)) {	g_bcPJoySelect = DOWN; }
+		if (GetJoyDpadRight(Joycon)) {	g_bcPJoySelect = RIGHT; }
+		if (GetJoyDpadLeft(Joycon)) {	g_bcPJoySelect = LEFT; }
+	}
+	else
+	{	// 接続無し↓
+		g_bcPJoySelect = NOT;
+	}
+
+	if (g_bcPTime == true) {
+		if (GetKeyRepeat(VK_W) || GetKeyRepeat(VK_UP) || (g_bcPJoySelect == UP))
 		{
 			CSound::SetPlayVol(SE_SELECT, 0.1f); // セレクト音
 
 			g_nSelectMenu = (C_PAUSE_MENU)((g_nSelectMenu + NUM_C_PAUSE_MENU - 1) % NUM_C_PAUSE_MENU);
 			SetC_PauseMenu();
+			g_bcPTime = false;
+			g_ncPTime = WAIT_CPTIME;
 		}
-		else if (GetKeyRepeat(VK_S) || GetKeyRepeat(VK_DOWN))
+		else if (GetKeyRepeat(VK_S) || GetKeyRepeat(VK_DOWN) || (g_bcPJoySelect == DOWN))
 		{
 			CSound::SetPlayVol(SE_SELECT, 0.1f); // セレクト音
 
 			g_nSelectMenu = (C_PAUSE_MENU)((g_nSelectMenu + 1) % NUM_C_PAUSE_MENU);
 			SetC_PauseMenu();
+			g_bcPTime = false;
+			g_ncPTime = WAIT_CPTIME;
 		}
-
-	
-
-
-	
+	}
+	--g_ncPTime;
 	// 反射光の設定
 	g_fCol = cosf(g_fCurve) * 0.2f + 0.8f;
 }
