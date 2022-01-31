@@ -46,12 +46,12 @@ typedef enum {
 //*****************************************************************************
 #define	NUM_C_PAUSE_MENU		(3)			// ポーズメニュー数
 #define	C_PAUSE_MENU_WIDTH	(320.0f)	// ポーズメニュー幅
-#define	C_PAUSE_MENU_HEIGHT	(100.0f)		// ポーズメニュー高さ
+#define	C_PAUSE_MENU_HEIGHT	(60.0f)		// ポーズメニュー高さ
 #define	C_PAUSE_MENU_POS_X	(0.0f)		// ポーズメニュー位置(X座標)
 #define	C_PAUSE_MENU_INTERVAL	(100.0f)	// ポーズメニュー間隔
 #define	C_PAUSE_MENU_POS_Y	(C_PAUSE_MENU_INTERVAL)	// ポーズメニュー位置(Y座標)
-#define	PLATE_WIDTH			(460.0f)	// プレートの幅
-#define	PLATE_HEIGHT		(420.0f)	// プレートの幅
+#define	PLATE_WIDTH			(360.0f)	// プレートの幅
+#define	PLATE_HEIGHT		(320.0f)	// プレートの幅
 #define	PLATE_POS_X			(0.0f)		// プレートの位置(X座標)
 #define	PLATE_POS_Y			(0.0f)		// プレートの位置(Y座標)
 
