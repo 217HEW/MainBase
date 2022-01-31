@@ -316,3 +316,8 @@ HRESULT SetScene(EScene eScene)
 	}
 	return hr;
 }
+
+EScene GetScene()
+{
+	return g_eScene;
+}

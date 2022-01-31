@@ -62,6 +62,6 @@ void UpdateScene();		// 更新
 void DrawScene();		// 描画
 
 HRESULT SetScene(EScene eScene); // 切替処理
-HRESULT GetScene(); // シーン情報取得
+EScene GetScene(); // シーン情報取得
 
 

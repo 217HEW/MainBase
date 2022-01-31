@@ -104,6 +104,7 @@
 
 bool g_bPause;				//一時停止中
 bool g_bC_Pause;				//一時停止中
+EScene g_Next;
 Effect g_GameEffect;			// エフェクト変数
 static int g_EffectTimer = 0;	// エフェクト制御用タイマー
 //**************************************************************
@@ -233,6 +234,9 @@ HRESULT InitGame(AREA Area)
 	g_bC_Pause = false;
 	if (FAILED(hr))
 		return hr;
+
+	//g_Next = GetScene();
+	//g_Next = g_Next + 1;
 	// SetMeshWall(XMFLOAT3(0.0f, 0.0f, 640.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), 16, 2, XMFLOAT2(40.0f, 40.0f));
 	// SetMeshWall(XMFLOAT3(-640.0f, 0.0f, 0.0f), XMFLOAT3(0.0f, -90.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), 16, 2, XMFLOAT2(80.0f, 80.0f));
 	// SetMeshWall(XMFLOAT3(640.0f, 0.0f, 0.0f), XMFLOAT3(0.0f, 90.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), 16, 2, XMFLOAT2(80.0f, 80.0f));
@@ -579,7 +583,7 @@ void UpdateGame()
 			switch (GetC_PauseMenu())
 			{
 			case C_PAUSE_MENU_NEXTSTAGE:	// ネクステージ
-				StartFadeOut(SCENE_SELECT);
+				//StartFadeOut();
 				//g_bC_Pause = false;
 				CSound::SetVolume(BGM_GAME000, 0.1f);
 				CSound::SetPlayVol(SE_CANCEL, 0.1f); // キャンセル

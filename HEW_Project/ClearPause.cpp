@@ -55,6 +55,7 @@ static ID3D11ShaderResourceView*	g_pTextures[3] = { nullptr };	// テクスチャへの
 static C_PAUSE_MENU g_nSelectMenu = C_PAUSE_MENU_NEXTSTAGE;		// 選択中のメニューNo.
 static float g_fCurve = 0.0f;
 static float g_fCol = 0.0f;
+//int scene = C_PAUSE_MENU_NEXTSTAGE;
 
 static LPCWSTR c_aFileNameC_PauseMenu[NUM_C_PAUSE_MENU] =
 {
@@ -133,7 +134,7 @@ void UpdateC_Pause(void)
 	//{
 	//	if (C_PAUSE_MENU_NEXTSTAGE)
 	//	{
-	//		GetSelectMenu() + 1;
+	//		scene++;
 	//
 	//	}
 	//}
