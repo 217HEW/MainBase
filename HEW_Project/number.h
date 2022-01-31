@@ -9,4 +9,3 @@
 HRESULT InitNumber();	//‰Šú‰»
 void UninitNumber();	//I—¹ˆ—
 void DrawNumber(XMFLOAT2 vPos,unsigned,int nWidth, float fSizeX = NUMBER_SIZE_X,float fSizeY = NUMBER_SIZE_Y);		//•`‰æ
-

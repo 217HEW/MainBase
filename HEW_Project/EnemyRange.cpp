@@ -22,6 +22,9 @@
 //	2022/01/22	遠隔敵の情報を取得する関数の作成
 //				プレイヤーのライフ処理はここで屋あるべきでないため削除
 //	編集者：柴山凜太郎
+//--------------------------------------------------------------
+//	2022/01/31	敵がプレイヤーの方角へ向く簡易的な処理を追加しました
+//	編集者：上月大地
 //**************************************************************
 
 //**************************************************************
@@ -55,7 +58,7 @@
 
 #define ENEMY_TIMER				(5)			// 制限時間
 
-#define SCALE_E_RANGE		(XMFLOAT3(0.05f, 0.1f, 0.1f))
+#define SCALE_E_RANGE		(XMFLOAT3(0.03f, 0.06f, 0.06f))
 //**************************************************************
 // グローバル変数
 //**************************************************************
@@ -81,7 +84,7 @@ HRESULT InitEnemyRange(void)
 	//}
 
 	// モデルデータの読み込み
-	g_model.SetDif(XMFLOAT4(0.2f,5.0f,0.2f,1.0f));
+	g_model.SetDif(XMFLOAT4(0.2f,20.0f,10.0f,1.0f));
 	if (!g_model.Load(pDevice, pDeviceContext, MODEL_ENEMY))
 	{
 		MessageBoxA(GetMainWnd(), "モデルデータ読み込みエラー", "InitEnemy", MB_OK);
@@ -129,10 +132,15 @@ void UpdateEnemyRange(void)
 
 	for (int i = 0; i < MAX_ENEMYRANGE; ++i)
 	{
-		//GetPlayerJump();
-		//敵とプレイヤーの距離が近づいたら
-		//if (CollisionSphere(posPlayer, sizePlayer, g_ERange[i].m_pos, SEARCH_RANGE))
-		//{
+		if (g_ERange[i].m_pos.x >= posPlayer.x)
+		{
+			g_ERange[i].m_rot = (XMFLOAT3(0.0f, 180.0f, 0.0f));
+		}	
+		//敵座標がプレイヤーよりも小さかったら
+		if (g_ERange[i].m_pos.x <= posPlayer.x)
+		{	
+			g_ERange[i].m_rot = (XMFLOAT3(0.0f, 0.0f, 0.0f));
+		}
 			// 使用中ならスキップ
 			if (!g_ERange[i].m_use)
 			{

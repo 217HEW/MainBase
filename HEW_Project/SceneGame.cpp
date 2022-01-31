@@ -95,6 +95,7 @@
 #include "PlayEffect.h"
 #include "StageSelect.h"
 
+
 //**************************************************************
 // マクロ定義
 //**************************************************************
@@ -105,7 +106,7 @@
 // グローバル変数
 //**************************************************************
 //TPolyline			g_polyline[MAX_POLYLINE];	// ポリライン情報
-
+static DWORD	Joycon;		// コントローラー情報
 bool g_bPause;		// 一時停止中
 int	 g_nNowScene;	// 現在のシーン		
 
@@ -218,11 +219,6 @@ HRESULT InitGame(AREA Area)
 
 	// エクスプロード呼び出し
 	// SetEnemyExplode(XMFLOAT3(60.0f, -790.0f, 0.0f));
-
-	// メッシュ壁初期化
-	hr = InitMeshWall();
-	if (FAILED(hr))
-		return hr;
 
 	// エフェクト(for Effekseer)初期化
 	hr = g_GameEffect.Load();
@@ -353,7 +349,11 @@ void UninitGame()
 //**************************************************************
 void UpdateGame()
 {
+	// コントローラー情報
+	GetJoyState(Joycon);
+
 	TEnemyMelee* pEMelee = GetEnemyMelee();
+
 	// 入力処理更新
 	//UpdateInput();	// 必ずUpdate関数の先頭で実行.
 
@@ -481,7 +481,7 @@ void UpdateGame()
 
 	}
 	//一時停止ON/OFF
-	if (GetKeyTrigger(VK_P))
+	if (GetKeyTrigger(VK_P)||GetJoyTrigger(Joycon, JOYSTICKID4))
 	{
 		if (GetFadeState() == FADE_NONE)
 		{
@@ -506,7 +506,7 @@ void UpdateGame()
 	if (g_bPause && GetFadeState() == FADE_NONE)
 	{
 		//[ENTER]が押された?
-		if (GetKeyTrigger(VK_RETURN))
+		if (GetKeyTrigger(VK_RETURN)||GetJoyTrigger(Joycon, JOYSTICKID1))
 		{
 			//選択中のメニュー項目により分岐
 			switch (GetPauseMenu())
@@ -571,9 +571,6 @@ void DrawGame()
 	// 煙描画
 	//DrawSmoke();
 
-	// 壁描画 (不透明部分)
-	DrawMeshWall(DRAWPART_OPAQUE);
-
 	// ブロック描画
 	//DrawBlock();
 
@@ -585,10 +582,7 @@ void DrawGame()
 	// {
 	// 	DrawPolyline(&g_polyline[i]);
 	// }
-
-	// 壁描画 (半透明部分)
-	DrawMeshWall(DRAWPART_TRANSLUCENT);
-
+	
 	SetZBuffer(false);
 
 	// エフェクト描画

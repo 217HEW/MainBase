@@ -15,6 +15,9 @@
 //--------------------------------------------------------------
 //	2021/12/27	音データを追加したので実装(セレクト＆キャンセル音)
 //														変更者：上月大地
+//--------------------------------------------------------------
+//	2022/01/31	コントローラ操作を追加しました
+//														変更者：上月大地
 //**************************************************************
 
 #include "Pause.h"
@@ -23,6 +26,20 @@
 #include "polygon.h"
 #include "Texture.h"
 #include "Sound.h"
+#include <xinput.h>		// コントローラー情報取得に必要
+
+#pragma comment (lib, "xinput.lib")	// コントローラー情報取得に必要
+
+// コントローラ十字キー用
+typedef enum {
+	NOT = 0,	// 何も押してない
+	UP,			// 上
+	DOWN,		// 下
+	RIGHT,		// 右
+	LEFT,		// 左
+
+	CROSS_MAX
+} PCROSS;
 
 //*****************************************************************************
 // マクロ定義
@@ -38,6 +55,9 @@
 #define	PLATE_POS_X			(-450.0f)		// プレートの位置(X座標)
 #define	PLATE_POS_Y			(0.0f)		// プレートの位置(Y座標)
 
+
+#define WAIT_PTIME			(15)			// 選択待機時間
+
 //説明用
 #define PATH_STEXTURE "data/texture/pause003.png"//説明画像
 #define S_POS_X 200.0f
@@ -52,6 +72,14 @@ static ID3D11ShaderResourceView*	g_pTextures[3] = { nullptr };	// テクスチャへの
 static PAUSE_MENU g_nSelectMenu = PAUSE_MENU_CONTINUE;		// 選択中のメニューNo.
 static float g_fCurve = 0.0f;
 static float g_fCol = 0.0f;
+static DWORD	Joystate;	// 接続確認用
+static DWORD	Joycon;		// コントローラー情報
+
+bool g_bpTime;	// 待機用
+int g_bpJoySelect;	// コントローラ選択用
+
+// 待機タイマーカウントダウン
+int g_npTime;
 
 static LPCWSTR c_aFileNamePauseMenu[NUM_PAUSE_MENU] =
 {
@@ -75,6 +103,9 @@ HRESULT InitPause(void)
 			c_aFileNamePauseMenu[nCntPauseMenu],	// ファイルの名前
 			&g_pTextures[nCntPauseMenu]);			// 読み込むメモリー
 	}
+	g_bpTime = false;
+	g_npTime = WAIT_PTIME;
+	g_bpJoySelect = NOT;	// 何も選択していない
 
 	g_nSelectMenu = PAUSE_MENU_CONTINUE;
 	g_fCurve = 0.0f;
@@ -111,21 +142,56 @@ void UninitPause(void)
 //=============================================================================
 void UpdatePause(void)
 {
-	if (GetKeyRepeat(VK_W) || GetKeyRepeat(VK_UP)) 
+	//ゲームパッドの状態を取得
+	XINPUT_STATE state;
+
+	// コントローラー情報
+	GetJoyState(Joycon);
+
+	// 選択待機時間
+	if (g_npTime < 0)
 	{
-		CSound::SetPlayVol(SE_SELECT, 0.1f); // セレクト音
-
-		g_nSelectMenu = (PAUSE_MENU)((g_nSelectMenu + NUM_PAUSE_MENU - 1) % NUM_PAUSE_MENU);
-		SetPauseMenu();
+		g_bpTime = true;
 	}
-	else if (GetKeyRepeat(VK_S) || GetKeyRepeat(VK_DOWN))
-	{
-		CSound::SetPlayVol(SE_SELECT, 0.1f); // セレクト音
+	g_bpJoySelect = NOT;	// コントローラ用選択初期化
 
-		g_nSelectMenu = (PAUSE_MENU)((g_nSelectMenu + 1) % NUM_PAUSE_MENU);
-		SetPauseMenu();
+	// -------コントローラー操作------------------------------------------
+	GetJoyState(Joycon);
+	// コントローラーの接続状況確認
+	Joystate = XInputGetState(0, &state);
+
+	if (Joystate == ERROR_SUCCESS)
+	{	// 接続有り↓
+		if (GetJoyDpadUp(Joycon)) { g_bpJoySelect = UP; }
+		if (GetJoyDpadDown(Joycon)) { g_bpJoySelect = DOWN; }
+		if (GetJoyDpadRight(Joycon)) { g_bpJoySelect = RIGHT; }
+		if (GetJoyDpadLeft(Joycon)) { g_bpJoySelect = LEFT; }
+	}
+	else
+	{	// 接続無し↓
+		g_bpJoySelect = NOT;
 	}
 
+	if (g_bpTime == true) {
+		if (GetKeyRepeat(VK_W) || GetKeyRepeat(VK_UP) || (g_bpJoySelect == UP))
+		{
+			CSound::SetPlayVol(SE_SELECT, 0.1f); // セレクト音
+
+			g_nSelectMenu = (PAUSE_MENU)((g_nSelectMenu + NUM_PAUSE_MENU - 1) % NUM_PAUSE_MENU);
+			SetPauseMenu();
+			g_bpTime = false;
+			g_npTime = WAIT_PTIME;
+		}
+		else if (GetKeyRepeat(VK_S) || GetKeyRepeat(VK_DOWN) || (g_bpJoySelect == DOWN))
+		{
+			CSound::SetPlayVol(SE_SELECT, 0.1f); // セレクト音
+
+			g_nSelectMenu = (PAUSE_MENU)((g_nSelectMenu + 1) % NUM_PAUSE_MENU);
+			SetPauseMenu();
+			g_bpTime = false;
+			g_npTime = WAIT_PTIME;
+		}
+	}
 	//g_fCurve += XM_PI * 0.01f;//ピカピカの原因
 	//if (g_fCurve > XM_PI) {
 	//	g_fCurve -= XM_2PI;
@@ -133,6 +199,8 @@ void UpdatePause(void)
 
 	// 反射光の設定
 	g_fCol = cosf(g_fCurve) * 0.2f + 0.8f;
+
+	--g_npTime;
 }
 
 //=============================================================================

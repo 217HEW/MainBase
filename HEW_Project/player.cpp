@@ -120,7 +120,7 @@
 #define COLLAR_PLAYER		(XMFLOAT4(1.0f, 1.0f, 1.0f,1.0f))	// プレイヤーカラー(仮)ここをいじるとカラーが変わります
 #define SIZE_PLAYER			XMFLOAT3(6.0f, 10.0f, 0.5f)//(110.5f, 16.5f, 1.0f)	// プレイヤーのモデルサイズ
 
-#define	PLAYER_RADIUS		(10.0f)		// 境界球半径
+#define	PLAYER_RADIUS		(5.0f)		// 境界球半径
 #define DAMAGE_TIMER		(120)		// ダメージ後の無敵時間
 
 //**************************************************************
