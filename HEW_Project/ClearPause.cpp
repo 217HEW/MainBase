@@ -62,9 +62,9 @@ bool g_SetClearPause;
 
 static LPCWSTR c_aFileNameC_PauseMenu[NUM_C_PAUSE_MENU] =
 {
-	L"data/texture/NextStage.png",	// ネクステージ
-	L"data/texture/select.png",	// セレクト
-	L"data/texture/pause002.png",	// クイット
+	L"data/texture/ClearNextStage.png",	// ネクステージ
+	L"data/texture/ClearSelect.png",	// セレクト
+	L"data/texture/ClearQuit.png",	// クイット
 };
 
 static ID3D11ShaderResourceView* g_pSTexture;//説明用
@@ -112,7 +112,7 @@ void UninitC_Pause(void)
 		SAFE_RELEASE(g_pTextures[nCntC_PauseMenu]);
 	}
 	// テクスチャ解放
-	SAFE_RELEASE(g_pSTexture);
+	//SAFE_RELEASE(g_pSTexture);
 }
 
 //=============================================================================
@@ -166,6 +166,7 @@ void DrawC_Pause(void)
 	SetPolygonSize(C_PAUSE_MENU_WIDTH, C_PAUSE_MENU_HEIGHT);
 	for (int nCntC_PauseMenu = 0; nCntC_PauseMenu < NUM_C_PAUSE_MENU; ++nCntC_PauseMenu) 
 	{
+
 		SetPolygonPos(C_PAUSE_MENU_POS_X, C_PAUSE_MENU_POS_Y - nCntC_PauseMenu * C_PAUSE_MENU_INTERVAL);
 
 		if (nCntC_PauseMenu == g_nSelectMenu) {
@@ -178,6 +179,7 @@ void DrawC_Pause(void)
 		SetPolygonTexture(g_pTextures[nCntC_PauseMenu]);
 		// ポリゴンの描画
 		DrawPolygon(pDeviceContext);
+
 	}
 
 	
