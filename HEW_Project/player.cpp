@@ -118,7 +118,7 @@
 #define COLLAR_PLAYER		(XMFLOAT4(1.0f, 1.0f, 1.0f,1.0f))	// プレイヤーカラー(仮)ここをいじるとカラーが変わります
 #define SIZE_PLAYER			XMFLOAT3(6.0f, 10.0f, 0.5f)		// プレイヤーのモデルサイズ
 
-#define	PLAYER_RADIUS		(10.0f)		// 境界球半径
+#define	PLAYER_RADIUS		(5.0f)		// 境界球半径
 #define DAMAGE_TIMER		(120)		// ダメージ後の無敵時間
 
 //**************************************************************
@@ -210,7 +210,7 @@ void UpdatePlayer(void)
 	// 体力が0ならゲームオーバーへ
 	if (GetLife() <= 0)
 	{
-		StartFadeOut(SCENE_GAMEOVER);
+		StartFadeOut(GetScene());
 	}
 
 	// 操作したら無敵を解除

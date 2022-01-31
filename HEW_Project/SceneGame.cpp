@@ -85,8 +85,10 @@
 #include "EnemyRange.h"
 #include "Pause.h"
 #include "PlayEffect.h"
+#include "ClearPause.h"	//テストインクルード
 #include "StageSelect.h"
 #include "CountEnemy.h"
+
 
 //**************************************************************
 // マクロ定義
@@ -97,10 +99,10 @@
 //**************************************************************
 // グローバル変数
 //**************************************************************
-
+//TPolyline			g_polyline[MAX_POLYLINE];	// ポリライン情報
+static DWORD	Joycon;		// コントローラー情報
 bool g_bPause;		// 一時停止中
-int	 g_nNowScene;	// 現在のシーン		
-
+bool g_bC_Pause;				//一時停止中	
 Effect g_GameEffect;			// エフェクト変数
 static int g_EffectTimer = 0;	// エフェクト制御用タイマー
 //**************************************************************
@@ -201,9 +203,56 @@ HRESULT InitGame(AREA Area)
 	if (FAILED(hr))
 		return hr;
 
-	// シーン番号取得
-	g_nNowScene = GetScene();
+	// テスト
+	hr = InitC_Pause();
+	g_bC_Pause = false;
+	if (FAILED(hr))
+		return hr;
 
+	//g_nNowScene = GetScene();
+	
+	// SetMeshWall(XMFLOAT3(0.0f, 0.0f, 640.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), 16, 2, XMFLOAT2(40.0f, 40.0f));
+	// SetMeshWall(XMFLOAT3(-640.0f, 0.0f, 0.0f), XMFLOAT3(0.0f, -90.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), 16, 2, XMFLOAT2(80.0f, 80.0f));
+	// SetMeshWall(XMFLOAT3(640.0f, 0.0f, 0.0f), XMFLOAT3(0.0f, 90.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), 16, 2, XMFLOAT2(80.0f, 80.0f));
+	// SetMeshWall(XMFLOAT3(0.0f, 0.0f, -640.0f), XMFLOAT3(0.0f, 180.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), 16, 2, XMFLOAT2(80.0f, 80.0f));
+
+	// ブロックセット
+	// for (int y = 0; y < 10; ++y)
+	// {
+	//	 for (int x = 0; x < 12; ++x)
+	//	 {
+	//		 SetBlock(XMFLOAT3(21.0f * x, 41.0f * y, 100.0f));
+	//	 }
+	// }
+	// ボリライン初期化
+	// hr = InitPolyline();
+	// if (FAILED(hr))
+	// 	return hr;
+	// XMFLOAT4 vColor[8] = {
+	// 	XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f),
+	// 	XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f),
+	// 	XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f),
+	// 	XMFLOAT4(1.0f, 0.0f, 1.0f, 1.0f),
+	// 	XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f),
+	// 	XMFLOAT4(0.0f, 1.0f, 1.0f, 1.0f),
+	// 	XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f),
+	// 	XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),
+	// };
+	// for (int i = 0; i < MAX_POLYLINE; ++i) {
+	// 	hr = CreatePolyline(&g_polyline[i], THICKNESS, true, vColor[i % 7 + 1], BS_ADDITIVE);
+	// 	if (FAILED(hr)) {
+	// 		return hr;
+	// 	}
+	// 	XMFLOAT3 pos;
+	// 	pos.x = rand() % 1240 - 620.0f;
+	// 	pos.y = rand() % 140 + 10.0f;
+	// 	pos.z = rand() % 1240 - 620.0f;
+	// 	AddPolylinePoint(&g_polyline[i], pos);
+	// 	pos.x = rand() % 1240 - 620.0f;
+	// 	pos.y = rand() % 140 + 10.0f;
+	// 	pos.z = rand() % 1240 - 620.0f;
+	// 	AddPolylinePoint(&g_polyline[i], pos);
+	// }
 	// BGM再生開始
 	// エリア毎にBGMを変えたい時はここをswitch文で切り替えるようにする
 	CSound::SetPlayVol(BGM_GAME000, 0.1f); // ゲーム本編BGM
@@ -221,6 +270,22 @@ void UninitGame()
 
 	//ポーズ終了処理
 	UninitPause();
+
+	//テスト
+	UninitC_Pause();
+
+	// ポリライン終了処理
+	//UninitPolyline();
+	// 壁終了
+	//UninitMeshWall();
+	// レンジ終了
+	//UninitEnemyRange();
+	// エネミーメレー終了
+	// UninitEnemyMelee();
+	// エネミーエクスプロード終了
+	// UninitEnemyExplode();
+	// ブロック終了
+	//UninitBlock();
 
 	// エフェクト終了
 	UninitEffect();
@@ -261,7 +326,23 @@ void UninitGame()
 //**************************************************************
 void UpdateGame()
 {
+	// コントローラー情報
+	GetJoyState(Joycon);
+
 	TEnemyMelee* pEMelee = GetEnemyMelee();
+
+	if (g_bC_Pause) {
+		//一時停止更新
+		UpdateC_Pause();
+	}
+	else if (GetFadeState() == FADE_NONE)
+	{
+		int Timer = GetTimer();
+		if (Timer <= 0)
+		{
+			StartFadeOut(SCENE_GAMEOVER);
+		}
+	}
 
 	//一時停止中?
 	if (g_bPause) {
@@ -360,7 +441,7 @@ void UpdateGame()
 
 	}
 	//一時停止ON/OFF
-	if (GetKeyTrigger(VK_P))
+	if (GetKeyTrigger(VK_P)||GetJoyTrigger(Joycon, JOYSTICKID4))
 	{
 		if (GetFadeState() == FADE_NONE)
 		{
@@ -381,11 +462,33 @@ void UpdateGame()
 		}
 	}
 
+	//一時停止ON/OFF
+	if (GetKeyTrigger(VK_M))
+	{
+		if (GetFadeState() == FADE_NONE)
+		{
+			g_bC_Pause = !g_bC_Pause;
+			if (g_bC_Pause) {
+				//CSound::Pause();
+				CSound::SetVolume(BGM_GAME000, 0.06f);
+				CSound::SetPlayVol(SE_SELECT, 0.1f); // セレクト
+	
+				ResetPauseMenu();
+			}
+			else
+			{
+				CSound::SetVolume(BGM_GAME000, 0.1f);
+				CSound::SetPlayVol(SE_CANCEL, 0.1f); // キャンセル
+				//CSound::Resume();
+			}
+		}
+	}
+
 	//一時停止メニューの選択
 	if (g_bPause && GetFadeState() == FADE_NONE)
 	{
 		//[ENTER]が押された?
-		if (GetKeyTrigger(VK_RETURN))
+		if (GetKeyTrigger(VK_RETURN)||GetJoyTrigger(Joycon, JOYSTICKID1))
 		{
 			//選択中のメニュー項目により分岐
 			switch (GetPauseMenu())
@@ -397,10 +500,38 @@ void UpdateGame()
 				//CSound::Resume();
 				break;
 			case PAUSE_MENU_RETRY:		// リトライ
-				StartFadeOut(g_nNowScene);
+				StartFadeOut(GetScene());
 				CSound::SetPlayVol(SE_SELECT, 0.1f); // セレクト
 				break;
 			case PAUSE_MENU_QUIT:		// ゲームを辞める
+				StartFadeOut(SCENE_TITLE);
+				CSound::SetPlayVol(SE_SELECT, 0.1f); // セレクト
+				break;
+			}
+		}
+	}
+
+	//テスト
+	if (g_bC_Pause && GetFadeState() == FADE_NONE)
+	{
+		//[ENTER]が押された?
+		if (GetKeyTrigger(VK_RETURN))
+		{
+			//選択中のメニュー項目により分岐
+			switch (GetC_PauseMenu())
+			{
+			case C_PAUSE_MENU_NEXTSTAGE:	// ネクステージ
+				StartFadeOut(GetScene());
+				//g_bC_Pause = false;
+				CSound::SetVolume(BGM_GAME000, 0.1f);
+				CSound::SetPlayVol(SE_CANCEL, 0.1f); // キャンセル
+				//CSound::Resume();
+				break;
+			case C_PAUSE_MENU_SELECT:		// セレクト画面
+				StartFadeOut(SCENE_SELECT);
+				CSound::SetPlayVol(SE_SELECT, 0.1f); // セレクト
+				break;
+			case C_PAUSE_MENU_QUIT:		// ゲームを辞める
 				StartFadeOut(SCENE_TITLE);
 				CSound::SetPlayVol(SE_SELECT, 0.1f); // セレクト
 				break;
@@ -436,13 +567,22 @@ void DrawGame()
 	//DrawSmoke();
 
 	// 壁描画 (不透明部分)
-	//DrawMeshWall(DRAWPART_OPAQUE);
+	DrawMeshWall(DRAWPART_OPAQUE);
+
+	// ブロック描画
+	//DrawBlock();
 
 	// 爆発描画
 	DrawExplosion();
 
+	// ポリライン描画
+	// for (int i = 0; i < MAX_POLYLINE; ++i)
+	// {
+	// 	DrawPolyline(&g_polyline[i]);
+	// }
+
 	// 壁描画 (半透明部分)
-	//DrawMeshWall(DRAWPART_TRANSLUCENT);
+	DrawMeshWall(DRAWPART_TRANSLUCENT);
 
 	SetZBuffer(false);
 
@@ -454,6 +594,11 @@ void DrawGame()
 	//一時停止描画
 	if (g_bPause) {
 		DrawPause();
+	}
+
+	//一時停止描画
+	if (g_bC_Pause) {
+		DrawC_Pause();
 	}
 
 	// Zバッファ無効(Zチェック無&Z更新無)
