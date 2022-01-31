@@ -232,7 +232,6 @@ void UpdateEnemyRange(void)
 					if (GetPlayerJump())
 					{
 						DelLife();
-						//DelLife();
 						StartExplosion(posPlayer, XMFLOAT2(40.0f, 40.0f));
 					}
 					else

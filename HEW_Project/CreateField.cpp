@@ -473,8 +473,7 @@ AREA eArea;		// エリア切り替え用変数
 HRESULT InitCField(AREA Area)
 {
 	HRESULT hr = S_OK;
-	//ID3D11Device* pDevice = GetDevice();
-	//ID3D11DeviceContext* pDeviceContext = GetDeviceContext();
+	
 	// ブロック初期化
 	hr = InitBlock();
 	if (FAILED(hr))
@@ -486,18 +485,7 @@ HRESULT InitCField(AREA Area)
 	// ブロックのサイズ取得
 	XMFLOAT3 BlockSize = GetBlockSize();
 
-	// 位置・回転・スケールの初期設定
-	//g_posModel = XMFLOAT3(0.0f, 0.0f, 0.0f);
-	//g_moveModel = XMFLOAT3(0.0f, 0.0f, 0.0f);
-	//g_rotModel = XMFLOAT3(0.0f, 0.0f, 0.0f);
-	//g_rotDestModel = XMFLOAT3(0.0f, 0.0f, 0.0f);
-
-	// モデルデータの読み込み
-	//if (!g_model.Load(pDevice, pDeviceContext, FIELD_TEST)) {
-	//	MessageBoxA(GetMainWnd(), "自機モデルデータ読み込みエラー", "InitModel", MB_OK);
-	//	return E_FAIL;
-	//}
-
+	
 	//配列の中身の処理
 	//二次元配列Map内で、"1"の場所に描画する
 	//描画するオブジェクトの関数を呼び出す
@@ -505,11 +493,7 @@ HRESULT InitCField(AREA Area)
 	{
 		for (int Width = 0; Width < MAP_WIDTH; Width++)
 		{
-			//if (g_Map[Height][Width] == 0)
-			//{
-			//	continue;
-			//}
-
+			
 			switch (g_Map[eArea][Height][Width])
 			{
 			//	何もしない
@@ -949,17 +933,13 @@ HRESULT InitCField(AREA Area)
 //=============================================================================
 void UninitCField(void)
 {
-	// 丸影の解放
-	//ReleaseShadow(g_nShadow);
-
-	// モデルの解放
-	//g_model.Release();
-
 	// ブロック終了
 	UninitBlock();
 
+	// 近接敵終了
 	UninitEnemyMelee();
 
+	// 遠隔敵終了
 	UninitEnemyRange();
 }
 
@@ -968,24 +948,14 @@ void UninitCField(void)
 //=============================================================================
 void UpdateCField(void)
 {
-	//XMMATRIX mtxWorld;
-	//XMFLOAT3 model;
-
-
-
-	// ワールドマトリックスの初期化
-	//mtxWorld = XMMatrixIdentity();
-	// ワールドマトリックス設定
-	//XMStoreFloat4x4(&g_mtxWorld, mtxWorld);
-
-	// 丸影の移動
-	//MoveShadow(g_nShadow, g_posModel);
-
+	
 	// ブロック更新
 	UpdateBlock();
 
+	// 近接敵更新
 	UpdateEnemyMelee();
 
+	// 遠隔敵更新
 	UpdateEnemyRange();
 }
 
@@ -996,18 +966,19 @@ void UpdateCField(void)
 //=============================================================================
 void DrawCField(void)
 {
-	//ID3D11DeviceContext* pDC = GetDeviceContext();
-
 	// ブロック描画
 	DrawBlock();
 
+	// 近接敵描画
 	DrawEnemyMelee();
 
+	// 遠隔敵描画
 	DrawEnemyRange();
 }
 
 //=============================================================================
 // エリア状態の取得
+// 戻り値：現在のエリア
 //=============================================================================
 AREA GetAreaState()
 {

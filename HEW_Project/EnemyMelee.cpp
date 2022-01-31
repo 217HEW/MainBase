@@ -307,11 +307,6 @@ void UpdateEnemyMelee(void)
 			}
 			if (CollisionSphere(g_EMelee[i].m_pos, g_EMelee[i].m_size.x, posPlayer, sizePlayer))
 			{
-				//DelLife();
-				//if (GetLife() == 0)
-				//{
-				//	SetScene(SCENE_GAMEOVER);
-				//}
 				DelCountEnemy();
 				g_EMelee[i].m_use = false;
 			}
@@ -477,12 +472,8 @@ void UpdateEnemyMelee(void)
 				}
 			if (CollisionSphere(g_EMelee1[i].m_pos, g_EMelee1[i].m_size.x, posPlayer, sizePlayer))
 			{
-				//DelLife();
 				DelCountEnemy();
-				//if (GetLife() == 0)
-				//{
-				//	SetScene(SCENE_GAMEOVER);
-				//}
+				
 				g_EMelee1[i].m_use = false;
 			}
 

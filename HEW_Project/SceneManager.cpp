@@ -47,8 +47,6 @@
 #include "SceneManager.h"
 #include "SceneTitle.h"
 #include "SceneGame.h"
-#include "SceneArea2.h"
-#include "SceneArea3.h"
 #include "SceneGameover.h"
 #include "SceneGameclear.h"
 #include "StageSelect.h"
