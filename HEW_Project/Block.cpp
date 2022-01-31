@@ -81,9 +81,9 @@
 // ブロックモデル格納用配列
 const char* c_aFileNameStageModel[MAX_BLOCK_TYPE] =
 {
-	"data/model/Hew_3_3.fbx",	// 通常ブロック
-	"data/model2/Hew_2.fbx",	// ひび割れたブロック
-	"data/model/Block.fbx",		// 無敵ブロック
+	"data/model/Block/Normal/Hew_3_3.fbx",	// 通常ブロック
+	"data/model/Block/Cracks/Hew_2.fbx",	// ひび割れたブロック
+	"data/model/Block/Block.fbx",		// 無敵ブロック
 };
 
 static CAssimpModel	g_model[MAX_BLOCK_TYPE];	// モデル情報
