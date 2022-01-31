@@ -166,7 +166,7 @@ void DrawC_Pause(void)
 	SetPolygonSize(C_PAUSE_MENU_WIDTH, C_PAUSE_MENU_HEIGHT);
 	for (int nCntC_PauseMenu = 0; nCntC_PauseMenu < NUM_C_PAUSE_MENU; ++nCntC_PauseMenu) 
 	{
-		SetPolygonPos(C_PAUSE_MENU_POS_X + nCntC_PauseMenu * C_PAUSE_MENU_INTERVAL, C_PAUSE_MENU_POS_Y );
+		SetPolygonPos(C_PAUSE_MENU_POS_X, C_PAUSE_MENU_POS_Y - nCntC_PauseMenu * C_PAUSE_MENU_INTERVAL);
 
 		if (nCntC_PauseMenu == g_nSelectMenu) {
 			SetPolygonColor(1.0f, 1.0f, 0.1f);
