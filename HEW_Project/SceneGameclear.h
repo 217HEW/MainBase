@@ -24,3 +24,4 @@ HRESULT InitGameclear(); // ‰Šú‰»
 void UninitGameclear(); // I—¹ˆ—
 void UpdateGameclear(); // XV
 void DrawGameclear(); // •`‰æ
+void GameclearFlag();

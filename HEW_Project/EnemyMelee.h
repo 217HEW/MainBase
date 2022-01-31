@@ -64,7 +64,7 @@ void UninitEnemyMelee(void);	// I—¹
 void UpdateEnemyMelee(void);	// XV
 void DrawEnemyMelee(void);		// •`‰æ
 
-int SetEnemyMelee(XMFLOAT3(pos), int(id));	 // ‹ßÚ“Gİ’u
+int SetEnemyMelee(XMFLOAT3 pos, int id);	 // ‹ßÚ“Gİ’u
 TEnemyMelee* GetEnemyMelee();		// ‹ßÚ“Gî•ñæ“¾
 // ‹ßÚ“G‚Æ‚Ì“–‚½‚è”»’èˆ—
 bool CollisionEnemyMelee(XMFLOAT3 pos, float radius);

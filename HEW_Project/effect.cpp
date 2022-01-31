@@ -28,6 +28,7 @@
 // マクロ定義
 //*****************************************************************************
 #define	TEXTURE_EFFECT			L"data/TEXTURE/effect000.jpg"	// 読み込むテクスチャファイル名
+
 #define	EFFECT_SIZE_X			(50.0f)							// ビルボードの幅
 #define	EFFECT_SIZE_Y			(50.0f)							// ビルボードの高さ
 #define	VALUE_MOVE_BULLET		(2.0f)							// 移動速度
@@ -53,20 +54,24 @@ struct TEffect {
 	bool use;				// 使用しているかどうか
 };
 
+
 //*****************************************************************************
 // プロトタイプ宣言
 //*****************************************************************************
 HRESULT MakeVertexEffect(ID3D11Device* pDevice);
+
 void SetVertexEffect(int nIdxEffect, XMFLOAT2 size);
+
 void SetColorEffect(int nIdxEffect, XMFLOAT4 col);
 
 //*****************************************************************************
 // グローバル変数
 //*****************************************************************************
 static MESH				g_mesh;					// メッシュ情報
+static MESH				g_Rmesh;					// メッシュ情報
 static MATERIAL			g_material;				// マテリアル情報
+static MATERIAL			g_Rmaterial;				// マテリアル情報
 static TEffect			g_effect[MAX_EFFECT];	// エフェクト情報
-
 //=============================================================================
 // 初期化処理
 //=============================================================================
@@ -98,7 +103,6 @@ HRESULT InitEffect(void)
 		g_effect[nCntEffect].nTimer = 0;
 		g_effect[nCntEffect].use = false;
 	}
-
 	return S_OK;
 }
 

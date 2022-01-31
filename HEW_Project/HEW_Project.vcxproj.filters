@@ -153,8 +153,8 @@
     <ClCompile Include="Sound.cpp">
       <Filter>ソースファイル\System\Sound</Filter>
     </ClCompile>
-    <ClCompile Include="ClearPause.cpp">
-      <Filter>ソースファイル\Scene\Scene_System</Filter>
+    <ClCompile Include="Reticle.cpp">
+      <Filter>ソースファイル\Effect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -299,8 +299,8 @@
     <ClInclude Include="meshwall.h">
       <Filter>ヘッダーファイル\System[.h]\Mesh</Filter>
     </ClInclude>
-    <ClInclude Include="ClearPause.h">
-      <Filter>ヘッダーファイル\System[.h]</Filter>
+    <ClInclude Include="Reticle.h">
+      <Filter>ヘッダーファイル\Effect[.h]</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

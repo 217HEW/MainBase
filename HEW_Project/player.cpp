@@ -78,6 +78,10 @@
 //--------------------------------------------------------------
 //	2022/01/29	操作するまで無敵、と判断する処理を追加しました
 //	編集者：上月大地
+//--------------------------------------------------------------
+//	2022/01/29	プレイヤーの方向指定する変数を列挙体変数で宣言し直しました
+//				これにより、関数の型も列挙体宣言時の型名に変更しました。
+//	編集者：柴山凜太郎
 //**************************************************************
 
 //**************************************************************
@@ -134,7 +138,7 @@ static XMFLOAT3		g_SizeModel;	// 当たり判定用サイズ
 static XMFLOAT4X4	g_mtxWorld;		// ワールドマトリックス
 
 int	g_nDamage;		// 点滅中
-int	g_nDir;			// 壁と接している方向	0:当ってない 1:右,2:左,3:上,4:下
+PlayerDir	g_eDir;	// 壁と接している方向	0:当ってない 1:右,2:左,3:上,4:下
 bool g_bInv;		// ダメージ時の無敵判定	true:無敵
 bool g_bLand;		// 地面判定	true:飛んでない
 bool g_bkabe;		// 壁に触れてます true触れてます
@@ -181,7 +185,7 @@ HRESULT InitPlayer(void)
 	g_bInv = true;
 	g_bkabe = true;
 
-	g_nDir = 4;	// 下と接している
+	g_eDir = DIR_DOWN;	// 下と接している
 
 	return hr;
 }
@@ -249,15 +253,15 @@ void UpdatePlayer(void)
 				else
 				{	// 大きく傾けた場合↓
 					// 方向指定(コントローラ用)
-					switch (g_nDir)
+					switch (g_eDir)
 					{
-					case 1: if (Stick.x < 0.4f)	{ g_bkabe = false; }
+					case DIR_RIGHT: if (Stick.x < 0.4f)	{ g_bkabe = false; }
 						break;
-					case 2: if (Stick.x > -0.4f) { g_bkabe = false; }
+					case DIR_LEFT: if (Stick.x > -0.4f) { g_bkabe = false; }
 						break;
-					case 3: if (Stick.y > -0.4f) { g_bkabe = false; }
+					case DIR_UP: if (Stick.y > -0.4f) { g_bkabe = false; }
 						break;
-					case 4: if (Stick.y < 0.4f) { g_bkabe = false; }
+					case DIR_DOWN: if (Stick.y < 0.4f) { g_bkabe = false; }
 						break;
 					default:
 						break;
@@ -277,7 +281,7 @@ void UpdatePlayer(void)
 					{
 						g_moveModel.x += SPEED_MOVE_PLAYER *Stick.x;
 						g_moveModel.y += SPEED_MOVE_PLAYER *Stick.y*1.5;
-						g_nDir = 0;
+						g_eDir = DIR_NONE;
 						g_rotModel.z = Stick.x * -90;
 						g_rotModel.y = Stick.y * -90;
 						g_bLand = false;				 // 設置判定オフ
@@ -303,13 +307,13 @@ void UpdatePlayer(void)
 		g_moveModel.z = 0;
 
 		// 上下移動
-		if (GetKeyTrigger(VK_UP) && !(g_nDir == 3)) {
+		if (GetKeyTrigger(VK_UP) && !(g_eDir == DIR_UP)) {
 			StartExplosion(g_posModel, XMFLOAT2(40.0f, 40.0f));
 			g_moveModel.y += SPEED_MOVE_PLAYER * 1.5;
 			CSound::SetPlayVol(SE_JUMP, 0.1f); // ジャンプ音
 			g_bLand = false;	// 設置判定オフ
 		}
-		else if (GetKeyTrigger(VK_DOWN) && !(g_nDir == 4)) {
+		else if (GetKeyTrigger(VK_DOWN) && !(g_eDir == DIR_DOWN)) {
 			StartExplosion(g_posModel, XMFLOAT2(40.0f, 40.0f));
 			g_moveModel.y -= SPEED_MOVE_PLAYER * 1.5f;
 			CSound::SetPlayVol(SE_JUMP, 0.1f); // ジャンプ音
@@ -321,10 +325,10 @@ void UpdatePlayer(void)
 		if (!g_bLand)
 		{
 			// 左右移動
-			if (GetKeyPress(VK_LEFT) && !(g_nDir == 1)) {
+			if (GetKeyPress(VK_LEFT) && !(g_eDir == DIR_RIGHT)) {
 				g_moveModel.x -= SPEED_MOVE_PLAYER;
 			}
-			else if (GetKeyPress(VK_RIGHT) && !(g_nDir == 2)) {
+			else if (GetKeyPress(VK_RIGHT) && !(g_eDir == DIR_LEFT)) {
 				g_moveModel.x += SPEED_MOVE_PLAYER;
 			}
 			// 奥手前移動
@@ -451,25 +455,25 @@ void UpdatePlayer(void)
 	if (g_posModel.y < -400.0f) { StartFadeOut(SCENE_GAMEOVER); }	// 下
 
 	// プレイヤー向き調整
-	switch (g_nDir)
+	switch (g_eDir)
 	{
-	case 0: g_rotModel.x = 0.0f;
+	case DIR_NONE: g_rotModel.x = 0.0f;
 			//g_rotModel.y = 0.0f;
 		break;
 
-	case 1: g_rotModel.x = 90.0f;
+	case DIR_RIGHT: g_rotModel.x = 90.0f;
 			g_rotModel.y = 90.0f;
 			g_rotModel.z = 0.0f;
 		break;
-	case 2:	g_rotModel.x = 90.0f;
+	case DIR_LEFT:	g_rotModel.x = 90.0f;
 			g_rotModel.y = -90.0f;
 			g_rotModel.z = 0.0f;
 		break;
-	case 3: g_rotModel.x = 0.0f;
+	case DIR_UP: g_rotModel.x = 0.0f;
 			g_rotModel.y = 0.0f;
 			g_rotModel.z = 180.0f;
 		break;
-	case 4: g_rotModel.x = 0.0f;
+	case DIR_DOWN: g_rotModel.x = 0.0f;
 			g_rotModel.y = 0.0f; 
 			g_rotModel.z = 0.0f;
 		break;
@@ -520,29 +524,31 @@ void UpdatePlayer(void)
 #ifdef _DEBUG
 	PrintDebugProc("StickX : %f\n", Stick.x);
 	PrintDebugProc("StickY : %f\n", Stick.y);
-	PrintDebugProc("Dir : %d\n", g_nDir);
+	PrintDebugProc("PosX : %f\n", g_posModel.x);
+	PrintDebugProc("PosY : %f\n", g_posModel.y);
+	PrintDebugProc("Dir : %d\n", g_eDir);
 #endif // _DEBUG
 
 	
 
 	// -------モデルアニメーション制御------------------------------------------
-	switch (g_nDir)
+	switch (g_eDir)
 	{
-	case 0: g_model.SetAnimIndex(2);
-			g_model.SetAnimTime(0.4);
-			break;
-	case 1: g_model.SetAnimIndex(4);
-			g_model.SetAnimTime(0.4);
-			break;
-	case 2: g_model.SetAnimIndex(4);
-			g_model.SetAnimTime(0.4);
-			break;
-	case 3: g_model.SetAnimIndex(2);
-			g_model.SetAnimTime(10);
-			break;
-	case 4: g_model.SetAnimIndex(2);
-			g_model.SetAnimTime(10);
-			break;
+	case DIR_NONE: g_model.SetAnimIndex(2);
+				   g_model.SetAnimTime(0.4);
+				   break;
+	case DIR_RIGHT: g_model.SetAnimIndex(4);
+					g_model.SetAnimTime(0.4);
+					break;
+	case DIR_LEFT: g_model.SetAnimIndex(4);
+				   g_model.SetAnimTime(0.4);
+				   break;
+	case DIR_UP: g_model.SetAnimIndex(2);
+				 g_model.SetAnimTime(10);
+				 break;
+	case DIR_DOWN: g_model.SetAnimIndex(2);
+				   g_model.SetAnimTime(10);
+				   break;
 	default:
 		break;
 	}
@@ -566,9 +572,9 @@ void UpdatePlayer(void)
 	mtxWorld = XMMatrixMultiply(mtxWorld, mtxScale);
 
 	// 移動を反映
-	if(g_nDir == 3) { mtxTranslate = XMMatrixTranslation(g_posModel.x, g_posModel.y + 10, g_posModel.z); } // 天井に当っていたらモデル座標修正
-	else if(g_nDir == 1) { mtxTranslate = XMMatrixTranslation(g_posModel.x -6, g_posModel.y - 10, g_posModel.z); }
-	else if(g_nDir == 2) { mtxTranslate = XMMatrixTranslation(g_posModel.x +3, g_posModel.y - 10, g_posModel.z); }
+	if(g_eDir == DIR_UP) { mtxTranslate = XMMatrixTranslation(g_posModel.x, g_posModel.y + 10, g_posModel.z); } // 天井に当っていたらモデル座標修正
+	else if(g_eDir == DIR_RIGHT) { mtxTranslate = XMMatrixTranslation(g_posModel.x -6, g_posModel.y - 10, g_posModel.z); }
+	else if(g_eDir == DIR_LEFT) { mtxTranslate = XMMatrixTranslation(g_posModel.x +3, g_posModel.y - 10, g_posModel.z); }
 	else{ mtxTranslate = XMMatrixTranslation(g_posModel.x, g_posModel.y - 10, g_posModel.z); }
 	mtxWorld = XMMatrixMultiply(mtxWorld, mtxTranslate);
 
@@ -723,9 +729,9 @@ bool CollisionPlayer(XMFLOAT3 pos, float radius, float damage)
 //		無し
 //
 //*******************************
-void SetPlayerDir(int dir)
+void SetPlayerDir(PlayerDir dir)
 {
-	g_nDir = dir;
+	g_eDir = dir;
 }
 
 //*******************************

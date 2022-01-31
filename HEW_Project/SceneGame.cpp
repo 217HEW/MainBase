@@ -78,6 +78,7 @@
 #include "bullet.h"
 #include "explosion.h"
 #include "effect.h"
+#include "Reticle.h"
 #include "smoke.h"
 #include "meshwall.h"
 // #include "polyline.h"
@@ -94,6 +95,7 @@
 #include "PlayEffect.h"
 #include "ClearPause.h"	//テストインクルード
 #include "StageSelect.h"
+#include "CountEnemy.h"
 
 //**************************************************************
 // マクロ定義
@@ -142,6 +144,13 @@ HRESULT InitGame(AREA Area)
 		MessageBox(GetMainWnd(), _T("タイマー表示初期化失敗"), NULL, MB_OK | MB_ICONSTOP);
 		return hr;
 	}
+	// カウントエネミー表示初期化
+	hr = InitCountEnemy();
+	if (FAILED(hr))
+	{
+		MessageBox(GetMainWnd(), _T("カウントエネミー表示初期化失敗"), NULL, MB_OK | MB_ICONSTOP);
+		return hr;
+	}
 
 	// ライフ表示初期化
 	hr = InitLife();
@@ -181,6 +190,11 @@ HRESULT InitGame(AREA Area)
 	if (FAILED(hr))
 		return hr;
 
+	// レティクル初期化
+	hr = InitReticle();
+	if (FAILED(hr))
+		return hr;
+
 	// 煙初期化
 	hr = InitSmoke();
 	if (FAILED(hr))
@@ -193,6 +207,11 @@ HRESULT InitGame(AREA Area)
 
 	// エネミーメレー初期化
 	hr = InitEnemyMelee();
+	if (FAILED(hr))
+		return hr;
+
+	// レンジ初期化
+	hr = InitEnemyRange();
 	if (FAILED(hr))
 		return hr;
 
@@ -209,10 +228,6 @@ HRESULT InitGame(AREA Area)
 	// エクスプロード呼び出し
 	// SetEnemyExplode(XMFLOAT3(60.0f, -790.0f, 0.0f));
 
-	// レンジ初期化
-	hr = InitEnemyRange();
-	if (FAILED(hr))
-		return hr;
 
 	// レンジ呼び出し
 	//SetEnemyRange(XMFLOAT3(40.0f, -500.0f, 0.0f));
@@ -311,24 +326,22 @@ void UninitGame()
 
 	// ポリライン終了処理
 	//UninitPolyline();
-
 	// 壁終了
 	//UninitMeshWall();
-
 	// レンジ終了
-	UninitEnemyRange();
-
+	//UninitEnemyRange();
 	// エネミーメレー終了
 	// UninitEnemyMelee();
-
 	// エネミーエクスプロード終了
 	// UninitEnemyExplode();
-
 	// ブロック終了
 	//UninitBlock();
 
 	// エフェクト終了
 	UninitEffect();
+
+	// レティクル終了
+	UninitReticle();
 
 	// 爆発終了
 	UninitExplosion();
@@ -356,6 +369,9 @@ void UninitGame()
 
 	//タイマー終了
 	UninitTimer();
+
+	//カウントエネミー終了
+	UninitCountEnemy();
 
 	// メッシュ終了
 	UninitMesh();
@@ -436,10 +452,8 @@ void UpdateGame()
 
 		// デバッグ文字列表示更新
 		//UpdateDebugProc();
-
 		// デバッグ文字列設定
 		//StartDebugProc();
-
 		// ポリゴン表示更新
 		//UpdatePolygon();
 
@@ -451,16 +465,12 @@ void UpdateGame()
 
 		// エネミーメレー更新
 		// UpdateEnemyMelee();
-
 		// エネミーエクスプロード更新
 		// UpdateEnemyExplode();
-
 		// エネミーレンジ更新
-		UpdateEnemyRange();
-
+		//UpdateEnemyRange();
 		// 壁更新
 		//UpdateMeshWall();
-
 		// フィールド更新
 		//UpdateMeshField();
 
@@ -469,7 +479,12 @@ void UpdateGame()
 
 		//*12/17澤村瑠人追加
 		// タイマー更新
+		if (!GetPlayerInv())
 		UpdateTimer();
+
+		// タイマー更新
+		if (!GetPlayerInv())
+			UpdateCountEnemy();
 
 		// 丸影更新
 		//UpdateShadow();
@@ -485,6 +500,7 @@ void UpdateGame()
 
 		// エフェクト更新
 		UpdateEffect();
+		UpdateReticle();
 
 		// エフェクト(for Effekseer)更新
 		if (g_EffectTimer == 0)
@@ -518,7 +534,7 @@ void UpdateGame()
 			g_bPause = !g_bPause;
 			if (g_bPause) {
 				//CSound::Pause();
-				CSound::SetVolume(BGM_GAME000, 0.06f);
+				CSound::SetVolume(BGM_GAME000, 0.03f);
 				CSound::SetPlayVol(SE_SELECT, 0.1f); // セレクト
 
 				ResetPauseMenu();
@@ -634,13 +650,13 @@ void DrawGame()
 	DrawPlayer();
 
 	// エネミーメレー
-	DrawEnemyMelee();
+	//DrawEnemyMelee();
+
+	// エネミーレンジ
+	//DrawEnemyRange();
 
 	// エネミーエクスプロード
 	// DrawEnemyExplode();
-
-	// エネミーレンジ
-	DrawEnemyRange();
 
 	// 丸影描画
 	//DrawShadow();
@@ -673,6 +689,8 @@ void DrawGame()
 
 	// エフェクト描画
 	DrawEffect();
+	DrawReticle();
+
 	SetZBuffer(true);
 	//一時停止描画
 	if (g_bPause) {
@@ -693,8 +711,11 @@ void DrawGame()
 
 	// タイマー表示
 	DrawTimer();
+
+	DrawCountEnemy();
+
 	// ライフ表示(完了)
-	DrawLife();
+	//DrawLife();
 	//DrawDebugProc();
 	SetBlendState(BS_NONE);
 }

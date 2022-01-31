@@ -214,6 +214,10 @@ void UpdateSelect(void)
 		}
 		else if (GetKeyRepeat(VK_LEFT)|| (g_bJoySelect == LEFT))
 		{
+			if (g_nSelectMenu == STAGE_1)
+			{
+				g_nSelectMenu = SELECT;
+			}
 			// カーソル音
 			CSound::SetPlayVol(SE_SELECT, 0.3f);
 			g_nSelectMenu = (SELECT_MENU)((g_nSelectMenu + NUM_SELECT_MENU - 1) % (NUM_SELECT_MENU));
@@ -234,6 +238,9 @@ void UpdateSelect(void)
 		if (GetKeyTrigger(VK_RETURN)||GetJoyTrigger(Joycon, JOYSTICKID1))
 		{
 			CSound::SetPlayVol(SE_DECISION, 0.7f);
+			g_bTime = false;
+			g_nTime = WAIT_TIME * WAIT_TIME;
+
 			//選択中のメニュー項目により分岐
 			switch (GetSelectMenu())
 			{

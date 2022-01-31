@@ -45,6 +45,8 @@
 // グローバル変数
 //**************************************************************
 static ID3D11ShaderResourceView* g_pTexture;	// テクスチャ用変数
+
+bool ClearFlag;//trueだとCLEAR
 //**************************************************************
 // 初期化処理
 //**************************************************************
@@ -124,4 +126,8 @@ void DrawGameclear()
 	SetPolygonTexture(g_pTexture);
 	DrawPolygon(pDC);
 
+}
+void GameclearFlag()
+{
+	ClearFlag = true;
 }

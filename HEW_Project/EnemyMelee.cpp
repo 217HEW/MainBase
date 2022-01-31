@@ -30,7 +30,7 @@
 #include "life.h"
 #include "SceneManager.h"
 #include "PlayEffect.h"
-
+#include "CountEnemy.h"
 //**************************************************************
 // マクロ定義
 //**************************************************************
@@ -199,7 +199,8 @@ void UpdateEnemyMelee(void)
 		}
 
 		//敵とプレイヤーの距離が近づいたら
-		if (CollisionSphere(posPlayer, sizePlayer, g_EMelee[i].m_pos, SEARCH_ENEMY))
+		
+		if (CollisionSphere(posPlayer, sizePlayer, g_EMelee[i].m_pos, SEARCH_ENEMY) && (!GetPlayerInv()))
 		{
 			if (!g_EMelee[i].m_use)
 			{//未使用なら次へ
@@ -311,6 +312,7 @@ void UpdateEnemyMelee(void)
 				//{
 				//	SetScene(SCENE_GAMEOVER);
 				//}
+				DelCountEnemy();
 				g_EMelee[i].m_use = false;
 			}
 
@@ -335,7 +337,7 @@ void UpdateEnemyMelee(void)
 				-SinDeg(g_EMelee[i].m_rot.y) * VALUE_MOVE_ENEMY,
 				0.0f,
 				-CosDeg(g_EMelee[i].m_rot.y) * VALUE_MOVE_ENEMY);
-
+		}
 			// ワールドマトリックスの初期化
 			mtxWorld = XMMatrixIdentity();
 
@@ -357,8 +359,6 @@ void UpdateEnemyMelee(void)
 
 			// ワールドマトリックス設定
 			XMStoreFloat4x4(&g_EMelee[i].m_mtxWorld, mtxWorld);
-
-		}
 	}
 
 
@@ -370,7 +370,7 @@ void UpdateEnemyMelee(void)
 		}
 
 		//敵とプレイヤーの距離が近づいたら
-		if (CollisionSphere(posPlayer, sizePlayer, g_EMelee1[i].m_pos, SEARCH_ENEMY1))
+		if (CollisionSphere(posPlayer, sizePlayer, g_EMelee1[i].m_pos, SEARCH_ENEMY1) && (!GetPlayerInv()))
 		{
 			if (!g_EMelee1[i].m_use)
 			{//未使用なら次へ
@@ -462,22 +462,23 @@ void UpdateEnemyMelee(void)
 				}
 			}
 			for (int k = 0; k < MAX_BLOCK; ++k, --Block)
-			// エフェクトセット＆制御
-			//if (g_EffectTimer1 == 0)
-			//{
-			//	g_MeleeEffect1[i].Set(EFFECT_FIRE, g_EMelee1[i].m_pos, XMFLOAT3(1.0f, 1.0f, 1.0f), 0.5f, XMFLOAT3(1.0f, 1.0f, 1.0f));
-			//	g_EffectTimer1 = 30;
-			//}
-			//--g_EffectTimer1;
+				// エフェクトセット＆制御
+				//if (g_EffectTimer1 == 0)
+				//{
+				//	g_MeleeEffect1[i].Set(EFFECT_FIRE, g_EMelee1[i].m_pos, XMFLOAT3(1.0f, 1.0f, 1.0f), 0.5f, XMFLOAT3(1.0f, 1.0f, 1.0f));
+				//	g_EffectTimer1 = 30;
+				//}
+				//--g_EffectTimer1;
 
-			// 敵とプレイヤーの当たり判定
-			if (!g_EMelee1[i].m_use)
-			{// 未使用なら次へ
-				continue;
-			}
+				// 敵とプレイヤーの当たり判定
+				if (!g_EMelee1[i].m_use)
+				{// 未使用なら次へ
+					continue;
+				}
 			if (CollisionSphere(g_EMelee1[i].m_pos, g_EMelee1[i].m_size.x, posPlayer, sizePlayer))
 			{
-				DelLife();
+				//DelLife();
+				DelCountEnemy();
 				//if (GetLife() == 0)
 				//{
 				//	SetScene(SCENE_GAMEOVER);
@@ -506,7 +507,7 @@ void UpdateEnemyMelee(void)
 				-SinDeg(g_EMelee1[i].m_rot.y) * VALUE_MOVE_ENEMY1,
 				0.0f,
 				-CosDeg(g_EMelee1[i].m_rot.y) * VALUE_MOVE_ENEMY1);
-
+		}
 			// ワールドマトリックスの初期化
 			mtxWorld = XMMatrixIdentity();
 
@@ -528,8 +529,6 @@ void UpdateEnemyMelee(void)
 
 			// ワールドマトリックス設定
 			XMStoreFloat4x4(&g_EMelee1[i].m_mtxWorld, mtxWorld);
-
-		}
 	}
 
 
@@ -544,7 +543,7 @@ void UpdateEnemyMelee(void)
 		}
 
 		//敵とプレイヤーの距離が近づいたら
-		if (CollisionSphere(posPlayer, sizePlayer, g_EMelee2[i].m_pos, SEARCH_ENEMY2))
+		if (CollisionSphere(posPlayer, sizePlayer, g_EMelee2[i].m_pos, SEARCH_ENEMY2) && (!GetPlayerInv()))
 		{
 			if (!g_EMelee2[i].m_use)
 			{//未使用なら次へ
@@ -637,19 +636,19 @@ void UpdateEnemyMelee(void)
 			}
 			for (int k = 0; k < MAX_BLOCK; ++k, --Block2)
 
-			// エフェクトセット＆制御
-			//if (g_EffectTimer == 0)
-			//{
-			//	g_MeleeEffect1[i].Set(EFFECT_FIRE, g_EMelee1[i].m_pos, XMFLOAT3(1.0f, 1.0f, 1.0f), 0.5f, XMFLOAT3(1.0f, 1.0f, 1.0f));
-			//	g_EffectTimer = 30;
-			//}
-			//--g_EffectTimer;
+				// エフェクトセット＆制御
+				//if (g_EffectTimer == 0)
+				//{
+				//	g_MeleeEffect1[i].Set(EFFECT_FIRE, g_EMelee1[i].m_pos, XMFLOAT3(1.0f, 1.0f, 1.0f), 0.5f, XMFLOAT3(1.0f, 1.0f, 1.0f));
+				//	g_EffectTimer = 30;
+				//}
+				//--g_EffectTimer;
 
-			// 敵とプレイヤーの当たり判定
-			if (!g_EMelee2[i].m_use)
-			{// 未使用なら次へ
-				continue;
-			}
+				// 敵とプレイヤーの当たり判定
+				if (!g_EMelee2[i].m_use)
+				{// 未使用なら次へ
+					continue;
+				}
 			if (CollisionSphere(g_EMelee2[i].m_pos, g_EMelee2[i].m_size.x, posPlayer, sizePlayer))
 			{
 				//DelLife();
@@ -657,6 +656,7 @@ void UpdateEnemyMelee(void)
 				//{
 				//	SetScene(SCENE_GAMEOVER);
 				//}
+				DelCountEnemy();
 				g_EMelee2[i].m_use = false;
 			}
 
@@ -681,7 +681,7 @@ void UpdateEnemyMelee(void)
 				-SinDeg(g_EMelee2[i].m_rot.y) * VALUE_MOVE_ENEMY2,
 				0.0f,
 				-CosDeg(g_EMelee2[i].m_rot.y) * VALUE_MOVE_ENEMY2);
-
+		}
 			// ワールドマトリックスの初期化
 			mtxWorld = XMMatrixIdentity();
 
@@ -703,8 +703,6 @@ void UpdateEnemyMelee(void)
 
 			// ワールドマトリックス設定
 			XMStoreFloat4x4(&g_EMelee2[i].m_mtxWorld, mtxWorld);
-
-		}
 	}
 }
 
@@ -763,7 +761,7 @@ void DrawEnemyMelee(void)
 //		:使用している敵の最大数
 //
 //****************************************************************
-int SetEnemyMelee(XMFLOAT3(pos), int(id))
+int SetEnemyMelee(XMFLOAT3 pos, int id)
 {
 	if (id == 0)
 	{

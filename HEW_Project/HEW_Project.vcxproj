@@ -171,6 +171,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="ClearPause.cpp" />
     <ClCompile Include="collision.cpp" />
+    <ClCompile Include="CountEnemy.cpp" />
     <ClCompile Include="CreateField.cpp" />
     <ClCompile Include="debugproc.cpp" />
     <ClCompile Include="effect.cpp" />
@@ -194,6 +195,7 @@
     <ClCompile Include="player.cpp" />
     <ClCompile Include="polygon.cpp" />
     <ClCompile Include="polyline.cpp" />
+    <ClCompile Include="Reticle.cpp" />
     <ClCompile Include="SceneArea2.cpp" />
     <ClCompile Include="SceneArea3.cpp" />
     <ClCompile Include="SceneGame.cpp" />
@@ -218,6 +220,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="ClearPause.h" />
     <ClInclude Include="collision.h" />
+    <ClInclude Include="CountEnemy.h" />
     <ClInclude Include="CreateField.h" />
     <ClInclude Include="debugproc.h" />
     <ClInclude Include="effect.h" />
@@ -242,6 +245,7 @@
     <ClInclude Include="polygon.h" />
     <ClInclude Include="polyline.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="Reticle.h" />
     <ClInclude Include="SceneArea2.h" />
     <ClInclude Include="SceneArea3.h" />
     <ClInclude Include="SceneGame.h" />
