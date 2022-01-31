@@ -27,3 +27,6 @@ void DrawC_Pause(void);
 void SetC_PauseMenu(void);
 C_PAUSE_MENU GetC_PauseMenu(void);
 void ResetC_PauseMenu(void);
+
+bool GetClearPause();
+void SetClearPause(bool Setpause);

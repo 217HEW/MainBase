@@ -183,7 +183,9 @@ void GameclearFlag()
 		SceneClearFlag = 10;
 		break;
 	}
-	StartFadeOut(SCENE_GAMECLEAR);
+	
+	SetClearPause(true);
+
 	
 }
 

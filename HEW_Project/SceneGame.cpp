@@ -210,6 +210,8 @@ HRESULT InitGame(AREA Area)
 	if (FAILED(hr))
 		return hr;
 
+
+
 	g_nNowScene = GetScene();
 	
 	// SetMeshWall(XMFLOAT3(0.0f, 0.0f, 640.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), 16, 2, XMFLOAT2(40.0f, 40.0f));
@@ -332,213 +334,225 @@ void UpdateGame()
 
 	TEnemyMelee* pEMelee = GetEnemyMelee();
 
-	if (g_bC_Pause) {
-		//一時停止更新
-		UpdateC_Pause();
-	}
-	else if (GetFadeState() == FADE_NONE)
+	if (GetClearPause())
 	{
-		int Timer = GetTimer();
-		if (Timer <= 0)
-		{
-			StartFadeOut(SCENE_GAMEOVER);
-		}
-	}
-
-	//一時停止中?
-	if (g_bPause) {
-		//一時停止更新
-		UpdatePause();
+		UpdateC_Pause();
 	}
 	else
 	{
-		// フェード中は処理しない
-		if (GetFadeState() == FADE_NONE)
-		{ 
-			
+
+
+
+		//if (g_bC_Pause) {
+		//	//一時停止更新
+		//	UpdateC_Pause();
+		//}
+		//else if (GetFadeState() == FADE_NONE)
+		//{
+		//	int Timer = GetTimer();
+		//	if (Timer <= 0)
+		//	{
+		//		StartFadeOut(SCENE_GAMEOVER);
+		//	}
+		//}
+
+		//一時停止中?
+		if (g_bPause) {
+			//一時停止更新
+			UpdatePause();
+		}
+		else
+		{
+			// フェード中は処理しない
+			if (GetFadeState() == FADE_NONE)
+			{
+
 #ifdef _DEBUG
-			if (GetKeyRelease(VK_1))
-			{
-				StartFadeOut(SCENE_TITLE);
-			}
-			else if (GetKeyRelease(VK_2))
-			{
-				StartFadeOut(SCENE_SELECT);
-			}
-			else if (GetKeyRelease(VK_3))
-			{
-				StartFadeOut(SCENE_GAME);
-			}
-			else if (GetKeyRelease(VK_4))
-			{
-				StartFadeOut(SCENE_AREA2);
-			}
-			 else if (GetKeyRelease(VK_5))
-			 {
-			 	StartFadeOut(SCENE_AREA3);
-			 }
-			else if (GetKeyRelease(VK_6))
-			{
-				StartFadeOut(SCENE_GAMEOVER);
-			}
-			else if (GetKeyRelease(VK_7))
-			{
-				StartFadeOut(SCENE_GAMECLEAR);
-			}
-			else if (GetKeyRelease(VK_8))
-			{
-				StartFadeOut(SCENE_SELECT);
-			}
+				if (GetKeyRelease(VK_1))
+				{
+					StartFadeOut(SCENE_TITLE);
+				}
+				else if (GetKeyRelease(VK_2))
+				{
+					StartFadeOut(SCENE_SELECT);
+				}
+				else if (GetKeyRelease(VK_3))
+				{
+					StartFadeOut(SCENE_GAME);
+				}
+				else if (GetKeyRelease(VK_4))
+				{
+					StartFadeOut(SCENE_AREA2);
+				}
+				else if (GetKeyRelease(VK_5))
+				{
+					StartFadeOut(SCENE_AREA3);
+				}
+				else if (GetKeyRelease(VK_6))
+				{
+					StartFadeOut(SCENE_GAMEOVER);
+				}
+				else if (GetKeyRelease(VK_7))
+				{
+					StartFadeOut(SCENE_GAMECLEAR);
+				}
+				else if (GetKeyRelease(VK_8))
+				{
+					StartFadeOut(SCENE_SELECT);
+				}
 #endif
-		
-			int Timer = GetTimer();
-			if (Timer <= 0)
+
+				int Timer = GetTimer();
+				if (Timer <= 0)
+				{
+					StartFadeOut(SCENE_GAMEOVER);
+				}
+			}
+			// 背景更新
+			UpdateBG();
+
+			// 自機更新
+			UpdatePlayer();
+
+			// 二次元配列マップ更新
+			UpdateCField();
+
+			//*12/17澤村瑠人追加
+			// タイマー更新
+			if (!GetPlayerInv())
+				UpdateTimer();
+
+			// タイマー更新
+			if (!GetPlayerInv())
+				UpdateCountEnemy();
+
+			// 丸影更新
+			//UpdateShadow();
+
+			// カメラ更新
+			CCamera::Get()->Update();
+
+			// 爆発更新
+			UpdateExplosion();
+
+			// エフェクト更新
+			UpdateEffect();
+			UpdateReticle();
+
+			// エフェクト(for Effekseer)更新
+			if (g_EffectTimer == 0)
 			{
-				StartFadeOut(SCENE_GAMEOVER);
+				g_GameEffect.Set(EFFECT_FIRE, XMFLOAT3(-50, -50, 0), XMFLOAT3(10.0f, 10.0f, 10.0f), 0.1f, XMFLOAT3(1.0f, 1.0f, 1.0f));
+				g_EffectTimer = 30;
+			}
+			--g_EffectTimer;
+			g_GameEffect.Update();
+
+			// 煙更新
+			// UpdateSmoke();
+
+		}
+		//一時停止ON/OFF
+		if (GetKeyTrigger(VK_P) || GetJoyTrigger(Joycon, JOYSTICKID4))
+		{
+			if (GetFadeState() == FADE_NONE)
+			{
+				g_bPause = !g_bPause;
+				if (g_bPause) {
+					//CSound::Pause();
+					CSound::SetVolume(BGM_GAME000, 0.03f);
+					CSound::SetPlayVol(SE_SELECT, 0.1f); // セレクト
+
+					ResetPauseMenu();
+				}
+				else
+				{
+					CSound::SetVolume(BGM_GAME000, 0.1f);
+					CSound::SetPlayVol(SE_CANCEL, 0.1f); // キャンセル
+					//CSound::Resume();
+				}
 			}
 		}
-		// 背景更新
-		UpdateBG();
 
-		// 自機更新
-		UpdatePlayer();
+		//一時停止ON/OFF
+		//if (GetKeyTrigger(VK_M))
+		//{
+		//	if (GetFadeState() == FADE_NONE)
+		//	{
+		//		g_bC_Pause = !g_bC_Pause;
+		//		if (g_bC_Pause) {
+		//			//CSound::Pause();
+		//			CSound::SetVolume(BGM_GAME000, 0.06f);
+		//			CSound::SetPlayVol(SE_SELECT, 0.1f); // セレクト
+		//
+		//			ResetPauseMenu();
+		//		}
+		//		else
+		//		{
+		//			CSound::SetVolume(BGM_GAME000, 0.1f);
+		//			CSound::SetPlayVol(SE_CANCEL, 0.1f); // キャンセル
+		//			//CSound::Resume();
+		//		}
+		//	}
+		//}
 
-		// 二次元配列マップ更新
-		UpdateCField();
-
-		//*12/17澤村瑠人追加
-		// タイマー更新
-		if (!GetPlayerInv())
-			UpdateTimer();
-
-		// タイマー更新
-		if (!GetPlayerInv())
-			UpdateCountEnemy();
-
-		// 丸影更新
-		//UpdateShadow();
-
-		// カメラ更新
-		CCamera::Get()->Update();
-
-		// 爆発更新
-		UpdateExplosion();
-
-		// エフェクト更新
-		UpdateEffect();
-		UpdateReticle();
-
-		// エフェクト(for Effekseer)更新
-		if (g_EffectTimer == 0)
+		//一時停止メニューの選択
+		if (g_bPause && GetFadeState() == FADE_NONE)
 		{
-			g_GameEffect.Set(EFFECT_FIRE, XMFLOAT3(-50, -50, 0), XMFLOAT3(10.0f, 10.0f, 10.0f), 0.1f, XMFLOAT3(1.0f, 1.0f, 1.0f));
-			g_EffectTimer = 30;
+			//[ENTER]が押された?
+			if (GetKeyTrigger(VK_RETURN) || GetJoyTrigger(Joycon, JOYSTICKID1))
+			{
+				//選択中のメニュー項目により分岐
+				switch (GetPauseMenu())
+				{
+				case PAUSE_MENU_CONTINUE:	// コンテニュー
+					g_bPause = false;
+					CSound::SetVolume(BGM_GAME000, 0.1f);
+					CSound::SetPlayVol(SE_CANCEL, 0.1f); // キャンセル
+					//CSound::Resume();
+					break;
+				case PAUSE_MENU_RETRY:		// リトライ
+					StartFadeOut(GetScene());
+					CSound::SetPlayVol(SE_SELECT, 0.1f); // セレクト
+					break;
+				case PAUSE_MENU_QUIT:		// ゲームを辞める
+					StartFadeOut(SCENE_TITLE);
+					CSound::SetPlayVol(SE_SELECT, 0.1f); // セレクト
+					break;
+				}
+			}
 		}
-		--g_EffectTimer;
-		g_GameEffect.Update();
 
-		// 煙更新
-		// UpdateSmoke();
 
 	}
-	//一時停止ON/OFF
-	if (GetKeyTrigger(VK_P)||GetJoyTrigger(Joycon, JOYSTICKID4))
-	{
-		if (GetFadeState() == FADE_NONE)
+		//テスト
+		if (GetClearPause() && GetFadeState() == FADE_NONE)
 		{
-			g_bPause = !g_bPause;
-			if (g_bPause) {
-				//CSound::Pause();
-				CSound::SetVolume(BGM_GAME000, 0.03f);
-				CSound::SetPlayVol(SE_SELECT, 0.1f); // セレクト
-
-				ResetPauseMenu();
-			}
-			else
+			//[ENTER]が押された?
+			if (GetKeyTrigger(VK_RETURN))
 			{
-				CSound::SetVolume(BGM_GAME000, 0.1f);
-				CSound::SetPlayVol(SE_CANCEL, 0.1f); // キャンセル
-				//CSound::Resume();
+				//選択中のメニュー項目により分岐
+				switch (GetC_PauseMenu())
+				{
+				case C_PAUSE_MENU_NEXTSTAGE:	// ネクステージ
+					StartFadeOut(g_nNowScene + 1);
+					SetClearPause(false);
+					CSound::SetVolume(BGM_GAME000, 0.1f);
+					CSound::SetPlayVol(SE_SELECT, 0.1f); // キャンセル
+					//CSound::Resume();
+					break;
+				case C_PAUSE_MENU_SELECT:		// セレクト画面
+					StartFadeOut(SCENE_SELECT);
+					CSound::SetPlayVol(SE_SELECT, 0.1f); // セレクト
+					break;
+				case C_PAUSE_MENU_QUIT:		// ゲームを辞める
+					StartFadeOut(SCENE_TITLE);
+					CSound::SetPlayVol(SE_SELECT, 0.1f); // セレクト
+					break;
+				}
 			}
 		}
-	}
-
-	//一時停止ON/OFF
-	if (GetKeyTrigger(VK_M))
-	{
-		if (GetFadeState() == FADE_NONE)
-		{
-			g_bC_Pause = !g_bC_Pause;
-			if (g_bC_Pause) {
-				//CSound::Pause();
-				CSound::SetVolume(BGM_GAME000, 0.06f);
-				CSound::SetPlayVol(SE_SELECT, 0.1f); // セレクト
 	
-				ResetPauseMenu();
-			}
-			else
-			{
-				CSound::SetVolume(BGM_GAME000, 0.1f);
-				CSound::SetPlayVol(SE_CANCEL, 0.1f); // キャンセル
-				//CSound::Resume();
-			}
-		}
-	}
-
-	//一時停止メニューの選択
-	if (g_bPause && GetFadeState() == FADE_NONE)
-	{
-		//[ENTER]が押された?
-		if (GetKeyTrigger(VK_RETURN)||GetJoyTrigger(Joycon, JOYSTICKID1))
-		{
-			//選択中のメニュー項目により分岐
-			switch (GetPauseMenu())
-			{
-			case PAUSE_MENU_CONTINUE:	// コンテニュー
-				g_bPause = false;
-				CSound::SetVolume(BGM_GAME000, 0.1f);
-				CSound::SetPlayVol(SE_CANCEL, 0.1f); // キャンセル
-				//CSound::Resume();
-				break;
-			case PAUSE_MENU_RETRY:		// リトライ
-				StartFadeOut(GetScene());
-				CSound::SetPlayVol(SE_SELECT, 0.1f); // セレクト
-				break;
-			case PAUSE_MENU_QUIT:		// ゲームを辞める
-				StartFadeOut(SCENE_TITLE);
-				CSound::SetPlayVol(SE_SELECT, 0.1f); // セレクト
-				break;
-			}
-		}
-	}
-
-	//テスト
-	if (g_bC_Pause && GetFadeState() == FADE_NONE)
-	{
-		//[ENTER]が押された?
-		if (GetKeyTrigger(VK_RETURN))
-		{
-			//選択中のメニュー項目により分岐
-			switch (GetC_PauseMenu())
-			{
-			case C_PAUSE_MENU_NEXTSTAGE:	// ネクステージ
-				StartFadeOut(g_nNowScene + 1);
-				//g_bC_Pause = false;
-				CSound::SetVolume(BGM_GAME000, 0.1f);
-				CSound::SetPlayVol(SE_SELECT, 0.1f); // キャンセル
-				//CSound::Resume();
-				break;
-			case C_PAUSE_MENU_SELECT:		// セレクト画面
-				StartFadeOut(SCENE_SELECT);
-				CSound::SetPlayVol(SE_SELECT, 0.1f); // セレクト
-				break;
-			case C_PAUSE_MENU_QUIT:		// ゲームを辞める
-				StartFadeOut(SCENE_TITLE);
-				CSound::SetPlayVol(SE_SELECT, 0.1f); // セレクト
-				break;
-			}
-		}
-	}
 }
 
 //**************************************************************
@@ -598,7 +612,7 @@ void DrawGame()
 	}
 
 	//一時停止描画
-	if (g_bC_Pause) {
+	if (GetClearPause()) {
 		DrawC_Pause();
 	}
 
