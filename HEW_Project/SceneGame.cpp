@@ -246,7 +246,7 @@ HRESULT InitGame(AREA Area)
 	if (FAILED(hr))
 		return hr;
 
-	//g_nNowScene = GetScene();
+	g_nNowScene = GetScene();
 	
 	// SetMeshWall(XMFLOAT3(0.0f, 0.0f, 640.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), 16, 2, XMFLOAT2(40.0f, 40.0f));
 	// SetMeshWall(XMFLOAT3(-640.0f, 0.0f, 0.0f), XMFLOAT3(0.0f, -90.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), 16, 2, XMFLOAT2(80.0f, 80.0f));
@@ -292,8 +292,8 @@ HRESULT InitGame(AREA Area)
 	// }
 
 	// シーン番号取得
-	g_nNowScene = GetScene();
-	g_nNowScene++;
+	//g_nNowScene = GetScene();
+	//g_nNowScene++;
 
 	// BGM再生開始
 	// エリア毎にBGMを変えたい時はここをswitch文で切り替えるようにする
@@ -603,10 +603,10 @@ void UpdateGame()
 			switch (GetC_PauseMenu())
 			{
 			case C_PAUSE_MENU_NEXTSTAGE:	// ネクステージ
-				StartFadeOut(g_nNowScene);
+				StartFadeOut(g_nNowScene + 1);
 				//g_bC_Pause = false;
 				CSound::SetVolume(BGM_GAME000, 0.1f);
-				CSound::SetPlayVol(SE_CANCEL, 0.1f); // キャンセル
+				CSound::SetPlayVol(SE_SELECT, 0.1f); // キャンセル
 				//CSound::Resume();
 				break;
 			case C_PAUSE_MENU_SELECT:		// セレクト画面
