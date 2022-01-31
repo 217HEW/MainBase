@@ -30,12 +30,14 @@
 #include "life.h"
 #include "SceneManager.h"
 #include "PlayEffect.h"
+#include "Sound.h"
+
 #include "CountEnemy.h"
 //**************************************************************
 // ƒ}ƒNƒ’è‹`
 //**************************************************************
 #define MODEL_ENEMY			"data/model/Melee/Melee.fbx"//
-#define	VALUE_MOVE_ENEMY		(1.0f)		// ˆÚ“®‘¬“x
+#define	VALUE_MOVE_ENEMY		(0.5f)		// ˆÚ“®‘¬“x
 #define	VALUE_SCALE_ENEMY		4.0f, 8.0f, 4.0f
 #define MAX_ENEMYMELEE			(10)		// “G‹@Å‘å”
 
@@ -115,7 +117,7 @@ HRESULT InitEnemyMelee(void)
 		g_EMelee[i].m_pos = (XMFLOAT3(0.0f, 0.0f, 0.0f));
 		g_EMelee[i].m_size = (XMFLOAT3(10.0f, 10.0f, 10.0f));
 		g_EMelee[i].m_move = (XMFLOAT3(0.0f, 0.0f, 0.0f));
-		g_EMelee[i].m_rot = (XMFLOAT3(90.0f, 90.0f, 0.0f));
+		g_EMelee[i].m_rot = (XMFLOAT3(90.0f,90.0f, 0.0f));
 		g_EMelee[i].m_rotDest = g_EMelee[i].m_rot;
 		g_EMelee[i].m_use = false;
 	}
@@ -216,7 +218,7 @@ void UpdateEnemyMelee(void)
 			if (g_EMelee[i].m_pos.x >= posPlayer.x)
 			{
 				g_EMelee[i].m_pos.x += -VALUE_MOVE_ENEMY;
-				g_EMelee[i].m_rot = (XMFLOAT3(90.0f, 0.0f, 0.0f));
+				g_EMelee[i].m_rot = (XMFLOAT3(90.0f, 90.0f, 0.0f));
 
 				g_EMelee[i].m_rotDest.y = rotCamera.y - 90.0f;
 			}
@@ -224,7 +226,7 @@ void UpdateEnemyMelee(void)
 			if (g_EMelee[i].m_pos.x <= posPlayer.x)
 			{
 				g_EMelee[i].m_pos.x += VALUE_MOVE_ENEMY;
-				g_EMelee[i].m_rot = (XMFLOAT3(90.0f, 0.0f, 90.0f));
+				g_EMelee[i].m_rot = (XMFLOAT3(90.0f, 270.0f, 0.0f));
 				g_EMelee[i].m_rotDest.y = rotCamera.y + 90.0f;
 
 			}
@@ -248,6 +250,10 @@ void UpdateEnemyMelee(void)
 			// “G“¯Žm‚Ì“–‚½‚è”»’è
 			for (int j = 0; j < MAX_ENEMYMELEE; ++j)
 			{
+				if (!g_EMelee[j].m_use)
+				{//–¢Žg—p‚È‚çŽŸ‚Ö
+					continue;
+				}
 				if (CollisionSphere(g_EMelee[i].m_pos, g_EMelee[i].m_size.x, g_EMelee[j].m_pos, g_EMelee[j].m_size.x))
 				{
 					if (i == j)
@@ -255,7 +261,6 @@ void UpdateEnemyMelee(void)
 						continue;
 					}
 					//“G“¯Žm‚ªd‚È‚ç‚È‚¢ˆ—
-
 				}
 			}
 
@@ -307,11 +312,12 @@ void UpdateEnemyMelee(void)
 			}
 			if (CollisionSphere(g_EMelee[i].m_pos, g_EMelee[i].m_size.x, posPlayer, sizePlayer))
 			{
-				//DelLife();
-				//if (GetLife() == 0)
-				//{
-				//	SetScene(SCENE_GAMEOVER);
-				//}
+				if (GetPlayerJump())
+				{
+					DelLife();
+				}
+				CSound::SetPlayVol(SE_ENEMYBREAK, 0.3f);
+				StartExplosion(g_EMelee[i].m_pos, XMFLOAT2(25.0f, 25.0f));
 				DelCountEnemy();
 				g_EMelee[i].m_use = false;
 			}

@@ -112,7 +112,7 @@ void DrawTimer()
 	DrawPolygon(pDC);
 
 	// タイマー表示
-	DrawNumber(XMFLOAT2(TIMER_POS_X, TIMER_POS_Y),(unsigned)(g_nTimer / 60), TIMER_CHRCNT);
+	DrawNumber(XMFLOAT2(TIMER_POS_X, TIMER_POS_Y),(unsigned)(g_nTimer / 60), TIMER_CHRCNT, NUMBER_SIZE_X, NUMBER_SIZE_Y);
 	// 元に戻す
 	SetPolygonColor(1.0f, 1.0f, 1.0f);
 }

@@ -46,6 +46,8 @@ HRESULT InitNumber()
 	hr = CreateTextureFromFile(pDevice, PATH_NUMBERTEXTURE, &g_pTexture);
 	return hr;
 }
+
+
 //**************************************************************
 // èIóπèàóù
 //**************************************************************
@@ -64,13 +66,13 @@ void DrawNumber(XMFLOAT2 vPos,	// ï\é¶à íu(ç∂è„)
 				float fSizeY)	// ï\é¶ècïù
 {
 	ID3D11DeviceContext* pDC = GetDeviceContext();
-	SetPolygonSize(NUMBER_SIZE_X, NUMBER_SIZE_Y);
+	SetPolygonSize(fSizeX, fSizeY);
 	SetPolygonTexture(g_pTexture);
 	SetPolygonFrameSize(1.0f / NUMBER_COUNT_X,
 		1.0f / NUMBER_COUNT_Y);
 	// á@
-	vPos.x += (nWidth - 0.5f) * NUMBER_SIZE_X;
-	vPos.y -= NUMBER_SIZE_Y * 0.5f;
+	vPos.x += (nWidth - 0.5f) * fSizeX;
+	vPos.y -= fSizeY * 0.5f;
 	// áD
 	for (; nWidth > 0; --nWidth) 
 	{
@@ -86,7 +88,7 @@ void DrawNumber(XMFLOAT2 vPos,	// ï\é¶à íu(ç∂è„)
 		// áB
 		uNumber /= 10;
 		// áC
-		vPos.x -= NUMBER_SIZE_X* 1.1;
+		vPos.x -= fSizeX * 1.1;
 	}
 	// å≥Ç…ñﬂÇ∑
 	SetPolygonFrameSize(1.0f, 1.0f);

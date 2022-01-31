@@ -22,6 +22,9 @@
 //	2022/01/22	遠隔敵の情報を取得する関数の作成
 //				プレイヤーのライフ処理はここで屋あるべきでないため削除
 //	編集者：柴山凜太郎
+//--------------------------------------------------------------
+//	2022/01/31	敵がプレイヤーの方角へ向く簡易的な処理を追加しました
+//	編集者：上月大地
 //**************************************************************
 
 //**************************************************************
@@ -54,24 +57,25 @@
 #define SEARCH_RANGE			(200)		// 探索範囲
 #define ENEMY_TIMER				(5)			// 制限時間
 #define SCALE_E_RANGE		(XMFLOAT3(0.05f, 0.1f, 0.1f))
-#define COLLAR_ENEMY		(XMFLOAT4(0.0f, 10.0f, 0.0f,1.0f))	// プレイヤーカラー(仮)ここをいじるとカラーが変わります
+#define COLLAR_ENEMY		(XMFLOAT4(0.0f, 20.0f, 0.0f,1.0f))	// プレイヤーカラー(仮)ここをいじるとカラーが変わります
 //////////////////////////////////////////////////////////////////
 #define MODEL_ENEMY1			"data/model/Range/Range.fbx"	// "data/model/helicopter000.fbx"
 #define MAX_ENEMYRANGE1			(10)		// 敵機最大数
 #define SEARCH_RANGE1			(200)		// 探索範囲
 #define ENEMY_TIMER1			(5)			// 制限時間
 #define SCALE_E_RANGE1		(XMFLOAT3(0.05f, 0.1f, 0.1f))
-#define COLLAR_ENEMY1		(XMFLOAT4(0.0f, 0.0f, 10.0f,1.0f))	// プレイヤーカラー(仮)ここをいじるとカラーが変わります
+#define COLLAR_ENEMY1		(XMFLOAT4(0.0f, 0.0f, 20.0f,1.0f))	// プレイヤーカラー(仮)ここをいじるとカラーが変わります
 //////////////////////////////////////////////////////////////////
 #define MODEL_ENEMY2			"data/model/Range/Range.fbx"	// "data/model/helicopter000.fbx"
 #define MAX_ENEMYRANGE2			(10)		// 敵機最大数
 #define SEARCH_RANGE2			(200)		// 探索範囲
 #define ENEMY_TIMER2				(5)			// 制限時間
 #define SCALE_E_RANGE2		(XMFLOAT3(0.05f, 0.1f, 0.1f))
-#define COLLAR_ENEMY2		(XMFLOAT4(10.0f, 0.0f, 10.0f,1.0f))	// プレイヤーカラー(仮)ここをいじるとカラーが変わります
+#define COLLAR_ENEMY2		(XMFLOAT4(20.0f, 0.0f, 20.0f,1.0f))	// プレイヤーカラー(仮)ここをいじるとカラーが変わります
 
 
 #define DEFAULT_COLLAR		(XMFLOAT4(1.0f, 1.0f, 0.0f,1.0f))
+#define SCALE_E_RANGE		(XMFLOAT3(0.03f, 0.06f, 0.06f))
 //**************************************************************
 // グローバル変数
 //**************************************************************
@@ -103,13 +107,13 @@ HRESULT InitEnemyRange(void)
 	//}
 
 	// モデルデータの読み込み
-	g_model.SetDif(COLLAR_ENEMY); // モデルロード前にカラーを指定
+	g_model.SetDif(XMFLOAT4(0.2f,20.0f,10.0f,1.0f));
 	if (!g_model.Load(pDevice, pDeviceContext, MODEL_ENEMY))
 	{
 		MessageBoxA(GetMainWnd(), "モデルデータ読み込みエラー", "InitEnemy", MB_OK);
 		return E_FAIL;
 	}
-	g_model.SetDif(DEFAULT_COLLAR);
+
 	for (int i = 0; i < MAX_ENEMYRANGE; ++i)
 	{// 初期化したいモノがあればここに↓
 		g_ERange[i].m_pos = XMFLOAT3(0.0f, 0.0f, 0.0f);
@@ -195,10 +199,15 @@ void UpdateEnemyRange(void)
 
 	for (int i = 0; i < MAX_ENEMYRANGE; ++i)
 	{
-		//GetPlayerJump();
-		//敵とプレイヤーの距離が近づいたら
-		//if (CollisionSphere(posPlayer, sizePlayer, g_ERange[i].m_pos, SEARCH_RANGE))
-		//{
+		if (g_ERange[i].m_pos.x >= posPlayer.x)
+		{
+			g_ERange[i].m_rot = (XMFLOAT3(0.0f, 180.0f, 0.0f));
+		}	
+		//敵座標がプレイヤーよりも小さかったら
+		if (g_ERange[i].m_pos.x <= posPlayer.x)
+		{	
+			g_ERange[i].m_rot = (XMFLOAT3(0.0f, 0.0f, 0.0f));
+		}
 			// 使用中ならスキップ
 			if (!g_ERange[i].m_use)
 			{
@@ -232,12 +241,6 @@ void UpdateEnemyRange(void)
 					if (GetPlayerJump())
 					{
 						DelLife();
-						//DelLife();
-						StartExplosion(posPlayer, XMFLOAT2(40.0f, 40.0f));
-					}
-					else
-					{
-						continue;
 					}
 					g_ERange[i].m_Time += (ENEMY_TIMER + rand() % 3) * 60 + 59;	// もう一度3～6秒数える
 					g_ERange[i].ReticleSize = g_ERange[i].m_Time / 3;
