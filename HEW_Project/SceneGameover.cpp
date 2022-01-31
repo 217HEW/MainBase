@@ -126,9 +126,6 @@ void UpdateGameover()
 			StartFadeOut(SCENE_GAMECLEAR);
 		}
 	}
-
-	// ポリゴン表示更新
-	//UpdatePolygon();
 }
 
 //**************************************************************

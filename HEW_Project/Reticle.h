@@ -16,4 +16,5 @@ void UninitReticle(void);
 void UpdateReticle(void);
 void DrawReticle(void);
 
+// è∆èÄê›íu
 int SetReticle(XMFLOAT3 pos, XMFLOAT3 move, XMFLOAT4 col, XMFLOAT2 size, int timer);

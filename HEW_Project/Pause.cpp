@@ -110,9 +110,6 @@ HRESULT InitPause(void)
 	g_nSelectMenu = PAUSE_MENU_CONTINUE;
 	g_fCurve = 0.0f;
 
-	// 効果音初期化
-	//g_pSE_Select = CreateSound(SE_SELECT_PATH);
-
 	// テクスチャ読込
 	hr = CreateTextureFromFile(pDevice, PATH_STEXTURE, &g_pSTexture);
 	if (FAILED(hr))
@@ -192,10 +189,6 @@ void UpdatePause(void)
 			g_npTime = WAIT_PTIME;
 		}
 	}
-	//g_fCurve += XM_PI * 0.01f;//ピカピカの原因
-	//if (g_fCurve > XM_PI) {
-	//	g_fCurve -= XM_2PI;
-	//}
 
 	// 反射光の設定
 	g_fCol = cosf(g_fCurve) * 0.2f + 0.8f;
@@ -275,7 +268,5 @@ PAUSE_MENU GetPauseMenu(void)
 void ResetPauseMenu(void)
 {
 	g_nSelectMenu = PAUSE_MENU_CONTINUE;
-	// CSound::Play(SE_SELECT);
-	// CSound::SetVolume(SE_SELECT, 0.02f);
 	SetPauseMenu();
 }
