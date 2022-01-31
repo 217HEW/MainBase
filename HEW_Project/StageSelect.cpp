@@ -32,6 +32,8 @@
 #include "debugproc.h"
 #include "input.h"
 #include "number.h"
+#include "SceneGameclear.h"
+
 #include <xinput.h>		// コントローラー情報取得に必要
 
 #pragma comment (lib, "xinput.lib")	// コントローラー情報取得に必要
@@ -188,6 +190,9 @@ void UpdateSelect(void)
 	{	// 接続無し↓
 		g_bJoySelect = NOT;
 	}
+
+	if (g_StageClear < Getclear())
+		g_StageClear = Getclear();
 
 	if (g_bTime == true) {
 		if (GetKeyRepeat(VK_UP) || (g_bJoySelect == UP))

@@ -192,4 +192,7 @@ void GameclearFlag()
 
 	
 }
-
+int Getclear()
+{
+	return SceneClearFlag;
+}

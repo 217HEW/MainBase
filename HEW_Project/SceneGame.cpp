@@ -472,7 +472,7 @@ void UpdateGame()
 		if (GetClearPause() && GetFadeState() == FADE_NONE)
 		{
 			//[ENTER]‚ª‰Ÿ‚³‚ê‚½?
-			if (GetKeyTrigger(VK_RETURN))
+			if (GetKeyTrigger(VK_RETURN)|| GetJoyTrigger(Joycon, JOYSTICKID1))
 			{
 				//‘I‘ğ’†‚Ìƒƒjƒ…[€–Ú‚É‚æ‚è•ªŠò
 				switch (GetC_PauseMenu())

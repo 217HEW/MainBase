@@ -27,3 +27,4 @@ void DrawGameclear(); // 描画
 
 // クリアフラグ管理関数
 void GameclearFlag();
+int Getclear();

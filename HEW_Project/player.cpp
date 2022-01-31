@@ -335,10 +335,13 @@ void UpdatePlayer(void)
 	g_posModel.y += g_moveModel.y;
 
 	// ゲームオーバー用制限
-	if (g_posModel.x > 630.0f)	{ StartFadeOut(SCENE_GAMEOVER); }	// 右
-	if (g_posModel.x < -430.0f) { StartFadeOut(SCENE_GAMEOVER); }	// 左
-	if (g_posModel.y > 0.0f)	{ StartFadeOut(SCENE_GAMEOVER); }	// 上
-	if (g_posModel.y < -400.0f) { StartFadeOut(SCENE_GAMEOVER); }	// 下
+	if ((g_posModel.x > 630.0f)	 ||	// 右
+		(g_posModel.x < -430.0f) ||	// 左
+		(g_posModel.y > 0.0f)	 ||	// 上
+		(g_posModel.y < -400.0f))	// 下
+	{
+		StartFadeOut(GetScene());
+	}
 
 	// プレイヤー向き調整
 	switch (g_eDir)
