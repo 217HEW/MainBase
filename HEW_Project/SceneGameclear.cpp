@@ -19,7 +19,7 @@
 //	2021/12/28	デバッグ操作で遷移できるシーンの追加(AREA2,3,BOSS)
 //	編集者：柴山凜太郎
 //--------------------------------------------------------------
-//　2022/1/26	コンテニューか終るかの処理制作開始
+//　2022/1/31	クリア時ポーズ制作中
 //	編集者：澤村瑠人
 //
 //**************************************************************
@@ -33,7 +33,8 @@
 #include "polygon.h"
 #include "Fade.h"
 #include "Texture.h"
-
+#include "ClearPause.h"
+#include "Sound.h"
 //**************************************************************
 // マクロ定義
 //**************************************************************
@@ -47,7 +48,8 @@
 //**************************************************************
 static ID3D11ShaderResourceView* g_pTexture;	// テクスチャ用変数
 
-int SceneClearFlag=0;//シーンクリアフラグ
+int g_nNowScene;
+bool ClearFlag;//trueだとCLEAR
 //**************************************************************
 // 初期化処理
 //**************************************************************
@@ -59,6 +61,9 @@ HRESULT InitGameclear()
 	hr = CreateTextureFromFile(pDevice, PATH_BGTEXTURE, &g_pTexture);
 	if (FAILED(hr))
 		return hr;
+	
+	//g_nNowScene = GetScene();
+	//g_nNowScene++;
 
 	return hr;
 }
@@ -70,6 +75,8 @@ void UninitGameclear()
 {
 	// テクスチャ解放
 	SAFE_RELEASE(g_pTexture);
+
+	
 }
 
 //**************************************************************
@@ -81,9 +88,35 @@ void UpdateGameclear()
 	{
 		if (GetKeyRelease(VK_1))// || GetKeyTrigger(VK_RETURN) || GetKeyTrigger(VK_SPACE))
 		{
+
+			//[ENTER]が押された?
+			//if (GetKeyTrigger(VK_RETURN))
+			//{
+				//選択中のメニュー項目により分岐
+				switch (GetC_PauseMenu())
+				{
+				case C_PAUSE_MENU_NEXTSTAGE:	// ネクステージ
+					StartFadeOut(g_nNowScene);
+					//g_bC_Pause = false;
+					CSound::SetVolume(BGM_GAME000, 0.1f);
+					CSound::SetPlayVol(SE_CANCEL, 0.1f); // キャンセル
+					//CSound::Resume();
+					break;
+				case C_PAUSE_MENU_SELECT:		// セレクト画面
+					StartFadeOut(SCENE_SELECT);
+					CSound::SetPlayVol(SE_SELECT, 0.1f); // セレクト
+					break;
+				case C_PAUSE_MENU_QUIT:		// ゲームを辞める
+					StartFadeOut(SCENE_TITLE);
+					CSound::SetPlayVol(SE_SELECT, 0.1f); // セレクト
+					break;
+				}
+			//}
+		
+
 			StartFadeOut(SCENE_TITLE);
 		}
-		else if (GetKeyRelease(VK_2))
+		/*else if (GetKeyRelease(VK_2))
 		{
 			StartFadeOut(SCENE_GAME);
 		}
@@ -94,20 +127,24 @@ void UpdateGameclear()
 		else if (GetKeyRelease(VK_4))
 		{
 			StartFadeOut(SCENE_AREA3);
-		}
+		}*/
 	//	else if (GetKeyRelease(VK_5))
 	//	{
 	//		StartFadeOut(SCENE_AREA_DEBUG);
 	//	}
-		else if (GetKeyRelease(VK_6))
+		/*else if (GetKeyRelease(VK_6))
 		{
 			StartFadeOut(SCENE_GAMEOVER);
 		}
 		else if (GetKeyRelease(VK_7))
 		{
 			StartFadeOut(SCENE_GAMECLEAR);
-		}
+		}*/
 	}
+
+	
+
+
 	// ポリゴン表示更新
 	//UpdatePolygon();
 
@@ -124,6 +161,12 @@ void DrawGameclear()
 	SetPolygonPos(BG_POS_X, BG_POS_Y);
 	SetPolygonTexture(g_pTexture);
 	DrawPolygon(pDC);
+
+	//if (ClearFlag == true)
+	//{
+		DrawC_Pause();
+	//}
+
 }
 void GameclearFlag()
 {
