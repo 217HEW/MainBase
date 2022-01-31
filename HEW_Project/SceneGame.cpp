@@ -58,6 +58,9 @@
 //	2022/01/30	ポーズ中にリトライを押すと変なエリアに飛ぶ
 //				不具合をなくしました
 //														変更者：上月大地
+//--------------------------------------------------------------
+//	2022/01/31	いらない処理＆コメント部分の削除
+//														変更者：柴山凜太郎
 //**************************************************************
 
 //**************************************************************
@@ -93,8 +96,8 @@
 //**************************************************************
 // マクロ定義
 //**************************************************************
-#define MAX_POLYLINE	(20)					// ポリライン数
-#define THICKNESS		(10.0f)					// 線の太さ
+#define MAX_POLYLINE	(20)		// ポリライン数
+#define THICKNESS		(10.0f)		// 線の太さ
 
 //**************************************************************
 // グローバル変数
@@ -106,6 +109,7 @@ bool g_bC_Pause;				//一時停止中
 int g_nNowScene;
 Effect g_GameEffect;			// エフェクト変数
 static int g_EffectTimer = 0;	// エフェクト制御用タイマー
+
 //**************************************************************
 // 初期化処理
 //	引数：遷移先のエリア
@@ -158,11 +162,6 @@ HRESULT InitGame(AREA Area)
 	if (FAILED(hr))
 		return hr;
 
-	// ビルボード弾初期化
-	//hr = InitBullet();
-	//if (FAILED(hr))
-	//	return hr;
-
 	// 爆発初期化
 	hr = InitExplosion();
 	if (FAILED(hr))
@@ -212,48 +211,6 @@ HRESULT InitGame(AREA Area)
 
 	g_nNowScene = GetScene();
 	
-	// SetMeshWall(XMFLOAT3(0.0f, 0.0f, 640.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), 16, 2, XMFLOAT2(40.0f, 40.0f));
-	// SetMeshWall(XMFLOAT3(-640.0f, 0.0f, 0.0f), XMFLOAT3(0.0f, -90.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), 16, 2, XMFLOAT2(80.0f, 80.0f));
-	// SetMeshWall(XMFLOAT3(640.0f, 0.0f, 0.0f), XMFLOAT3(0.0f, 90.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), 16, 2, XMFLOAT2(80.0f, 80.0f));
-	// SetMeshWall(XMFLOAT3(0.0f, 0.0f, -640.0f), XMFLOAT3(0.0f, 180.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), 16, 2, XMFLOAT2(80.0f, 80.0f));
-
-	// ブロックセット
-	// for (int y = 0; y < 10; ++y)
-	// {
-	//	 for (int x = 0; x < 12; ++x)
-	//	 {
-	//		 SetBlock(XMFLOAT3(21.0f * x, 41.0f * y, 100.0f));
-	//	 }
-	// }
-	// ボリライン初期化
-	// hr = InitPolyline();
-	// if (FAILED(hr))
-	// 	return hr;
-	// XMFLOAT4 vColor[8] = {
-	// 	XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f),
-	// 	XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f),
-	// 	XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f),
-	// 	XMFLOAT4(1.0f, 0.0f, 1.0f, 1.0f),
-	// 	XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f),
-	// 	XMFLOAT4(0.0f, 1.0f, 1.0f, 1.0f),
-	// 	XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f),
-	// 	XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),
-	// };
-	// for (int i = 0; i < MAX_POLYLINE; ++i) {
-	// 	hr = CreatePolyline(&g_polyline[i], THICKNESS, true, vColor[i % 7 + 1], BS_ADDITIVE);
-	// 	if (FAILED(hr)) {
-	// 		return hr;
-	// 	}
-	// 	XMFLOAT3 pos;
-	// 	pos.x = rand() % 1240 - 620.0f;
-	// 	pos.y = rand() % 140 + 10.0f;
-	// 	pos.z = rand() % 1240 - 620.0f;
-	// 	AddPolylinePoint(&g_polyline[i], pos);
-	// 	pos.x = rand() % 1240 - 620.0f;
-	// 	pos.y = rand() % 140 + 10.0f;
-	// 	pos.z = rand() % 1240 - 620.0f;
-	// 	AddPolylinePoint(&g_polyline[i], pos);
-	// }
 	// BGM再生開始
 	// エリア毎にBGMを変えたい時はここをswitch文で切り替えるようにする
 	CSound::SetPlayVol(BGM_GAME000, 0.1f); // ゲーム本編BGM
@@ -274,19 +231,6 @@ void UninitGame()
 
 	//テスト
 	UninitC_Pause();
-
-	// ポリライン終了処理
-	//UninitPolyline();
-	// 壁終了
-	//UninitMeshWall();
-	// レンジ終了
-	//UninitEnemyRange();
-	// エネミーメレー終了
-	// UninitEnemyMelee();
-	// エネミーエクスプロード終了
-	// UninitEnemyExplode();
-	// ブロック終了
-	//UninitBlock();
 
 	// エフェクト終了
 	UninitEffect();
@@ -415,9 +359,6 @@ void UpdateGame()
 		if (!GetPlayerInv())
 			UpdateCountEnemy();
 
-		// 丸影更新
-		//UpdateShadow();
-
 		// カメラ更新
 		CCamera::Get()->Update();
 
@@ -426,6 +367,8 @@ void UpdateGame()
 
 		// エフェクト更新
 		UpdateEffect();
+
+		// 照準更新
 		UpdateReticle();
 
 		// エフェクト(for Effekseer)更新
@@ -436,10 +379,6 @@ void UpdateGame()
 		}
 		--g_EffectTimer;
 		g_GameEffect.Update();
-
-		// 煙更新
-		// UpdateSmoke();
-
 	}
 	//一時停止ON/OFF
 	if (GetKeyTrigger(VK_P)||GetJoyTrigger(Joycon, JOYSTICKID4))
@@ -561,37 +500,19 @@ void DrawGame()
 	// 自機描画
 	DrawPlayer();
 
-	// ビルボード弾描画
-	//DrawBullet();
-
-	// 煙描画
-	//DrawSmoke();
-
-	// 壁描画 (不透明部分)
-	//DrawMeshWall(DRAWPART_OPAQUE);
-
-	// ブロック描画
-	//DrawBlock();
-
 	// 爆発描画
 	DrawExplosion();
-
-	// ポリライン描画
-	// for (int i = 0; i < MAX_POLYLINE; ++i)
-	// {
-	// 	DrawPolyline(&g_polyline[i]);
-	// }
-
-	// 壁描画 (半透明部分)
-	//DrawMeshWall(DRAWPART_TRANSLUCENT);
 
 	SetZBuffer(false);
 
 	// エフェクト描画
 	DrawEffect();
+
+	// 照準描画
 	DrawReticle();
 
 	SetZBuffer(true);
+
 	//一時停止描画
 	if (g_bPause) {
 		DrawPause();
@@ -616,7 +537,7 @@ void DrawGame()
 
 	// ライフ表示(完了)
 	//DrawLife();
-	//DrawDebugProc();
+	
 	SetBlendState(BS_NONE);
 }
 
