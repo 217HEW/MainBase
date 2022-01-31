@@ -387,7 +387,6 @@ void UpdateGame()
 		{
 			g_bPause = !g_bPause;
 			if (g_bPause) {
-				//CSound::Pause();
 				CSound::SetVolume(BGM_GAME000, 0.03f);
 				CSound::SetPlayVol(SE_SELECT, 0.1f); // セレクト
 
@@ -397,7 +396,6 @@ void UpdateGame()
 			{
 				CSound::SetVolume(BGM_GAME000, 0.1f);
 				CSound::SetPlayVol(SE_CANCEL, 0.1f); // キャンセル
-				//CSound::Resume();
 			}
 		}
 	}
@@ -409,7 +407,6 @@ void UpdateGame()
 		{
 			g_bC_Pause = !g_bC_Pause;
 			if (g_bC_Pause) {
-				//CSound::Pause();
 				CSound::SetVolume(BGM_GAME000, 0.06f);
 				CSound::SetPlayVol(SE_SELECT, 0.1f); // セレクト
 	
@@ -419,7 +416,6 @@ void UpdateGame()
 			{
 				CSound::SetVolume(BGM_GAME000, 0.1f);
 				CSound::SetPlayVol(SE_CANCEL, 0.1f); // キャンセル
-				//CSound::Resume();
 			}
 		}
 	}
@@ -437,7 +433,6 @@ void UpdateGame()
 				g_bPause = false;
 				CSound::SetVolume(BGM_GAME000, 0.1f);
 				CSound::SetPlayVol(SE_CANCEL, 0.1f); // キャンセル
-				//CSound::Resume();
 				break;
 			case PAUSE_MENU_RETRY:		// リトライ
 				StartFadeOut(GetScene());
@@ -465,7 +460,6 @@ void UpdateGame()
 				//g_bC_Pause = false;
 				CSound::SetVolume(BGM_GAME000, 0.1f);
 				CSound::SetPlayVol(SE_SELECT, 0.1f); // キャンセル
-				//CSound::Resume();
 				break;
 			case C_PAUSE_MENU_SELECT:		// セレクト画面
 				StartFadeOut(SCENE_SELECT);

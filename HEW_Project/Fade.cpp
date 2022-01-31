@@ -131,9 +131,6 @@ void UpdateFade()
 
 			// シーン切替
 			SetScene(g_eNext);
-			// SetBlendState(BS_NONE);
-			// SetZWrite(false);
-		
 		}
 		// ボリュームもフェードアウト
 		CSound::SetVolume(1.0f - g_fAlpha);
@@ -148,8 +145,6 @@ void UpdateFade()
 			// フェードイン終了
 			g_fAlpha = 0.0f;
 			g_eState = FADE_NONE;
-			// SetBlendState(BS_ALPHABLEND);
-			// SetZBuffer(true);
 		}
 		// ボリュームもフェードイン
 		CSound::SetVolume(1.0f - g_fAlpha);

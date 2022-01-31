@@ -24,4 +24,6 @@ HRESULT InitGameclear(); // 初期化
 void UninitGameclear(); // 終了処理
 void UpdateGameclear(); // 更新
 void DrawGameclear(); // 描画
+
+// クリアフラグ管理関数
 void GameclearFlag();

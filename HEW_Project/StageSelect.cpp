@@ -84,7 +84,7 @@ float g_fCol = 0.0f;
 
 int g_StageClear = 0;
 
-bool g_bTime;	// 待機用
+bool g_bTime;		// 待機用
 int g_bJoySelect;	// コントローラ選択用
 
 // 待機タイマーカウントダウン
@@ -231,11 +231,6 @@ void UpdateSelect(void)
 			g_nTime = WAIT_TIME;
 		}
 
-		//g_fCurve += XM_PI * 0.01f;//ピカピカの原因
-	//if (g_fCurve > XM_PI) {
-	//	g_fCurve -= XM_2PI;
-	//}
-
 		// 反射光の設定
 		g_fCol = cosf(g_fCurve) * 0.2f + 0.8f;
 
@@ -348,13 +343,6 @@ void DrawSelect(void)
 				SELECT_MENU_POS_Y - SELECT_MENU_INTERVAL * 1.5);
 		}
 
-		if (nCntStageMenu == g_nSelectMenu) {
-			//SetPolygonColor(1.0f, 1.0f, 0.1f);
-		}
-		else {
-			//SetPolygonColor(0.3f, 0.3f, 0.3f);
-		}
-
 		// テクスチャの設定
 		// 選ばれているステージの画像の入れ替え
 		if (nCntStageMenu == g_nSelectMenu) {
@@ -405,7 +393,7 @@ void DrawSelect(void)
 }
 
 //=============================================================================
-// ポーズメニューの設定
+// セレクトメニューの設定
 //=============================================================================
 void SetSelectMenu(void)
 {
@@ -413,7 +401,7 @@ void SetSelectMenu(void)
 }
 
 //=============================================================================
-// ポーズメニューの取得
+// セレクトメニューの取得
 //=============================================================================
 SELECT_MENU GetSelectMenu(void)
 {
@@ -421,12 +409,10 @@ SELECT_MENU GetSelectMenu(void)
 }
 
 //=============================================================================
-// ポーズメニューのリセット
+// ステージセレクトのリセット
 //=============================================================================
 void ResetSelectMenu(void)
 {
 	g_nSelectMenu = STAGE_1;
-	// CSound::Play(SE_SELECT);
-	// CSound::SetVolume(SE_SELECT, 0.02f);
 	SetSelectMenu();
 }
