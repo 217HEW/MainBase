@@ -34,8 +34,8 @@
 #define	C_PAUSE_MENU_WIDTH	(320.0f)	// ポーズメニュー幅
 #define	C_PAUSE_MENU_HEIGHT	(60.0f)		// ポーズメニュー高さ
 #define	C_PAUSE_MENU_POS_X	(0.0f)		// ポーズメニュー位置(X座標)
-#define	C_PAUSE_MENU_POS_Y	(C_PAUSE_MENU_INTERVAL)	// ポーズメニュー位置(Y座標)
-#define	C_PAUSE_MENU_INTERVAL	(100.0f)	// ポーズメニュー間隔
+#define	C_PAUSE_MENU_POS_Y	(0.0f)	// ポーズメニュー位置(Y座標)
+#define	C_PAUSE_MENU_INTERVAL	(300.0f)	// ポーズメニュー間隔
 #define	PLATE_WIDTH			(360.0f)	// プレートの幅
 #define	PLATE_HEIGHT		(320.0f)	// プレートの幅
 #define	PLATE_POS_X			(0.0f)		// プレートの位置(X座標)
@@ -158,7 +158,7 @@ void DrawC_Pause(void)
 	SetPolygonSize(C_PAUSE_MENU_WIDTH, C_PAUSE_MENU_HEIGHT);
 	for (int nCntC_PauseMenu = 0; nCntC_PauseMenu < NUM_C_PAUSE_MENU; ++nCntC_PauseMenu) 
 	{
-		SetPolygonPos(C_PAUSE_MENU_POS_X, C_PAUSE_MENU_POS_Y - nCntC_PauseMenu * C_PAUSE_MENU_INTERVAL);
+		SetPolygonPos(C_PAUSE_MENU_POS_X + nCntC_PauseMenu * C_PAUSE_MENU_INTERVAL, C_PAUSE_MENU_POS_Y );
 
 		if (nCntC_PauseMenu == g_nSelectMenu) {
 			SetPolygonColor(1.0f, 1.0f, 0.1f);

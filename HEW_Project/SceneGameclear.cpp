@@ -48,6 +48,7 @@
 //**************************************************************
 static ID3D11ShaderResourceView* g_pTexture;	// テクスチャ用変数
 
+int SceneClearFlag = 0;
 int g_nNowScene;
 bool ClearFlag;//trueだとCLEAR
 //**************************************************************
@@ -164,7 +165,7 @@ void DrawGameclear()
 
 	//if (ClearFlag == true)
 	//{
-		DrawC_Pause();
+		
 	//}
 
 }
@@ -203,5 +204,6 @@ void GameclearFlag()
 		SceneClearFlag = 10;
 		break;
 	}
+	DrawC_Pause();
 	StartFadeOut(SCENE_GAMECLEAR);
 }
