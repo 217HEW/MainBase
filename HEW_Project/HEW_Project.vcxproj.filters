@@ -36,20 +36,8 @@
     <ClCompile Include="Camera.cpp">
       <Filter>ソースファイル\Object</Filter>
     </ClCompile>
-    <ClCompile Include="Gate.cpp">
-      <Filter>ソースファイル\Object</Filter>
-    </ClCompile>
-    <ClCompile Include="bullet.cpp">
-      <Filter>ソースファイル\Object</Filter>
-    </ClCompile>
     <ClCompile Include="player.cpp">
       <Filter>ソースファイル\Object</Filter>
-    </ClCompile>
-    <ClCompile Include="SceneArea2.cpp">
-      <Filter>ソースファイル\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="SceneArea3.cpp">
-      <Filter>ソースファイル\Scene</Filter>
     </ClCompile>
     <ClCompile Include="SceneGame.cpp">
       <Filter>ソースファイル\Scene</Filter>
@@ -68,12 +56,6 @@
     </ClCompile>
     <ClCompile Include="life.cpp">
       <Filter>ソースファイル\Object\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="Boss.cpp">
-      <Filter>ソースファイル\Object\Enemy</Filter>
-    </ClCompile>
-    <ClCompile Include="EnemyExplode.cpp">
-      <Filter>ソースファイル\Object\Enemy</Filter>
     </ClCompile>
     <ClCompile Include="EnemyMelee.cpp">
       <Filter>ソースファイル\Object\Enemy</Filter>
@@ -108,22 +90,10 @@
     <ClCompile Include="number.cpp">
       <Filter>ソースファイル\System</Filter>
     </ClCompile>
-    <ClCompile Include="smoke.cpp">
-      <Filter>ソースファイル\Effect</Filter>
-    </ClCompile>
-    <ClCompile Include="shadow.cpp">
-      <Filter>ソースファイル\Effect</Filter>
-    </ClCompile>
-    <ClCompile Include="polyline.cpp">
-      <Filter>ソースファイル\Effect</Filter>
-    </ClCompile>
     <ClCompile Include="PlayEffect.cpp">
       <Filter>ソースファイル\Effect</Filter>
     </ClCompile>
     <ClCompile Include="explosion.cpp">
-      <Filter>ソースファイル\Effect</Filter>
-    </ClCompile>
-    <ClCompile Include="effect.cpp">
       <Filter>ソースファイル\Effect</Filter>
     </ClCompile>
     <ClCompile Include="polygon.cpp">
@@ -132,20 +102,11 @@
     <ClCompile Include="Light.cpp">
       <Filter>ソースファイル\System</Filter>
     </ClCompile>
-    <ClCompile Include="EnemyBase.cpp">
-      <Filter>ソースファイル\Object\Enemy</Filter>
-    </ClCompile>
     <ClCompile Include="Texture.cpp">
       <Filter>ソースファイル\System</Filter>
     </ClCompile>
     <ClCompile Include="Shader.cpp">
       <Filter>ソースファイル\System</Filter>
-    </ClCompile>
-    <ClCompile Include="meshfield.cpp">
-      <Filter>ソースファイル\System\Mesh</Filter>
-    </ClCompile>
-    <ClCompile Include="meshwall.cpp">
-      <Filter>ソースファイル\System\Mesh</Filter>
     </ClCompile>
     <ClCompile Include="mesh.cpp">
       <Filter>ソースファイル\System\Mesh</Filter>
@@ -156,11 +117,17 @@
     <ClCompile Include="Reticle.cpp">
       <Filter>ソースファイル\Effect</Filter>
     </ClCompile>
+    <ClCompile Include="CountEnemy.cpp">
+      <Filter>ソースファイル\Object\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="effect.cpp">
+      <Filter>ソースファイル\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="ClearPause.cpp">
+      <Filter>ソースファイル\Scene\Scene_System</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="main.h">
-      <Filter>ヘッダーファイル</Filter>
-    </ClInclude>
     <ClInclude Include="SoundData.hpp">
       <Filter>ソースファイル\System\Sound</Filter>
     </ClInclude>
@@ -170,23 +137,8 @@
     <ClInclude Include="Block.h">
       <Filter>ヘッダーファイル\Object[.h]</Filter>
     </ClInclude>
-    <ClInclude Include="bullet.h">
-      <Filter>ヘッダーファイル\Object[.h]</Filter>
-    </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>ヘッダーファイル\Object[.h]</Filter>
-    </ClInclude>
-    <ClInclude Include="Gate.h">
-      <Filter>ヘッダーファイル\Object[.h]</Filter>
-    </ClInclude>
-    <ClInclude Include="Pause.h">
-      <Filter>ヘッダーファイル\Scene[.h]</Filter>
-    </ClInclude>
-    <ClInclude Include="SceneArea2.h">
-      <Filter>ヘッダーファイル\Scene[.h]</Filter>
-    </ClInclude>
-    <ClInclude Include="SceneArea3.h">
-      <Filter>ヘッダーファイル\Scene[.h]</Filter>
     </ClInclude>
     <ClInclude Include="SceneGame.h">
       <Filter>ヘッダーファイル\Scene[.h]</Filter>
@@ -197,16 +149,7 @@
     <ClInclude Include="SceneGameover.h">
       <Filter>ヘッダーファイル\Scene[.h]</Filter>
     </ClInclude>
-    <ClInclude Include="SceneManager.h">
-      <Filter>ヘッダーファイル\Scene[.h]</Filter>
-    </ClInclude>
     <ClInclude Include="SceneTitle.h">
-      <Filter>ヘッダーファイル\Scene[.h]</Filter>
-    </ClInclude>
-    <ClInclude Include="Fade.h">
-      <Filter>ヘッダーファイル\Scene[.h]</Filter>
-    </ClInclude>
-    <ClInclude Include="StageSelect.h">
       <Filter>ヘッダーファイル\Scene[.h]</Filter>
     </ClInclude>
     <ClInclude Include="effect.h">
@@ -218,20 +161,8 @@
     <ClInclude Include="PlayEffect.h">
       <Filter>ヘッダーファイル\Effect[.h]</Filter>
     </ClInclude>
-    <ClInclude Include="smoke.h">
-      <Filter>ヘッダーファイル\Effect[.h]</Filter>
-    </ClInclude>
-    <ClInclude Include="shadow.h">
-      <Filter>ヘッダーファイル\Effect[.h]</Filter>
-    </ClInclude>
-    <ClInclude Include="polyline.h">
-      <Filter>ヘッダーファイル\Effect[.h]</Filter>
-    </ClInclude>
     <ClInclude Include="bg.h">
       <Filter>ヘッダーファイル\Object[.h]</Filter>
-    </ClInclude>
-    <ClInclude Include="life.h">
-      <Filter>ヘッダーファイル\Object[.h]\UI</Filter>
     </ClInclude>
     <ClInclude Include="timer.h">
       <Filter>ヘッダーファイル\Object[.h]\UI</Filter>
@@ -239,19 +170,10 @@
     <ClInclude Include="player.h">
       <Filter>ヘッダーファイル\Object[.h]</Filter>
     </ClInclude>
-    <ClInclude Include="EnemyBase.h">
-      <Filter>ヘッダーファイル\Object[.h]\Enemy</Filter>
-    </ClInclude>
-    <ClInclude Include="EnemyExplode.h">
-      <Filter>ヘッダーファイル\Object[.h]\Enemy</Filter>
-    </ClInclude>
     <ClInclude Include="EnemyMelee.h">
       <Filter>ヘッダーファイル\Object[.h]\Enemy</Filter>
     </ClInclude>
     <ClInclude Include="EnemyRange.h">
-      <Filter>ヘッダーファイル\Object[.h]\Enemy</Filter>
-    </ClInclude>
-    <ClInclude Include="Boss.h">
       <Filter>ヘッダーファイル\Object[.h]\Enemy</Filter>
     </ClInclude>
     <ClInclude Include="collision.h">
@@ -293,14 +215,32 @@
     <ClInclude Include="mesh.h">
       <Filter>ヘッダーファイル\System[.h]\Mesh</Filter>
     </ClInclude>
-    <ClInclude Include="meshfield.h">
-      <Filter>ヘッダーファイル\System[.h]\Mesh</Filter>
-    </ClInclude>
-    <ClInclude Include="meshwall.h">
-      <Filter>ヘッダーファイル\System[.h]\Mesh</Filter>
-    </ClInclude>
     <ClInclude Include="Reticle.h">
       <Filter>ヘッダーファイル\Effect[.h]</Filter>
+    </ClInclude>
+    <ClInclude Include="CountEnemy.h">
+      <Filter>ヘッダーファイル\Object[.h]\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="life.h">
+      <Filter>ヘッダーファイル\Object[.h]\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneManager.h">
+      <Filter>ヘッダーファイル\Scene[.h]\Scene_System</Filter>
+    </ClInclude>
+    <ClInclude Include="Fade.h">
+      <Filter>ヘッダーファイル\Scene[.h]\Scene_System</Filter>
+    </ClInclude>
+    <ClInclude Include="Pause.h">
+      <Filter>ヘッダーファイル\Scene[.h]\Scene_System</Filter>
+    </ClInclude>
+    <ClInclude Include="StageSelect.h">
+      <Filter>ヘッダーファイル\Scene[.h]\Scene_System</Filter>
+    </ClInclude>
+    <ClInclude Include="main.h">
+      <Filter>ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="ClearPause.h">
+      <Filter>ヘッダーファイル\Scene[.h]\Scene_System</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -375,6 +315,9 @@
     </Filter>
     <Filter Include="ヘッダーファイル\Scene[.h]">
       <UniqueIdentifier>{dd531ca0-bc44-4e59-b5ee-77ea0df15a5b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダーファイル\Scene[.h]\Scene_System">
+      <UniqueIdentifier>{718e3b2d-617e-4703-88df-c47d3d10b73e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

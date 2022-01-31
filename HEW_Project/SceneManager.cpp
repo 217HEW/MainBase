@@ -47,8 +47,6 @@
 #include "SceneManager.h"
 #include "SceneTitle.h"
 #include "SceneGame.h"
-#include "SceneArea2.h"
-#include "SceneArea3.h"
 #include "SceneGameover.h"
 #include "SceneGameclear.h"
 #include "StageSelect.h"
@@ -95,10 +93,10 @@ void UpdateScene()
 	case SCENE_GAME:
 		UpdateGame();
 		break;
-	case SCENE_AREA2:		// ゲーム画面
+	case SCENE_AREA2:	// ゲーム画面
 		UpdateGame();
 		break;
-	case SCENE_AREA3:		// ゲーム画面
+	case SCENE_AREA3:	// ゲーム画面
 		UpdateGame();
 		break;
 	case SCENE_AREA4: // ゲーム画面エリア4
@@ -125,6 +123,7 @@ void UpdateScene()
 	// case SCENE_AREA_DEBUG:		// ゲーム画面
 	// 	UpdateGame();
 	// 	break;
+	
 	// 何かシーンを追加する場合はこちらに
 	case SCENE_GAMEOVER:
 		UpdateGameover();

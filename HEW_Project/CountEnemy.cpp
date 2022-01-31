@@ -93,19 +93,8 @@ void UpdateCountEnemy()
 void DrawCountEnemy()
 {
 	ID3D11DeviceContext* pDC = GetDeviceContext();
-	//// 白か赤に設定
-	//if (g_nCountEnemy < 10 * 60)
-	//{
-	//	if (g_nCountEnemy == 9.7 * 60)
-	//	{
-	//		CSound::SetPlayVol(SE_BEEP, 0.07f); // 警告音
-	//	}
-	//	SetPolygonColor(1.0f, 0.0f, 0.0f);//残り10秒で赤くなる
-	//}
-	//else {
-	//	SetPolygonColor(1.0f, 1.0f, 1.0f);
-	//}
-	// タイマー枠表示::
+	
+	// タイマー枠表示
 	SetPolygonSize(CountEnemyFRAME_WIDTH, CountEnemyFRAME_HEIGHT);
 	SetPolygonPos(CountEnemyFRAME_POS_X, CountEnemyFRAME_POS_Y);
 	SetPolygonTexture(g_pTexture);
@@ -113,9 +102,7 @@ void DrawCountEnemy()
 
 	// カウンター表示
 	DrawNumber(XMFLOAT2(CountEnemy_POS_X, CountEnemy_POS_Y), g_nCountEnemy, CountEnemy_CHRCNT, CountEnemy_NumSize_X, CountEnemy_NumSize_Y);
-	// カウンター最大表示
-	//DrawNumber(XMFLOAT2(MaxCountEnemy_POS_X, MaxCountEnemy_POS_Y), g_nMaxCountEnemy, CountEnemy_CHRCNT);
-
+	
 	// 元に戻す
 	SetPolygonColor(1.0f, 1.0f, 1.0f);
 }

@@ -33,17 +33,6 @@
 // #include "input.h"
 #include "polygon.h"
 #include "debugproc.h"
-//#include "mesh.h"
-//#include "meshfield.h"
-//#include "player.h"
-//#include "shadow.h"
-//#include "bg.h"
-//#include "bullet.h"
-//#include "explosion.h"
-//#include "effect.h"
-//#include "smoke.h"
-//#include "meshwall.h"
-//#include "polyline.h"
 #include "Fade.h"
 #include "Sound.h"
 #include "SceneManager.h"
@@ -422,121 +411,23 @@ HRESULT Init(HWND hWnd, BOOL bWindow)
 	dsd2.DepthEnable = FALSE;
 	g_pDevice->CreateDepthStencilState(&dsd2, &g_pDSS[1]);
 
-	
-	// ポリゴン表示初期化
-	hr = InitPolygon(g_pDevice);
-	if (FAILED(hr))
-		return hr;
-
-	
-	//  Assimp用シェーダ初期化
-	if (!CAssimpModel::InitShader(g_pDevice))
-		return E_FAIL;
-	 /*
-	// メッシュ初期化
-	hr = InitMesh();
-	if (FAILED(hr))
-		return hr;
-
-	// 丸影初期化
-	hr = InitShadow();
-	if (FAILED(hr))
-		return hr;
-
-	// 自機初期化
-	hr = InitPlayer();
-	if (FAILED(hr))
-		return hr;
-
-	// フィールド初期化
-	hr = InitMeshField(16, 16, 80.0f, 80.0f);
-	if (FAILED(hr))
-		return hr;
-
-	// 背景初期化
-	hr = InitBG();
-	if (FAILED(hr))
-		return hr;
-
-	// ビルボード弾初期化
-	hr = InitBullet();
-	if (FAILED(hr))
-		return hr;
-
-	// 爆発初期化
-	hr = InitExplosion();
-	if (FAILED(hr))
-		return hr;
-
-	// エフェクト初期化
-	hr = InitEffect();
-	if (FAILED(hr))
-		return hr;
-
-	// エフェクト初期化
-	hr = InitEffect();
-	if (FAILED(hr))
-		return hr;
-
-	// 煙初期化
-	hr = InitSmoke();
-	if (FAILED(hr))
-		return hr;
-
-	// 壁初期化
-	hr = InitMeshWall();
-	if (FAILED(hr))
-		return hr;
-	SetMeshWall(XMFLOAT3(   0.0f, 0.0f,  640.0f), XMFLOAT3(0.0f,   0.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), 16, 2, XMFLOAT2(80.0f, 80.0f));
-	SetMeshWall(XMFLOAT3(-640.0f, 0.0f,    0.0f), XMFLOAT3(0.0f, -90.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), 16, 2, XMFLOAT2(80.0f, 80.0f));
-	SetMeshWall(XMFLOAT3( 640.0f, 0.0f,    0.0f), XMFLOAT3(0.0f,  90.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), 16, 2, XMFLOAT2(80.0f, 80.0f));
-	SetMeshWall(XMFLOAT3(   0.0f, 0.0f, -640.0f), XMFLOAT3(0.0f, 180.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), 16, 2, XMFLOAT2(80.0f, 80.0f));
-	SetMeshWall(XMFLOAT3(   0.0f, 0.0f,  640.0f), XMFLOAT3(0.0f, 180.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 0.2f), 16, 2, XMFLOAT2(80.0f, 80.0f));
-	SetMeshWall(XMFLOAT3(-640.0f, 0.0f,    0.0f), XMFLOAT3(0.0f,  90.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 0.2f), 16, 2, XMFLOAT2(80.0f, 80.0f));
-	SetMeshWall(XMFLOAT3( 640.0f, 0.0f,    0.0f), XMFLOAT3(0.0f, -90.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 0.2f), 16, 2, XMFLOAT2(80.0f, 80.0f));
-	SetMeshWall(XMFLOAT3(   0.0f, 0.0f, -640.0f), XMFLOAT3(0.0f,   0.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 0.2f), 16, 2, XMFLOAT2(80.0f, 80.0f));
-
-	// ボリライン初期化
-	hr = InitPolyline();
-	if (FAILED(hr))
-		return hr;
-	XMFLOAT4 vColor[8] = {
-		XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f),
-		XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f),
-		XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f),
-		XMFLOAT4(1.0f, 0.0f, 1.0f, 1.0f),
-		XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f),
-		XMFLOAT4(0.0f, 1.0f, 1.0f, 1.0f),
-		XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f),
-		XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f),
-	};
-	for (int i = 0; i < MAX_POLYLINE; ++i) {
-		hr = CreatePolyline(&g_polyline[i], THICKNESS, true, vColor[i % 7 + 1], BS_ADDITIVE);
-		if (FAILED(hr)) {
-			return hr;
-		}
-		XMFLOAT3 pos;
-		pos.x = rand() % 1240 - 620.0f;
-		pos.y = rand() % 140 + 10.0f;
-		pos.z = rand() % 1240 - 620.0f;
-		AddPolylinePoint(&g_polyline[i], pos);
-		pos.x = rand() % 1240 - 620.0f;
-		pos.y = rand() % 140 + 10.0f;
-		pos.z = rand() % 1240 - 620.0f;
-		AddPolylinePoint(&g_polyline[i], pos);
-	}
-	// BGM再生
-	CSound::Play(BGM_003);
-	*/
-
-	// サウンド初期化
-	CSound::Init();
-
 	// 入力処理初期化
 	hr = InitInput();
 	if (FAILED(hr))
 		return hr;
 
+	// ポリゴン表示初期化
+	hr = InitPolygon(g_pDevice);
+	if (FAILED(hr))
+		return hr;
+
+	//  Assimp用シェーダ初期化
+	if (!CAssimpModel::InitShader(g_pDevice))
+		return E_FAIL;
+
+	// サウンド初期化
+	CSound::Init();
+	
 	// デバッグ文字列表示初期化
 	hr = InitDebugProc();
 	if (FAILED(hr))
@@ -546,7 +437,6 @@ HRESULT Init(HWND hWnd, BOOL bWindow)
 	hr = InitScene();
 	if (FAILED(hr))
 		return hr;
-
 
 	return hr;
 }
@@ -679,8 +569,6 @@ void Update(void)
 	PrintDebugProc("7:[ ｹﾞｰﾑｸﾘｱ ]\n\n");
 #endif // DEBUG
 
-	
-
 	// シーン遷移更新
 	UpdateScene();
 
@@ -690,45 +578,11 @@ void Update(void)
 	// サウンド更新
 	CSound::Update();
 
-	
 	// ポリゴン表示更新
 	UpdatePolygon();
-	/*
-	// 自機更新
-	UpdatePlayer();
-
-	// 背景更新
-	UpdateBG();
-
-	// フィールド更新
-	UpdateMeshField();
-
-	// 丸影更新
-	UpdateShadow();
 
 	// カメラ更新
-	CCamera::Get()->Update();
-
-	// ビルボード弾更新
-	UpdateBullet();
-
-	// 爆発更新
-	UpdateExplosion();
-
-	// エフェクト更新
-	UpdateEffect();
-
-	// 煙更新
-	UpdateSmoke();
-
-	// ポリライン更新
-	for (int i = 0; i < MAX_POLYLINE; ++i) {
-		UpdatePolyline(&g_polyline[i]);
-	}
-
-	// 壁更新
-	UpdateMeshWall();
-	*/
+	//CCamera::Get()->Update();
 
 }
 
@@ -741,52 +595,7 @@ void Draw(void)
 	float ClearColor[4] = { 0.117647f, 0.254902f, 0.352941f, 1.0f };
 	g_pDeviceContext->ClearRenderTargetView(g_pRenderTargetView, ClearColor);
 	g_pDeviceContext->ClearDepthStencilView(g_pDepthStencilView,
-		D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
-	/*
-	// Zバッファ無効(Zチェック無&Z更新無)
-	SetZBuffer(false);
-
-	// 背景描画
-	DrawBG();
-
-	// Zバッファ有効(Zチェック有&Z更新有)
-	SetZBuffer(true);
-
-	// フィールド描画
-	DrawMeshField();
-
-	// 壁描画 (不透明部分)
-	DrawMeshWall(DRAWPART_OPAQUE);
-
-	// 自機描画
-	DrawPlayer();
-
-	// 丸影描画
-	DrawShadow();
-
-	// ビルボード弾描画
-	DrawBullet();
-
-	// 煙描画
-	DrawSmoke();
-
-	// エフェクト描画
-	DrawEffect();
-
-	// 爆発描画
-	DrawExplosion();
-
-	// ポリライン描画
-	for (int i = 0; i < MAX_POLYLINE; ++i) {
-		DrawPolyline(&g_polyline[i]);
-	}
-
-	// 壁描画 (半透明部分)
-	DrawMeshWall(DRAWPART_TRANSLUCENT);
-
-	// Zバッファ無効(Zチェック無&Z更新無)
-	SetZBuffer(false);
-	*/
+					  D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 	
 	// シーン描画
 	DrawScene();

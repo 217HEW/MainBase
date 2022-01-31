@@ -51,9 +51,10 @@ enum E_FADE_STATE
 // テクスチャ
 typedef enum {
 	
-	LOAD = 0,	// Now Loadingテクスチャ
-	LOGO,		// キャラ顔テクスチャ
-	FADE_TEX_MAX		// 最大数
+	LOAD = 0,		// Now Loadingテクスチャ
+	LOGO,			// キャラ顔テクスチャ
+
+	FADE_TEX_MAX	// 最大数
 } FADE_TEX;
 
 //**************************************************************
@@ -64,6 +65,9 @@ void UninitFade();	// 終了処理
 void UpdateFade();	// 更新
 void DrawFade();	// 描画
 
-void StartFadeOut(int eNext);// フェードアウト開始
-E_FADE_STATE GetFadeState();	//フェード状態取得
+// フェードアウト開始
+void StartFadeOut(int eNext);
+
+//フェード状態取得
+E_FADE_STATE GetFadeState();
 

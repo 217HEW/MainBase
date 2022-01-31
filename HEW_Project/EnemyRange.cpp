@@ -43,7 +43,6 @@
 #include "Reticle.h"
 #include "Sound.h"
 #include "CountEnemy.h"
-//#include "SceneManager.h"
 
 
 
@@ -97,14 +96,6 @@ HRESULT InitEnemyRange(void)
 	HRESULT hr = S_OK;
 	ID3D11Device* pDevice = GetDevice();
 	ID3D11DeviceContext* pDeviceContext = GetDeviceContext();
-
-
-	//// テクスチャ読込
-	//hr = CreateTextureFromFile(pDevice, RETICLE_TEXTURE, &g_pTexture);
-	//if (FAILED(hr))
-	//{
-	//	return hr;
-	//}
 
 	// モデルデータの読み込み
 	g_model.SetDif(XMFLOAT4(0.2f,20.0f,10.0f,1.0f));
@@ -220,11 +211,6 @@ void UpdateEnemyRange(void)
 			}
 			if (CollisionSphere(g_ERange[i].m_pos, g_ERange[i].m_size.x, posPlayer, sizePlayer))
 			{
-				//DelLife();
-				//if (GetLife() == 0)
-				//{
-				//	SetScene(SCENE_GAMEOVER);
-				//}
 				DelCountEnemy();
 				g_ERange[i].m_use = false;
 			}

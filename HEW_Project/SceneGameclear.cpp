@@ -19,7 +19,7 @@
 //	2021/12/28	デバッグ操作で遷移できるシーンの追加(AREA2,3,BOSS)
 //	編集者：柴山凜太郎
 //--------------------------------------------------------------
-//　2022/1/31	クリア時ポーズ制作中
+//　2022/1/31	クリア時ポーズ破棄
 //	編集者：澤村瑠人
 //
 //**************************************************************
@@ -49,7 +49,7 @@
 static ID3D11ShaderResourceView* g_pTexture;	// テクスチャ用変数
 
 int SceneClearFlag = 0;
-int g_nNowScene;
+//int g_nNowScene;
 bool ClearFlag;//trueだとCLEAR
 //**************************************************************
 // 初期化処理
@@ -63,6 +63,8 @@ HRESULT InitGameclear()
 	if (FAILED(hr))
 		return hr;
 	
+	//InitC_Pause();
+
 	//g_nNowScene = GetScene();
 	//g_nNowScene++;
 
@@ -77,7 +79,7 @@ void UninitGameclear()
 	// テクスチャ解放
 	SAFE_RELEASE(g_pTexture);
 
-	
+	//UninitC_Pause();
 }
 
 //**************************************************************
@@ -90,31 +92,7 @@ void UpdateGameclear()
 		if (GetKeyRelease(VK_1))// || GetKeyTrigger(VK_RETURN) || GetKeyTrigger(VK_SPACE))
 		{
 
-			//[ENTER]が押された?
-			//if (GetKeyTrigger(VK_RETURN))
-			//{
-				//選択中のメニュー項目により分岐
-				switch (GetC_PauseMenu())
-				{
-				case C_PAUSE_MENU_NEXTSTAGE:	// ネクステージ
-					StartFadeOut(g_nNowScene);
-					//g_bC_Pause = false;
-					CSound::SetVolume(BGM_GAME000, 0.1f);
-					CSound::SetPlayVol(SE_CANCEL, 0.1f); // キャンセル
-					//CSound::Resume();
-					break;
-				case C_PAUSE_MENU_SELECT:		// セレクト画面
-					StartFadeOut(SCENE_SELECT);
-					CSound::SetPlayVol(SE_SELECT, 0.1f); // セレクト
-					break;
-				case C_PAUSE_MENU_QUIT:		// ゲームを辞める
-					StartFadeOut(SCENE_TITLE);
-					CSound::SetPlayVol(SE_SELECT, 0.1f); // セレクト
-					break;
-				}
-			//}
-		
-
+			
 			StartFadeOut(SCENE_TITLE);
 		}
 		/*else if (GetKeyRelease(VK_2))
@@ -142,6 +120,7 @@ void UpdateGameclear()
 			StartFadeOut(SCENE_GAMECLEAR);
 		}*/
 	}
+			//UpdateC_Pause();
 
 	
 
@@ -165,10 +144,14 @@ void DrawGameclear()
 
 	//if (ClearFlag == true)
 	//{
-		
+		//DrawC_Pause();
 	//}
 
 }
+
+//**************************************************************
+// クリアフラグ管理関数
+//**************************************************************
 void GameclearFlag()
 {
 	switch (GetScene())
@@ -204,6 +187,9 @@ void GameclearFlag()
 		SceneClearFlag = 10;
 		break;
 	}
-	DrawC_Pause();
-	StartFadeOut(SCENE_GAMECLEAR);
+	
+	SetClearPause(true);
+
+	
 }
+

@@ -34,8 +34,8 @@
 #define	C_PAUSE_MENU_WIDTH	(320.0f)	// ポーズメニュー幅
 #define	C_PAUSE_MENU_HEIGHT	(60.0f)		// ポーズメニュー高さ
 #define	C_PAUSE_MENU_POS_X	(0.0f)		// ポーズメニュー位置(X座標)
-#define	C_PAUSE_MENU_POS_Y	(0.0f)	// ポーズメニュー位置(Y座標)
-#define	C_PAUSE_MENU_INTERVAL	(300.0f)	// ポーズメニュー間隔
+#define	C_PAUSE_MENU_INTERVAL	(100.0f)	// ポーズメニュー間隔
+#define	C_PAUSE_MENU_POS_Y	(C_PAUSE_MENU_INTERVAL)	// ポーズメニュー位置(Y座標)
 #define	PLATE_WIDTH			(360.0f)	// プレートの幅
 #define	PLATE_HEIGHT		(320.0f)	// プレートの幅
 #define	PLATE_POS_X			(0.0f)		// プレートの位置(X座標)
@@ -56,6 +56,9 @@ static C_PAUSE_MENU g_nSelectMenu = C_PAUSE_MENU_NEXTSTAGE;		// 選択中のメニュー
 static float g_fCurve = 0.0f;
 static float g_fCol = 0.0f;
 //int scene = C_PAUSE_MENU_NEXTSTAGE;
+
+bool g_SetClearPause;
+
 
 static LPCWSTR c_aFileNameC_PauseMenu[NUM_C_PAUSE_MENU] =
 {
@@ -92,6 +95,8 @@ HRESULT InitC_Pause(void)
 	//{
 	//	return hr;
 	//}
+
+	g_SetClearPause = false;
 	return hr;
 
 }
@@ -115,20 +120,23 @@ void UninitC_Pause(void)
 //=============================================================================
 void UpdateC_Pause(void)
 {
-	if (GetKeyRepeat(VK_W) || GetKeyRepeat(VK_UP)) 
-	{
-		CSound::SetPlayVol(SE_SELECT, 0.1f); // セレクト音
+	
+		if (GetKeyRepeat(VK_W) || GetKeyRepeat(VK_UP)) 
+		{
+			CSound::SetPlayVol(SE_SELECT, 0.1f); // セレクト音
 
-		g_nSelectMenu = (C_PAUSE_MENU)((g_nSelectMenu + NUM_C_PAUSE_MENU - 1) % NUM_C_PAUSE_MENU);
-		SetC_PauseMenu();
-	}
-	else if (GetKeyRepeat(VK_S) || GetKeyRepeat(VK_DOWN))
-	{
-		CSound::SetPlayVol(SE_SELECT, 0.1f); // セレクト音
+			g_nSelectMenu = (C_PAUSE_MENU)((g_nSelectMenu + NUM_C_PAUSE_MENU - 1) % NUM_C_PAUSE_MENU);
+			SetC_PauseMenu();
+		}
+		else if (GetKeyRepeat(VK_S) || GetKeyRepeat(VK_DOWN))
+		{
+			CSound::SetPlayVol(SE_SELECT, 0.1f); // セレクト音
 
-		g_nSelectMenu = (C_PAUSE_MENU)((g_nSelectMenu + 1) % NUM_C_PAUSE_MENU);
-		SetC_PauseMenu();
-	}
+			g_nSelectMenu = (C_PAUSE_MENU)((g_nSelectMenu + 1) % NUM_C_PAUSE_MENU);
+			SetC_PauseMenu();
+		}
+
+	
 
 
 	
@@ -205,4 +213,14 @@ void ResetC_PauseMenu(void)
 	// CSound::Play(SE_SELECT);
 	// CSound::SetVolume(SE_SELECT, 0.02f);
 	SetC_PauseMenu();
+}
+
+bool GetClearPause()
+{
+	return g_SetClearPause;
+}
+
+void SetClearPause(bool Setpause)
+{
+	g_SetClearPause = Setpause;
 }
