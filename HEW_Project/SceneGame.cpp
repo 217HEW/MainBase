@@ -102,12 +102,12 @@
 //**************************************************************
 // グローバル変数
 //**************************************************************
-//TPolyline			g_polyline[MAX_POLYLINE];	// ポリライン情報
-static DWORD	Joycon;		// コントローラー情報
-bool g_bPause;		// 一時停止中
-bool g_bC_Pause;				//一時停止中
-int g_nNowScene;
-Effect g_GameEffect;			// エフェクト変数
+static DWORD Joycon;	// コントローラー情報
+bool g_bPause;			// 一時停止中
+bool g_bC_Pause;		// クリア表示フラグ
+int g_nNowScene;		// 現在のシーン
+
+Effect g_GameEffect;	// エフェクト変数
 static int g_EffectTimer = 0;	// エフェクト制御用タイマー
 
 //**************************************************************
