@@ -37,7 +37,7 @@
 //**************************************************************
 // マクロ定義
 //**************************************************************
-#define MODEL_ENEMY			"data/model/Melee/Melee.fbx"//
+#define MODEL_ENEMY			"data/model/Enemy/Melee/Melee.fbx"//
 #define	VALUE_MOVE_ENEMY		(0.5f)		// 移動速度
 #define	VALUE_SCALE_ENEMY		4.0f, 8.0f, 4.0f
 #define MAX_ENEMYMELEE			(10)		// 敵機最大数
@@ -49,7 +49,7 @@
 #define COLLAR_ENEMY		(XMFLOAT4(1.0f, 0.5f, 0.0f,1.0f))	//橙 プレイヤーカラー(仮)ここをいじるとカラーが変わります
 
 ////////////////////////////////////////////////////////////////
-#define MODEL_ENEMY1			"data/model/Melee/Melee.fbx"//
+#define MODEL_ENEMY1			"data/model/Enemy/Melee/Melee.fbx"//
 #define	VALUE_MOVE_ENEMY1		(1.0f)		// 移動速度
 #define	VALUE_SCALE_ENEMY1		4.0f, 8.0f, 4.0f
 #define MAX_ENEMYMELEE1			(10)		// 敵機最大数
@@ -61,7 +61,7 @@
 #define COLLAR_ENEMY1		(XMFLOAT4(10.0f, 10.0f, 10.0f,1.0f))	//白 プレイヤーカラー(仮)ここをいじるとカラーが変わります
 
 ////////////////////////////////////////////////////////////////
-#define MODEL_ENEMY2			"data/model/Melee/Melee.fbx"
+#define MODEL_ENEMY2			"data/model/Enemy/Melee/Melee.fbx"
 #define	VALUE_MOVE_ENEMY2		(1.0f)		// 移動速度
 #define	VALUE_SCALE_ENEMY2		4.0f, 8.0f, 4.0f
 #define MAX_ENEMYMELEE2			(10)		// 敵機最大数

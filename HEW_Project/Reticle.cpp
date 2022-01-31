@@ -27,7 +27,7 @@
 //*****************************************************************************
 // マクロ定義
 //*****************************************************************************
-#define	TEXTURE_RETICLE			L"data/texture/reticle000.png"	// 読み込むテクスチャファイル名
+#define	TEXTURE_RETICLE			L"data/texture/effect/reticle000.png"	// 読み込むテクスチャファイル名
 
 #define	RETICLE_SIZE_X			(10.0f)							// ビルボードの幅
 #define	RETICLE_SIZE_Y			(10.0f)							// ビルボードの高さ

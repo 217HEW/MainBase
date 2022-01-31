@@ -27,7 +27,7 @@
 //*****************************************************************************
 // マクロ定義
 //*****************************************************************************
-#define	TEXTURE_EFFECT			L"data/TEXTURE/effect000.jpg"	// 読み込むテクスチャファイル名
+#define	TEXTURE_EFFECT			L"data/texture/effect/effect000.jpg"	// 読み込むテクスチャファイル名
 
 #define	EFFECT_SIZE_X			(50.0f)							// ビルボードの幅
 #define	EFFECT_SIZE_Y			(50.0f)							// ビルボードの高さ

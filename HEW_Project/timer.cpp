@@ -30,7 +30,7 @@
 //**************************************************************
 
 // タイマー枠
-#define PATH_TIMERFRAMETEXTURE L"data/texture/frame_timer.png"		// タイマー枠テクスチャ
+#define PATH_TIMERFRAMETEXTURE L"data/texture/GameScene/frame_timer.png"		// タイマー枠テクスチャ
 #define TIMERFRAME_WIDTH (140.0f)		// タイマー枠横幅
 #define TIMERFRAME_HEIGHT (80.0f)		// タイマー枠縦幅
 #define TIMERFRAME_POS_X (0.0f)			// タイマー枠横軸座標

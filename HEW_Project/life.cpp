@@ -28,14 +28,14 @@
 //**************************************************************
 
 // ライフ枠
-#define PATH_LIFEFRAMETEXTURE L"data/texture/frame_life.png"	//ライフ枠テクスチャ
+#define PATH_LIFEFRAMETEXTURE L"data/texture/GameScene/frame_life.png"	//ライフ枠テクスチャ
 #define LIFEFRAME_WIDTH (200.0f)		// ライフ枠の横幅
 #define LIFEFRAME_HEIGHT (80.0f)		// ライフ枠の縦幅
 #define LIFEFRAME_POS_X ((SCREEN_WIDTH-LIFEFRAME_WIDTH)*-0.5f)	// ライフ枠横軸座標
 #define LIFEFRAME_POS_Y ((SCREEN_HEIGHT-LIFEFRAME_HEIGHT)*0.5f)	// ライフ枠縦軸座標
 
 // ライフアイコン
-#define PATH_LIFETEXTURE L"data/texture/hart.tga"	//ライフアイコンテクスチャ
+#define PATH_LIFETEXTURE L"data/texture/GameScene/hart.tga"	//ライフアイコンテクスチャ
 #define MAX_LIFE (1)		// ライフ最大値
 #define LIFE_SIZE_X (40.0f)	// 横テクスチャサイズ
 #define LIFE_SIZE_Y (40.0f)	// 縦テクスチャサイズ

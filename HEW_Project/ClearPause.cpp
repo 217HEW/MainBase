@@ -86,9 +86,9 @@ bool g_SetClearPause;
 
 static LPCWSTR c_aFileNameC_PauseMenu[NUM_C_PAUSE_MENU] =
 {
-	L"data/texture/ClearNextStage.png",	// ネクステージ
-	L"data/texture/ClearSelect.png",	// セレクト
-	L"data/texture/ClearQuit.png",	// クイット
+	L"data/texture/ClearSelect/ClearNextStage.png",	// ネクステージ
+	L"data/texture/ClearSelect/ClearSelect.png",	// セレクト
+	L"data/texture/ClearSelect/ClearQuit.png",	// クイット
 };
 
 static ID3D11ShaderResourceView* g_pSTexture;//説明用

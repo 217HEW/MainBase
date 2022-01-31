@@ -46,13 +46,13 @@ typedef enum {
 	RIGHT,		// 右
 	LEFT,		// 左
 
-	CROSS_MAX
+	CROSS_MAX	
 } CROSS;
 
 //*****************************************************************************
 // マクロ定義
 //*****************************************************************************
-#define PATH_BGTEXTURE	L"data/texture/SelectBG.png"	// 背景テクスチャ
+#define PATH_BGTEXTURE	L"data/texture/StageSelect/SelectBG.png"	// 背景テクスチャ
 #define BG_POS_X		(0.0f)	// 背景X座標
 #define BG_POS_Y		(0.0f)	// 背景Y座標
 #define BG_WIDTH		SCREEN_WIDTH	// テクスチャの横幅
@@ -94,18 +94,18 @@ int g_nTime;
 
 static LPCWSTR c_aFileNameStageMenu[NUM_SELECT_MENU] =
 {
-	L"data/texture/hero002.jpg",// hero001 → 選択中
-	L"data/texture/hero002.jpg",// hero002 → 選択できない
-	L"data/texture/hero002.jpg",// hero003 → 選択できるが選択していない
-	L"data/texture/hero002.jpg",
-	L"data/texture/hero002.jpg",
-	L"data/texture/hero002.jpg",
-	L"data/texture/hero002.jpg",
-	L"data/texture/hero002.jpg",
-	L"data/texture/hero002.jpg",
-	L"data/texture/hero002.jpg",
-	L"data/texture/STitle.png",// タイトルに戻る
-	L"data/texture/hero001.jpg",
+	L"data/texture/StageSelect/hero002.jpg",// hero001 → 選択中
+	L"data/texture/StageSelect/hero002.jpg",// hero002 → 選択できない
+	L"data/texture/StageSelect/hero002.jpg",// hero003 → 選択できるが選択していない
+	L"data/texture/StageSelect/hero002.jpg",
+	L"data/texture/StageSelect/hero002.jpg",
+	L"data/texture/StageSelect/hero002.jpg",
+	L"data/texture/StageSelect/hero002.jpg",
+	L"data/texture/StageSelect/hero002.jpg",
+	L"data/texture/StageSelect/hero002.jpg",
+	L"data/texture/StageSelect/hero002.jpg",
+	L"data/texture/StageSelect/STitle.png",	// タイトルに戻る
+	L"data/texture/StageSelect/hero001.jpg",
 };
 
 //=============================================================================

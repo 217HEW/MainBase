@@ -58,8 +58,8 @@ static float g_fAlpha;		// α値:0.0f~1.0f
 
 // 画像ファイルネーム
 static LPCWSTR g_pszTexFName[FADE_TEX_MAX] = {
-	L"data/texture/NowLoading.png",
-	L"data/texture/Logo.png",
+	L"data/texture/Loading/NowLoading.png",
+	L"data/texture/Loading/Logo.png",
 };
 
 static ID3D11ShaderResourceView* g_pTexture[FADE_TEX_MAX];

@@ -25,7 +25,7 @@
 //**************************************************************
 // マクロ定義
 //**************************************************************
-#define PATH_BGTEXTURE	L"data/texture/Bg002.png"	// 背景テクスチャ
+#define PATH_BGTEXTURE	L"data/texture/GameScene/Bg002.png"	// 背景テクスチャ
 #define BG_POS_X		(0.0f)	// 背景X座標
 #define BG_POS_Y		(0.0f)	// 背景Y座標
 #define BG_WIDTH		SCREEN_WIDTH	// テクスチャの横幅

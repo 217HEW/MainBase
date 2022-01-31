@@ -49,8 +49,8 @@
 //**************************************************************
 // マクロ定義
 //**************************************************************
-#define MODEL_ENEMY			"data/model/Range/Range.fbx"	// "data/model/helicopter000.fbx"
-#define RETICLE_TEXTURE		L"data/texture/reticle000.png"
+#define MODEL_ENEMY			"data/model/Enemy/Range/Range.fbx"	// "data/model/helicopter000.fbx"
+#define RETICLE_TEXTURE		L"data/texture/effect/reticle000.png"
 
 #define MAX_ENEMYRANGE			(10)		// 敵機最大数
 #define SEARCH_RANGE			(200)		// 探索範囲
@@ -58,14 +58,14 @@
 #define SCALE_E_RANGE		(XMFLOAT3(0.03f, 0.06f, 0.06f))
 #define COLLAR_ENEMY		(XMFLOAT4(0.0f, 20.0f, 0.0f,1.0f))	// プレイヤーカラー(仮)ここをいじるとカラーが変わります
 //////////////////////////////////////////////////////////////////
-#define MODEL_ENEMY1			"data/model/Range/Range.fbx"	// "data/model/helicopter000.fbx"
+#define MODEL_ENEMY1			"data/model/Enemy/Range/Range.fbx"	// "data/model/helicopter000.fbx"
 #define MAX_ENEMYRANGE1			(10)		// 敵機最大数
 #define SEARCH_RANGE1			(200)		// 探索範囲
 #define ENEMY_TIMER1			(5)			// 制限時間
 #define SCALE_E_RANGE1		(XMFLOAT3(0.05f, 0.1f, 0.1f))
 #define COLLAR_ENEMY1		(XMFLOAT4(0.0f, 0.0f, 20.0f,1.0f))	// プレイヤーカラー(仮)ここをいじるとカラーが変わります
 //////////////////////////////////////////////////////////////////
-#define MODEL_ENEMY2			"data/model/Range/Range.fbx"	// "data/model/helicopter000.fbx"
+#define MODEL_ENEMY2			"data/model/Enemy/Range/Range.fbx"	// "data/model/helicopter000.fbx"
 #define MAX_ENEMYRANGE2			(10)		// 敵機最大数
 #define SEARCH_RANGE2			(200)		// 探索範囲
 #define ENEMY_TIMER2				(5)			// 制限時間

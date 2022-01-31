@@ -59,7 +59,7 @@ typedef enum {
 #define WAIT_PTIME			(15)			// 選択待機時間
 
 //説明用
-#define PATH_STEXTURE "data/texture/pause003.png"//説明画像
+#define PATH_STEXTURE "data/texture/Pause/pause003.png"//説明画像
 #define S_POS_X 200.0f
 #define S_POS_Y 0.0f
 #define S_WIDTH 809
@@ -83,9 +83,9 @@ int g_npTime;
 
 static LPCWSTR c_aFileNamePauseMenu[NUM_PAUSE_MENU] =
 {
-	L"data/texture/pause000.png",	// コンティニュー
-	L"data/texture/pause001.png",	// リトライ
-	L"data/texture/pause002.png",	// クイット
+	L"data/texture/Pause/pause000.png",	// コンティニュー
+	L"data/texture/Pause/pause001.png",	// リトライ
+	L"data/texture/Pause/pause002.png",	// クイット
 };
 
 static ID3D11ShaderResourceView* g_pSTexture;//説明用

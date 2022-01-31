@@ -28,7 +28,7 @@
 // マクロ定義
 //**************************************************************
 // タイマー枠
-#define PATH_CountEnemyFRAMETEXTURE L"data/texture/frame_CountEnemy.png"		//カウンター枠テクスチャ
+#define PATH_CountEnemyFRAMETEXTURE L"data/texture/GameScene/frame_CountEnemy.png"		//カウンター枠テクスチャ
 #define CountEnemyFRAME_WIDTH (399.0f)		//カウンター枠横幅
 #define CountEnemyFRAME_HEIGHT (80.0f)		//カウンター枠縦幅
 #define CountEnemyFRAME_POS_X (400.0f)			//カウンター枠横軸座標
