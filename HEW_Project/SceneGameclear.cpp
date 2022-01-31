@@ -58,7 +58,6 @@ HRESULT InitGameclear()
 {
 	HRESULT hr = S_OK;
 	ID3D11Device* pDevice = GetDevice();
-
 	// テクスチャ読込
 	hr = CreateTextureFromFile(pDevice, PATH_BGTEXTURE, &g_pTexture);
 	if (FAILED(hr))
@@ -90,7 +89,7 @@ void UpdateGameclear()
 {
 	if (GetFadeState() == FADE_NONE)
 	{
-		if (GetKeyRelease(VK_1) || GetKeyTrigger(VK_RETURN) || GetKeyTrigger(VK_SPACE))
+		if (GetKeyRelease(VK_1))// || GetKeyTrigger(VK_RETURN) || GetKeyTrigger(VK_SPACE))
 		{
 
 			

@@ -110,8 +110,7 @@
 //TPolyline			g_polyline[MAX_POLYLINE];	// ポリライン情報
 static DWORD	Joycon;		// コントローラー情報
 bool g_bPause;		// 一時停止中
-bool g_bC_Pause;				//一時停止中
-int	 g_nNowScene;	// 現在のシーン		
+bool g_bC_Pause;				//一時停止中	
 Effect g_GameEffect;			// エフェクト変数
 static int g_EffectTimer = 0;	// エフェクト制御用タイマー
 //**************************************************************
@@ -290,11 +289,6 @@ HRESULT InitGame(AREA Area)
 	// 	pos.z = rand() % 1240 - 620.0f;
 	// 	AddPolylinePoint(&g_polyline[i], pos);
 	// }
-
-	// シーン番号取得
-	//g_nNowScene = GetScene();
-	//g_nNowScene++;
-
 	// BGM再生開始
 	// エリア毎にBGMを変えたい時はここをswitch文で切り替えるようにする
 	CSound::SetPlayVol(BGM_GAME000, 0.1f); // ゲーム本編BGM
@@ -582,7 +576,7 @@ void UpdateGame()
 				//CSound::Resume();
 				break;
 			case PAUSE_MENU_RETRY:		// リトライ
-				StartFadeOut(g_nNowScene);
+				StartFadeOut(GetScene());
 				CSound::SetPlayVol(SE_SELECT, 0.1f); // セレクト
 				break;
 			case PAUSE_MENU_QUIT:		// ゲームを辞める
