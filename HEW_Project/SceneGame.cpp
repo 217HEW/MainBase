@@ -92,6 +92,7 @@
 #include "EnemyRange.h"
 #include "Pause.h"
 #include "PlayEffect.h"
+#include "ClearPause.h"	//テストインクルード
 #include "StageSelect.h"
 
 //**************************************************************
@@ -108,6 +109,9 @@
 bool g_bPause;		// 一時停止中
 int	 g_nNowScene;	// 現在のシーン		
 
+bool g_bPause;				//一時停止中
+bool g_bC_Pause;				//一時停止中
+EScene g_Next;
 Effect g_GameEffect;			// エフェクト変数
 static int g_EffectTimer = 0;	// エフェクト制御用タイマー
 //**************************************************************
@@ -231,6 +235,15 @@ HRESULT InitGame(AREA Area)
 	g_bPause = false;
 	if (FAILED(hr))
 		return hr;
+
+	// テスト
+	hr = InitC_Pause();
+	g_bC_Pause = false;
+	if (FAILED(hr))
+		return hr;
+
+	//g_Next = GetScene();
+	//g_Next = g_Next + 1;
 	// SetMeshWall(XMFLOAT3(0.0f, 0.0f, 640.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), 16, 2, XMFLOAT2(40.0f, 40.0f));
 	// SetMeshWall(XMFLOAT3(-640.0f, 0.0f, 0.0f), XMFLOAT3(0.0f, -90.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), 16, 2, XMFLOAT2(80.0f, 80.0f));
 	// SetMeshWall(XMFLOAT3(640.0f, 0.0f, 0.0f), XMFLOAT3(0.0f, 90.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), 16, 2, XMFLOAT2(80.0f, 80.0f));
@@ -295,6 +308,9 @@ void UninitGame()
 	//ポーズ終了処理
 	UninitPause();
 
+	//テスト
+	UninitC_Pause();
+
 	// ポリライン終了処理
 	//UninitPolyline();
 
@@ -355,6 +371,19 @@ void UpdateGame()
 	TEnemyMelee* pEMelee = GetEnemyMelee();
 	// 入力処理更新
 	//UpdateInput();	// 必ずUpdate関数の先頭で実行.
+
+	if (g_bC_Pause) {
+		//一時停止更新
+		UpdateC_Pause();
+	}
+	else if (GetFadeState() == FADE_NONE)
+	{
+		int Timer = GetTimer();
+		if (Timer <= 0)
+		{
+			StartFadeOut(SCENE_GAMEOVER);
+		}
+	}
 
 	//一時停止中?
 	if (g_bPause) {
@@ -505,6 +534,28 @@ void UpdateGame()
 		}
 	}
 
+	//一時停止ON/OFF
+	if (GetKeyTrigger(VK_M))
+	{
+		if (GetFadeState() == FADE_NONE)
+		{
+			g_bC_Pause = !g_bC_Pause;
+			if (g_bC_Pause) {
+				//CSound::Pause();
+				CSound::SetVolume(BGM_GAME000, 0.06f);
+				CSound::SetPlayVol(SE_SELECT, 0.1f); // セレクト
+	
+				ResetPauseMenu();
+			}
+			else
+			{
+				CSound::SetVolume(BGM_GAME000, 0.1f);
+				CSound::SetPlayVol(SE_CANCEL, 0.1f); // キャンセル
+				//CSound::Resume();
+			}
+		}
+	}
+
 	//一時停止メニューの選択
 	if (g_bPause && GetFadeState() == FADE_NONE)
 	{
@@ -525,6 +576,34 @@ void UpdateGame()
 				CSound::SetPlayVol(SE_SELECT, 0.1f); // セレクト
 				break;
 			case PAUSE_MENU_QUIT:		// ゲームを辞める
+				StartFadeOut(SCENE_TITLE);
+				CSound::SetPlayVol(SE_SELECT, 0.1f); // セレクト
+				break;
+			}
+		}
+	}
+
+	//テスト
+	if (g_bC_Pause && GetFadeState() == FADE_NONE)
+	{
+		//[ENTER]が押された?
+		if (GetKeyTrigger(VK_RETURN))
+		{
+			//選択中のメニュー項目により分岐
+			switch (GetC_PauseMenu())
+			{
+			case C_PAUSE_MENU_NEXTSTAGE:	// ネクステージ
+				//StartFadeOut();
+				//g_bC_Pause = false;
+				CSound::SetVolume(BGM_GAME000, 0.1f);
+				CSound::SetPlayVol(SE_CANCEL, 0.1f); // キャンセル
+				//CSound::Resume();
+				break;
+			case C_PAUSE_MENU_SELECT:		// セレクト画面
+				StartFadeOut(SCENE_SELECT);
+				CSound::SetPlayVol(SE_SELECT, 0.1f); // セレクト
+				break;
+			case C_PAUSE_MENU_QUIT:		// ゲームを辞める
 				StartFadeOut(SCENE_TITLE);
 				CSound::SetPlayVol(SE_SELECT, 0.1f); // セレクト
 				break;
@@ -600,6 +679,11 @@ void DrawGame()
 	//一時停止描画
 	if (g_bPause) {
 		DrawPause();
+	}
+
+	//一時停止描画
+	if (g_bC_Pause) {
+		DrawC_Pause();
 	}
 
 	// Zバッファ無効(Zチェック無&Z更新無)
