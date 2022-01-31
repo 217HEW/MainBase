@@ -102,10 +102,12 @@
 //**************************************************************
 // グローバル変数
 //**************************************************************
-static DWORD Joycon;	// コントローラー情報
-bool g_bPause;			// 一時停止中
-bool g_bC_Pause;		//一時停止中	
-Effect g_GameEffect;	// エフェクト変数
+//TPolyline			g_polyline[MAX_POLYLINE];	// ポリライン情報
+static DWORD	Joycon;		// コントローラー情報
+bool g_bPause;		// 一時停止中
+bool g_bC_Pause;				//一時停止中
+int g_nNowScene;
+Effect g_GameEffect;			// エフェクト変数
 static int g_EffectTimer = 0;	// エフェクト制御用タイマー
 
 //**************************************************************
@@ -207,7 +209,7 @@ HRESULT InitGame(AREA Area)
 	if (FAILED(hr))
 		return hr;
 
-	//g_nNowScene = GetScene();
+	g_nNowScene = GetScene();
 	
 	// BGM再生開始
 	// エリア毎にBGMを変えたい時はここをswitch文で切り替えるようにする
@@ -459,10 +461,10 @@ void UpdateGame()
 			switch (GetC_PauseMenu())
 			{
 			case C_PAUSE_MENU_NEXTSTAGE:	// ネクステージ
-				StartFadeOut(GetScene());
+				StartFadeOut(g_nNowScene + 1);
 				//g_bC_Pause = false;
 				CSound::SetVolume(BGM_GAME000, 0.1f);
-				CSound::SetPlayVol(SE_CANCEL, 0.1f); // キャンセル
+				CSound::SetPlayVol(SE_SELECT, 0.1f); // キャンセル
 				//CSound::Resume();
 				break;
 			case C_PAUSE_MENU_SELECT:		// セレクト画面
