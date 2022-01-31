@@ -82,6 +82,8 @@ static SELECT_MENU g_nSelectMenu = STAGE_1;		// 選択中のメニューNo.
 float g_fCurve = 0.0f;
 float g_fCol = 0.0f;
 
+int g_StageClear = 0;
+
 bool g_bTime;	// 待機用
 int g_bJoySelect;	// コントローラ選択用
 
@@ -149,7 +151,7 @@ void UninitSelect(void)
 	}
 	// 背景テクスチャ解放
 	SAFE_RELEASE(g_pBGTexture);
-	
+
 }
 
 //=============================================================================
@@ -177,9 +179,9 @@ void UpdateSelect(void)
 
 	if (Joystate == ERROR_SUCCESS)
 	{	// 接続有り↓
-		if (GetJoyDpadUp(Joycon))	{ g_bJoySelect = UP; }
+		if (GetJoyDpadUp(Joycon)) { g_bJoySelect = UP; }
 		if (GetJoyDpadDown(Joycon)) { g_bJoySelect = DOWN; }
-		if (GetJoyDpadRight(Joycon)){ g_bJoySelect = RIGHT;}
+		if (GetJoyDpadRight(Joycon)) { g_bJoySelect = RIGHT; }
 		if (GetJoyDpadLeft(Joycon)) { g_bJoySelect = LEFT; }
 	}
 	else
@@ -187,8 +189,8 @@ void UpdateSelect(void)
 		g_bJoySelect = NOT;
 	}
 
-	if(g_bTime == true){
-		if (GetKeyRepeat(VK_UP)|| (g_bJoySelect == UP))
+	if (g_bTime == true) {
+		if (GetKeyRepeat(VK_UP) || (g_bJoySelect == UP))
 		{
 			// カーソル音
 			CSound::SetPlayVol(SE_SELECT, 0.3f);
@@ -197,7 +199,7 @@ void UpdateSelect(void)
 			g_bTime = false;
 			g_nTime = WAIT_TIME;
 		}
-		else if (GetKeyRepeat(VK_DOWN)|| (g_bJoySelect == DOWN))
+		else if (GetKeyRepeat(VK_DOWN) || (g_bJoySelect == DOWN))
 		{
 			// カーソル音
 			CSound::SetPlayVol(SE_SELECT, 0.3f);
@@ -206,7 +208,7 @@ void UpdateSelect(void)
 			g_bTime = false;
 			g_nTime = WAIT_TIME;
 		}
-		else if (GetKeyRepeat(VK_RIGHT)|| (g_bJoySelect == RIGHT))
+		else if (GetKeyRepeat(VK_RIGHT) || (g_bJoySelect == RIGHT))
 		{
 			// カーソル音
 			CSound::SetPlayVol(SE_SELECT, 0.3f);
@@ -215,7 +217,7 @@ void UpdateSelect(void)
 			g_bTime = false;
 			g_nTime = WAIT_TIME;
 		}
-		else if (GetKeyRepeat(VK_LEFT)|| (g_bJoySelect == LEFT))
+		else if (GetKeyRepeat(VK_LEFT) || (g_bJoySelect == LEFT))
 		{
 			if (g_nSelectMenu == STAGE_1)
 			{
@@ -228,7 +230,7 @@ void UpdateSelect(void)
 			g_bTime = false;
 			g_nTime = WAIT_TIME;
 		}
-		
+
 		//g_fCurve += XM_PI * 0.01f;//ピカピカの原因
 	//if (g_fCurve > XM_PI) {
 	//	g_fCurve -= XM_2PI;
@@ -238,11 +240,18 @@ void UpdateSelect(void)
 		g_fCol = cosf(g_fCurve) * 0.2f + 0.8f;
 
 		//[ENTER]が押された
-		if (GetKeyTrigger(VK_RETURN)||GetJoyTrigger(Joycon, JOYSTICKID1))
+		if (GetKeyTrigger(VK_RETURN) || GetJoyTrigger(Joycon, JOYSTICKID1))
 		{
-			CSound::SetPlayVol(SE_DECISION, 0.7f);
-			g_bTime = false;
-			g_nTime = WAIT_TIME * WAIT_TIME;
+			if (g_StageClear >= GetSelectMenu())
+			{
+				CSound::SetPlayVol(SE_DECISION, 0.7f);
+				g_bTime = false;
+				g_nTime = WAIT_TIME * WAIT_TIME;
+			}
+			else
+			{
+				CSound::SetPlayVol(SE_CANCEL, 0.4f);
+			}
 
 			//選択中のメニュー項目により分岐
 			switch (GetSelectMenu())
@@ -251,31 +260,40 @@ void UpdateSelect(void)
 				StartFadeOut(SCENE_GAME);
 				break;
 			case STAGE_2:	// ステージ2
-				StartFadeOut(SCENE_AREA2);
+				if (g_StageClear >= 1)
+					StartFadeOut(SCENE_AREA2);
 				break;
 			case STAGE_3:	// ステージ3
-				StartFadeOut(SCENE_AREA3);
+				if (g_StageClear >= 2)
+					StartFadeOut(SCENE_AREA3);
 				break;
 			case STAGE_4:	// ステージ4
-				StartFadeOut(SCENE_AREA4);
+				if (g_StageClear >= 3)
+					StartFadeOut(SCENE_AREA4);
 				break;
 			case STAGE_5:	// ステージ5
-				StartFadeOut(SCENE_AREA5);
+				if (g_StageClear >= 4)
+					StartFadeOut(SCENE_AREA5);
 				break;
 			case STAGE_6:	// ステージ6
-				StartFadeOut(SCENE_AREA6);
+				if (g_StageClear >= 5)
+					StartFadeOut(SCENE_AREA6);
 				break;
 			case STAGE_7:	// ステージ7
-				StartFadeOut(SCENE_AREA7);
+				if (g_StageClear >= 6)
+					StartFadeOut(SCENE_AREA7);
 				break;
 			case STAGE_8:	// ステージ8
-				StartFadeOut(SCENE_AREA8);
+				if (g_StageClear >= 7)
+					StartFadeOut(SCENE_AREA8);
 				break;
 			case STAGE_9:	// ステージ9
-				StartFadeOut(SCENE_AREA9);
+				if (g_StageClear >= 8)
+					StartFadeOut(SCENE_AREA9);
 				break;
 			case STAGE_10:	// ステージ10
-				StartFadeOut(SCENE_AREA10);
+				if (g_StageClear >= 9)
+					StartFadeOut(SCENE_AREA10);
 				break;
 			case SELECT_TITLE:
 				StartFadeOut(SCENE_TITLE); // タイトルへ
@@ -314,22 +332,22 @@ void DrawSelect(void)
 	SetPolygonColor(g_fCol, g_fCol, g_fCol);
 	SetPolygonAlpha(1.0f);
 	DrawPolygon(pDeviceContext);*/
-	
+
 	// ｽﾃｰｼﾞ1～10
 	for (nCntStageMenu = 0; nCntStageMenu < NUM_SELECT_MENU - 2; ++nCntStageMenu)
 	{
 		//ｽﾃｰｼﾞ5までいったら改行
-		if(nCntStageMenu <= 4)
-		{ 
-			SetPolygonPos(SELECT_MENU_POS_X+ nCntStageMenu * SELECT_MENU_INTERVAL,
+		if (nCntStageMenu <= 4)
+		{
+			SetPolygonPos(SELECT_MENU_POS_X + nCntStageMenu * SELECT_MENU_INTERVAL,
 				SELECT_MENU_POS_Y);
 		}
-		else if(!nCntStageMenu <= 4)
+		else if (!nCntStageMenu <= 4)
 		{
-			SetPolygonPos(SELECT_MENU_POS_X + (nCntStageMenu-5) * SELECT_MENU_INTERVAL,
+			SetPolygonPos(SELECT_MENU_POS_X + (nCntStageMenu - 5) * SELECT_MENU_INTERVAL,
 				SELECT_MENU_POS_Y - SELECT_MENU_INTERVAL * 1.5);
 		}
-		
+
 		if (nCntStageMenu == g_nSelectMenu) {
 			//SetPolygonColor(1.0f, 1.0f, 0.1f);
 		}
@@ -340,7 +358,11 @@ void DrawSelect(void)
 		// テクスチャの設定
 		// 選ばれているステージの画像の入れ替え
 		if (nCntStageMenu == g_nSelectMenu) {
-			SetPolygonTexture(g_pTextures[SELECT]);
+			if (g_StageClear >= GetSelectMenu())
+				SetPolygonTexture(g_pTextures[SELECT]);
+			else
+				SetPolygonTexture(g_pTextures[nCntStageMenu]);
+
 			SetPolygonSize(SELECT_MENU_WIDTH + 25, SELECT_MENU_HEIGHT + 25);
 		}
 		else
@@ -352,15 +374,16 @@ void DrawSelect(void)
 		// ポリゴンの描画
 		DrawPolygon(pDeviceContext);
 	}
+	//数字
 	SetPolygonColor(10.0f, 10.0f, 0.0f);
 	for (int i = 1; i < 6; i++)
 	{
-		DrawNumber(XMFLOAT2(-585 + (180 * i), 175), i, 2,50.0f,100.0f);
+		DrawNumber(XMFLOAT2(-585 + (180 * i), 175), i, 2, 50.0f, 100.0f);
 
 	}
 	for (int i = 6; i < 11; i++)
 	{
-		DrawNumber(XMFLOAT2(-585 + (180 * (i-5)), -95), i, 2, 50.0f, 100.0f);
+		DrawNumber(XMFLOAT2(-585 + (180 * (i - 5)), -95), i, 2, 50.0f, 100.0f);
 
 	}
 	// タイトル
@@ -374,7 +397,7 @@ void DrawSelect(void)
 	}
 	SetPolygonTexture(g_pTextures[SELECT_TITLE]);
 	DrawPolygon(pDeviceContext);
-	
+
 	// Zバッファ有効(Zチェック有&Z更新有)
 	SetZBuffer(true);
 	SetBlendState(BS_NONE);
