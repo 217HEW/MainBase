@@ -130,20 +130,8 @@ void UpdateC_Pause(void)
 		SetC_PauseMenu();
 	}
 
-	//if (GetFadeState() == FADE_NONE)
-	//{
-	//	if (C_PAUSE_MENU_NEXTSTAGE)
-	//	{
-	//		scene++;
-	//
-	//	}
-	//}
 
-	//g_fCurve += XM_PI * 0.01f;//ピカピカの原因
-	//if (g_fCurve > XM_PI) {
-	//	g_fCurve -= XM_2PI;
-	//}
-
+	
 	// 反射光の設定
 	g_fCol = cosf(g_fCurve) * 0.2f + 0.8f;
 }
@@ -184,13 +172,7 @@ void DrawC_Pause(void)
 		DrawPolygon(pDeviceContext);
 	}
 
-	//説明用
-	//SetPolygonColor(3.0f, 3.0f, 3.0f);//1以上にすることで明るさ変更可能
-	//ID3D11DeviceContext* pDC = GetDeviceContext();
-	//SetPolygonSize(S_WIDTH, S_HEIGHT);
-	//SetPolygonPos(S_POS_X, S_POS_Y);
-	//SetPolygonTexture(g_pSTexture);
-	//DrawPolygon(pDC);
+	
 
 	// Zバッファ有効(Zチェック有&Z更新有)
 	SetZBuffer(true);
