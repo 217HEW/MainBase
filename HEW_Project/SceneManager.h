@@ -61,7 +61,10 @@ void UninitScene();		// 終了処理
 void UpdateScene();		// 更新
 void DrawScene();		// 描画
 
-HRESULT SetScene(int eScene); // 切替処理
-int GetScene(); // シーン情報取得
+ // シーン切替処理
+HRESULT SetScene(int eScene);
+
+// シーン情報取得
+int GetScene();
 
 

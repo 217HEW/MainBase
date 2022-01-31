@@ -170,10 +170,6 @@ void UpdateBlock(void)
 
 			mtxWorld = XMMatrixMultiply(mtxWorld, mtxRot);
 
-			//// 箱のサイズ
-			//mtxWorld = XMMatrixScaling(g_BlockScale.x,
-			//	g_BlockScale.y * 2,
-			//	g_BlockScale.z);
 			mtxWorld = XMMatrixScaling(g_block[nCntBlock][nCntBlockType].m_size.x,
 									   g_block[nCntBlock][nCntBlockType].m_size.y * 2,
 									   g_block[nCntBlock][nCntBlockType].m_size.z);
@@ -318,138 +314,133 @@ int SetBlock(XMFLOAT3 pos, bool inv,XMFLOAT2 size, XMFLOAT2 cpos)
 	ID3D11Device* pDevice = GetDevice();
 	ID3D11DeviceContext* pDeviceContext = GetDeviceContext();
 	int Block = -1;
-	//for (int cntBlockType = 0; cntBlockType < MAX_BLOCK_TYPE; ++cntBlockType)
+	for (int cntBlock = 0; cntBlock < MAX_BLOCK; ++cntBlock)
 	{
-		for (int cntBlock = 0; cntBlock < MAX_BLOCK; ++cntBlock)
-		{
+		if (inv)
+		{// -----------------無敵壁の設置------------------------------------------------------------
+			// 使用中ならスキップ
+			if (g_block[cntBlock][BLOCK_INVINCIBLE].m_use)
+				continue;
+			g_block[cntBlock][BLOCK_INVINCIBLE].m_invincible = true;
+			// 使用中ＯＮ
+			g_block[cntBlock][BLOCK_INVINCIBLE].m_use = true;
+			g_block[cntBlock][BLOCK_INVINCIBLE].m_pos = pos;
+			g_block[cntBlock][BLOCK_INVINCIBLE].m_pos.x += cpos.x;
+			g_block[cntBlock][BLOCK_INVINCIBLE].m_pos.y += cpos.y;
 
-			if (inv)
-			{// -----------------無敵壁の設置------------------------------------------------------------
-				// 使用中ならスキップ
-				if (g_block[cntBlock][BLOCK_INVINCIBLE].m_use)
-					continue;
-				g_block[cntBlock][BLOCK_INVINCIBLE].m_invincible = true;
-				// 使用中ＯＮ
-				g_block[cntBlock][BLOCK_INVINCIBLE].m_use = true;
-				g_block[cntBlock][BLOCK_INVINCIBLE].m_pos = pos;
-				g_block[cntBlock][BLOCK_INVINCIBLE].m_pos.x += cpos.x;
-				g_block[cntBlock][BLOCK_INVINCIBLE].m_pos.y += cpos.y;
-
-				// 指定されたサイズに変更
-				g_block[cntBlock][BLOCK_INVINCIBLE].m_size.x *= size.x;
-				g_block[cntBlock][BLOCK_INVINCIBLE].m_size.y *= size.y;
+			// 指定されたサイズに変更
+			g_block[cntBlock][BLOCK_INVINCIBLE].m_size.x *= size.x;
+			g_block[cntBlock][BLOCK_INVINCIBLE].m_size.y *= size.y;
 
 
-				if (((g_block[cntBlock][BLOCK_INVINCIBLE].m_Halfsize.x * size.x) > g_BlockHalfScale.x))
-				{
-					g_block[cntBlock][BLOCK_INVINCIBLE].m_Halfsize.x = 
-				   (g_block[cntBlock][BLOCK_INVINCIBLE].m_size.x / 2);
-				}
-				else if (((g_block[cntBlock][BLOCK_INVINCIBLE].m_Halfsize.x * size.x) < g_BlockHalfScale.x))
-				{
-					g_block[cntBlock][BLOCK_INVINCIBLE].m_Halfsize.x = 
-				   (g_block[cntBlock][BLOCK_INVINCIBLE].m_size.x / 2);
-				}
-				else { g_block[cntBlock][BLOCK_INVINCIBLE].m_Halfsize.x = g_BlockHalfScale.x; }
-
-				if (((g_block[cntBlock][BLOCK_INVINCIBLE].m_Halfsize.y * size.y) > g_BlockHalfScale.y))
-				{
-					g_block[cntBlock][BLOCK_INVINCIBLE].m_Halfsize.y = 
-				   (g_block[cntBlock][BLOCK_INVINCIBLE].m_Halfsize.y * size.y);// -(g_BlockHalfScale.y * 2.0f) + g_BlockHalfScale.y;
-				}
-				else
-				{
-					g_block[cntBlock][BLOCK_INVINCIBLE].m_Halfsize.y = g_BlockHalfScale.y;
-				}
+			if (((g_block[cntBlock][BLOCK_INVINCIBLE].m_Halfsize.x * size.x) > g_BlockHalfScale.x))
+			{
+				g_block[cntBlock][BLOCK_INVINCIBLE].m_Halfsize.x = 
+			   (g_block[cntBlock][BLOCK_INVINCIBLE].m_size.x / 2);
 			}
-			else 
-			{// --------------通常壁の設置------------------------------------------------------------
-				if (g_block[cntBlock][BLOCK_NORMAL].m_use)
-					continue;	// 使用中ならスキップ
-
-				// 使用中ＯＮ
-				g_block[cntBlock][BLOCK_NORMAL].m_use = true;
-				
-				// 触れた瞬間に消えるようにする
-				g_block[cntBlock][BLOCK_NORMAL].m_nLife = 0;
-				
-				// 座標設定
-				g_block[cntBlock][BLOCK_NORMAL].m_pos = pos;
-				g_block[cntBlock][BLOCK_NORMAL].m_pos.x += cpos.x;
-				g_block[cntBlock][BLOCK_NORMAL].m_pos.y += cpos.y;
-
-				// 指定されたサイズに変更
-				g_block[cntBlock][BLOCK_NORMAL].m_size.x *= size.x;
-				g_block[cntBlock][BLOCK_NORMAL].m_size.y *= size.y;
-
-
-				if (((g_block[cntBlock][BLOCK_NORMAL].m_Halfsize.x * size.x) > g_BlockHalfScale.x))
-				{
-					g_block[cntBlock][BLOCK_NORMAL].m_Halfsize.x =
-				   (g_block[cntBlock][BLOCK_NORMAL].m_size.x / 2);
-				}
-				else if (((g_block[cntBlock][BLOCK_NORMAL].m_Halfsize.x * size.x) < g_BlockHalfScale.x))
-				{
-					g_block[cntBlock][BLOCK_NORMAL].m_Halfsize.x =
-				   (g_block[cntBlock][BLOCK_NORMAL].m_size.x / 2);
-				}
-				else { g_block[cntBlock][BLOCK_NORMAL].m_Halfsize.x = g_BlockHalfScale.x; }
-
-				if (((g_block[cntBlock][BLOCK_NORMAL].m_Halfsize.y * size.y) > g_BlockHalfScale.y))
-				{
-					g_block[cntBlock][BLOCK_NORMAL].m_Halfsize.y =
-				   (g_block[cntBlock][BLOCK_NORMAL].m_Halfsize.y * size.y);// -(g_BlockHalfScale.y * 2.0f) + g_BlockHalfScale.y;
-				}
-				else
-				{
-					g_block[cntBlock][BLOCK_NORMAL].m_Halfsize.y = g_BlockHalfScale.y;
-				}
-
-				// --------------ヒビ壁の設置------------------------------------------------------------
-				if (g_block[cntBlock][BLOCK_CRACKS].m_use)
-					continue;	// 使用中ならスキップ
-
-				// 使用中ＯＮ
-				g_block[cntBlock][BLOCK_CRACKS].m_use = true;
-				
-				// 座標設定
-				g_block[cntBlock][BLOCK_CRACKS].m_pos = pos;
-				g_block[cntBlock][BLOCK_CRACKS].m_pos.x += cpos.x;
-				g_block[cntBlock][BLOCK_CRACKS].m_pos.y += cpos.y;
-
-				// 指定されたサイズに変更
-				g_block[cntBlock][BLOCK_CRACKS].m_size.x *= size.x;
-				g_block[cntBlock][BLOCK_CRACKS].m_size.y *= size.y;
-
-
-				if (((g_block[cntBlock][BLOCK_CRACKS].m_Halfsize.x * size.x) > g_BlockHalfScale.x))
-				{
-					g_block[cntBlock][BLOCK_CRACKS].m_Halfsize.x =
-				   (g_block[cntBlock][BLOCK_CRACKS].m_size.x / 2);
-				}
-				else if (((g_block[cntBlock][BLOCK_CRACKS].m_Halfsize.x * size.x) < g_BlockHalfScale.x))
-				{
-					g_block[cntBlock][BLOCK_CRACKS].m_Halfsize.x =
-				   (g_block[cntBlock][BLOCK_CRACKS].m_size.x / 2);
-				}
-				else { g_block[cntBlock][BLOCK_CRACKS].m_Halfsize.x = g_BlockHalfScale.x; }
-
-				if (((g_block[cntBlock][BLOCK_CRACKS].m_Halfsize.y * size.y) > g_BlockHalfScale.y))
-				{
-					g_block[cntBlock][BLOCK_CRACKS].m_Halfsize.y =
-				   (g_block[cntBlock][BLOCK_CRACKS].m_Halfsize.y * size.y);// -(g_BlockHalfScale.y * 2.0f) + g_BlockHalfScale.y;
-				}
-				else
-				{
-					g_block[cntBlock][BLOCK_CRACKS].m_Halfsize.y = g_BlockHalfScale.y;
-				}
+			else if (((g_block[cntBlock][BLOCK_INVINCIBLE].m_Halfsize.x * size.x) < g_BlockHalfScale.x))
+			{
+				g_block[cntBlock][BLOCK_INVINCIBLE].m_Halfsize.x = 
+			   (g_block[cntBlock][BLOCK_INVINCIBLE].m_size.x / 2);
 			}
-			
-			
-			// 使用しているブロック数のカウント
-			Block = cntBlock + 1;
-			break;
+			else { g_block[cntBlock][BLOCK_INVINCIBLE].m_Halfsize.x = g_BlockHalfScale.x; }
+
+			if (((g_block[cntBlock][BLOCK_INVINCIBLE].m_Halfsize.y * size.y) > g_BlockHalfScale.y))
+			{
+				g_block[cntBlock][BLOCK_INVINCIBLE].m_Halfsize.y = 
+			   (g_block[cntBlock][BLOCK_INVINCIBLE].m_Halfsize.y * size.y);// -(g_BlockHalfScale.y * 2.0f) + g_BlockHalfScale.y;
+			}
+			else
+			{
+				g_block[cntBlock][BLOCK_INVINCIBLE].m_Halfsize.y = g_BlockHalfScale.y;
+			}
 		}
+		else 
+		{// --------------通常壁の設置------------------------------------------------------------
+			if (g_block[cntBlock][BLOCK_NORMAL].m_use)
+				continue;	// 使用中ならスキップ
+
+			// 使用中ＯＮ
+			g_block[cntBlock][BLOCK_NORMAL].m_use = true;
+			
+			// 触れた瞬間に消えるようにする
+			g_block[cntBlock][BLOCK_NORMAL].m_nLife = 0;
+			
+			// 座標設定
+			g_block[cntBlock][BLOCK_NORMAL].m_pos = pos;
+			g_block[cntBlock][BLOCK_NORMAL].m_pos.x += cpos.x;
+			g_block[cntBlock][BLOCK_NORMAL].m_pos.y += cpos.y;
+
+			// 指定されたサイズに変更
+			g_block[cntBlock][BLOCK_NORMAL].m_size.x *= size.x;
+			g_block[cntBlock][BLOCK_NORMAL].m_size.y *= size.y;
+
+
+			if (((g_block[cntBlock][BLOCK_NORMAL].m_Halfsize.x * size.x) > g_BlockHalfScale.x))
+			{
+				g_block[cntBlock][BLOCK_NORMAL].m_Halfsize.x =
+			   (g_block[cntBlock][BLOCK_NORMAL].m_size.x / 2);
+			}
+			else if (((g_block[cntBlock][BLOCK_NORMAL].m_Halfsize.x * size.x) < g_BlockHalfScale.x))
+			{
+				g_block[cntBlock][BLOCK_NORMAL].m_Halfsize.x =
+			   (g_block[cntBlock][BLOCK_NORMAL].m_size.x / 2);
+			}
+			else { g_block[cntBlock][BLOCK_NORMAL].m_Halfsize.x = g_BlockHalfScale.x; }
+
+			if (((g_block[cntBlock][BLOCK_NORMAL].m_Halfsize.y * size.y) > g_BlockHalfScale.y))
+			{
+				g_block[cntBlock][BLOCK_NORMAL].m_Halfsize.y =
+			   (g_block[cntBlock][BLOCK_NORMAL].m_Halfsize.y * size.y);// -(g_BlockHalfScale.y * 2.0f) + g_BlockHalfScale.y;
+			}
+			else
+			{
+				g_block[cntBlock][BLOCK_NORMAL].m_Halfsize.y = g_BlockHalfScale.y;
+			}
+
+			// --------------ヒビ壁の設置------------------------------------------------------------
+			if (g_block[cntBlock][BLOCK_CRACKS].m_use)
+				continue;	// 使用中ならスキップ
+
+			// 使用中ＯＮ
+			g_block[cntBlock][BLOCK_CRACKS].m_use = true;
+			
+			// 座標設定
+			g_block[cntBlock][BLOCK_CRACKS].m_pos = pos;
+			g_block[cntBlock][BLOCK_CRACKS].m_pos.x += cpos.x;
+			g_block[cntBlock][BLOCK_CRACKS].m_pos.y += cpos.y;
+
+			// 指定されたサイズに変更
+			g_block[cntBlock][BLOCK_CRACKS].m_size.x *= size.x;
+			g_block[cntBlock][BLOCK_CRACKS].m_size.y *= size.y;
+
+
+			if (((g_block[cntBlock][BLOCK_CRACKS].m_Halfsize.x * size.x) > g_BlockHalfScale.x))
+			{
+				g_block[cntBlock][BLOCK_CRACKS].m_Halfsize.x =
+			   (g_block[cntBlock][BLOCK_CRACKS].m_size.x / 2);
+			}
+			else if (((g_block[cntBlock][BLOCK_CRACKS].m_Halfsize.x * size.x) < g_BlockHalfScale.x))
+			{
+				g_block[cntBlock][BLOCK_CRACKS].m_Halfsize.x =
+			   (g_block[cntBlock][BLOCK_CRACKS].m_size.x / 2);
+			}
+			else { g_block[cntBlock][BLOCK_CRACKS].m_Halfsize.x = g_BlockHalfScale.x; }
+
+			if (((g_block[cntBlock][BLOCK_CRACKS].m_Halfsize.y * size.y) > g_BlockHalfScale.y))
+			{
+				g_block[cntBlock][BLOCK_CRACKS].m_Halfsize.y =
+			   (g_block[cntBlock][BLOCK_CRACKS].m_Halfsize.y * size.y);// -(g_BlockHalfScale.y * 2.0f) + g_BlockHalfScale.y;
+			}
+			else
+			{
+				g_block[cntBlock][BLOCK_CRACKS].m_Halfsize.y = g_BlockHalfScale.y;
+			}
+		}
+		
+		// 使用しているブロック数のカウント
+		Block = cntBlock + 1;
+		break;
 	}
 	return Block;
 }

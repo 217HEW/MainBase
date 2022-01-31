@@ -91,8 +91,6 @@
 #include <xinput.h>		// コントローラー情報取得に必要
 #include "AssimpModel.h"
 #include "debugproc.h"
-#include "shadow.h"
-#include "bullet.h"
 #include "effect.h"
 #include "collision.h"
 #include "explosion.h"
@@ -116,9 +114,9 @@
 #define	RATE_MOVE_PLAYER	(0.025f)	// 移動慣性係数
 #define	VALUE_ROTATE_PLAYER	(4.5f)		// 回転速度
 #define	RATE_ROTATE_PLAYER	(0.1f)		// 回転慣性係数
-#define SCALE_PLAYER		(XMFLOAT3(1.0f, 1.5f, 1.0f))//(XMFLOAT3(2.0f, 1.5f, 1.0f)) //	プレイヤーのモデルスケール
+#define SCALE_PLAYER		(XMFLOAT3(1.0f, 1.5f, 1.0f))	//	プレイヤーのモデルスケール
 #define COLLAR_PLAYER		(XMFLOAT4(1.0f, 1.0f, 1.0f,1.0f))	// プレイヤーカラー(仮)ここをいじるとカラーが変わります
-#define SIZE_PLAYER			XMFLOAT3(6.0f, 10.0f, 0.5f)//(110.5f, 16.5f, 1.0f)	// プレイヤーのモデルサイズ
+#define SIZE_PLAYER			XMFLOAT3(6.0f, 10.0f, 0.5f)		// プレイヤーのモデルサイズ
 
 #define	PLAYER_RADIUS		(5.0f)		// 境界球半径
 #define DAMAGE_TIMER		(120)		// ダメージ後の無敵時間
@@ -176,10 +174,9 @@ HRESULT InitPlayer(void)
 		MessageBoxA(GetMainWnd(), "自機モデルデータ読み込みエラー", "InitModel", MB_OK);
 		return E_FAIL;
 	}
-	g_PlayerEffect.Load();
-	// 丸影の生成
-	//g_nShadow = CreateShadow(g_posModel, 12.0f);
 
+	g_PlayerEffect.Load();
+	
 	// 壁接触,無敵判定初期化
 	g_bLand = true;
 	g_bInv = true;
@@ -195,9 +192,6 @@ HRESULT InitPlayer(void)
 //**************************************************************
 void UninitPlayer(void)
 {
-	// 丸影の解放
-	//ReleaseShadow(g_nShadow);
-
 	// モデルの解放
 	g_model.Release();
 }
@@ -331,122 +325,14 @@ void UpdatePlayer(void)
 			else if (GetKeyPress(VK_RIGHT) && !(g_eDir == DIR_LEFT)) {
 				g_moveModel.x += SPEED_MOVE_PLAYER;
 			}
-			// 奥手前移動
-			//if (GetKeyPress(VK_UP)) {
-			//	g_moveModel.z += SPEED_MOVE_PLAYER;
-			//}
-			//else if (GetKeyPress(VK_DOWN)) {
-			//	g_moveModel.z -= SPEED_MOVE_PLAYER;
-			//}
 		}
 	}
-	//if (GetKeyPress(VK_LEFT)) {
-	//	if (GetKeyPress(VK_UP)) {
-	//		// 左前移動
-	//		g_moveModel.x -= SinDeg(rotCamera.y + 135.0f) * VALUE_MOVE_PLAYER;
-	//		//g_moveModel.z -= CosDeg(rotCamera.y + 135.0f) * VALUE_MOVE_PLAYER;
-	//
-	//		g_rotDestModel.y = rotCamera.y + 135.0f;
-	//	} else if (GetKeyPress(VK_DOWN)) {
-	//		// 左後移動
-	//		g_moveModel.x -= SinDeg(rotCamera.y + 45.0f) * VALUE_MOVE_PLAYER;
-	//		//g_moveModel.z -= CosDeg(rotCamera.y + 45.0f) * VALUE_MOVE_PLAYER;
-	//
-	//		g_rotDestModel.y = rotCamera.y + 45.0f;
-	//	} else {
-	//		// 左移動
-	//		g_moveModel.x -= SinDeg(rotCamera.y + 90.0f) * VALUE_MOVE_PLAYER;
-	//		//g_moveModel.z -= CosDeg(rotCamera.y + 90.0f) * VALUE_MOVE_PLAYER;
-	//
-	//		g_rotDestModel.y = rotCamera.y + 90.0f;
-	//	}
-	//} else if (GetKeyPress(VK_RIGHT)) {
-	//	if (GetKeyPress(VK_UP)) {
-	//		// 右前移動
-	//		g_moveModel.x -= SinDeg(rotCamera.y - 135.0f) * VALUE_MOVE_PLAYER;
-	//		//g_moveModel.z -= CosDeg(rotCamera.y - 135.0f) * VALUE_MOVE_PLAYER;
-	//
-	//		g_rotDestModel.y = rotCamera.y - 135.0f;
-	//	} else if (GetKeyPress(VK_DOWN)) {
-	//		// 右後移動
-	//		g_moveModel.x -= SinDeg(rotCamera.y - 45.0f) * VALUE_MOVE_PLAYER;
-	//		//g_moveModel.z -= CosDeg(rotCamera.y - 45.0f) * VALUE_MOVE_PLAYER;
-	//
-	//		g_rotDestModel.y = rotCamera.y - 45.0f;
-	//	} else {
-	//		// 右移動
-	//		g_moveModel.x -= SinDeg(rotCamera.y - 90.0f) * VALUE_MOVE_PLAYER;
-	//		//g_moveModel.z -= CosDeg(rotCamera.y - 90.0f) * VALUE_MOVE_PLAYER;
-	//
-	//		g_rotDestModel.y = rotCamera.y - 90.0f;
-	//	}
-	//} else if (GetKeyPress(VK_UP)) {
-	//	// 前移動
-	//	g_moveModel.x -= SinDeg(180.0f + rotCamera.y) * VALUE_MOVE_PLAYER;
-	//	//g_moveModel.z -= CosDeg(180.0f + rotCamera.y) * VALUE_MOVE_PLAYER;
-	//
-	//	g_rotDestModel.y = 180.0f + rotCamera.y;
-	//} else if (GetKeyPress(VK_DOWN)) {
-	//	// 後移動
-	//	g_moveModel.x -= SinDeg(rotCamera.y) * VALUE_MOVE_PLAYER;
-	//	//g_moveModel.z -= CosDeg(rotCamera.y) * VALUE_MOVE_PLAYER;
-	//
-	//	g_rotDestModel.y = rotCamera.y;
-	//}
-
-	//if (GetKeyPress(VK_I)) {
-	//	// 上に移動
-	//	g_moveModel.y += VALUE_MOVE_PLAYER;
-	//}
-	//if (GetKeyPress(VK_K)) {
-	//	// 下に移動
-	//	g_moveModel.y -= VALUE_MOVE_PLAYER;
-	//}
-	//
-	//if (GetKeyPress(VK_J)) {
-	//	// 左回転
-	//	g_rotDestModel.y -= VALUE_ROTATE_PLAYER;
-	//	if (g_rotDestModel.y < -180.0f) {
-	//		g_rotDestModel.y += 360.0f;
-	//	}
-	//}
-	//if (GetKeyPress(VK_L)) {
-	//	// 右回転
-	//	g_rotDestModel.y += VALUE_ROTATE_PLAYER;
-	//	if (g_rotDestModel.y >= 180.0f) {
-	//		g_rotDestModel.y -= 360.0f;
-	//	}
-	//}
-
+	
 	// -------移動の制限&制御------------------------------------------
-
-	// 目的の角度までの差分
-	//float fDiffRotY = g_rotDestModel.y - g_rotModel.y;
-	//if (fDiffRotY >= 180.0f) {
-	//	fDiffRotY -= 360.0f;
-	//}
-	//if (fDiffRotY < -180.0f) {
-	//	fDiffRotY += 360.0f;
-	//}
-
-	// 目的の角度まで慣性をかける
-	// g_rotModel.y += fDiffRotY * RATE_ROTATE_PLAYER *3;
-	// if (g_rotModel.y >= 180.0f) {
-	// 	g_rotModel.y -= 360.0f;
-	// }
-	// if (g_rotModel.y < -180.0f) {
-	// 	g_rotModel.y += 360.0f;
-	// }
 
 	// 位置移動
 	g_posModel.x += g_moveModel.x;
 	g_posModel.y += g_moveModel.y;
-	//g_posModel.z += g_moveModel.z;
-
-	// 移動量に慣性をかける
-	// g_moveModel.x += (0.0f - g_moveModel.x) * RATE_MOVE_PLAYER;
-	// g_moveModel.y += (0.0f - g_moveModel.y) * RATE_MOVE_PLAYER;
-	// //g_moveModel.z += (0.0f - g_moveModel.z) * RATE_MOVE_PLAYER;
 
 	// ゲームオーバー用制限
 	if (g_posModel.x > 630.0f)	{ StartFadeOut(SCENE_GAMEOVER); }	// 右
@@ -489,22 +375,9 @@ void UpdatePlayer(void)
 	   + g_moveModel.z * g_moveModel.z) > 1.0f) {
 		XMFLOAT3 pos;
 
-		// エフェクト出現座標の調整
-		// pos.x = g_posModel.x + SinDeg(g_rotModel.y) * 10.0f;
-		// pos.y = g_posModel.y + 2.0f;
-		// pos.z = g_posModel.z + CosDeg(g_rotModel.y) * 10.0f;
-		
 		pos.x = g_posModel.x;
 		pos.y = g_posModel.y - 10.0f;
 		pos.z = g_posModel.z;
-
-		// エフェクシアのサンプルエフェクト再生処理
-		// if (g_PEffectTimer == 0)
-		// {	
-		// 	g_PlayerEffect.Set(EFFECT_FIRE, pos, XMFLOAT3(10.0f, 10.0f, 0.0f), 2.5f, XMFLOAT3(0.0f,0.0f,0.0f));
-		// 	g_PEffectTimer = 1;
-		// }
-		// --g_PEffectTimer;
 
 		// エフェクトの設定
 		SetEffect(pos, XMFLOAT3(0.0f, 0.0f, 0.0f),
@@ -517,10 +390,7 @@ void UpdatePlayer(void)
 					   XMFLOAT4(0.45f, 0.45f, 0.05f, 0.15f),
 					   XMFLOAT2(5.0f, 5.0f), 20);
 	}
-	
-	// PrintDebugProc("[ﾋｺｳｷ ｲﾁ : (%f : %f : %f)]\n", g_posModel.x, g_posModel.y, g_posModel.z);
-	// PrintDebugProc("[ﾋｺｳｷ ﾑｷ : (%f) < ﾓｸﾃｷ ｲﾁ:(%f) >]\n", g_rotModel.y, g_rotDestModel.y);
-	// PrintDebugProc("\n");
+
 #ifdef _DEBUG
 	PrintDebugProc("StickX : %f\n", Stick.x);
 	PrintDebugProc("StickY : %f\n", Stick.y);

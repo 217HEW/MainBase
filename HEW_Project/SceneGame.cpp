@@ -71,25 +71,17 @@
 #include "polygon.h"
 #include "debugproc.h"
 #include "mesh.h"
-#include "meshfield.h"
 #include "player.h"
-#include "shadow.h"
 #include "bg.h"
-#include "bullet.h"
 #include "explosion.h"
 #include "effect.h"
 #include "Reticle.h"
-#include "smoke.h"
-#include "meshwall.h"
-// #include "polyline.h"
 #include "Sound.h"
 #include "timer.h"
 #include "life.h"
 #include "number.h"
-// #include "CreateField.h"
 #include "Block.h"
 #include "EnemyMelee.h"
-// #include "EnemyExplode.h"
 #include "EnemyRange.h"
 #include "Pause.h"
 #include "PlayEffect.h"
@@ -127,11 +119,6 @@ HRESULT InitGame(AREA Area)
 	if (FAILED(hr))
 		return hr;
 
-	// 丸影初期化
-	hr = InitShadow();
-	if (FAILED(hr))
-		return hr;
-
 	// №初期化
 	hr = InitNumber();
 	if (FAILED(hr))
@@ -166,20 +153,15 @@ HRESULT InitGame(AREA Area)
 	if (FAILED(hr))
 		return hr;
 
-	// // フィールド初期化
-	// hr = InitMeshField(16, 16, 80.0f, 80.0f);
-	// if (FAILED(hr))
-	// 	return hr;
-
 	// 背景初期化
 	hr = InitBG();
 	if (FAILED(hr))
 		return hr;
 
 	// ビルボード弾初期化
-	hr = InitBullet();
-	if (FAILED(hr))
-		return hr;
+	//hr = InitBullet();
+	//if (FAILED(hr))
+	//	return hr;
 
 	// 爆発初期化
 	hr = InitExplosion();
@@ -196,16 +178,6 @@ HRESULT InitGame(AREA Area)
 	if (FAILED(hr))
 		return hr;
 
-	// 煙初期化
-	hr = InitSmoke();
-	if (FAILED(hr))
-		return hr;
-
-	// ブロック初期化
-	//hr = InitBlock();
-	//if (FAILED(hr))
-	//return hr;
-
 	// エネミーメレー初期化
 	hr = InitEnemyMelee();
 	if (FAILED(hr))
@@ -220,14 +192,6 @@ HRESULT InitGame(AREA Area)
 	hr = InitCField(Area);
 	if (FAILED(hr))
 		return hr;
-
-	// エネミーエクスプロード初期化
-	// hr = InitEnemyExplode();
-	// if (FAILED(hr))
-	// 	return hr;
-
-	// エクスプロード呼び出し
-	// SetEnemyExplode(XMFLOAT3(60.0f, -790.0f, 0.0f));
 
 	// エフェクト(for Effekseer)初期化
 	hr = g_GameEffect.Load();
@@ -336,17 +300,11 @@ void UninitGame()
 	// 背景終了
 	UninitBG();
 
-	// フィールド終了
-	//UninitMeshField();
-
 	// 二次元配列マップ終了
 	UninitCField();
 
 	// 自機終了
 	UninitPlayer();
-
-	// 丸影終了
-	//UninitShadow();
 
 	//ナンバー終了
 	UninitNumber();
@@ -374,9 +332,6 @@ void UpdateGame()
 
 	TEnemyMelee* pEMelee = GetEnemyMelee();
 
-	// 入力処理更新
-	//UpdateInput();	// 必ずUpdate関数の先頭で実行.
-
 	if (g_bC_Pause) {
 		//一時停止更新
 		UpdateC_Pause();
@@ -397,8 +352,10 @@ void UpdateGame()
 	}
 	else
 	{
+		// フェード中は処理しない
 		if (GetFadeState() == FADE_NONE)
-		{
+		{ 
+			
 #ifdef _DEBUG
 			if (GetKeyRelease(VK_1))
 			{
@@ -406,20 +363,20 @@ void UpdateGame()
 			}
 			else if (GetKeyRelease(VK_2))
 			{
-				StartFadeOut(SCENE_GAME);
+				StartFadeOut(SCENE_SELECT);
 			}
 			else if (GetKeyRelease(VK_3))
 			{
-				StartFadeOut(SCENE_AREA2);
+				StartFadeOut(SCENE_GAME);
 			}
 			else if (GetKeyRelease(VK_4))
 			{
-				StartFadeOut(SCENE_AREA3);
+				StartFadeOut(SCENE_AREA2);
 			}
-		// 	else if (GetKeyRelease(VK_5))
-		// 	{
-		// 		StartFadeOut(SCENE_AREA_DEBUG);
-		// 	}
+			 else if (GetKeyRelease(VK_5))
+			 {
+			 	StartFadeOut(SCENE_AREA3);
+			 }
 			else if (GetKeyRelease(VK_6))
 			{
 				StartFadeOut(SCENE_GAMEOVER);
@@ -433,37 +390,18 @@ void UpdateGame()
 				StartFadeOut(SCENE_SELECT);
 			}
 #endif
+		
 			int Timer = GetTimer();
 			if (Timer <= 0)
 			{
 				StartFadeOut(SCENE_GAMEOVER);
 			}
 		}
-
-
-		// デバッグ文字列表示更新
-		//UpdateDebugProc();
-		// デバッグ文字列設定
-		//StartDebugProc();
-		// ポリゴン表示更新
-		//UpdatePolygon();
-
 		// 背景更新
 		UpdateBG();
 
 		// 自機更新
 		UpdatePlayer();
-
-		// エネミーメレー更新
-		// UpdateEnemyMelee();
-		// エネミーエクスプロード更新
-		// UpdateEnemyExplode();
-		// エネミーレンジ更新
-		//UpdateEnemyRange();
-		// 壁更新
-		//UpdateMeshWall();
-		// フィールド更新
-		//UpdateMeshField();
 
 		// 二次元配列マップ更新
 		UpdateCField();
@@ -471,7 +409,7 @@ void UpdateGame()
 		//*12/17澤村瑠人追加
 		// タイマー更新
 		if (!GetPlayerInv())
-		UpdateTimer();
+			UpdateTimer();
 
 		// タイマー更新
 		if (!GetPlayerInv())
@@ -482,9 +420,6 @@ void UpdateGame()
 
 		// カメラ更新
 		CCamera::Get()->Update();
-
-		// ビルボード弾更新
-		//UpdateBullet();
 
 		// 爆発更新
 		UpdateExplosion();
@@ -502,19 +437,8 @@ void UpdateGame()
 		--g_EffectTimer;
 		g_GameEffect.Update();
 
-
-		// ブロック更新
-		// UpdateBlock();
-
 		// 煙更新
 		// UpdateSmoke();
-
-		// ブロック更新
-		// ポリライン更新
-		// for (int i = 0; i < MAX_POLYLINE; ++i) {
-		// 	UpdatePolyline(&g_polyline[i]);
-		// }
-
 
 	}
 	//一時停止ON/OFF
@@ -631,32 +555,20 @@ void DrawGame()
 	// Zバッファ有効(Zチェック有&Z更新有)
 	SetZBuffer(true);
 
-	// フィールド描画
-	//DrawMeshField();
-
 	// 二次元配列マップ描画
 	DrawCField();
 
 	// 自機描画
 	DrawPlayer();
 
-	// エネミーメレー
-	//DrawEnemyMelee();
-
-	// エネミーレンジ
-	//DrawEnemyRange();
-
-	// エネミーエクスプロード
-	// DrawEnemyExplode();
-
-	// 丸影描画
-	//DrawShadow();
-
 	// ビルボード弾描画
-	DrawBullet();
+	//DrawBullet();
 
 	// 煙描画
 	//DrawSmoke();
+
+	// 壁描画 (不透明部分)
+	DrawMeshWall(DRAWPART_OPAQUE);
 
 	// ブロック描画
 	//DrawBlock();
@@ -669,7 +581,10 @@ void DrawGame()
 	// {
 	// 	DrawPolyline(&g_polyline[i]);
 	// }
-	
+
+	// 壁描画 (半透明部分)
+	DrawMeshWall(DRAWPART_TRANSLUCENT);
+
 	SetZBuffer(false);
 
 	// エフェクト描画
