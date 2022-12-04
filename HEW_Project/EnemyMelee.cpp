@@ -98,7 +98,8 @@ Effect g_MeleeEffect2[MAX_ENEMYMELEE2];
 static int g_EffectTimer2 = 0;		// エフェクト制御用タイマー
 
 static XMFLOAT3			Blocksize;
-
+float	g_I_Rad;
+float	g_J_Rad;
 //**************************************************************
 // 初期化処理
 //**************************************************************
@@ -197,6 +198,8 @@ void UpdateEnemyMelee(void)
 	XMFLOAT3 posPlayer = GetPlayerPos();
 	float sizePlayer = GetPlayerRadSize();
 
+	
+
 	for (int i = 0; i < MAX_ENEMYMELEE; ++i)
 	{
 		if (!g_EMelee[i].m_use)
@@ -247,6 +250,11 @@ void UpdateEnemyMelee(void)
 
 			}
 
+			
+
+
+
+
 			//**************************************************************************************
 			//		当たり判定
 			//**************************************************************************************
@@ -254,6 +262,10 @@ void UpdateEnemyMelee(void)
 			// 敵同士の当たり判定
 			for (int j = 0; j < MAX_ENEMYMELEE; ++j)
 			{
+				//敵キャラクターの半径の値取得
+				g_I_Rad = (g_EMelee[i].m_pos.x + g_EMelee[i].m_size.x) / 2;
+				g_J_Rad = (g_EMelee[j].m_pos.x + g_EMelee[j].m_size.x) / 2;
+
 				if (!g_EMelee[j].m_use)
 				{//未使用なら次へ
 					continue;
@@ -264,7 +276,21 @@ void UpdateEnemyMelee(void)
 					{//同じ敵ならとばす
 						continue;
 					}
-					//敵同士が重ならない処理
+				}
+			//***************************
+			// 敵同士が重ならない処理(座標)
+			//***************************
+				if (g_I_Rad == g_J_Rad)
+				{
+					if (i == j)
+					{//同じ敵ならとばす
+						continue;
+					}
+					else
+					{
+						//ヘリコプター参照？
+					}
+
 				}
 			}
 
