@@ -61,6 +61,12 @@
 //--------------------------------------------------------------
 //	2022/01/31	いらない処理＆コメント部分の削除
 //														変更者：柴山凜太郎
+//--------------------------------------------------------------
+//	2022/12/06	クラス化進行中
+//				コンストラクタ、デストラクタ追加
+//				プレイヤー、近接敵、遠距離敵の
+//				ポインタメンバ変数を作成
+//														変更者：澤村瑠人
 //**************************************************************
 
 //**************************************************************
@@ -74,7 +80,7 @@
 #include "polygon.h"
 #include "debugproc.h"
 #include "mesh.h"
-#include "player.h"
+
 #include "bg.h"
 #include "explosion.h"
 #include "effect.h"
@@ -84,8 +90,7 @@
 #include "life.h"
 #include "number.h"
 #include "Block.h"
-#include "EnemyMelee.h"
-#include "EnemyRange.h"
+
 #include "Pause.h"
 #include "PlayEffect.h"
 #include "ClearPause.h"	//テストインクルード
@@ -110,11 +115,32 @@ int g_nNowScene;		// 現在のシーン
 Effect g_GameEffect;	// エフェクト変数
 static int g_EffectTimer = 0;	// エフェクト制御用タイマー
 
+
+//**************************************************************
+// コンストラクタ
+//**************************************************************
+CSceneGame::CSceneGame()
+{
+	m_Player = nullptr;
+	m_EnemyMelee = nullptr;
+	m_EnemyRange = nullptr;
+
+}
+
+//**************************************************************
+// デストラクタ
+//**************************************************************
+CSceneGame::~CSceneGame()
+{
+	
+
+}
+
 //**************************************************************
 // 初期化処理
 //	引数：遷移先のエリア
 //**************************************************************
-HRESULT InitGame(AREA Area)
+HRESULT CSceneGame::InitGame(AREA Area)
 {
 	HRESULT hr = S_OK;
 
@@ -153,9 +179,8 @@ HRESULT InitGame(AREA Area)
 	}
 
 	// 自機初期化
-	hr = InitPlayer();
-	if (FAILED(hr))
-		return hr;
+	//2022/12/06変更
+	m_Player = new CPlayer();
 
 	// 背景初期化
 	hr = InitBG();
@@ -178,14 +203,13 @@ HRESULT InitGame(AREA Area)
 		return hr;
 
 	// エネミーメレー初期化
-	hr = InitEnemyMelee();
-	if (FAILED(hr))
-		return hr;
+	//2022/12/06変更
+	m_EnemyMelee = new CEnemyMelee();
+	
 
 	// レンジ初期化
-	hr = InitEnemyRange();
-	if (FAILED(hr))
-		return hr;
+	//2022/12/06変更
+	m_EnemyRange = new CEnemyRange();
 
 	//二次元配列マップ
 	hr = InitCField(Area);
@@ -223,7 +247,7 @@ HRESULT InitGame(AREA Area)
 //**************************************************************
 // 終了処理
 //**************************************************************
-void UninitGame()
+void CSceneGame::UninitGame()
 {
 	// BGM再生停止
 	CSound::Stop(BGM_GAME000);
@@ -250,7 +274,9 @@ void UninitGame()
 	UninitCField();
 
 	// 自機終了
-	UninitPlayer();
+	//2022/12/06変更
+	m_Player->UninitPlayer();
+	delete m_Player;
 
 	//ナンバー終了
 	UninitNumber();
@@ -271,7 +297,7 @@ void UninitGame()
 //**************************************************************
 // 更新処理
 //**************************************************************
-void UpdateGame()
+void CSceneGame::UpdateGame()
 {
 	// コントローラー情報
 	GetJoyState(Joycon);
@@ -356,7 +382,8 @@ void UpdateGame()
 			UpdateBG();
 
 			// 自機更新
-			UpdatePlayer();
+			//2022/12/06変更
+			m_Player->UpdatePlayer();
 
 			// 二次元配列マップ更新
 			UpdateCField();
@@ -501,7 +528,7 @@ void UpdateGame()
 //**************************************************************
 // 描画処理
 //**************************************************************
-void DrawGame()
+void CSceneGame::DrawGame()
 {
 	// Zバッファ無効(Zチェック無&Z更新無)
 	SetZBuffer(false);
@@ -516,7 +543,8 @@ void DrawGame()
 	DrawCField();
 
 	// 自機描画
-	DrawPlayer();
+	//2022/12/06変更
+	m_Player->DrawPlayer();
 
 	// 爆発描画
 	DrawExplosion();

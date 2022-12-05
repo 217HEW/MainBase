@@ -103,7 +103,7 @@ float	g_J_Rad;
 //**************************************************************
 // 初期化処理
 //**************************************************************
-HRESULT InitEnemyMelee(void)
+HRESULT CEnemyMelee::InitEnemyMelee()
 {
 	HRESULT hr = S_OK;
 	ID3D11Device* pDevice = GetDevice();
@@ -169,7 +169,7 @@ HRESULT InitEnemyMelee(void)
 //**************************************************************
 // 終了処理
 //**************************************************************
-void UninitEnemyMelee(void)
+void CEnemyMelee::UninitEnemyMelee()
 {
 	// モデルの解放
 	g_model.Release();
@@ -184,7 +184,7 @@ void UninitEnemyMelee(void)
 //**************************************************************
 // 更新処理
 //**************************************************************
-void UpdateEnemyMelee(void)
+void CEnemyMelee::UpdateEnemyMelee()
 {
 	// カメラの向き取得
 	XMFLOAT3 rotCamera = CCamera::Get()->GetAngle();
@@ -263,8 +263,8 @@ void UpdateEnemyMelee(void)
 			for (int j = 0; j < MAX_ENEMYMELEE; ++j)
 			{
 				//敵キャラクターの半径の値取得
-				g_I_Rad = (g_EMelee[i].m_pos.x + g_EMelee[i].m_size.x) / 2;
-				g_J_Rad = (g_EMelee[j].m_pos.x + g_EMelee[j].m_size.x) / 2;
+				//g_I_Rad = (g_EMelee[i].m_pos.x + g_EMelee[i].m_size.x) / 2;
+				//g_J_Rad = (g_EMelee[j].m_pos.x + g_EMelee[j].m_size.x) / 2;
 
 				if (!g_EMelee[j].m_use)
 				{//未使用なら次へ
@@ -280,18 +280,18 @@ void UpdateEnemyMelee(void)
 			//***************************
 			// 敵同士が重ならない処理(座標)
 			//***************************
-				if (g_I_Rad == g_J_Rad)
-				{
-					if (i == j)
-					{//同じ敵ならとばす
-						continue;
-					}
-					else
-					{
-						//ヘリコプター参照？
-					}
+				//if (g_I_Rad == g_J_Rad)
+				//{
+				//	if (i == j)
+				//	{//同じ敵ならとばす
+				//		continue;
+				//	}
+				//	else
+				//	{
+				//		//ヘリコプター参照？
+				//	}
 
-				}
+				//}
 			}
 
 			// 敵と壁の当たり判定
@@ -741,7 +741,7 @@ void UpdateEnemyMelee(void)
 //**************************************************************
 // 描画処理
 //**************************************************************
-void DrawEnemyMelee(void)
+void CEnemyMelee::DrawEnemyMelee()
 {
 
 	ID3D11DeviceContext* pDC = GetDeviceContext();

@@ -48,10 +48,22 @@ enum PlayerDir
 //*****************************************************************************
 // プロトタイプ宣言
 //*****************************************************************************
-HRESULT InitPlayer(void);	// 初期化
-void UninitPlayer(void);	// 終了
-void UpdatePlayer(void);	// 更新
-void DrawPlayer(void);		// 描画
+class CPlayer
+{
+public:
+	/*CPlayer();
+	~CPlayer();*/
+
+	virtual HRESULT InitPlayer();	// 初期化
+	virtual void UninitPlayer();	// 終了
+	virtual void UpdatePlayer();	// 更新
+	virtual void DrawPlayer();		// 描画
+
+private:
+
+};
+
+
 
 // プレイヤー位置情報取得
 XMFLOAT3& GetPlayerPos();
