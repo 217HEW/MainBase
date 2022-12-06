@@ -58,10 +58,29 @@ struct TEnemyRange2 {
 //**************************************************************
 // プロトタイプ宣言
 //**************************************************************
-HRESULT InitEnemyRange(void);	// 初期化
-void UninitEnemyRange(void);	// 終了
-void UpdateEnemyRange(void);	// 更新
-void DrawEnemyRange(void);		// 描画
+class CEnemyRange
+{
+public:
+	CEnemyRange();
+	~CEnemyRange();
+
+	virtual HRESULT InitEnemyRange();	// 初期化
+	virtual void UninitEnemyRange();	// 終了
+	virtual void UpdateEnemyRange();	// 更新
+	virtual void DrawEnemyRange();		// 描画
+
+private:
+
+};
+
+CEnemyRange::CEnemyRange()
+{
+}
+
+CEnemyRange::~CEnemyRange()
+{
+}
+
 
 int SetEnemyRange(XMFLOAT3 pos,int id);	// 遠隔敵設置
 TEnemyRange* GetEnemyRange();		// 遠隔敵情報取得

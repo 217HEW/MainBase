@@ -91,7 +91,7 @@ static TEnemyRange2	g_ERange2[MAX_ENEMYRANGE2];	// 敵機情報
 //**************************************************************
 // 初期化処理
 //**************************************************************
-HRESULT InitEnemyRange(void)
+HRESULT CEnemyRange::InitEnemyRange()
 {
 	HRESULT hr = S_OK;
 	ID3D11Device* pDevice = GetDevice();
@@ -162,7 +162,7 @@ HRESULT InitEnemyRange(void)
 //**************************************************************
 // 終了処理
 //**************************************************************
-void UninitEnemyRange(void)
+void CEnemyRange::UninitEnemyRange()
 {
 	// モデルの解放
 	g_model.Release();
@@ -179,7 +179,7 @@ void UninitEnemyRange(void)
 //**************************************************************
 // 更新処理
 //**************************************************************
-void UpdateEnemyRange(void)
+void CEnemyRange::UpdateEnemyRange()
 {
 	XMMATRIX mtxWorld, mtxRot, mtxTranslate, mtxSize, mtxScale;
 	ID3D11DeviceContext* pDC = GetDeviceContext();
@@ -408,7 +408,7 @@ void UpdateEnemyRange(void)
 //**************************************************************
 // 描画処理
 //**************************************************************
-void DrawEnemyRange(void)
+void CEnemyRange::DrawEnemyRange()
 {
 
 	ID3D11DeviceContext* pDC = GetDeviceContext();

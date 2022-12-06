@@ -98,11 +98,12 @@ Effect g_MeleeEffect2[MAX_ENEMYMELEE2];
 static int g_EffectTimer2 = 0;		// エフェクト制御用タイマー
 
 static XMFLOAT3			Blocksize;
-
+float	g_I_Rad;
+float	g_J_Rad;
 //**************************************************************
 // 初期化処理
 //**************************************************************
-HRESULT InitEnemyMelee(void)
+HRESULT CEnemyMelee::InitEnemyMelee()
 {
 	HRESULT hr = S_OK;
 	ID3D11Device* pDevice = GetDevice();
@@ -168,7 +169,7 @@ HRESULT InitEnemyMelee(void)
 //**************************************************************
 // 終了処理
 //**************************************************************
-void UninitEnemyMelee(void)
+void CEnemyMelee::UninitEnemyMelee()
 {
 	// モデルの解放
 	g_model.Release();
@@ -183,7 +184,7 @@ void UninitEnemyMelee(void)
 //**************************************************************
 // 更新処理
 //**************************************************************
-void UpdateEnemyMelee(void)
+void CEnemyMelee::UpdateEnemyMelee()
 {
 	// カメラの向き取得
 	XMFLOAT3 rotCamera = CCamera::Get()->GetAngle();
@@ -196,6 +197,8 @@ void UpdateEnemyMelee(void)
 	//プレイヤーの座標・サイズ取得
 	XMFLOAT3 posPlayer = GetPlayerPos();
 	float sizePlayer = GetPlayerRadSize();
+
+	
 
 	for (int i = 0; i < MAX_ENEMYMELEE; ++i)
 	{
@@ -247,6 +250,11 @@ void UpdateEnemyMelee(void)
 
 			}
 
+			
+
+
+
+
 			//**************************************************************************************
 			//		当たり判定
 			//**************************************************************************************
@@ -254,6 +262,10 @@ void UpdateEnemyMelee(void)
 			// 敵同士の当たり判定
 			for (int j = 0; j < MAX_ENEMYMELEE; ++j)
 			{
+				//敵キャラクターの半径の値取得
+				//g_I_Rad = (g_EMelee[i].m_pos.x + g_EMelee[i].m_size.x) / 2;
+				//g_J_Rad = (g_EMelee[j].m_pos.x + g_EMelee[j].m_size.x) / 2;
+
 				if (!g_EMelee[j].m_use)
 				{//未使用なら次へ
 					continue;
@@ -264,8 +276,22 @@ void UpdateEnemyMelee(void)
 					{//同じ敵ならとばす
 						continue;
 					}
-					//敵同士が重ならない処理
 				}
+			//***************************
+			// 敵同士が重ならない処理(座標)
+			//***************************
+				//if (g_I_Rad == g_J_Rad)
+				//{
+				//	if (i == j)
+				//	{//同じ敵ならとばす
+				//		continue;
+				//	}
+				//	else
+				//	{
+				//		//ヘリコプター参照？
+				//	}
+
+				//}
 			}
 
 			// 敵と壁の当たり判定
@@ -715,7 +741,7 @@ void UpdateEnemyMelee(void)
 //**************************************************************
 // 描画処理
 //**************************************************************
-void DrawEnemyMelee(void)
+void CEnemyMelee::DrawEnemyMelee()
 {
 
 	ID3D11DeviceContext* pDC = GetDeviceContext();
