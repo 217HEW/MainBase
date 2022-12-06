@@ -76,8 +76,11 @@ private:
 	static int m_nScene;	// シーン設定用変数
 
 	CSceneGame* m_SGame;
-	CFade* m_fade;
+	CFade* m_fade; 
+	static CSceneManager* m_pSManager;
 public:
+	
+	static CSceneManager* CGet() { return m_pSManager; };
 	 // シーン切替処理
 	HRESULT Set(int eScene);
 	// シーン情報取得

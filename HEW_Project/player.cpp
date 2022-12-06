@@ -213,11 +213,12 @@ void CPlayer::UpdatePlayer()
 
 	// カメラの向き取得
 	XMFLOAT3 rotCamera = CCamera::Get()->GetAngle();
-
+	CSceneManager* SManager = CSceneManager::CGet();
+	CFade* fade = SManager->GetCFade();
 	// 体力が0ならゲームオーバーへ
 	if (GetLife() <= 0)
 	{
-		StartFadeOut(GetScene());
+		fade->StartFadeOut(SManager->Get());
 	}
 
 	// 操作したら無敵を解除
@@ -342,10 +343,10 @@ void CPlayer::UpdatePlayer()
 	g_posModel.y += g_moveModel.y;
 
 	// ゲームオーバー用制限
-	if (g_posModel.x > 630.0f)	{ StartFadeOut(GetScene()); }	// 右
-	if (g_posModel.x < -430.0f) { StartFadeOut(GetScene()); }	// 左
-	if (g_posModel.y > 0.0f)	{ StartFadeOut(GetScene()); }	// 上
-	if (g_posModel.y < -400.0f) { StartFadeOut(GetScene()); }	// 下
+	if (g_posModel.x > 630.0f)	{ fade->StartFadeOut(SManager->Get()); }	// 右
+	if (g_posModel.x < -430.0f) { fade->StartFadeOut(SManager->Get()); }	// 左
+	if (g_posModel.y > 0.0f)	{ fade->StartFadeOut(SManager->Get()); }	// 上
+	if (g_posModel.y < -400.0f) { fade->StartFadeOut(SManager->Get()); }	// 下
 
 	// プレイヤー向き調整
 	switch (g_eDir)

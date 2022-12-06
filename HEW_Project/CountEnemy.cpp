@@ -52,7 +52,7 @@
 static ID3D11ShaderResourceView* g_pTexture;	// テクスチャ用変数
 int g_nCountEnemy;		//エネミーをカウントする
 int g_nMaxCountEnemy;	//そのエリアのエネミーの最大数を保管する
-
+CNumber* g_pNumber = nullptr;
 //**************************************************************
 // 初期化処理
 //**************************************************************
@@ -67,6 +67,7 @@ HRESULT CCountEnemy::InitCountEnemy()
 	{
 		return hr;
 	}
+	g_pNumber = CNumber::Get();
 	// 変数初期化
 	g_nCountEnemy=0;	
 	g_nMaxCountEnemy=0;
@@ -101,7 +102,7 @@ void CCountEnemy::DrawCountEnemy()
 	DrawPolygon(pDC);
 
 	// カウンター表示
-	DrawNumber(XMFLOAT2(CountEnemy_POS_X, CountEnemy_POS_Y), g_nCountEnemy, CountEnemy_CHRCNT, CountEnemy_NumSize_X, CountEnemy_NumSize_Y);
+	g_pNumber->DrawNumber(XMFLOAT2(CountEnemy_POS_X, CountEnemy_POS_Y), g_nCountEnemy, CountEnemy_CHRCNT, CountEnemy_NumSize_X, CountEnemy_NumSize_Y);
 	
 	// 元に戻す
 	SetPolygonColor(1.0f, 1.0f, 1.0f);

@@ -15,9 +15,7 @@ public:
 	virtual void UninitNumber();	//I—¹ˆ—
 	virtual void DrawNumber(XMFLOAT2 vPos, unsigned, int nWidth, float fSizeX, float fSizeY);		//•`‰æ
 
+	static CNumber* Get() { return m_pNumber; };
 private:
-
+	static CNumber* m_pNumber;
 };
-
-
-

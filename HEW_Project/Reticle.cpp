@@ -73,6 +73,7 @@ static MESH				g_Rmesh;					// メッシュ情報
 static MATERIAL			g_material;				// マテリアル情報
 static MATERIAL			g_Rmaterial;				// マテリアル情報
 static TReticle		g_effect[MAX_RETICLE];	// エフェクト情報
+
 //=============================================================================
 // 初期化処理
 //=============================================================================
@@ -149,6 +150,7 @@ void CReticle::DrawReticle(void)
 	XMMATRIX mtxWorld, mtxScale, mtxTranslate;
 
 	CLight::Get()->SetDisable();
+
 	SetBlendState(BS_ADDITIVE);		// 加算合成
 	SetZWrite(false);	// 半透明描画はZバッファを更新しない(Zチェックは行う)
 
@@ -188,7 +190,7 @@ void CReticle::DrawReticle(void)
 			g_material.Diffuse = g_effect[nCntEffect].col;
 
 			// メッシュの描画
-			DrawMesh(pDC, &g_mesh);
+			CMesh::Get()->DrawMesh(pDC, &g_mesh);
 		}
 	}
 

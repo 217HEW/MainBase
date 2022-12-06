@@ -93,6 +93,7 @@ int g_bJoySelect;	// コントローラ選択用
 int g_nTime;
 CFade* g_fade;	// フェード取得変数
 CSceneManager* g_SManager;	// フェード取得変数
+CNumber* g_pNumber;
 static LPCWSTR c_aFileNameStageMenu[NUM_SELECT_MENU] =
 {
 	L"data/texture/StageSelect/hero002.jpg",// hero001 → 選択中
@@ -114,9 +115,10 @@ static LPCWSTR c_aFileNameStageMenu[NUM_SELECT_MENU] =
 //=============================================================================
 HRESULT InitSelect(void)
 {
+
 	ID3D11Device* pDevice = GetDevice();
 	HRESULT hr = S_OK;
-	InitNumber();
+	g_pNumber->InitNumber();
 	g_SManager = GetSManager();
 	g_fade = g_SManager->GetCFade();
 	for (int nCntStageMenu = 0; nCntStageMenu < NUM_SELECT_MENU; ++nCntStageMenu) {
@@ -125,7 +127,7 @@ HRESULT InitSelect(void)
 			c_aFileNameStageMenu[nCntStageMenu],	// ファイルの名前
 			&g_pTextures[nCntStageMenu]);			// 読み込むメモリー
 	}
-
+	g_pNumber = new CNumber;
 	g_nSelectMenu = S_STAGE_1;
 	g_fCurve = 0.0f;
 	g_bTime = false;
@@ -146,8 +148,8 @@ HRESULT InitSelect(void)
 void UninitSelect(void)
 {
 	CSound::Stop(BGM_SELECT);
-	UninitNumber();
-
+	g_pNumber->UninitNumber();
+	delete g_pNumber;
 	// テクスチャの開放
 	for (int nCntStageMenu = 0; nCntStageMenu < NUM_SELECT_MENU; ++nCntStageMenu)
 	{
@@ -373,12 +375,12 @@ void DrawSelect(void)
 	SetPolygonColor(10.0f, 10.0f, 0.0f);
 	for (int i = 1; i < 6; i++)
 	{
-		DrawNumber(XMFLOAT2(-585 + (180 * i), 175), i, 2, 50.0f, 100.0f);
+		g_pNumber->DrawNumber(XMFLOAT2(-585 + (180 * i), 175), i, 2, 50.0f, 100.0f);
 
 	}
 	for (int i = 6; i < 11; i++)
 	{
-		DrawNumber(XMFLOAT2(-585 + (180 * (i - 5)), -95), i, 2, 50.0f, 100.0f);
+		g_pNumber->DrawNumber(XMFLOAT2(-585 + (180 * (i - 5)), -95), i, 2, 50.0f, 100.0f);
 
 	}
 	// タイトル

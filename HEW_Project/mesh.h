@@ -71,9 +71,9 @@ public:
 	virtual void UninitMesh(void);
 	virtual void UpdateMesh(MESH* pMesh);
 	virtual void DrawMesh(ID3D11DeviceContext* pDeviceContext, MESH* pMesh, int nTranslucntType = TT_NOAFFECT);
-
+	static CMesh* Get() { return m_pMesh; };
 private:
-
+	static CMesh* m_pMesh;
 };
 
 
