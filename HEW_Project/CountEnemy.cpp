@@ -56,7 +56,7 @@ int g_nMaxCountEnemy;	//そのエリアのエネミーの最大数を保管する
 //**************************************************************
 // 初期化処理
 //**************************************************************
-HRESULT InitCountEnemy()
+HRESULT CCountEnemy::InitCountEnemy()
 {
 	HRESULT hr = S_OK;
 
@@ -76,7 +76,7 @@ HRESULT InitCountEnemy()
 //**************************************************************
 // 終了処理
 //**************************************************************
-void UninitCountEnemy()
+void CCountEnemy::UninitCountEnemy()
 {
 	// テクスチャ解放
 	SAFE_RELEASE(g_pTexture);
@@ -84,13 +84,13 @@ void UninitCountEnemy()
 //**************************************************************
 // 更新処理
 //**************************************************************
-void UpdateCountEnemy()
+void CCountEnemy::UpdateCountEnemy()
 {
 }
 //**************************************************************
 // 描画処理
 //**************************************************************
-void DrawCountEnemy()
+void CCountEnemy::DrawCountEnemy()
 {
 	ID3D11DeviceContext* pDC = GetDeviceContext();
 	
@@ -109,7 +109,7 @@ void DrawCountEnemy()
 //**************************************************************
 // カウントエネミー加算
 //**************************************************************
-void AddCountEnemy(int nCount)
+void CCountEnemy::AddCountEnemy(int nCount)
 {
 	g_nCountEnemy += nCount;
 	g_nMaxCountEnemy += nCount;
@@ -122,7 +122,7 @@ void AddCountEnemy(int nCount)
 //**************************************************************
 // カウントエネミー減算
 //**************************************************************
-void DelCountEnemy(int nCount)
+void CCountEnemy::DelCountEnemy(int nCount)
 {
 	g_nCountEnemy -= nCount;
 	if (nCount < 0)
@@ -137,7 +137,7 @@ void DelCountEnemy(int nCount)
 //**************************************************************
 //カウントエネミー取得
 //**************************************************************
-int GetCountEnemy()
+int CCountEnemy::GetCountEnemy()
 {
 	return g_nCountEnemy;
 }
