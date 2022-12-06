@@ -33,6 +33,9 @@
 #include "ClearPause.h"	//テストインクルード
 #include "Reticle.h"
 #include "effect.h"
+#include "SceneManager.h"
+#include "mesh.h"
+#include "number.h"
 
 //**************************************************************
 // プロトタイプ宣言
@@ -63,4 +66,6 @@ private:
 	CClearPause* m_pCPause;
 	CReticle* m_pReticle;
 	CEffect* m_pEffect;
+	CMesh* m_pMesh;
+	CNumber* m_pNumber;
 };

@@ -38,7 +38,7 @@ static ID3D11ShaderResourceView* g_pTexture;		// テクスチャ用変数
 //**************************************************************
 // 初期化処理
 //**************************************************************
-HRESULT InitNumber()
+HRESULT CNumber::InitNumber()
 {
 	HRESULT hr = S_OK;
 	ID3D11Device* pDevice = GetDevice();
@@ -51,7 +51,7 @@ HRESULT InitNumber()
 //**************************************************************
 // 終了処理
 //**************************************************************
-void UninitNumber()
+void CNumber::UninitNumber()
 {
 	// テクスチャ解放
 	SAFE_RELEASE(g_pTexture);
@@ -59,7 +59,7 @@ void UninitNumber()
 //**************************************************************
 // 描画処理
 //**************************************************************
-void DrawNumber(XMFLOAT2 vPos,	// 表示位置(左上)
+void CNumber::DrawNumber(XMFLOAT2 vPos,	// 表示位置(左上)
 				unsigned uNumber,	// 表示数値
 				int nWidth,		// 表示桁数
 				float fSizeX,	// 表示横幅

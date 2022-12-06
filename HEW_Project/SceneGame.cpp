@@ -79,13 +79,13 @@
 #include "input.h"
 #include "polygon.h"
 #include "debugproc.h"
-#include "mesh.h"
+
 
 
 
 
 #include "Sound.h"
-#include "number.h"
+
 #include "Block.h"
 
 
@@ -129,6 +129,8 @@ CSceneGame::CSceneGame()
 	m_pCPause = nullptr;
 	m_pReticle = nullptr;
 	m_pEffect = nullptr;
+	m_pMesh = nullptr;
+	m_pNumber = nullptr;
 }
 
 //**************************************************************
@@ -148,12 +150,12 @@ HRESULT CSceneGame::Init(STAGE Stage)
 	HRESULT hr = S_OK;
 
 	// メッシュ初期化
-	hr = InitMesh();
+	hr = m_pMesh->InitMesh();
 	if (FAILED(hr))
 		return hr;
 
 	// №初期化
-	hr = InitNumber();
+	hr = m_pNumber->InitNumber();
 	if (FAILED(hr))
 		return hr;
 
@@ -246,6 +248,7 @@ HRESULT CSceneGame::Init(STAGE Stage)
 
 
 	g_nNowScene = GetScene();
+	//g_nNowScene = m_pScene->Get();
 	
 	// BGM再生開始
 	// エリア毎にBGMを変えたい時はここをswitch文で切り替えるようにする
@@ -290,7 +293,7 @@ void CSceneGame::Uninit()
 	
 
 	//ナンバー終了
-	UninitNumber();
+	m_pNumber->UninitNumber();
 
 	//ライフ終了
 	m_pLife->UninitLife();
@@ -302,7 +305,7 @@ void CSceneGame::Uninit()
 	m_pCountEnemy->UninitCountEnemy();
 
 	// メッシュ終了
-	UninitMesh();
+	m_pMesh->UninitMesh();
 }
 
 //**************************************************************
@@ -597,5 +600,4 @@ void CSceneGame::Draw()
 	
 	SetBlendState(BS_NONE);
 }
-
 
