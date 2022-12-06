@@ -81,9 +81,6 @@
     <ClCompile Include="collision.cpp">
       <Filter>ソースファイル\System</Filter>
     </ClCompile>
-    <ClCompile Include="CreateField.cpp">
-      <Filter>ソースファイル\System</Filter>
-    </ClCompile>
     <ClCompile Include="debugproc.cpp">
       <Filter>ソースファイル\System</Filter>
     </ClCompile>
@@ -125,6 +122,9 @@
     </ClCompile>
     <ClCompile Include="ClearPause.cpp">
       <Filter>ソースファイル\Scene\Scene_System</Filter>
+    </ClCompile>
+    <ClCompile Include="CreateStage.cpp">
+      <Filter>ソースファイル\System</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -177,9 +177,6 @@
       <Filter>ヘッダーファイル\Object[.h]\Enemy</Filter>
     </ClInclude>
     <ClInclude Include="collision.h">
-      <Filter>ヘッダーファイル\System[.h]</Filter>
-    </ClInclude>
-    <ClInclude Include="CreateField.h">
       <Filter>ヘッダーファイル\System[.h]</Filter>
     </ClInclude>
     <ClInclude Include="debugproc.h">
@@ -241,6 +238,9 @@
     </ClInclude>
     <ClInclude Include="ClearPause.h">
       <Filter>ヘッダーファイル\Scene[.h]\Scene_System</Filter>
+    </ClInclude>
+    <ClInclude Include="CreateStage.h">
+      <Filter>ヘッダーファイル\System[.h]</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

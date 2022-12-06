@@ -170,7 +170,7 @@
     <ClCompile Include="ClearPause.cpp" />
     <ClCompile Include="collision.cpp" />
     <ClCompile Include="CountEnemy.cpp" />
-    <ClCompile Include="CreateField.cpp" />
+    <ClCompile Include="CreateStage.cpp" />
     <ClCompile Include="debugproc.cpp" />
     <ClCompile Include="effect.cpp" />
     <ClCompile Include="EnemyMelee.cpp" />
@@ -207,7 +207,7 @@
     <ClInclude Include="ClearPause.h" />
     <ClInclude Include="collision.h" />
     <ClInclude Include="CountEnemy.h" />
-    <ClInclude Include="CreateField.h" />
+    <ClInclude Include="CreateStage.h" />
     <ClInclude Include="debugproc.h" />
     <ClInclude Include="effect.h" />
     <ClInclude Include="EnemyMelee.h" />

@@ -22,7 +22,7 @@
 // インクルード部
 //**************************************************************
 #include "main.h"
-#include "CreateField.h"
+#include "CreateStage.h"
 #include "player.h"
 #include "EnemyMelee.h"
 #include "EnemyRange.h"
@@ -37,7 +37,7 @@ public:
 	CSceneGame();
 	~CSceneGame();
 
-	virtual HRESULT InitGame(AREA Area); // 初期化
+	virtual HRESULT InitGame(STAGE Stage); // 初期化
 	virtual void UninitGame();	// 終了処理
 	virtual void UpdateGame();	// 更新
 	virtual void DrawGame();	// 描画
