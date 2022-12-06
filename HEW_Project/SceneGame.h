@@ -29,6 +29,8 @@
 //**************************************************************
 // プロトタイプ宣言
 //**************************************************************
+class CSceneManager;
+class CFade;
 class CSceneGame
 {
 public:
@@ -45,5 +47,6 @@ private:
 	//本来はPlayerやEnemyを除いたものは別cppなどでまとめて一括で呼びたい
 	CPlayer* m_Player;
 	CStage* m_Stage;
-
+	CSceneManager* m_SManager;
+	CFade* m_fade;
 };

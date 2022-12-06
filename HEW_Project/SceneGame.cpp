@@ -175,12 +175,17 @@ HRESULT CSceneGame::Init(STAGE Stage)
 		return hr;
 	}
 
+	// シーンマネージャー取得
+	m_SManager = GetSManager();
 	// 自機初期化
 	//2022/12/06変更
 	m_Player = new CPlayer();
 
 	// ステージのインスタンス
 	m_Stage = new CStage();
+
+	// フェード情報取得
+	m_fade = m_SManager->GetCFade();
 
 	// 背景初期化
 	hr = InitBG();
@@ -226,9 +231,9 @@ HRESULT CSceneGame::Init(STAGE Stage)
 	if (FAILED(hr))
 		return hr;
 
+	
 
-
-	g_nNowScene = GetScene();
+	g_nNowScene = m_SManager->Get();
 	
 	// BGM再生開始
 	// エリア毎にBGMを変えたい時はここをswitch文で切り替えるようにする
@@ -327,48 +332,48 @@ void CSceneGame::Update()
 		else
 		{
 			// フェード中は処理しない
-			if (GetFadeState() == FADE_NONE)
+			if (m_fade->GetFadeState() == FADE_NONE)
 			{
 
 #ifdef _DEBUG
 				if (GetKeyRelease(VK_1))
 				{
-					StartFadeOut(SCENE_TITLE);
+					m_fade->StartFadeOut(SCENE_TITLE);
 				}
 				else if (GetKeyRelease(VK_2))
 				{
-					StartFadeOut(SCENE_SELECT);
+					m_fade->StartFadeOut(SCENE_SELECT);
 				}
 				else if (GetKeyRelease(VK_3))
 				{
-					StartFadeOut(SCENE_GAME);
+					m_fade->StartFadeOut(SCENE_GAME);
 				}
 				else if (GetKeyRelease(VK_4))
 				{
-					StartFadeOut(SCENE_STAGE2);
+					m_fade->StartFadeOut(SCENE_STAGE2);
 				}
 				else if (GetKeyRelease(VK_5))
 				{
-					StartFadeOut(SCENE_STAGE3);
+					m_fade->StartFadeOut(SCENE_STAGE3);
 				}
 				else if (GetKeyRelease(VK_6))
 				{
-					StartFadeOut(SCENE_GAMEOVER);
+					m_fade->StartFadeOut(SCENE_GAMEOVER);
 				}
 				else if (GetKeyRelease(VK_7))
 				{
-					StartFadeOut(SCENE_GAMECLEAR);
+					m_fade->StartFadeOut(SCENE_GAMECLEAR);
 				}
 				else if (GetKeyRelease(VK_8))
 				{
-					StartFadeOut(SCENE_SELECT);
+					m_fade->StartFadeOut(SCENE_SELECT);
 				}
 #endif
 
 				int Timer = GetTimer();
 				if (Timer <= 0)
 				{
-					StartFadeOut(SCENE_GAMEOVER);
+					m_fade->StartFadeOut(SCENE_GAMEOVER);
 				}
 			}
 			// 背景更新
@@ -418,7 +423,7 @@ void CSceneGame::Update()
 		//一時停止ON/OFF
 		if (GetKeyTrigger(VK_P) || GetJoyTrigger(Joycon, JOYSTICKID4))
 		{
-			if (GetFadeState() == FADE_NONE)
+			if (m_fade->GetFadeState() == FADE_NONE)
 			{
 				g_bPause = !g_bPause;
 				if (g_bPause) {
@@ -460,7 +465,7 @@ void CSceneGame::Update()
 		//}
 
 		//一時停止メニューの選択
-		if (g_bPause && GetFadeState() == FADE_NONE)
+		if (g_bPause && m_fade->GetFadeState() == FADE_NONE)
 		{
 			//[ENTER]が押された?
 			if (GetKeyTrigger(VK_RETURN) || GetJoyTrigger(Joycon, JOYSTICKID1))
@@ -475,11 +480,11 @@ void CSceneGame::Update()
 					//CSound::Resume();
 					break;
 				case PAUSE_MENU_RETRY:		// リトライ
-					StartFadeOut(GetScene());
+					m_fade->StartFadeOut(m_SManager->Get());
 					CSound::SetPlayVol(SE_SELECT, 0.1f); // セレクト
 					break;
 				case PAUSE_MENU_QUIT:		// ゲームを辞める
-					StartFadeOut(SCENE_TITLE);
+					m_fade->StartFadeOut(SCENE_TITLE);
 					CSound::SetPlayVol(SE_SELECT, 0.1f); // セレクト
 					break;
 				}
@@ -489,7 +494,7 @@ void CSceneGame::Update()
 
 	}
 		//テスト
-		if (GetClearPause() && GetFadeState() == FADE_NONE)
+		if (GetClearPause() && m_fade->GetFadeState() == FADE_NONE)
 		{
 			//[ENTER]が押された?
 			if (GetKeyTrigger(VK_RETURN)|| GetJoyTrigger(Joycon, JOYSTICKID1))
@@ -498,18 +503,18 @@ void CSceneGame::Update()
 				switch (GetC_PauseMenu())
 				{
 				case C_PAUSE_MENU_NEXTSTAGE:	// ネクステージ
-					StartFadeOut(g_nNowScene + 1);
+					m_fade->StartFadeOut(g_nNowScene + 1);
 					SetClearPause(false);
 					CSound::SetVolume(BGM_GAME000, 0.1f);
 					CSound::SetPlayVol(SE_SELECT, 0.1f); // キャンセル
 					//CSound::Resume();
 					break;
 				case C_PAUSE_MENU_SELECT:		// セレクト画面
-					StartFadeOut(SCENE_SELECT);
+					m_fade->StartFadeOut(SCENE_SELECT);
 					CSound::SetPlayVol(SE_SELECT, 0.1f); // セレクト
 					break;
 				case C_PAUSE_MENU_QUIT:		// ゲームを辞める
-					StartFadeOut(SCENE_TITLE);
+					m_fade->StartFadeOut(SCENE_TITLE);
 					CSound::SetPlayVol(SE_SELECT, 0.1f); // セレクト
 					break;
 				}

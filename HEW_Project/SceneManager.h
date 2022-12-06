@@ -60,21 +60,27 @@ enum EScene
 // プロトタイプ宣言
 //**************************************************************
 class CSceneGame;
+class CFade;
 class CSceneManager {
 public:
+	CSceneManager();
+	~CSceneManager();
 
-private:
 	HRESULT Init();	// 初期化
 	void Uninit();		// 終了処理
 	void Update();		// 更新
 	void Draw();		// 描画
 
+private:
+	
 	static int m_nScene;	// シーン設定用変数
 
 	CSceneGame* m_SGame;
+	CFade* m_fade;
 public:
 	 // シーン切替処理
 	HRESULT Set(int eScene);
 	// シーン情報取得
 	int Get() { return m_nScene; };
+	CFade* GetCFade() { return m_fade; };
 };

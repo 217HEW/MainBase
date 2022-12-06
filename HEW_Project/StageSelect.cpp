@@ -91,7 +91,8 @@ int g_bJoySelect;	// コントローラ選択用
 
 // 待機タイマーカウントダウン
 int g_nTime;
-
+CFade* g_fade;	// フェード取得変数
+CSceneManager* g_SManager;	// フェード取得変数
 static LPCWSTR c_aFileNameStageMenu[NUM_SELECT_MENU] =
 {
 	L"data/texture/StageSelect/hero002.jpg",// hero001 → 選択中
@@ -116,7 +117,8 @@ HRESULT InitSelect(void)
 	ID3D11Device* pDevice = GetDevice();
 	HRESULT hr = S_OK;
 	InitNumber();
-
+	g_SManager = GetSManager();
+	g_fade = g_SManager->GetCFade();
 	for (int nCntStageMenu = 0; nCntStageMenu < NUM_SELECT_MENU; ++nCntStageMenu) {
 		// テクスチャの読み込み
 		hr = CreateTextureFromFile(pDevice,			// デバイスへのポインタ
@@ -257,46 +259,46 @@ void UpdateSelect(void)
 			switch (GetSelectMenu())
 			{
 			case S_STAGE_1:	// スレージ1
-				StartFadeOut(SCENE_GAME);
+				g_fade->StartFadeOut(SCENE_GAME);
 				break;
 			case S_STAGE_2:	// ステージ2
 				if (g_StageClear >= 1)
-					StartFadeOut(SCENE_STAGE2);
+					g_fade->StartFadeOut(SCENE_STAGE2);
 				break;
 			case S_STAGE_3:	// ステージ3
 				if (g_StageClear >= 2)
-					StartFadeOut(SCENE_STAGE3);
+					g_fade->StartFadeOut(SCENE_STAGE3);
 				break;
 			case S_STAGE_4:	// ステージ4
 				if (g_StageClear >= 3)
-					StartFadeOut(SCENE_STAGE4);
+					g_fade->StartFadeOut(SCENE_STAGE4);
 				break;
 			case S_STAGE_5:	// ステージ5
 				if (g_StageClear >= 4)
-					StartFadeOut(SCENE_STAGE5);
+					g_fade->StartFadeOut(SCENE_STAGE5);
 				break;
 			case S_STAGE_6:	// ステージ6
 				if (g_StageClear >= 5)
-					StartFadeOut(SCENE_STAGE6);
+					g_fade->StartFadeOut(SCENE_STAGE6);
 				break;
 			case S_STAGE_7:	// ステージ7
 				if (g_StageClear >= 6)
-					StartFadeOut(SCENE_STAGE7);
+					g_fade->StartFadeOut(SCENE_STAGE7);
 				break;
 			case S_STAGE_8:	// ステージ8
 				if (g_StageClear >= 7)
-					StartFadeOut(SCENE_STAGE8);
+					g_fade->StartFadeOut(SCENE_STAGE8);
 				break;
 			case S_STAGE_9:	// ステージ9
 				if (g_StageClear >= 8)
-					StartFadeOut(SCENE_STAGE9);
+					g_fade->StartFadeOut(SCENE_STAGE9);
 				break;
 			case S_STAGE_10:	// ステージ10
 				if (g_StageClear >= 9)
-					StartFadeOut(SCENE_STAGE10);
+					g_fade->StartFadeOut(SCENE_STAGE10);
 				break;
 			case S_SELECT_TITLE:
-				StartFadeOut(SCENE_TITLE); // タイトルへ
+				g_fade->StartFadeOut(SCENE_TITLE); // タイトルへ
 				break;
 			}
 		}

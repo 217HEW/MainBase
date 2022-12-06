@@ -79,6 +79,7 @@ ID3D11BlendState*			g_pBlendState[MAX_BLENDSTATE];// ブレンド ステート
 ID3D11DepthStencilState*	g_pDSS[2];				// Z/ステンシル ステート
 
 int							g_nCountFPS;			// FPSカウンタ
+CSceneManager* g_SManager = new CSceneManager();	// シーン遷移システムインスタンス
 
 //TPolyline					g_polyline[MAX_POLYLINE];	// ポリライン情報
 
@@ -434,7 +435,7 @@ HRESULT Init(HWND hWnd, BOOL bWindow)
 		return hr;
 
 	// シーン遷移処理初期化
-	hr = InitScene();
+	hr = g_SManager->Init();
 	if (FAILED(hr))
 		return hr;
 
@@ -514,7 +515,8 @@ void Uninit(void)
 	CSound::Fin();
 
 	// シーン遷移終了
-	UninitScene();
+	g_SManager->Uninit();
+	delete g_SManager;
 
 	// 深度ステンシルステート解放
 	for (int i = 0; i < _countof(g_pDSS); ++i) {
@@ -570,7 +572,7 @@ void Update(void)
 #endif // DEBUG
 
 	// シーン遷移更新
-	UpdateScene();
+	g_SManager->Update();
 
 	// デバッグ文字列表示更新
 	UpdateDebugProc();
@@ -598,7 +600,7 @@ void Draw(void)
 					  D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 	
 	// シーン描画
-	DrawScene();
+	g_SManager->Draw();
 
 	// デバッグ文字列表示
 	SetBlendState(BS_ALPHABLEND);
@@ -676,4 +678,9 @@ void SetCullMode(int nCullMode)
 	if (nCullMode >= 0 && nCullMode < MAX_CULLMODE) {
 		g_pDeviceContext->RSSetState(g_pRs[nCullMode]);
 	}
+}
+
+CSceneManager* GetSManager()
+{
+	return g_SManager;
 }

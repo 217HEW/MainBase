@@ -51,10 +51,6 @@
 //**************************************************************
 // グローバル変数
 //**************************************************************
-static float g_fRed;		// 赤:0.0f~255.0fト色
-static float g_fGreen;		// 緑:0.0f~255.0f
-static float g_fBlue;		// 青:0.0f~255.0f
-static float g_fAlpha;		// α値:0.0f~1.0f
 
 // 画像ファイルネーム
 static LPCWSTR g_pszTexFName[FADE_TEX_MAX] = {
@@ -62,14 +58,20 @@ static LPCWSTR g_pszTexFName[FADE_TEX_MAX] = {
 	L"data/texture/Loading/Logo.png",
 };
 
-static ID3D11ShaderResourceView* g_pTexture[FADE_TEX_MAX];
-static E_FADE_STATE g_eState;	// フェード状態
-static int g_eNext;			// 次のシーン
+
+CFade::CFade()
+{
+
+}
+CFade::~CFade()
+{
+
+}
 
 //**************************************************************
 // 初期化処理
 //**************************************************************
-HRESULT InitFade()
+HRESULT CFade::Init()
 {
 	HRESULT hr = S_OK;
 	ID3D11Device* pDevice = GetDevice();
@@ -83,12 +85,10 @@ HRESULT InitFade()
 		}
 	}
 	// 変数の初期化
-	g_fRed = 1.0f;
-	g_fGreen = 1.0f;
-	g_fBlue = 1.0f;
-	g_fAlpha = 1.0f;
-	g_eState = FADE_IN;
-	g_eNext = SCENE_TITLE;
+	m_color.r = m_color.g = m_color.b = m_color.a = 1.0f;
+	m_eState = FADE_IN;
+	m_nNext = SCENE_TITLE;
+	m_SManager = GetSManager();
 
 	return hr;
 }
@@ -96,7 +96,7 @@ HRESULT InitFade()
 //**************************************************************
 // 終了処理
 //**************************************************************
-void UninitFade()
+void CFade::Uninit()
 {
 	// 複数のテクスチャ解放
 	for (int i = 0; i < FADE_TEX_MAX; ++i)
@@ -105,75 +105,75 @@ void UninitFade()
 	}
 
 	// 終了時に初期化
-	g_fAlpha = 0.0f;
-	g_eState = FADE_NONE;
+	m_color.a = 0.0f;
+	m_eState = FADE_NONE;
 }
 
 //**************************************************************
 // 更新処理
 //**************************************************************
-void UpdateFade()
+void CFade::Update()
 {
 	// フェードイン・アウト
-	switch (g_eState)
+	switch (m_eState)
 	{
 	case FADE_NONE:
 		break;
 
 	case FADE_OUT:
 		// フェードアウト---------------------------------------
-		g_fAlpha += FADE_RATE; // 不透明度を増す
-		if (g_fAlpha >= 1.0f)
+		m_color.a += FADE_RATE; // 不透明度を増す
+		if (m_color.a >= 1.0f)
 		{
 			// フェードイン処理に切り替え
-			g_fAlpha = 1.0f;
-			g_eState = FADE_IN;
+			m_color.a = 1.0f;
+			m_eState = FADE_IN;
 
 			// シーン切替
-			SetScene(g_eNext);
+			m_SManager->Set(m_nNext);
 		}
 		// ボリュームもフェードアウト
-		CSound::SetVolume(1.0f - g_fAlpha);
+		CSound::SetVolume(1.0f - m_color.a);
 		break;
 		// -----------------------------------------------------
 
 	case FADE_IN:
 		// フェードイン-----------------------------------------
-		g_fAlpha -= FADE_RATE; // 透明度を増す
-		if (g_fAlpha <= 0.0f)
+		m_color.a -= FADE_RATE; // 透明度を増す
+		if (m_color.a <= 0.0f)
 		{
 			// フェードイン終了
-			g_fAlpha = 0.0f;
-			g_eState = FADE_NONE;
+			m_color.a = 0.0f;
+			m_eState = FADE_NONE;
 		}
 		// ボリュームもフェードイン
-		CSound::SetVolume(1.0f - g_fAlpha);
+		CSound::SetVolume(1.0f - m_color.a);
 		break;
 		// -----------------------------------------------------
 	}
-	if (g_fRed <= 0.0f)
+	if (m_color.r <= 0.0f)
 	{
-		g_fRed = g_fGreen = g_fBlue += FADE_RATE;
+		m_color.r = m_color.g = m_color.b += FADE_RATE;
 	}
 	else
 	{
-		g_fRed = g_fGreen = g_fBlue -= FADE_RATE;
+		m_color.r = m_color.g = m_color.b -= FADE_RATE;
 	}
 
-	if (g_eNext == SCENE_GAMECLEAR || g_eNext == SCENE_GAMEOVER)
+	if (m_nNext == SCENE_GAMECLEAR || m_nNext == SCENE_GAMEOVER)
 	{
-		g_fRed = g_fGreen = g_fBlue = 0.0f;
+		m_color.r = m_color.g = m_color.b = 0.0f;
 	}
 	else
 	{
-		g_fRed = g_fGreen = g_fBlue = 1.0f;
+		m_color.r = m_color.g = m_color.b = 1.0f;
 	}
 }
 
 //**************************************************************
 // 終了処理
 //**************************************************************
-void DrawFade()
+void CFade::Draw()
 {
 	// 画面全体に半透明の矩形を描画
 	SetBlendState(BS_ALPHABLEND);
@@ -182,11 +182,11 @@ void DrawFade()
 	 SetPolygonSize(SCREEN_WIDTH, SCREEN_HEIGHT);	// 額縁サイズ設定
 	 SetPolygonUV(0.0f, 0.0f);		// テクスチャ座標設定
 	 SetPolygonFrameSize(1.0f, 1.0f);	// テクスチャサイズ設定
-	 if(g_eNext == SCENE_TITLE)		// テクスチャ情報設定
+	 if(m_nNext == SCENE_TITLE)		// テクスチャ情報設定
 	 { SetPolygonTexture(g_pTexture[LOGO]);} 
 	 else {SetPolygonTexture(g_pTexture[LOAD]);}
-	 SetPolygonColor(g_fRed, g_fGreen, g_fBlue);// 色情報設定
-	 SetPolygonAlpha(g_fAlpha);		// 透明度設定
+	 SetPolygonColor(m_color.r, m_color.g, m_color.b);// 色情報設定
+	 SetPolygonAlpha(m_color.a);		// 透明度設定
 	 DrawPolygon(pDC);
 	 
 	  // 元に戻す
@@ -207,14 +207,14 @@ void DrawFade()
 //		無し
 //
 //*******************************
-void StartFadeOut(int eNext)
+void CFade::StartFadeOut(int eNext)
 {
 	// フェードアウトしていなければ処理
-	if (g_eState != FADE_OUT)
+	if (m_eState != FADE_OUT)
 	{
-		g_eState = FADE_OUT;
-		g_fAlpha = 0.0f;
-		g_eNext = eNext;
+		m_eState = FADE_OUT;
+		m_color.a = 0.0f;
+		m_nNext = eNext;
 	}
 }
 
@@ -231,7 +231,7 @@ void StartFadeOut(int eNext)
 //		2:アウト
 //
 //*******************************
-E_FADE_STATE GetFadeState()
+E_FADE_STATE CFade::GetFadeState()
 {
-	return g_eState;
+	return m_eState;
 }

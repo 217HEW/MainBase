@@ -56,6 +56,8 @@
 //**************************************************************
 static ID3D11ShaderResourceView* g_pTexture;	// テクスチャ用変数
 static DWORD	Joycon;		// コントローラー情報
+CSceneManager* g_SManager;
+CFade* g_fade;
 //**************************************************************
 // 初期化処理
 //**************************************************************
@@ -68,7 +70,8 @@ HRESULT InitGameover()
 	hr = CreateTextureFromFile(pDevice, PATH_BGTEXTURE, &g_pTexture);
 	if (FAILED(hr))
 		return hr;
-
+	g_SManager = GetSManager();
+	g_fade = g_SManager->GetCFade();
 	CSound::SetPlayVol(SE_GAMEOVER, 0.1f);
 
 	return hr;
@@ -93,37 +96,37 @@ void UpdateGameover()
 	GetJoyState(Joycon);
 
 	// フェード処理していなかったら
-	if (GetFadeState() == FADE_NONE)
+	if (g_fade->GetFadeState() == FADE_NONE)
 	{
 		if (GetKeyRelease(VK_1) || GetKeyTrigger(VK_RETURN) || GetKeyTrigger(VK_SPACE)||GetJoyTrigger(Joycon, JOYSTICKID1))
 		{
 			// タイトルへ
-			StartFadeOut(SCENE_TITLE);
+			g_fade->StartFadeOut(SCENE_TITLE);
 		}
 		else if (GetKeyRelease(VK_2))
 		{
 			// ゲームシーンへ
-			StartFadeOut(SCENE_GAME);
+			g_fade->StartFadeOut(SCENE_GAME);
 		}
 		else if (GetKeyRelease(VK_3))
 		{
-			StartFadeOut(SCENE_AREA2);
+			g_fade->StartFadeOut(SCENE_STAGE2);
 		}
 		else if (GetKeyRelease(VK_4))
 		{
-			StartFadeOut(SCENE_AREA3);
+			g_fade->StartFadeOut(SCENE_STAGE3);
 		}
 		//else if (GetKeyRelease(VK_5))
 		//{
-		//	StartFadeOut(SCENE_AREA_DEBUG);
+		//	StartFadeOut(SCENE_STAGE_DEBUG);
 		//}
 		else if (GetKeyRelease(VK_6))
 		{
-			StartFadeOut(SCENE_GAMEOVER);
+			g_fade->StartFadeOut(SCENE_GAMEOVER);
 		}
 		else if (GetKeyRelease(VK_7))
 		{
-			StartFadeOut(SCENE_GAMECLEAR);
+			g_fade->StartFadeOut(SCENE_GAMECLEAR);
 		}
 	}
 }

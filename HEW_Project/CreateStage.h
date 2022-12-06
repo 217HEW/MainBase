@@ -72,7 +72,7 @@ public:
 	void Draw(void);				// 描画
 private:
 	// ステージ構築用のデータ配列
-	int m_nMap[MAX_STAGE][MAP_WIDTH][MAP_HEIGHT];
+	//static int m_nMap[MAX_STAGE][MAP_WIDTH][MAP_HEIGHT];
 	static XMFLOAT3 m_fMapPosOrizin;	// マップ生成開始座標
 	STAGE eStage;		// エリア切り替え用変数
 

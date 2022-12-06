@@ -53,20 +53,28 @@
 #include "CreateStage.h"
 #include "Fade.h"
 #include "bg.h"
-//**************************************************************
-// グローバル宣言
-//**************************************************************
 
 
+CSceneManager::CSceneManager()
+{
+	m_fade = nullptr;
+	m_nScene = SCENE_TITLE;		// 最初の画面をタイトルに設定
+}
+CSceneManager::~CSceneManager()
+{
+	delete m_fade;
+}
 //**************************************************************
 // 初期化処理
 //**************************************************************
 HRESULT CSceneManager::Init()
 {
 	HRESULT hr = S_OK;
+	// フェードインスタンス
+	m_fade = new CFade();
 	// フェード初期化
-	InitFade();
-	m_nScene = SCENE_TITLE;		// 最初の画面をタイトルに設定
+	m_fade->Init();
+	
 	hr = Set(SCENE_TITLE);	//最初はタイトル画面へ
 
 	return hr;
@@ -78,7 +86,7 @@ HRESULT CSceneManager::Init()
 void CSceneManager::Uninit()
 {
 	Set(SCENE_NONE);	// 現在の画面を終了
-	UninitFade();			// フェード終了処理
+	m_fade->Uninit();			// フェード終了処理
 }
 
 //**************************************************************
@@ -138,7 +146,7 @@ void CSceneManager::Update()
 	}
 
 	//フェード更新
-	UpdateFade();
+	m_fade->Update();
 }
 
 //**************************************************************
@@ -197,7 +205,7 @@ void CSceneManager::Draw()
 	}
 
 	// フェード描画
-	DrawFade();
+	m_fade->Draw();
 
 }
 

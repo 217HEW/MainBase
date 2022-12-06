@@ -57,17 +57,37 @@ typedef enum {
 	FADE_TEX_MAX	// 最大数
 } FADE_TEX;
 
+struct Color
+{
+	static float r;
+	static float g;
+	static float b;
+	static float a;
+};
+
 //**************************************************************
 // プロトタイプ宣言
 //**************************************************************
-HRESULT InitFade(); // 初期化
-void UninitFade();	// 終了処理
-void UpdateFade();	// 更新
-void DrawFade();	// 描画
+class CSceneManager;
+class CFade
+{
+public:
+	CFade();
+	~CFade();
 
-// フェードアウト開始
-void StartFadeOut(int eNext);
+	HRESULT Init(); // 初期化
+	void Uninit();	// 終了処理
+	void Update();	// 更新
+	void Draw();	// 描画
 
-//フェード状態取得
-E_FADE_STATE GetFadeState();
-
+	// フェードアウト開始
+	void StartFadeOut(int eNext);
+	//フェード状態取得
+	E_FADE_STATE GetFadeState();
+private:
+	Color m_color;		// 色
+	static ID3D11ShaderResourceView* g_pTexture[FADE_TEX_MAX];	// フェード用テクスチャ
+	static E_FADE_STATE m_eState;	// フェード状態
+	static int m_nNext;			// 次のシーン
+	CSceneManager* m_SManager;
+};
