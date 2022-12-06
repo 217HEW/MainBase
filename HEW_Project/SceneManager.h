@@ -78,8 +78,3 @@ public:
 	// ƒV[ƒ“î•ñæ“¾
 	int Get() { return m_nScene; };
 };
-
-
-
-
-
