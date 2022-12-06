@@ -478,7 +478,17 @@ HRESULT InitCField(AREA Area)
 	hr = InitBlock();
 	if (FAILED(hr))
 		return hr;
-	
+
+	// エネミーメレー初期化
+	hr = InitEnemyMelee();
+	if (FAILED(hr))
+		return hr;
+
+	// レンジ初期化
+	hr = InitEnemyRange();
+	if (FAILED(hr))
+		return hr;
+
 	// 変数の初期化
 	eArea = Area;
 

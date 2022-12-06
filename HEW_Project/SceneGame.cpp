@@ -177,15 +177,9 @@ HRESULT InitGame(AREA Area)
 	if (FAILED(hr))
 		return hr;
 
-	// エネミーメレー初期化
-	hr = InitEnemyMelee();
-	if (FAILED(hr))
-		return hr;
+	
 
-	// レンジ初期化
-	hr = InitEnemyRange();
-	if (FAILED(hr))
-		return hr;
+	
 
 	//二次元配列マップ
 	hr = InitCField(Area);
