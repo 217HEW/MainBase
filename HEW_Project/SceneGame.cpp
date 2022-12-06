@@ -122,9 +122,7 @@ static int g_EffectTimer = 0;	// エフェクト制御用タイマー
 CSceneGame::CSceneGame()
 {
 	m_Player = nullptr;
-	m_EnemyMelee = nullptr;
-	m_EnemyRange = nullptr;
-
+	m_Stage = nullptr;
 }
 
 //**************************************************************
@@ -133,14 +131,13 @@ CSceneGame::CSceneGame()
 CSceneGame::~CSceneGame()
 {
 	
-
 }
 
 //**************************************************************
 // 初期化処理
 //	引数：遷移先のエリア
 //**************************************************************
-HRESULT CSceneGame::InitGame(AREA Area)
+HRESULT CSceneGame::Init(STAGE Stage)
 {
 	HRESULT hr = S_OK;
 
@@ -182,6 +179,9 @@ HRESULT CSceneGame::InitGame(AREA Area)
 	//2022/12/06変更
 	m_Player = new CPlayer();
 
+	// ステージのインスタンス
+	m_Stage = new CStage();
+
 	// 背景初期化
 	hr = InitBG();
 	if (FAILED(hr))
@@ -202,17 +202,10 @@ HRESULT CSceneGame::InitGame(AREA Area)
 	if (FAILED(hr))
 		return hr;
 
-	// エネミーメレー初期化
-	//2022/12/06変更
-	m_EnemyMelee = new CEnemyMelee();
 	
 
-	// レンジ初期化
-	//2022/12/06変更
-	m_EnemyRange = new CEnemyRange();
-
-	//二次元配列マップ
-	hr = InitCField(Area);
+	//二次元配列マップ初期化
+	hr = m_Stage->Init(Stage);
 	if (FAILED(hr))
 		return hr;
 
@@ -247,7 +240,7 @@ HRESULT CSceneGame::InitGame(AREA Area)
 //**************************************************************
 // 終了処理
 //**************************************************************
-void CSceneGame::UninitGame()
+void CSceneGame::Uninit()
 {
 	// BGM再生停止
 	CSound::Stop(BGM_GAME000);
@@ -271,7 +264,7 @@ void CSceneGame::UninitGame()
 	UninitBG();
 
 	// 二次元配列マップ終了
-	UninitCField();
+	m_Stage->Uninit();
 
 	// 自機終了
 	//2022/12/06変更
@@ -297,12 +290,12 @@ void CSceneGame::UninitGame()
 //**************************************************************
 // 更新処理
 //**************************************************************
-void CSceneGame::UpdateGame()
+void CSceneGame::Update()
 {
 	// コントローラー情報
 	GetJoyState(Joycon);
 
-	TEnemyMelee* pEMelee = GetEnemyMelee();
+	//TEnemyMelee* pEMelee = GetEnemyMelee();
 
 	if (GetClearPause())
 	{
@@ -352,11 +345,11 @@ void CSceneGame::UpdateGame()
 				}
 				else if (GetKeyRelease(VK_4))
 				{
-					StartFadeOut(SCENE_AREA2);
+					StartFadeOut(SCENE_STAGE2);
 				}
 				else if (GetKeyRelease(VK_5))
 				{
-					StartFadeOut(SCENE_AREA3);
+					StartFadeOut(SCENE_STAGE3);
 				}
 				else if (GetKeyRelease(VK_6))
 				{
@@ -386,7 +379,7 @@ void CSceneGame::UpdateGame()
 			m_Player->UpdatePlayer();
 
 			// 二次元配列マップ更新
-			UpdateCField();
+			m_Stage->Update();
 
 			//*12/17澤村瑠人追加
 			// タイマー更新
@@ -528,7 +521,7 @@ void CSceneGame::UpdateGame()
 //**************************************************************
 // 描画処理
 //**************************************************************
-void CSceneGame::DrawGame()
+void CSceneGame::Draw()
 {
 	// Zバッファ無効(Zチェック無&Z更新無)
 	SetZBuffer(false);
@@ -540,7 +533,7 @@ void CSceneGame::DrawGame()
 	SetZBuffer(true);
 
 	// 二次元配列マップ描画
-	DrawCField();
+	m_Stage->Draw();
 
 	// 自機描画
 	//2022/12/06変更

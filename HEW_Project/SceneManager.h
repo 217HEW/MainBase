@@ -16,6 +16,9 @@
 //	開発履歴
 //	2021/12/22	コメントの編集&追加
 //	編集者：柴山凜太郎
+//--------------------------------------------------------------
+//	2022/12/06	シーン列挙ESceneの定数名をAREA→STAGEに変更しました
+//	編集者：柴山凜太郎
 //**************************************************************
 #pragma once
 
@@ -34,15 +37,15 @@ enum EScene
 	SCENE_NONE = 0,		// 未設定
 	SCENE_TITLE,		// タイトル画面
 	SCENE_GAME,			// ゲーム画面
-	SCENE_AREA2,		// ゲーム画面エリア2
-	SCENE_AREA3,		// ゲーム画面エリア3
-	SCENE_AREA4,		// ゲーム画面エリア4
-	SCENE_AREA5,		// ゲーム画面エリア5
-	SCENE_AREA6,		// ゲーム画面エリア6
-	SCENE_AREA7,		// ゲーム画面エリア7
-	SCENE_AREA8,		// ゲーム画面エリア8
-	SCENE_AREA9,		// ゲーム画面エリア9
-	SCENE_AREA10,		// ゲーム画面エリア10
+	SCENE_STAGE2,		// ゲーム画面エリア2
+	SCENE_STAGE3,		// ゲーム画面エリア3
+	SCENE_STAGE4,		// ゲーム画面エリア4
+	SCENE_STAGE5,		// ゲーム画面エリア5
+	SCENE_STAGE6,		// ゲーム画面エリア6
+	SCENE_STAGE7,		// ゲーム画面エリア7
+	SCENE_STAGE8,		// ゲーム画面エリア8
+	SCENE_STAGE9,		// ゲーム画面エリア9
+	SCENE_STAGE10,		// ゲーム画面エリア10
 
 	//SCENE_AREA_DEBUG,	// ゲーム画面デバッグエリア
 	
@@ -56,15 +59,27 @@ enum EScene
 //**************************************************************
 // プロトタイプ宣言
 //**************************************************************
-HRESULT InitScene();	// 初期化
-void UninitScene();		// 終了処理
-void UpdateScene();		// 更新
-void DrawScene();		// 描画
+class CSceneGame;
+class CSceneManager {
+public:
 
- // シーン切替処理
-HRESULT SetScene(int eScene);
+private:
+	HRESULT Init();	// 初期化
+	void Uninit();		// 終了処理
+	void Update();		// 更新
+	void Draw();		// 描画
 
-// シーン情報取得
-int GetScene();
+	static int m_nScene;	// シーン設定用変数
+
+	CSceneGame* m_SGame;
+public:
+	 // シーン切替処理
+	HRESULT Set(int eScene);
+	// シーン情報取得
+	int Get() { return m_nScene; };
+};
+
+
+
 
 

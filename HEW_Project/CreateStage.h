@@ -57,23 +57,27 @@ enum STAGE
 //*****************************************************************************
 // クラス定義
 //*****************************************************************************
-
+class CEnemyMelee;
+class CEnemyRange;
 class CStage
 {
 public:
 	CStage();
 	~CStage();
 
-private:
-	HRESULT InitCStage(STAGE Stage);	// 初期化
-	void UninitCStage(void);			// 終了
-	void UpdateCStage(void);			// 更新
-	void DrawCStage(void);				// 描画
 
+	HRESULT Init(STAGE Stage);	// 初期化
+	void Uninit(void);			// 終了
+	void Update(void);			// 更新
+	void Draw(void);				// 描画
+private:
 	// ステージ構築用のデータ配列
 	int m_nMap[MAX_STAGE][MAP_WIDTH][MAP_HEIGHT];
-	static XMFLOAT3 g_MapPosOrizin;	// マップ生成開始座標
+	static XMFLOAT3 m_fMapPosOrizin;	// マップ生成開始座標
 	STAGE eStage;		// エリア切り替え用変数
+
+	CEnemyMelee* m_EnemyMelee;
+	CEnemyRange* m_EnemyRange;
 public:
-	STAGE GetStageState();		// 現在のステージの取得
+	STAGE GetState();		// 現在のステージの取得
 };

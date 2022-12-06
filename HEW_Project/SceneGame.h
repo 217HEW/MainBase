@@ -24,8 +24,6 @@
 #include "main.h"
 #include "CreateStage.h"
 #include "player.h"
-#include "EnemyMelee.h"
-#include "EnemyRange.h"
 
 
 //**************************************************************
@@ -37,22 +35,15 @@ public:
 	CSceneGame();
 	~CSceneGame();
 
-	virtual HRESULT InitGame(STAGE Stage); // 初期化
-	virtual void UninitGame();	// 終了処理
-	virtual void UpdateGame();	// 更新
-	virtual void DrawGame();	// 描画
+	virtual HRESULT Init(STAGE Stage); // 初期化
+	virtual void Uninit();	// 終了処理
+	virtual void Update();	// 更新
+	virtual void Draw();	// 描画
 
 
 private:
 	//本来はPlayerやEnemyを除いたものは別cppなどでまとめて一括で呼びたい
 	CPlayer* m_Player;
-	CEnemyMelee* m_EnemyMelee;
-	CEnemyRange* m_EnemyRange;
+	CStage* m_Stage;
 
 };
-
-
-
-
-
-// HRESULT SetMeshBlock(XMFLOAT3 pos);	// 箱生成

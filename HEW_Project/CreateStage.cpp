@@ -431,7 +431,9 @@ CStage::CStage()
 		 0,0,0,U,0,0,0,0,0,A,0,0,0,0,0,A,0,0,0,0,0,0,0,0,0,//
 		},
 	};
-	g_MapPosOrizin = XMFLOAT3(-40.0f, 130.0f, 0.0f);
+	m_EnemyMelee = nullptr;
+	m_EnemyRange = nullptr;
+	m_fMapPosOrizin = XMFLOAT3(-40.0f, 130.0f, 0.0f);
 	eStage = STAGE_NONE;
 }
 
@@ -443,8 +445,15 @@ CStage::~CStage()
 // 初期化処理
 // 引数：エリアの切り替え
 //=============================================================================
-HRESULT CStage::InitCStage(STAGE Stage)
+HRESULT CStage::Init(STAGE Stage)
 {
+	// エネミーメレーのインスタンス
+	//2022/12/06変更
+	m_EnemyMelee = new CEnemyMelee();
+	// レンジのインスタンス
+	//2022/12/06変更
+	m_EnemyRange = new CEnemyRange();
+
 	HRESULT hr = S_OK;
 	
 	// ブロック初期化
@@ -479,54 +488,54 @@ HRESULT CStage::InitCStage(STAGE Stage)
 				//マップチップ"1"の場所に描画するもの
 
 				// 通常ブロック
-				SetBlock(XMFLOAT3(g_MapPosOrizin.x + (Width  * BlockSize.x),
-					g_MapPosOrizin.y - (Height * BlockSize.y) *2,
-					g_MapPosOrizin.z), false,XMFLOAT2(0.5f, 2.0f), XMFLOAT2(1.0f, 11.0f));
+				SetBlock(XMFLOAT3(m_fMapPosOrizin.x + (Width  * BlockSize.x),
+					m_fMapPosOrizin.y - (Height * BlockSize.y) *2,
+					m_fMapPosOrizin.z), false,XMFLOAT2(0.5f, 2.0f), XMFLOAT2(1.0f, 11.0f));
 				break; }
 			//	通常Y_3
 			case 2:{
 				//マップチップ"2"の場所に描画するもの
 
 				// 無敵ブロック
-				SetBlock(XMFLOAT3(g_MapPosOrizin.x + (Width  * BlockSize.x),
-					g_MapPosOrizin.y - (Height * BlockSize.y) *2,
-					g_MapPosOrizin.z), false, XMFLOAT2(0.5f, 3.0f), XMFLOAT2(1.0f, 1.0f));
+				SetBlock(XMFLOAT3(m_fMapPosOrizin.x + (Width  * BlockSize.x),
+					m_fMapPosOrizin.y - (Height * BlockSize.y) *2,
+					m_fMapPosOrizin.z), false, XMFLOAT2(0.5f, 3.0f), XMFLOAT2(1.0f, 1.0f));
 				break; }
 			//	通常Y_4
 			case 3:{
 				//マップチップ"3"の場所に描画するもの
 
 				// 通常ブロック
-				SetBlock(XMFLOAT3(g_MapPosOrizin.x + (Width  * BlockSize.x),
-					g_MapPosOrizin.y - (Height * BlockSize.y) * 2,
-					g_MapPosOrizin.z), false, XMFLOAT2(0.5f, 4.0f), XMFLOAT2(1.0f, 11.0f));
+				SetBlock(XMFLOAT3(m_fMapPosOrizin.x + (Width  * BlockSize.x),
+					m_fMapPosOrizin.y - (Height * BlockSize.y) * 2,
+					m_fMapPosOrizin.z), false, XMFLOAT2(0.5f, 4.0f), XMFLOAT2(1.0f, 11.0f));
 				break; }
 			//	通常Y_5
 			case 4:{
 				//マップチップ"4"の場所に描画するもの
 
 				// 通常ブロック
-				SetBlock(XMFLOAT3(g_MapPosOrizin.x + (Width  * BlockSize.x),
-					g_MapPosOrizin.y - (Height * BlockSize.y) * 2,
-					g_MapPosOrizin.z), false, XMFLOAT2(0.5f, 5.0f), XMFLOAT2(1.0f, 1.0f));
+				SetBlock(XMFLOAT3(m_fMapPosOrizin.x + (Width  * BlockSize.x),
+					m_fMapPosOrizin.y - (Height * BlockSize.y) * 2,
+					m_fMapPosOrizin.z), false, XMFLOAT2(0.5f, 5.0f), XMFLOAT2(1.0f, 1.0f));
 				break; }
 			//	通常Y_6	
 			case 5:{
 				//マップチップ"5"の場所に描画するもの
 
 				// 通常ブロック
-				SetBlock(XMFLOAT3(g_MapPosOrizin.x + (Width  * BlockSize.x),
-					g_MapPosOrizin.y - (Height * BlockSize.y) * 2,
-					g_MapPosOrizin.z), false, XMFLOAT2(0.5f, 6.0f), XMFLOAT2(1.0f, 11.0f));
+				SetBlock(XMFLOAT3(m_fMapPosOrizin.x + (Width  * BlockSize.x),
+					m_fMapPosOrizin.y - (Height * BlockSize.y) * 2,
+					m_fMapPosOrizin.z), false, XMFLOAT2(0.5f, 6.0f), XMFLOAT2(1.0f, 11.0f));
 				break; }
 			//	通常Y_9
 			case 6:{
 				//マップチップ"6"の場所に描画するもの
 
 				// 通常ブロック
-				SetBlock(XMFLOAT3(g_MapPosOrizin.x + (Width  * BlockSize.x),
-					g_MapPosOrizin.y - (Height * BlockSize.y) * 2,
-					g_MapPosOrizin.z), false, XMFLOAT2(0.5f, 9.0f), XMFLOAT2(1.0f, 1.0f));
+				SetBlock(XMFLOAT3(m_fMapPosOrizin.x + (Width  * BlockSize.x),
+					m_fMapPosOrizin.y - (Height * BlockSize.y) * 2,
+					m_fMapPosOrizin.z), false, XMFLOAT2(0.5f, 9.0f), XMFLOAT2(1.0f, 1.0f));
 				break; }
 			// =============== 横
 			//	通常X_5.0
@@ -534,153 +543,153 @@ HRESULT CStage::InitCStage(STAGE Stage)
 				//マップチップ"7"の場所に描画するもの
 
 				// 通常ブロック
-				SetBlock(XMFLOAT3(g_MapPosOrizin.x + (Width  * BlockSize.x),
-					g_MapPosOrizin.y - (Height * BlockSize.y) * 2,
-					g_MapPosOrizin.z), false, XMFLOAT2(5.0f, 0.5f), XMFLOAT2(1.0f, 1.0f));
+				SetBlock(XMFLOAT3(m_fMapPosOrizin.x + (Width  * BlockSize.x),
+					m_fMapPosOrizin.y - (Height * BlockSize.y) * 2,
+					m_fMapPosOrizin.z), false, XMFLOAT2(5.0f, 0.5f), XMFLOAT2(1.0f, 1.0f));
 				break; }
 			//	通常X_5.5(左)
 			case 8:{
 				//マップチップ"8"の場所に描画するもの
 
 				// 通常ブロック
-				SetBlock(XMFLOAT3(g_MapPosOrizin.x + (Width  * BlockSize.x),
-					g_MapPosOrizin.y - (Height * BlockSize.y) * 2,
-					g_MapPosOrizin.z), false, XMFLOAT2(5.5f, 0.5f), XMFLOAT2(3.5f, 1.0f));
+				SetBlock(XMFLOAT3(m_fMapPosOrizin.x + (Width  * BlockSize.x),
+					m_fMapPosOrizin.y - (Height * BlockSize.y) * 2,
+					m_fMapPosOrizin.z), false, XMFLOAT2(5.5f, 0.5f), XMFLOAT2(3.5f, 1.0f));
 				break; }
 			//	通常X_5.5(右)
 			case 9:{
 				//マップチップ"1"の場所に描画するもの
 
 				// 通常ブロック
-				SetBlock(XMFLOAT3(g_MapPosOrizin.x + (Width  * BlockSize.x),
-					g_MapPosOrizin.y - (Height * BlockSize.y) * 2,
-					g_MapPosOrizin.z), false, XMFLOAT2(5.5f, 0.5f), XMFLOAT2(-1.5f, 1.0f));
+				SetBlock(XMFLOAT3(m_fMapPosOrizin.x + (Width  * BlockSize.x),
+					m_fMapPosOrizin.y - (Height * BlockSize.y) * 2,
+					m_fMapPosOrizin.z), false, XMFLOAT2(5.5f, 0.5f), XMFLOAT2(-1.5f, 1.0f));
 				break; }
 			//	通常X_6.0(右)
 			case A:{
 				//マップチップ"A"の場所に描画するもの
 
 				// 通常ブロック
-				SetBlock(XMFLOAT3(g_MapPosOrizin.x + (Width  * BlockSize.x),
-					g_MapPosOrizin.y - (Height * BlockSize.y) * 2,
-					g_MapPosOrizin.z), false, XMFLOAT2(6.0f, 0.5f), XMFLOAT2(-4.0f, 1.0f));
+				SetBlock(XMFLOAT3(m_fMapPosOrizin.x + (Width  * BlockSize.x),
+					m_fMapPosOrizin.y - (Height * BlockSize.y) * 2,
+					m_fMapPosOrizin.z), false, XMFLOAT2(6.0f, 0.5f), XMFLOAT2(-4.0f, 1.0f));
 				break; }
 			//	通常X_6.0(中)
 			case a: {
 				//マップチップ"a"の場所に描画するもの
 
 				// 通常ブロック
-				SetBlock(XMFLOAT3(g_MapPosOrizin.x + (Width  * BlockSize.x),
-					g_MapPosOrizin.y - (Height * BlockSize.y) * 2,
-					g_MapPosOrizin.z), false, XMFLOAT2(6.0f, 0.5f), XMFLOAT2(1.0f, 1.0f));
+				SetBlock(XMFLOAT3(m_fMapPosOrizin.x + (Width  * BlockSize.x),
+					m_fMapPosOrizin.y - (Height * BlockSize.y) * 2,
+					m_fMapPosOrizin.z), false, XMFLOAT2(6.0f, 0.5f), XMFLOAT2(1.0f, 1.0f));
 				break; }
 			//	通常X_6.5(左)
 			case B:{
 				//マップチップ"B"の場所に描画するもの
 
 				// 通常ブロック
-				SetBlock(XMFLOAT3(g_MapPosOrizin.x + (Width  * BlockSize.x),
-					g_MapPosOrizin.y - (Height * BlockSize.y) * 2,
-					g_MapPosOrizin.z), false, XMFLOAT2(6.5f, 0.5f), XMFLOAT2(8.25f, 1.0f));
+				SetBlock(XMFLOAT3(m_fMapPosOrizin.x + (Width  * BlockSize.x),
+					m_fMapPosOrizin.y - (Height * BlockSize.y) * 2,
+					m_fMapPosOrizin.z), false, XMFLOAT2(6.5f, 0.5f), XMFLOAT2(8.25f, 1.0f));
 				break; }
 			//	通常X_6.5(右)
 			case C:{
 				//マップチップ"C"の場所に描画するもの
 
 				// 通常ブロック
-				SetBlock(XMFLOAT3(g_MapPosOrizin.x + (Width  * BlockSize.x),
-					g_MapPosOrizin.y - (Height * BlockSize.y) * 2,
-					g_MapPosOrizin.z), false, XMFLOAT2(6.5f, 0.5f), XMFLOAT2(-6.25f, 1.0f));
+				SetBlock(XMFLOAT3(m_fMapPosOrizin.x + (Width  * BlockSize.x),
+					m_fMapPosOrizin.y - (Height * BlockSize.y) * 2,
+					m_fMapPosOrizin.z), false, XMFLOAT2(6.5f, 0.5f), XMFLOAT2(-6.25f, 1.0f));
 				break; }
 			//	通常X_7.0
 			case D:{
 				//マップチップ"D"の場所に描画するもの
 
 				// 通常ブロック
-				SetBlock(XMFLOAT3(g_MapPosOrizin.x + (Width  * BlockSize.x),
-					g_MapPosOrizin.y - (Height * BlockSize.y) * 2,
-					g_MapPosOrizin.z), false, XMFLOAT2(7.0f, 0.5f), XMFLOAT2(1.0f, 1.0f));
+				SetBlock(XMFLOAT3(m_fMapPosOrizin.x + (Width  * BlockSize.x),
+					m_fMapPosOrizin.y - (Height * BlockSize.y) * 2,
+					m_fMapPosOrizin.z), false, XMFLOAT2(7.0f, 0.5f), XMFLOAT2(1.0f, 1.0f));
 				break; }
 			//	通常X_7.5(左)
 			case E:{
 				//マップチップ"E"の場所に描画するもの
 
 				// 通常ブロック
-				SetBlock(XMFLOAT3(g_MapPosOrizin.x + (Width  * BlockSize.x),
-					g_MapPosOrizin.y - (Height * BlockSize.y) * 2,
-					g_MapPosOrizin.z), false, XMFLOAT2(7.5f, 0.5f), XMFLOAT2(3.5f, 1.0f));
+				SetBlock(XMFLOAT3(m_fMapPosOrizin.x + (Width  * BlockSize.x),
+					m_fMapPosOrizin.y - (Height * BlockSize.y) * 2,
+					m_fMapPosOrizin.z), false, XMFLOAT2(7.5f, 0.5f), XMFLOAT2(3.5f, 1.0f));
 				break; }
 			//	通常X_7.5(右)
 			case F:{
 				//マップチップ"F"の場所に描画するもの
 
 				// 通常ブロック
-				SetBlock(XMFLOAT3(g_MapPosOrizin.x + (Width  * BlockSize.x),
-					g_MapPosOrizin.y - (Height * BlockSize.y) * 2,
-					g_MapPosOrizin.z), false, XMFLOAT2(7.5f, 0.5f), XMFLOAT2(-1.5f, 1.0f));
+				SetBlock(XMFLOAT3(m_fMapPosOrizin.x + (Width  * BlockSize.x),
+					m_fMapPosOrizin.y - (Height * BlockSize.y) * 2,
+					m_fMapPosOrizin.z), false, XMFLOAT2(7.5f, 0.5f), XMFLOAT2(-1.5f, 1.0f));
 				break; }
 			//	通常X_8.0(右)
 			case G:{
 				//マップチップ"G"の場所に描画するもの
 
 				// 通常ブロック
-				SetBlock(XMFLOAT3(g_MapPosOrizin.x + (Width  * BlockSize.x),
-					g_MapPosOrizin.y - (Height * BlockSize.y) * 2,
-					g_MapPosOrizin.z), false, XMFLOAT2(8.0f, 0.5f), XMFLOAT2(-4.0f, 1.0f));
+				SetBlock(XMFLOAT3(m_fMapPosOrizin.x + (Width  * BlockSize.x),
+					m_fMapPosOrizin.y - (Height * BlockSize.y) * 2,
+					m_fMapPosOrizin.z), false, XMFLOAT2(8.0f, 0.5f), XMFLOAT2(-4.0f, 1.0f));
 				break; }
 			//	通常X_8.0(中)
 			case g:{
 				//マップチップ"G"の場所に描画するもの
 
 				// 通常ブロック
-				SetBlock(XMFLOAT3(g_MapPosOrizin.x + (Width  * BlockSize.x),
-					g_MapPosOrizin.y - (Height * BlockSize.y) * 2,
-					g_MapPosOrizin.z), false, XMFLOAT2(8.0f, 0.5f), XMFLOAT2(1.0f, 1.0f));
+				SetBlock(XMFLOAT3(m_fMapPosOrizin.x + (Width  * BlockSize.x),
+					m_fMapPosOrizin.y - (Height * BlockSize.y) * 2,
+					m_fMapPosOrizin.z), false, XMFLOAT2(8.0f, 0.5f), XMFLOAT2(1.0f, 1.0f));
 				break; }
 			//	通常X_9.5(左)
 			case H:{
 				//マップチップ"H"の場所に描画するもの
 
 				// 通常ブロック
-				SetBlock(XMFLOAT3(g_MapPosOrizin.x + (Width  * BlockSize.x),
-					g_MapPosOrizin.y - (Height * BlockSize.y) * 2,
-					g_MapPosOrizin.z), false, XMFLOAT2(9.5f, 0.5f), XMFLOAT2(4.0f, 1.0f));
+				SetBlock(XMFLOAT3(m_fMapPosOrizin.x + (Width  * BlockSize.x),
+					m_fMapPosOrizin.y - (Height * BlockSize.y) * 2,
+					m_fMapPosOrizin.z), false, XMFLOAT2(9.5f, 0.5f), XMFLOAT2(4.0f, 1.0f));
 				break;}
 			//	通常X_9.5(右)
 			case J:{
 				//マップチップ"J"の場所に描画するもの
 
 				// 通常ブロック
-				SetBlock(XMFLOAT3(g_MapPosOrizin.x + (Width  * BlockSize.x),
-					g_MapPosOrizin.y - (Height * BlockSize.y) * 2,
-					g_MapPosOrizin.z), false, XMFLOAT2(9.5f, 0.5f), XMFLOAT2(-1.5f, 1.0f));
+				SetBlock(XMFLOAT3(m_fMapPosOrizin.x + (Width  * BlockSize.x),
+					m_fMapPosOrizin.y - (Height * BlockSize.y) * 2,
+					m_fMapPosOrizin.z), false, XMFLOAT2(9.5f, 0.5f), XMFLOAT2(-1.5f, 1.0f));
 				break; }
 			//	通常X_10.0
 			case K:{
 				//マップチップ"K"の場所に描画するもの
 
 				// 通常ブロック
-				SetBlock(XMFLOAT3(g_MapPosOrizin.x + (Width  * BlockSize.x),
-					g_MapPosOrizin.y - (Height * BlockSize.y) * 2,
-					g_MapPosOrizin.z), false, XMFLOAT2(10.0f, 0.5f), XMFLOAT2(1.0f, 1.0f));
+				SetBlock(XMFLOAT3(m_fMapPosOrizin.x + (Width  * BlockSize.x),
+					m_fMapPosOrizin.y - (Height * BlockSize.y) * 2,
+					m_fMapPosOrizin.z), false, XMFLOAT2(10.0f, 0.5f), XMFLOAT2(1.0f, 1.0f));
 				break; }
 			//	通常X_11.5(左)
 			case L:{
 				//マップチップ"L"の場所に描画するもの
 
 				// 通常ブロック
-				SetBlock(XMFLOAT3(g_MapPosOrizin.x + (Width  * BlockSize.x),
-					g_MapPosOrizin.y - (Height * BlockSize.y) * 2,
-					g_MapPosOrizin.z), false, XMFLOAT2(11.5f, 0.5f), XMFLOAT2(3.5f, 1.0f));
+				SetBlock(XMFLOAT3(m_fMapPosOrizin.x + (Width  * BlockSize.x),
+					m_fMapPosOrizin.y - (Height * BlockSize.y) * 2,
+					m_fMapPosOrizin.z), false, XMFLOAT2(11.5f, 0.5f), XMFLOAT2(3.5f, 1.0f));
 				break; }
 			//	通常X_11.5(右)
 			case M:{
 				//マップチップ"M"の場所に描画するもの
 
 				// 通常ブロック
-				SetBlock(XMFLOAT3(g_MapPosOrizin.x + (Width  * BlockSize.x),
-					g_MapPosOrizin.y - (Height * BlockSize.y) * 2,
-					g_MapPosOrizin.z), false, XMFLOAT2(11.5f, 0.5f), XMFLOAT2(-1.5f, 1.0f));
+				SetBlock(XMFLOAT3(m_fMapPosOrizin.x + (Width  * BlockSize.x),
+					m_fMapPosOrizin.y - (Height * BlockSize.y) * 2,
+					m_fMapPosOrizin.z), false, XMFLOAT2(11.5f, 0.5f), XMFLOAT2(-1.5f, 1.0f));
 				break; }
 			// =============== 無敵
 			// =============== 縦
@@ -689,36 +698,36 @@ HRESULT CStage::InitCStage(STAGE Stage)
 				//マップチップ"N"の場所に描画するもの
 
 				// 無敵ブロック
-				SetBlock(XMFLOAT3(g_MapPosOrizin.x + (Width  * BlockSize.x),
-					g_MapPosOrizin.y - (Height * BlockSize.y) * 2,
-					g_MapPosOrizin.z), true, XMFLOAT2(0.5f, 3.0f), XMFLOAT2(1.0f, 1.0f));
+				SetBlock(XMFLOAT3(m_fMapPosOrizin.x + (Width  * BlockSize.x),
+					m_fMapPosOrizin.y - (Height * BlockSize.y) * 2,
+					m_fMapPosOrizin.z), true, XMFLOAT2(0.5f, 3.0f), XMFLOAT2(1.0f, 1.0f));
 				break; }
 			//	無敵Y_4
 			case P:{
 				//マップチップ"P"の場所に描画するもの
 
 				// 通常ブロック
-				SetBlock(XMFLOAT3(g_MapPosOrizin.x + (Width  * BlockSize.x),
-					g_MapPosOrizin.y - (Height * BlockSize.y) * 2,
-					g_MapPosOrizin.z), true, XMFLOAT2(0.5f, 4.0f), XMFLOAT2(1.0f, 11.0f));
+				SetBlock(XMFLOAT3(m_fMapPosOrizin.x + (Width  * BlockSize.x),
+					m_fMapPosOrizin.y - (Height * BlockSize.y) * 2,
+					m_fMapPosOrizin.z), true, XMFLOAT2(0.5f, 4.0f), XMFLOAT2(1.0f, 11.0f));
 				break; }
 			//	無敵Y_6	
 			case R: {
 				//マップチップ"5"の場所に描画するもの
 
 				// 通常ブロック
-				SetBlock(XMFLOAT3(g_MapPosOrizin.x + (Width  * BlockSize.x),
-					g_MapPosOrizin.y - (Height * BlockSize.y) * 2,
-					g_MapPosOrizin.z), true, XMFLOAT2(0.5f, 6.0f), XMFLOAT2(1.0f, 11.0f));
+				SetBlock(XMFLOAT3(m_fMapPosOrizin.x + (Width  * BlockSize.x),
+					m_fMapPosOrizin.y - (Height * BlockSize.y) * 2,
+					m_fMapPosOrizin.z), true, XMFLOAT2(0.5f, 6.0f), XMFLOAT2(1.0f, 11.0f));
 				break; }
 			//	無敵Y_9
 			case S: {
 				//マップチップ"6"の場所に描画するもの
 
 				// 通常ブロック
-				SetBlock(XMFLOAT3(g_MapPosOrizin.x + (Width  * BlockSize.x),
-					g_MapPosOrizin.y - (Height * BlockSize.y) * 2,
-					g_MapPosOrizin.z), true, XMFLOAT2(0.5f, 9.0f), XMFLOAT2(1.0f, 1.0f));
+				SetBlock(XMFLOAT3(m_fMapPosOrizin.x + (Width  * BlockSize.x),
+					m_fMapPosOrizin.y - (Height * BlockSize.y) * 2,
+					m_fMapPosOrizin.z), true, XMFLOAT2(0.5f, 9.0f), XMFLOAT2(1.0f, 1.0f));
 				break; }
 			// =============== 横
 			//	無敵X_5.0
@@ -726,63 +735,63 @@ HRESULT CStage::InitCStage(STAGE Stage)
 				//マップチップ"T"の場所に描画するもの
 
 				// 通常ブロック
-				SetBlock(XMFLOAT3(g_MapPosOrizin.x + (Width  * BlockSize.x),
-					g_MapPosOrizin.y - (Height * BlockSize.y) * 2,
-					g_MapPosOrizin.z), true, XMFLOAT2(5.0f, 0.5f), XMFLOAT2(1.0f, 1.0f));
+				SetBlock(XMFLOAT3(m_fMapPosOrizin.x + (Width  * BlockSize.x),
+					m_fMapPosOrizin.y - (Height * BlockSize.y) * 2,
+					m_fMapPosOrizin.z), true, XMFLOAT2(5.0f, 0.5f), XMFLOAT2(1.0f, 1.0f));
 				break; }
 			//	無敵X_6.0(右)
 			case U: {
 				//マップチップ"A"の場所に描画するもの
 
 				// 通常ブロック
-				SetBlock(XMFLOAT3(g_MapPosOrizin.x + (Width  * BlockSize.x),
-					g_MapPosOrizin.y - (Height * BlockSize.y) * 2,
-					g_MapPosOrizin.z), true, XMFLOAT2(6.0f, 0.5f), XMFLOAT2(-4.0f, 1.0f));
+				SetBlock(XMFLOAT3(m_fMapPosOrizin.x + (Width  * BlockSize.x),
+					m_fMapPosOrizin.y - (Height * BlockSize.y) * 2,
+					m_fMapPosOrizin.z), true, XMFLOAT2(6.0f, 0.5f), XMFLOAT2(-4.0f, 1.0f));
 				break; }
 			//	無敵X_6.0(中)
 			case V: {
 				//マップチップ"a"の場所に描画するもの
 
 				// 通常ブロック
-				SetBlock(XMFLOAT3(g_MapPosOrizin.x + (Width  * BlockSize.x),
-					g_MapPosOrizin.y - (Height * BlockSize.y) * 2,
-					g_MapPosOrizin.z), true, XMFLOAT2(6.0f, 0.5f), XMFLOAT2(1.0f, 1.0f));
+				SetBlock(XMFLOAT3(m_fMapPosOrizin.x + (Width  * BlockSize.x),
+					m_fMapPosOrizin.y - (Height * BlockSize.y) * 2,
+					m_fMapPosOrizin.z), true, XMFLOAT2(6.0f, 0.5f), XMFLOAT2(1.0f, 1.0f));
 				break; }
 			//	無敵X_7.0
 			case W: {
 				//マップチップ"D"の場所に描画するもの
 
 				// 通常ブロック
-				SetBlock(XMFLOAT3(g_MapPosOrizin.x + (Width  * BlockSize.x),
-					g_MapPosOrizin.y - (Height * BlockSize.y) * 2,
-					g_MapPosOrizin.z), true, XMFLOAT2(7.0f, 0.5f), XMFLOAT2(1.0f, 1.0f));
+				SetBlock(XMFLOAT3(m_fMapPosOrizin.x + (Width  * BlockSize.x),
+					m_fMapPosOrizin.y - (Height * BlockSize.y) * 2,
+					m_fMapPosOrizin.z), true, XMFLOAT2(7.0f, 0.5f), XMFLOAT2(1.0f, 1.0f));
 				break; }
 			//	無敵X_9.5(左)
 			case X: {
 				//マップチップ"X"の場所に描画するもの
 
 				// 通常ブロック
-				SetBlock(XMFLOAT3(g_MapPosOrizin.x + (Width  * BlockSize.x),
-					g_MapPosOrizin.y - (Height * BlockSize.y) * 2,
-					g_MapPosOrizin.z), true, XMFLOAT2(9.5f, 0.5f), XMFLOAT2(3.5f, 1.0f));
+				SetBlock(XMFLOAT3(m_fMapPosOrizin.x + (Width  * BlockSize.x),
+					m_fMapPosOrizin.y - (Height * BlockSize.y) * 2,
+					m_fMapPosOrizin.z), true, XMFLOAT2(9.5f, 0.5f), XMFLOAT2(3.5f, 1.0f));
 				break; }
 			//	無敵X_10.0(中)
 			case Y: {
 				//マップチップ"Y"の場所に描画するもの
 
 				// 通常ブロック
-				SetBlock(XMFLOAT3(g_MapPosOrizin.x + (Width  * BlockSize.x),
-					g_MapPosOrizin.y - (Height * BlockSize.y) * 2,
-					g_MapPosOrizin.z), true, XMFLOAT2(10.0f, 0.5f), XMFLOAT2(1.0f, 1.0f));
+				SetBlock(XMFLOAT3(m_fMapPosOrizin.x + (Width  * BlockSize.x),
+					m_fMapPosOrizin.y - (Height * BlockSize.y) * 2,
+					m_fMapPosOrizin.z), true, XMFLOAT2(10.0f, 0.5f), XMFLOAT2(1.0f, 1.0f));
 				break; }
 			//	無敵X_19.0
 			case Z:{
 				//マップチップ"N"の場所に描画するもの
 
 				// 通常ブロック
-				SetBlock(XMFLOAT3(g_MapPosOrizin.x + (Width  * BlockSize.x),
-					g_MapPosOrizin.y - (Height * BlockSize.y) * 2,
-					g_MapPosOrizin.z), true, XMFLOAT2(19.0f, 0.5f), XMFLOAT2(1.0f, 1.0f));
+				SetBlock(XMFLOAT3(m_fMapPosOrizin.x + (Width  * BlockSize.x),
+					m_fMapPosOrizin.y - (Height * BlockSize.y) * 2,
+					m_fMapPosOrizin.z), true, XMFLOAT2(19.0f, 0.5f), XMFLOAT2(1.0f, 1.0f));
 				break; }
 			// =============== 他(急遽増やしたもの)
 			//	無敵X_4.0
@@ -790,68 +799,68 @@ HRESULT CStage::InitCStage(STAGE Stage)
 				//マップチップ"N"の場所に描画するもの
 
 				// 通常ブロック
-				SetBlock(XMFLOAT3(g_MapPosOrizin.x + (Width  * BlockSize.x),
-					g_MapPosOrizin.y - (Height * BlockSize.y) * 2,
-					g_MapPosOrizin.z), true, XMFLOAT2(4.0f, 0.5f), XMFLOAT2(1.0f, 1.0f));
+				SetBlock(XMFLOAT3(m_fMapPosOrizin.x + (Width  * BlockSize.x),
+					m_fMapPosOrizin.y - (Height * BlockSize.y) * 2,
+					m_fMapPosOrizin.z), true, XMFLOAT2(4.0f, 0.5f), XMFLOAT2(1.0f, 1.0f));
 				break; }
 			//	通常X_4.5(左)
 			case I:{
 				//マップチップ"N"の場所に描画するもの
 
 				// 通常ブロック
-				SetBlock(XMFLOAT3(g_MapPosOrizin.x + (Width  * BlockSize.x),
-					g_MapPosOrizin.y - (Height * BlockSize.y) * 2,
-					g_MapPosOrizin.z), false, XMFLOAT2(4.5f, 0.5f), XMFLOAT2(8.0f, 1.0f));
+				SetBlock(XMFLOAT3(m_fMapPosOrizin.x + (Width  * BlockSize.x),
+					m_fMapPosOrizin.y - (Height * BlockSize.y) * 2,
+					m_fMapPosOrizin.z), false, XMFLOAT2(4.5f, 0.5f), XMFLOAT2(8.0f, 1.0f));
 				break;}
 			//	通常X_4.5(右)
 			case O:{
 				//マップチップ"N"の場所に描画するもの
 
 				// 通常ブロック
-				SetBlock(XMFLOAT3(g_MapPosOrizin.x + (Width  * BlockSize.x),
-					g_MapPosOrizin.y - (Height * BlockSize.y) * 2,
-					g_MapPosOrizin.z), false, XMFLOAT2(4.5f, 0.5f), XMFLOAT2(-6.25f, 1.0f));
+				SetBlock(XMFLOAT3(m_fMapPosOrizin.x + (Width  * BlockSize.x),
+					m_fMapPosOrizin.y - (Height * BlockSize.y) * 2,
+					m_fMapPosOrizin.z), false, XMFLOAT2(4.5f, 0.5f), XMFLOAT2(-6.25f, 1.0f));
 				break; }
 			//	通常X_5.0(右)
 			case Q:{
 				//マップチップ"Q"の場所に描画するもの
 
 				// 通常ブロック
-				SetBlock(XMFLOAT3(g_MapPosOrizin.x + (Width  * BlockSize.x),
-					g_MapPosOrizin.y - (Height * BlockSize.y) * 2,
-					g_MapPosOrizin.z), false, XMFLOAT2(5.0f, 0.5f), XMFLOAT2(-4.0f, 1.0f));
+				SetBlock(XMFLOAT3(m_fMapPosOrizin.x + (Width  * BlockSize.x),
+					m_fMapPosOrizin.y - (Height * BlockSize.y) * 2,
+					m_fMapPosOrizin.z), false, XMFLOAT2(5.0f, 0.5f), XMFLOAT2(-4.0f, 1.0f));
 				break; }
 			//	近接敵
 			case e: {
 				//マップチップ"e"の場所に描画するもの
 				AddCountEnemy();
 				//	近接敵
-				SetEnemyMelee(XMFLOAT3(g_MapPosOrizin.x + (Width * BlockSize.x),
-					g_MapPosOrizin.y - (Height * BlockSize.y) * 2,
-					g_MapPosOrizin.z),0);
+				SetEnemyMelee(XMFLOAT3(m_fMapPosOrizin.x + (Width * BlockSize.x),
+					m_fMapPosOrizin.y - (Height * BlockSize.y) * 2,
+					m_fMapPosOrizin.z),0);
 				break; }
 			case m: {
 				//マップチップ"e"の場所に描画するもの
 				AddCountEnemy();
 				//	近接敵
-				SetEnemyMelee(XMFLOAT3(g_MapPosOrizin.x + (Width * BlockSize.x),
-					g_MapPosOrizin.y - (Height * BlockSize.y) * 2,
-					g_MapPosOrizin.z),1);
+				SetEnemyMelee(XMFLOAT3(m_fMapPosOrizin.x + (Width * BlockSize.x),
+					m_fMapPosOrizin.y - (Height * BlockSize.y) * 2,
+					m_fMapPosOrizin.z),1);
 				break; }
 			case r: {
 				//マップチップ"r"の場所に描画するもの
 				AddCountEnemy();
 				// 遠距離敵にする
-				SetEnemyRange(XMFLOAT3(g_MapPosOrizin.x + (Width * BlockSize.x),
-					g_MapPosOrizin.y - (Height * BlockSize.y) * 2,
-					g_MapPosOrizin.z),0);
+				SetEnemyRange(XMFLOAT3(m_fMapPosOrizin.x + (Width * BlockSize.x),
+					m_fMapPosOrizin.y - (Height * BlockSize.y) * 2,
+					m_fMapPosOrizin.z),0);
 				break; }
 			case p: {
 				//マップチップ"p"の場所に描画するもの
 
 				// プレイヤー
-				SetPlayer(XMFLOAT3(g_MapPosOrizin.x + (Width * BlockSize.x),
-					(g_MapPosOrizin.y - (Height * BlockSize.y) * 2) -3.0f,
+				SetPlayer(XMFLOAT3(m_fMapPosOrizin.x + (Width * BlockSize.x),
+					(m_fMapPosOrizin.y - (Height * BlockSize.y) * 2) -3.0f,
 					0.0f));
 				break; }
 			//遠距離敵
@@ -860,27 +869,27 @@ HRESULT CStage::InitCStage(STAGE Stage)
 					AddCountEnemy();
 
 			//	//遠距離敵
-			//	SetEnemyRange(XMFLOAT3(g_MapPosOrizin.x + (Width * BlockSize.x),
-			//		g_MapPosOrizin.y - (Height * BlockSize.y) * 2,
-			//		g_MapPosOrizin.z), 0);
+			//	SetEnemyRange(XMFLOAT3(m_fMapPosOrizin.x + (Width * BlockSize.x),
+			//		m_fMapPosOrizin.y - (Height * BlockSize.y) * 2,
+			//		m_fMapPosOrizin.z), 0);
 			//	break; }
 			//case h: {
 			//	//マップチップ"h"の場所に描画するもの
 					AddCountEnemy();
 
 			//	//遠距離敵
-			//	SetEnemyRange(XMFLOAT3(g_MapPosOrizin.x + (Width * BlockSize.x),
-			//		g_MapPosOrizin.y - (Height * BlockSize.y) * 2,
-			//		g_MapPosOrizin.z), 1);
+			//	SetEnemyRange(XMFLOAT3(m_fMapPosOrizin.x + (Width * BlockSize.x),
+			//		m_fMapPosOrizin.y - (Height * BlockSize.y) * 2,
+			//		m_fMapPosOrizin.z), 1);
 			//	break; }
 			//case i: {
 			//	//マップチップ"i"の場所に描画するもの
 					AddCountEnemy();
 
 			//	//遠距離敵
-			//	SetEnemyRange(XMFLOAT3(g_MapPosOrizin.x + (Width * BlockSize.x),
-			//		g_MapPosOrizin.y - (Height * BlockSize.y) * 2,
-			//		g_MapPosOrizin.z), 2);
+			//	SetEnemyRange(XMFLOAT3(m_fMapPosOrizin.x + (Width * BlockSize.x),
+			//		m_fMapPosOrizin.y - (Height * BlockSize.y) * 2,
+			//		m_fMapPosOrizin.z), 2);
 			//	break; }
 
 			default:
@@ -890,9 +899,9 @@ HRESULT CStage::InitCStage(STAGE Stage)
 			//if (Map[Height][Width] == 1)
 			//{
 			//	
-			//	/*SetBlock(XMFLOAT3(g_MapPosOrizin.x + (Width * BlockSize.x), 
-			//					  g_MapPosOrizin.y + (Height * BlockSize.y),
-			//					  g_MapPosOrizin.z));*/
+			//	/*SetBlock(XMFLOAT3(m_fMapPosOrizin.x + (Width * BlockSize.x), 
+			//					  m_fMapPosOrizin.y + (Height * BlockSize.y),
+			//					  m_fMapPosOrizin.z));*/
 			//	
 			//}
 		}
@@ -904,32 +913,32 @@ HRESULT CStage::InitCStage(STAGE Stage)
 //=============================================================================
 // 終了処理
 //=============================================================================
-void CStage::UninitCStage(void)
+void CStage::Uninit(void)
 {
 	// ブロック終了
 	UninitBlock();
 
 	// 近接敵終了
-	CEnemyMelee::UninitEnemyMelee();
+	m_EnemyMelee->UninitEnemyMelee();
 
 	// 遠隔敵終了
-	CEnemyRange::UninitEnemyRange();
+	m_EnemyRange->UninitEnemyRange();
 }
 
 //=============================================================================
 // 更新処理
 //=============================================================================
-void CStage::UpdateCStage(void)
+void CStage::Update(void)
 {
 	
 	// ブロック更新
 	UpdateBlock();
 
 	// 近接敵更新
-	CEnemyMelee::UpdateEnemyMelee();
+	m_EnemyMelee->UpdateEnemyMelee();
 
 	// 遠隔敵更新
-	CEnemyRange::UpdateEnemyRange();
+	m_EnemyRange->UpdateEnemyRange();
 }
 
 //=============================================================================
@@ -937,23 +946,23 @@ void CStage::UpdateCStage(void)
 // やりたいこと：マップチップを三次元空間に500 * 500で描画したい
 // 出来ていないこと：座標の割り当て？
 //=============================================================================
-void CStage::DrawCStage(void)
+void CStage::Draw(void)
 {
 	// ブロック描画
 	DrawBlock();
 
 	// 近接敵描画
-	CEnemyMelee::DrawEnemyMelee();
+	m_EnemyMelee->DrawEnemyMelee();
 
 	// 遠隔敵描画
-	CEnemyRange::DrawEnemyRange();
+	m_EnemyRange->DrawEnemyRange();
 }
 
 //=============================================================================
 // エリア状態の取得
 // 戻り値：現在のエリア
 //=============================================================================
-STAGE CStage::GetStageState()
+STAGE CStage::GetState()
 {
 	return eStage;
 }

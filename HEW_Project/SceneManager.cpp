@@ -50,23 +50,24 @@
 #include "SceneGameover.h"
 #include "SceneGameclear.h"
 #include "StageSelect.h"
+#include "CreateStage.h"
 #include "Fade.h"
 #include "bg.h"
 //**************************************************************
 // グローバル宣言
 //**************************************************************
-static int g_eScene;	// シーン設定用変数
+
 
 //**************************************************************
 // 初期化処理
 //**************************************************************
-HRESULT InitScene()
+HRESULT CSceneManager::Init()
 {
 	HRESULT hr = S_OK;
 	// フェード初期化
 	InitFade();
-	g_eScene = SCENE_TITLE;		// 最初の画面をタイトルに設定
-	hr = SetScene(SCENE_TITLE);	//最初はタイトル画面へ
+	m_nScene = SCENE_TITLE;		// 最初の画面をタイトルに設定
+	hr = Set(SCENE_TITLE);	//最初はタイトル画面へ
 
 	return hr;
 }
@@ -74,54 +75,54 @@ HRESULT InitScene()
 //**************************************************************
 // 終了処理
 //**************************************************************
-void UninitScene()
+void CSceneManager::Uninit()
 {
-	SetScene(SCENE_NONE);	// 現在の画面を終了
+	Set(SCENE_NONE);	// 現在の画面を終了
 	UninitFade();			// フェード終了処理
 }
 
 //**************************************************************
 // 更新処理
 //**************************************************************
-void UpdateScene()
+void CSceneManager::Update()
 {
-	switch (g_eScene)
+	switch (m_nScene)
 	{
 	case SCENE_TITLE:
 		UpdateTitle();
 		break;
 	case SCENE_GAME:
-		UpdateGame();
+		m_SGame->Update();
 		break;
-	case SCENE_AREA2:	// ゲーム画面
-		UpdateGame();
+	case SCENE_STAGE2:	// ゲーム画面
+		m_SGame->Update();
 		break;
-	case SCENE_AREA3:	// ゲーム画面
-		UpdateGame();
+	case SCENE_STAGE3:	// ゲーム画面
+		m_SGame->Update();
 		break;
-	case SCENE_AREA4: // ゲーム画面エリア4
-		UpdateGame();
+	case SCENE_STAGE4: // ゲーム画面エリア4
+		m_SGame->Update();
 		break;
-	case SCENE_AREA5: // ゲーム画面エリア5
-		UpdateGame();
+	case SCENE_STAGE5: // ゲーム画面エリア5
+		m_SGame->Update();
 		break;
-	case SCENE_AREA6: // ゲーム画面エリア6
-		UpdateGame();
+	case SCENE_STAGE6: // ゲーム画面エリア6
+		m_SGame->Update();
 		break;
-	case SCENE_AREA7: // ゲーム画面エリア7
-		UpdateGame();
+	case SCENE_STAGE7: // ゲーム画面エリア7
+		m_SGame->Update();
 		break;
-	case SCENE_AREA8: // ゲーム画面エリア8
-		UpdateGame();
+	case SCENE_STAGE8: // ゲーム画面エリア8
+		m_SGame->Update();
 		break;
-	case SCENE_AREA9: // ゲーム画面エリア9
-		UpdateGame();
+	case SCENE_STAGE9: // ゲーム画面エリア9
+		m_SGame->Update();
 		break;
-	case SCENE_AREA10: // ゲーム画面エリア10
-		UpdateGame();
+	case SCENE_STAGE10: // ゲーム画面エリア10
+		m_SGame->Update();
 		break;
-	// case SCENE_AREA_DEBUG:		// ゲーム画面
-	// 	UpdateGame();
+	// case SCENE_STAGE_DEBUG:		// ゲーム画面
+	// 	m_SGame->Update();
 	// 	break;
 	
 	// 何かシーンを追加する場合はこちらに
@@ -143,45 +144,45 @@ void UpdateScene()
 //**************************************************************
 // 描画処理
 //**************************************************************
-void DrawScene()
+void CSceneManager::Draw()
 {
-	switch (g_eScene)
+	switch (m_nScene)
 	{
 	case SCENE_TITLE:
 		DrawTitle();
 		break;
 	case SCENE_GAME:
-		DrawGame();
+		m_SGame->Draw();
 		break;
-	case SCENE_AREA2:		// ゲーム画面
-		DrawGame();
+	case SCENE_STAGE2:		// ゲーム画面
+		m_SGame->Update();
 		break;
-	case SCENE_AREA3:		// ゲーム画面
-		DrawGame();
+	case SCENE_STAGE3:		// ゲーム画面
+		m_SGame->Update();
 		break;
-	case SCENE_AREA4: // ゲーム画面エリア4
-		DrawGame();
+	case SCENE_STAGE4: // ゲーム画面エリア4
+		m_SGame->Update();
 		break;
-	case SCENE_AREA5: // ゲーム画面エリア5
-		DrawGame();
+	case SCENE_STAGE5: // ゲーム画面エリア5
+		m_SGame->Update();
 		break;
-	case SCENE_AREA6: // ゲーム画面エリア6
-		DrawGame();
+	case SCENE_STAGE6: // ゲーム画面エリア6
+		m_SGame->Update();
 		break;
-	case SCENE_AREA7: // ゲーム画面エリア7
-		DrawGame();
+	case SCENE_STAGE7: // ゲーム画面エリア7
+		m_SGame->Update();
 		break;
-	case SCENE_AREA8: // ゲーム画面エリア8
-		DrawGame();
+	case SCENE_STAGE8: // ゲーム画面エリア8
+		m_SGame->Update();
 		break;
-	case SCENE_AREA9: // ゲーム画面エリア9
-		DrawGame();
+	case SCENE_STAGE9: // ゲーム画面エリア9
+		m_SGame->Update();
 		break;
-	case SCENE_AREA10: // ゲーム画面エリア10
-		DrawGame();
+	case SCENE_STAGE10: // ゲーム画面エリア10
+		m_SGame->Update();
 		break;
-	// case SCENE_AREA_DEBUG:		// ゲーム画面
-	// 	DrawGame();
+	// case SCENE_STAGE_DEBUG:		// ゲーム画面
+	// 	m_SGame->Update();
 	// 	break;
 	// 追加シーンの描画
 	case SCENE_GAMEOVER:
@@ -210,47 +211,47 @@ void DrawScene()
 //			:エラーかどうか
 //
 //*******************************
-HRESULT SetScene(int eScene)
+HRESULT CSceneManager::Set(int eScene)
 {
 	HRESULT hr = S_OK;
 	// 現在の画面を終了
-	switch (g_eScene)
+	switch (m_nScene)
 	{
 	case SCENE_TITLE:
 		UninitTitle();
 		break;
 	case SCENE_GAME:
-		UninitGame();
+		m_SGame->Uninit();
 		break;
-	case SCENE_AREA2: // ゲーム画面
-		UninitGame();
+	case SCENE_STAGE2: // ゲーム画面
+		m_SGame->Uninit();
 		break;
-	case SCENE_AREA3: // ゲーム画面
-		UninitGame();
+	case SCENE_STAGE3: // ゲーム画面
+		m_SGame->Uninit();
 		break;
-	case SCENE_AREA4: // ゲーム画面エリア4
-		UninitGame();
+	case SCENE_STAGE4: // ゲーム画面エリア4
+		m_SGame->Uninit();
 		break;
-	case SCENE_AREA5: // ゲーム画面エリア5
-		UninitGame();
+	case SCENE_STAGE5: // ゲーム画面エリア5
+		m_SGame->Uninit();
 		break;
-	case SCENE_AREA6: // ゲーム画面エリア6
-		UninitGame();
+	case SCENE_STAGE6: // ゲーム画面エリア6
+		m_SGame->Uninit();
 		break;
-	case SCENE_AREA7: // ゲーム画面エリア7
-		UninitGame();
+	case SCENE_STAGE7: // ゲーム画面エリア7
+		m_SGame->Uninit();
 		break;
-	case SCENE_AREA8: // ゲーム画面エリア8
-		UninitGame();
+	case SCENE_STAGE8: // ゲーム画面エリア8
+		m_SGame->Uninit();
 		break;
-	case SCENE_AREA9: // ゲーム画面エリア9
-		UninitGame();
+	case SCENE_STAGE9: // ゲーム画面エリア9
+		m_SGame->Uninit();
 		break;
-	case SCENE_AREA10: // ゲーム画面エリア10
-		UninitGame();
+	case SCENE_STAGE10: // ゲーム画面エリア10
+		m_SGame->Uninit();
 		break;
-	//case SCENE_AREA_DEBUG: // ゲーム画面
-		//UninitGame();
+	//case SCENE_STAGE_DEBUG: // ゲーム画面
+		//m_SGame->Uninit();
 		//break;
 	case SCENE_GAMEOVER: // ゲームオーバー画面
 		UninitGameover();
@@ -264,46 +265,46 @@ HRESULT SetScene(int eScene)
 	}
 
 	// 画面を入れ替え
-	g_eScene = eScene;
+	m_nScene = eScene;
 
 	// 次の画面を初期化
-	switch (g_eScene)
+	switch (m_nScene)
 	{
 	case SCENE_TITLE:
 		InitTitle();
 		break;
 	case SCENE_GAME:
-		InitGame(AREA_1);
+		m_SGame->Init(STAGE_1);
 		break;
-	case SCENE_AREA2: // ゲーム画面エリア2
-		InitGame(AREA_2);
+	case SCENE_STAGE2: // ゲーム画面エリア2
+		m_SGame->Init(STAGE_2);
 		break;
-	case SCENE_AREA3: // ゲーム画面エリア3
-		InitGame(AREA_3);
+	case SCENE_STAGE3: // ゲーム画面エリア3
+		m_SGame->Init(STAGE_3);
 		break;
-	case SCENE_AREA4: // ゲーム画面エリア4
-		InitGame(AREA_4);
+	case SCENE_STAGE4: // ゲーム画面エリア4
+		m_SGame->Init(STAGE_4);
 		break;
-	case SCENE_AREA5: // ゲーム画面エリア5
-		InitGame(AREA_5);
+	case SCENE_STAGE5: // ゲーム画面エリア5
+		m_SGame->Init(STAGE_5);
 		break;
-	case SCENE_AREA6: // ゲーム画面エリア6
-		InitGame(AREA_6);
+	case SCENE_STAGE6: // ゲーム画面エリア6
+		m_SGame->Init(STAGE_6);
 		break;
-	case SCENE_AREA7: // ゲーム画面エリア7
-		InitGame(AREA_7);
+	case SCENE_STAGE7: // ゲーム画面エリア7
+		m_SGame->Init(STAGE_7);
 		break;
-	case SCENE_AREA8: // ゲーム画面エリア8
-		InitGame(AREA_8);
+	case SCENE_STAGE8: // ゲーム画面エリア8
+		m_SGame->Init(STAGE_8);
 		break;
-	case SCENE_AREA9: // ゲーム画面エリア9
-		InitGame(AREA_9);
+	case SCENE_STAGE9: // ゲーム画面エリア9
+		m_SGame->Init(STAGE_9);
 		break;
-	case SCENE_AREA10: // ゲーム画面エリア10
-		InitGame(AREA_10);
+	case SCENE_STAGE10: // ゲーム画面エリア10
+		m_SGame->Init(STAGE_10);
 		break;
-	// case SCENE_AREA_DEBUG: // ゲーム画面エリア3
-		//InitGame(AREA_DEBUG);
+	// case SCENE_STAGE_DEBUG: // ゲーム画面エリア3
+		//m_SGame->Init(STAGE_DEBUG);
 		break;
 	case SCENE_GAMEOVER: // ゲームオーバー画面
 		InitGameover();
@@ -316,10 +317,4 @@ HRESULT SetScene(int eScene)
 		break;
 	}
 	return hr;
-}
-
-// 現在のシーン取得
-int GetScene()
-{
-	return g_eScene;
 }
