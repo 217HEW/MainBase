@@ -67,7 +67,7 @@ static HRESULT MakeVertexExplosion(ID3D11Device* pDevice);
 //**************************************************************
 // èâä˙âª
 //**************************************************************
-HRESULT InitExplosion(void)
+HRESULT CExplosion::InitExplosion(void)
 {
 	ID3D11Device* pDevice = GetDevice();
 	HRESULT hr = S_OK;
@@ -112,7 +112,7 @@ HRESULT InitExplosion(void)
 //**************************************************************
 // èIóπèàóù
 //**************************************************************
-void UninitExplosion(void)
+void CExplosion::UninitExplosion(void)
 {
 	ReleaseMesh(&g_mesh);
 }
@@ -120,7 +120,7 @@ void UninitExplosion(void)
 //**************************************************************
 // çXêVèàóù
 //**************************************************************
-void UpdateExplosion(void)
+void CExplosion::UpdateExplosion(void)
 {
 	TExplosion* pExplosion = g_explosion;
 	for (int i = 0; i < MAX_EXPLOSION; ++i, ++pExplosion) {
@@ -146,7 +146,7 @@ void UpdateExplosion(void)
 //**************************************************************
 // ï`âÊèàóù
 //**************************************************************
-void DrawExplosion(void)
+void CExplosion::DrawExplosion(void)
 {
 	ID3D11DeviceContext* pDC = GetDeviceContext();
 

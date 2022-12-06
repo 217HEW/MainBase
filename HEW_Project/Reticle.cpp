@@ -76,7 +76,7 @@ static TReticle		g_effect[MAX_RETICLE];	// エフェクト情報
 //=============================================================================
 // 初期化処理
 //=============================================================================
-HRESULT InitReticle(void)
+HRESULT CReticle::InitReticle(void)
 {
 	ID3D11Device* pDevice = GetDevice();
 
@@ -110,7 +110,7 @@ HRESULT InitReticle(void)
 //=============================================================================
 // 終了処理
 //=============================================================================
-void UninitReticle(void)
+void CReticle::UninitReticle(void)
 {
 	// メッシュの開放
 	ReleaseMesh(&g_mesh);
@@ -119,7 +119,7 @@ void UninitReticle(void)
 //=============================================================================
 // 更新処理
 //=============================================================================
-void UpdateReticle(void)
+void CReticle::UpdateReticle(void)
 {
 	for (int nCntEffect = 0; nCntEffect < MAX_RETICLE; ++nCntEffect) {
 		if (g_effect[nCntEffect].use) {
@@ -143,7 +143,7 @@ void UpdateReticle(void)
 //=============================================================================
 // 描画処理
 //=============================================================================
-void DrawReticle(void)
+void CReticle::DrawReticle(void)
 {
 	ID3D11DeviceContext* pDC = GetDeviceContext();
 	XMMATRIX mtxWorld, mtxScale, mtxTranslate;

@@ -81,21 +81,18 @@
 #include "debugproc.h"
 #include "mesh.h"
 
-#include "bg.h"
-#include "explosion.h"
-#include "effect.h"
-#include "Reticle.h"
+
+
+
 #include "Sound.h"
-#include "timer.h"
-#include "life.h"
 #include "number.h"
 #include "Block.h"
 
-#include "Pause.h"
+
 #include "PlayEffect.h"
-#include "ClearPause.h"	//テストインクルード
+
 #include "StageSelect.h"
-#include "CountEnemy.h"
+
 
 
 //**************************************************************
@@ -121,8 +118,17 @@ static int g_EffectTimer = 0;	// エフェクト制御用タイマー
 //**************************************************************
 CSceneGame::CSceneGame()
 {
-	m_Player = nullptr;
-	m_Stage = nullptr;
+	m_pPlayer = nullptr;
+	m_pStage = nullptr;
+	m_pTimer = nullptr;
+	m_pCountEnemy = nullptr;
+	m_pLife = nullptr;
+	m_pBG = nullptr;
+	m_pExplosion = nullptr;
+	m_pPause = nullptr;
+	m_pCPause = nullptr;
+	m_pReticle = nullptr;
+	m_pEffect = nullptr;
 }
 
 //**************************************************************
@@ -153,14 +159,14 @@ HRESULT CSceneGame::Init(STAGE Stage)
 
 	//*12/17澤村瑠人追加
 	// タイマー表示初期化
-	hr = InitTimer();
+	hr = m_pTimer->InitTimer();
 	if (FAILED(hr))
 	{
 		MessageBox(GetMainWnd(), _T("タイマー表示初期化失敗"), NULL, MB_OK | MB_ICONSTOP);
 		return hr;
 	}
 	// カウントエネミー表示初期化
-	hr = InitCountEnemy();
+	hr = m_pCountEnemy->InitCountEnemy();
 	if (FAILED(hr))
 	{
 		MessageBox(GetMainWnd(), _T("カウントエネミー表示初期化失敗"), NULL, MB_OK | MB_ICONSTOP);
@@ -168,7 +174,7 @@ HRESULT CSceneGame::Init(STAGE Stage)
 	}
 
 	// ライフ表示初期化
-	hr = InitLife();
+	hr = m_pLife->InitLife();
 	if (FAILED(hr))
 	{
 		MessageBox(GetMainWnd(), _T("ライフ表示初期化失敗"), NULL, MB_OK | MB_ICONSTOP);
@@ -177,35 +183,46 @@ HRESULT CSceneGame::Init(STAGE Stage)
 
 	// 自機初期化
 	//2022/12/06変更
-	m_Player = new CPlayer();
+	m_pPlayer->InitPlayer();
+	if (FAILED(hr))
+	{
+		MessageBox(GetMainWnd(), _T("プレイヤー表示初期化失敗"), NULL, MB_OK | MB_ICONSTOP);
+		return hr;
+	}
 
 	// ステージのインスタンス
-	m_Stage = new CStage();
+	/*m_pStage->Init();
+	if (FAILED(hr))
+	{
+		MessageBox(GetMainWnd(), _T("ステージ表示初期化失敗"), NULL, MB_OK | MB_ICONSTOP);
+		return hr;
+	}*/
+
 
 	// 背景初期化
-	hr = InitBG();
+	hr = m_pBG->InitBG();
 	if (FAILED(hr))
 		return hr;
 
 	// 爆発初期化
-	hr = InitExplosion();
+	hr = m_pExplosion->InitExplosion();
 	if (FAILED(hr))
 		return hr;
 
 	// エフェクト初期化
-	hr = InitEffect();
+	hr = m_pEffect->InitEffect();
 	if (FAILED(hr))
 		return hr;
 
 	// レティクル初期化
-	hr = InitReticle();
+	hr = m_pReticle->InitReticle();
 	if (FAILED(hr))
 		return hr;
 
 	
 
 	//二次元配列マップ初期化
-	hr = m_Stage->Init(Stage);
+	hr = m_pStage->Init(Stage);
 	if (FAILED(hr))
 		return hr;
 
@@ -215,13 +232,13 @@ HRESULT CSceneGame::Init(STAGE Stage)
 		return hr;
 
 	// ポーズ初期化
-	hr = InitPause();
+	hr = m_pPause->InitPause();
 	g_bPause = false;
 	if (FAILED(hr))
 		return hr;
 
 	// テスト
-	hr = InitC_Pause();
+	hr = m_pCPause->InitC_Pause();
 	g_bC_Pause = false;
 	if (FAILED(hr))
 		return hr;
@@ -246,42 +263,43 @@ void CSceneGame::Uninit()
 	CSound::Stop(BGM_GAME000);
 
 	//ポーズ終了処理
-	UninitPause();
+	m_pPause->UninitPause();
 
 	//テスト
-	UninitC_Pause();
+	m_pCPause->UninitC_Pause();
 
 	// エフェクト終了
-	UninitEffect();
+	m_pEffect->UninitEffect();
 
 	// レティクル終了
-	UninitReticle();
+	m_pReticle->UninitReticle();
 
 	// 爆発終了
-	UninitExplosion();
+	m_pExplosion->UninitExplosion();
 
 	// 背景終了
-	UninitBG();
+	m_pBG->UninitBG();
 
 	// 二次元配列マップ終了
-	m_Stage->Uninit();
+	m_pStage->Uninit();
+	
 
 	// 自機終了
 	//2022/12/06変更
-	m_Player->UninitPlayer();
-	delete m_Player;
+	m_pPlayer->UninitPlayer();
+	
 
 	//ナンバー終了
 	UninitNumber();
 
 	//ライフ終了
-	UninitLife();
+	m_pLife->UninitLife();
 
 	//タイマー終了
-	UninitTimer();
+	m_pTimer->UninitTimer();
 
 	//カウントエネミー終了
-	UninitCountEnemy();
+	m_pCountEnemy->UninitCountEnemy();
 
 	// メッシュ終了
 	UninitMesh();
@@ -299,7 +317,7 @@ void CSceneGame::Update()
 
 	if (GetClearPause())
 	{
-		UpdateC_Pause();
+		m_pCPause->UpdateC_Pause();
 	}
 	else
 	{
@@ -322,7 +340,7 @@ void CSceneGame::Update()
 		//一時停止中?
 		if (g_bPause) {
 			//一時停止更新
-			UpdatePause();
+			m_pPause->UpdatePause();
 		}
 		else
 		{
@@ -372,35 +390,35 @@ void CSceneGame::Update()
 				}
 			}
 			// 背景更新
-			UpdateBG();
+			m_pBG->UpdateBG();
 
 			// 自機更新
 			//2022/12/06変更
-			m_Player->UpdatePlayer();
+			m_pPlayer->UpdatePlayer();
 
 			// 二次元配列マップ更新
-			m_Stage->Update();
+			m_pStage->Update();
 
 			//*12/17澤村瑠人追加
 			// タイマー更新
 			if (!GetPlayerInv())
-				UpdateTimer();
+				m_pTimer->UpdateTimer();
 
 			// タイマー更新
 			if (!GetPlayerInv())
-				UpdateCountEnemy();
+				m_pCountEnemy->UpdateCountEnemy();
 
 		// カメラ更新
 		CCamera::Get()->Update();
 
 			// 爆発更新
-			UpdateExplosion();
+		m_pExplosion->UpdateExplosion();
 
 		// エフェクト更新
-		UpdateEffect();
+		m_pEffect->UpdateEffect();
 
 		// 照準更新
-		UpdateReticle();
+		m_pReticle->UpdateReticle();
 
 			// エフェクト(for Effekseer)更新
 			if (g_EffectTimer == 0)
@@ -527,39 +545,39 @@ void CSceneGame::Draw()
 	SetZBuffer(false);
 
 	// 背景描画
-	DrawBG();
+	m_pBG->DrawBG();
 
 	// Zバッファ有効(Zチェック有&Z更新有)
 	SetZBuffer(true);
 
 	// 二次元配列マップ描画
-	m_Stage->Draw();
+	m_pStage->Draw();
 
 	// 自機描画
 	//2022/12/06変更
-	m_Player->DrawPlayer();
+	m_pPlayer->DrawPlayer();
 
 	// 爆発描画
-	DrawExplosion();
+	m_pExplosion->DrawExplosion();
 
 	SetZBuffer(false);
 
 	// エフェクト描画
-	DrawEffect();
+	m_pEffect->DrawEffect();
 
 	// 照準描画
-	DrawReticle();
+	m_pReticle->DrawReticle();
 
 	SetZBuffer(true);
 
 	//一時停止描画
 	if (g_bPause) {
-		DrawPause();
+		m_pPause->DrawPause();
 	}
 
 	//一時停止描画
 	if (GetClearPause()) {
-		DrawC_Pause();
+		m_pCPause->DrawC_Pause();
 	}
 
 	// Zバッファ無効(Zチェック無&Z更新無)
@@ -570,9 +588,9 @@ void CSceneGame::Draw()
 	SetZBuffer(false);
 
 	// タイマー表示
-	DrawTimer();
+	m_pTimer->DrawTimer();
 
-	DrawCountEnemy();
+	m_pCountEnemy->DrawCountEnemy();
 
 	// ライフ表示(完了)
 	//DrawLife();

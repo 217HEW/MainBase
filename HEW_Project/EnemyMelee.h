@@ -62,15 +62,13 @@ struct TEnemyMelee2 {
 class CEnemyMelee
 {
 public:
-	/*CEnemyMelee();
-	~CEnemyMelee();*/
-
 	virtual HRESULT InitEnemyMelee();	// ‰Šú‰»
 	virtual void UninitEnemyMelee();	// I—¹
 	virtual void UpdateEnemyMelee();	// XV
 	virtual void DrawEnemyMelee();		// •`‰æ
 
 private:
+
 
 };
 

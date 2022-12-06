@@ -19,10 +19,21 @@ typedef enum {
 //*****************************************************************************
 // プロトタイプ宣言
 //*****************************************************************************
-HRESULT InitPause(void);
-void UninitPause(void);
-void UpdatePause(void);
-void DrawPause(void);
+class CPause
+{
+public:
+	/*Pause();
+	~Pause();*/
+
+	virtual HRESULT InitPause(void);
+	virtual void UninitPause(void);
+	virtual void UpdatePause(void);
+	virtual void DrawPause(void);
+
+private:
+
+};
+
 
 void SetPauseMenu(void);
 PAUSE_MENU GetPauseMenu(void);

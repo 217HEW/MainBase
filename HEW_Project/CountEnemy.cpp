@@ -109,7 +109,7 @@ void CCountEnemy::DrawCountEnemy()
 //**************************************************************
 // カウントエネミー加算
 //**************************************************************
-void CCountEnemy::AddCountEnemy(int nCount)
+void AddCountEnemy(int nCount)
 {
 	g_nCountEnemy += nCount;
 	g_nMaxCountEnemy += nCount;
@@ -122,7 +122,7 @@ void CCountEnemy::AddCountEnemy(int nCount)
 //**************************************************************
 // カウントエネミー減算
 //**************************************************************
-void CCountEnemy::DelCountEnemy(int nCount)
+void DelCountEnemy(int nCount)
 {
 	g_nCountEnemy -= nCount;
 	if (nCount < 0)
@@ -137,7 +137,7 @@ void CCountEnemy::DelCountEnemy(int nCount)
 //**************************************************************
 //カウントエネミー取得
 //**************************************************************
-int CCountEnemy::GetCountEnemy()
+int GetCountEnemy()
 {
 	return g_nCountEnemy;
 }
