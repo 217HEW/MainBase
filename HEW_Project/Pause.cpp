@@ -92,7 +92,7 @@ static ID3D11ShaderResourceView* g_pSTexture;//説明用
 //=============================================================================
 // 初期化処理
 //=============================================================================
-HRESULT InitPause(void)
+HRESULT CPause::InitPause(void)
 {
 	ID3D11Device* pDevice = GetDevice();
 	HRESULT hr = S_OK;
@@ -123,7 +123,7 @@ HRESULT InitPause(void)
 //=============================================================================
 // 終了処理
 //=============================================================================
-void UninitPause(void)
+void CPause::UninitPause(void)
 {
 	// テクスチャの開放
 	for (int nCntPauseMenu = 0; nCntPauseMenu < NUM_PAUSE_MENU; ++nCntPauseMenu)
@@ -137,7 +137,7 @@ void UninitPause(void)
 //=============================================================================
 // 更新処理
 //=============================================================================
-void UpdatePause(void)
+void CPause::UpdatePause(void)
 {
 	//ゲームパッドの状態を取得
 	XINPUT_STATE state;
@@ -199,7 +199,7 @@ void UpdatePause(void)
 //=============================================================================
 // 描画処理
 //=============================================================================
-void DrawPause(void)
+void CPause::DrawPause(void)
 {
 	// Zバッファ無効(Zチェック無&Z更新無)
 	SetZBuffer(false);

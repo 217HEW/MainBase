@@ -24,7 +24,18 @@
 #include "main.h"
 #include "CreateStage.h"
 #include "player.h"
-
+#include "timer.h"
+#include "CountEnemy.h"
+#include "life.h"
+#include "bg.h"
+#include "explosion.h"
+#include "Pause.h"
+#include "ClearPause.h"	//テストインクルード
+#include "Reticle.h"
+#include "effect.h"
+#include "SceneManager.h"
+#include "mesh.h"
+#include "number.h"
 
 //**************************************************************
 // プロトタイプ宣言
@@ -45,6 +56,20 @@ public:
 
 private:
 	//本来はPlayerやEnemyを除いたものは別cppなどでまとめて一括で呼びたい
+	//ポインタ変数だからm_p～と後で変える。コードの見やすさ意識する
+	CPlayer* m_pPlayer;
+	CStage* m_pStage;
+	CTimer* m_pTimer;
+	CCountEnemy* m_pCountEnemy;
+	CLife* m_pLife;
+	CBG* m_pBG;
+	CExplosion* m_pExplosion;
+	CPause* m_pPause;
+	CClearPause* m_pCPause;
+	CReticle* m_pReticle;
+	CEffect* m_pEffect;
+	CMesh* m_pMesh;
+	CNumber* m_pNumber;
 	CPlayer* m_Player;
 	CStage* m_Stage;
 	CSceneManager* m_SManager;

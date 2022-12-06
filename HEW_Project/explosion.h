@@ -11,10 +11,22 @@
 //*****************************************************************************
 // プロトタイプ宣言
 //*****************************************************************************
-HRESULT InitExplosion(void);
-void UninitExplosion(void);
-void UpdateExplosion(void);
-void DrawExplosion(void);
+class CExplosion
+{
+public:
+	/*CExplosion();
+	~CExplosion();*/
+
+	virtual HRESULT InitExplosion(void);
+	virtual void UninitExplosion(void);
+	virtual void UpdateExplosion(void);
+	virtual void DrawExplosion(void);
+
+private:
+
+};
+
+
 
 int StartExplosion(XMFLOAT3 pos, XMFLOAT2 size);
 void SetExplosionColor(int nExplosion, XMFLOAT4 color);

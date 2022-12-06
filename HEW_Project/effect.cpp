@@ -75,7 +75,7 @@ static TEffect			g_effect[MAX_EFFECT];	// エフェクト情報
 //=============================================================================
 // 初期化処理
 //=============================================================================
-HRESULT InitEffect(void)
+HRESULT CEffect::InitEffect(void)
 {
 	ID3D11Device* pDevice = GetDevice();
 
@@ -109,7 +109,7 @@ HRESULT InitEffect(void)
 //=============================================================================
 // 終了処理
 //=============================================================================
-void UninitEffect(void)
+void CEffect::UninitEffect(void)
 {
 	// メッシュの開放
 	ReleaseMesh(&g_mesh);
@@ -118,7 +118,7 @@ void UninitEffect(void)
 //=============================================================================
 // 更新処理
 //=============================================================================
-void UpdateEffect(void)
+void CEffect::UpdateEffect(void)
 {
 	for (int nCntEffect = 0; nCntEffect < MAX_EFFECT; ++nCntEffect) {
 		if (g_effect[nCntEffect].use) {
@@ -142,7 +142,7 @@ void UpdateEffect(void)
 //=============================================================================
 // 描画処理
 //=============================================================================
-void DrawEffect(void)
+void CEffect::DrawEffect(void)
 {
 	ID3D11DeviceContext* pDC = GetDeviceContext();
 	XMMATRIX mtxWorld, mtxScale, mtxTranslate;

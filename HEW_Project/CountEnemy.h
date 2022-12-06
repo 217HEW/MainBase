@@ -30,16 +30,16 @@ public:
 	void UninitCountEnemy(); // I—¹ˆ—
 	void UpdateCountEnemy(); // XV
 	void DrawCountEnemy(); // •`‰æ
-	void AddCountEnemy(int nCount = 1);
-	void DelCountEnemy(int nCount = 1);
-
-	int GetCountEnemy();
 
 
 private:
 
 };
 
+	void AddCountEnemy(int nCount = 1);
+	void DelCountEnemy(int nCount = 1);
+
+	int GetCountEnemy();
 
 
 

@@ -3,7 +3,18 @@
 #include "main.h"
 
 // 関数プロトタイプ
-HRESULT InitBG();	// 初期化
-void UninitBG();	// 終了処理
-void UpdateBG();	// 更新
-void DrawBG();		// 描画
+class CBG
+{
+public:
+	/*CBG();
+	~CBG();*/
+
+	virtual HRESULT InitBG();	// 初期化
+	virtual void UninitBG();	// 終了処理
+	virtual void UpdateBG();	// 更新
+	virtual void DrawBG();		// 描画
+
+private:
+
+};
+
