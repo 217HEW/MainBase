@@ -87,8 +87,3 @@ public:
 	int Get() { return m_nScene; };
 	CFade* GetCFade() { return m_fade; };
 };
-
-
-
-
-

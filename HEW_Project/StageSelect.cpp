@@ -80,7 +80,7 @@ static ID3D11ShaderResourceView*	g_pBGTexture; // 背景
 
 static DWORD	Joystate;	// 接続確認用
 static DWORD	Joycon;		// コントローラー情報
-static SELECT_MENU g_nSelectMenu = STAGE_1;		// 選択中のメニューNo.
+static SELECT_MENU g_nSelectMenu = S_STAGE_1;		// 選択中のメニューNo.
 float g_fCurve = 0.0f;
 float g_fCol = 0.0f;
 
@@ -228,9 +228,9 @@ void UpdateSelect(void)
 		}
 		else if (GetKeyRepeat(VK_LEFT) || (g_bJoySelect == LEFT))
 		{
-			if (g_nSelectMenu == STAGE_1)
+			if (g_nSelectMenu == S_STAGE_1)
 			{
-				g_nSelectMenu = SELECT;
+				g_nSelectMenu = S_SELECT;
 			}
 			// カーソル音
 			CSound::SetPlayVol(SE_SELECT, 0.3f);
@@ -263,39 +263,39 @@ void UpdateSelect(void)
 			case S_STAGE_1:	// スレージ1
 				g_fade->StartFadeOut(SCENE_GAME);
 				break;
-			case STAGE_2:	// ステージ2
+			case S_STAGE_2:	// ステージ2
 				if (g_StageClear >= 1)
 					g_fade->StartFadeOut(SCENE_STAGE2);
 				break;
-			case STAGE_3:	// ステージ3
+			case S_STAGE_3:	// ステージ3
 				if (g_StageClear >= 2)
 					g_fade->StartFadeOut(SCENE_STAGE3);
 				break;
-			case STAGE_4:	// ステージ4
+			case S_STAGE_4:	// ステージ4
 				if (g_StageClear >= 3)
 					g_fade->StartFadeOut(SCENE_STAGE4);
 				break;
-			case STAGE_5:	// ステージ5
+			case S_STAGE_5:	// ステージ5
 				if (g_StageClear >= 4)
 					g_fade->StartFadeOut(SCENE_STAGE5);
 				break;
-			case STAGE_6:	// ステージ6
+			case S_STAGE_6:	// ステージ6
 				if (g_StageClear >= 5)
 					g_fade->StartFadeOut(SCENE_STAGE6);
 				break;
-			case STAGE_7:	// ステージ7
+			case S_STAGE_7:	// ステージ7
 				if (g_StageClear >= 6)
 					g_fade->StartFadeOut(SCENE_STAGE7);
 				break;
-			case STAGE_8:	// ステージ8
+			case S_STAGE_8:	// ステージ8
 				if (g_StageClear >= 7)
 					g_fade->StartFadeOut(SCENE_STAGE8);
 				break;
-			case STAGE_9:	// ステージ9
+			case S_STAGE_9:	// ステージ9
 				if (g_StageClear >= 8)
 					g_fade->StartFadeOut(SCENE_STAGE9);
 				break;
-			case STAGE_10:	// ステージ10
+			case S_STAGE_10:	// ステージ10
 				if (g_StageClear >= 9)
 					g_fade->StartFadeOut(SCENE_STAGE10);
 				break;
@@ -356,7 +356,7 @@ void DrawSelect(void)
 		// 選ばれているステージの画像の入れ替え
 		if (nCntStageMenu == g_nSelectMenu) {
 			if (g_StageClear >= GetSelectMenu())
-				SetPolygonTexture(g_pTextures[SELECT]);
+				SetPolygonTexture(g_pTextures[S_SELECT]);
 			else
 				SetPolygonTexture(g_pTextures[nCntStageMenu]);
 
@@ -386,13 +386,13 @@ void DrawSelect(void)
 	// タイトル
 	SetPolygonSize(SELECT_MENU_WIDTH / 2, SELECT_MENU_HEIGHT);
 	SetPolygonPos(-500.0f, 0.0f);
-	if (g_nSelectMenu == SELECT_TITLE) {
+	if (g_nSelectMenu == S_SELECT_TITLE) {
 		SetPolygonColor(1.0f, 1.0f, 0.1f);
 	}
 	else {
 		SetPolygonColor(0.3f, 0.3f, 0.3f);
 	}
-	SetPolygonTexture(g_pTextures[SELECT_TITLE]);
+	SetPolygonTexture(g_pTextures[S_SELECT_TITLE]);
 	DrawPolygon(pDeviceContext);
 
 	// Zバッファ有効(Zチェック有&Z更新有)
@@ -422,6 +422,6 @@ SELECT_MENU GetSelectMenu(void)
 //=============================================================================
 void ResetSelectMenu(void)
 {
-	g_nSelectMenu = STAGE_1;
+	g_nSelectMenu = S_STAGE_1;
 	SetSelectMenu();
 }
