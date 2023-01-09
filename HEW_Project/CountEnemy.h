@@ -8,12 +8,6 @@
 //--------------------------------------------------------------
 //	製作者：小嶋悟
 //--------------------------------------------------------------
-//	開発履歴
-//	2021/01/28		数える君作成開始
-//	編集者，責任者：小嶋悟
-//--------------------------------------------------------------
-//	2022/01/28	？
-//--------------------------------------------------------------
 //**************************************************************
 
 //**************************************************************
@@ -23,24 +17,11 @@
 //**************************************************************
 // 関数プロトタイプ
 //**************************************************************
-class CCountEnemy
-{
-public:
-	HRESULT InitCountEnemy(); // 初期化
-	void UninitCountEnemy(); // 終了処理
-	void UpdateCountEnemy(); // 更新
-	void DrawCountEnemy(); // 描画
-
-
-private:
-
-};
-
-	void AddCountEnemy(int nCount = 1);
-	void DelCountEnemy(int nCount = 1);
-
-	int GetCountEnemy();
-
-
-
+HRESULT InitCountEnemy(); // 初期化
+void UninitCountEnemy(); // 終了処理
+void UpdateCountEnemy(); // 更新
+void DrawCountEnemy(); // 描画
+void AddCountEnemy(int nCount = 1);
+void DelCountEnemy(int nCount = 1);
+int GetCountEnemy();
 #endif // !__COUNTENEMY_H__

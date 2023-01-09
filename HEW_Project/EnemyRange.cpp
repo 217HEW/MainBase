@@ -8,26 +8,6 @@
 //**************************************************************
 
 //**************************************************************
-//	開発履歴
-//	2021/12/28	敵の範囲に入ったらタイマーでダメージを喰らう処理
-//				の実装
-//	2021/01/03	ジャンプ中は攻撃を喰らわない処理の実装
-//	編集者：石原聖斗
-//--------------------------------------------------------------
-//	2022/01/14	正式遠距離エネミーモデルを導入しました。
-//				射撃までのクールタイムを多少ランダムにする処理を
-//				作成中
-//	編集者：上月大地
-//--------------------------------------------------------------
-//	2022/01/22	遠隔敵の情報を取得する関数の作成
-//				プレイヤーのライフ処理はここで屋あるべきでないため削除
-//	編集者：柴山凜太郎
-//--------------------------------------------------------------
-//	2022/01/31	敵がプレイヤーの方角へ向く簡易的な処理を追加しました
-//	編集者：上月大地
-//**************************************************************
-
-//**************************************************************
 // インクルード部
 //**************************************************************
 #include "EnemyRange.h"
@@ -49,8 +29,8 @@
 //**************************************************************
 // マクロ定義
 //**************************************************************
-#define MODEL_ENEMY			"data/model/Enemy/Range/Range.fbx"	// "data/model/helicopter000.fbx"
-#define RETICLE_TEXTURE		L"data/texture/effect/reticle000.png"
+#define MODEL_ENEMY			"data/model/Range/Range.fbx"	// "data/model/helicopter000.fbx"
+#define RETICLE_TEXTURE		L"data/texture/reticle000.png"
 
 #define MAX_ENEMYRANGE			(10)		// 敵機最大数
 #define SEARCH_RANGE			(200)		// 探索範囲
@@ -58,14 +38,14 @@
 #define SCALE_E_RANGE		(XMFLOAT3(0.03f, 0.06f, 0.06f))
 #define COLLAR_ENEMY		(XMFLOAT4(0.0f, 20.0f, 0.0f,1.0f))	// プレイヤーカラー(仮)ここをいじるとカラーが変わります
 //////////////////////////////////////////////////////////////////
-#define MODEL_ENEMY1			"data/model/Enemy/Range/Range.fbx"	// "data/model/helicopter000.fbx"
+#define MODEL_ENEMY1			"data/model/Range/Range.fbx"	// "data/model/helicopter000.fbx"
 #define MAX_ENEMYRANGE1			(10)		// 敵機最大数
 #define SEARCH_RANGE1			(200)		// 探索範囲
 #define ENEMY_TIMER1			(5)			// 制限時間
 #define SCALE_E_RANGE1		(XMFLOAT3(0.05f, 0.1f, 0.1f))
 #define COLLAR_ENEMY1		(XMFLOAT4(0.0f, 0.0f, 20.0f,1.0f))	// プレイヤーカラー(仮)ここをいじるとカラーが変わります
 //////////////////////////////////////////////////////////////////
-#define MODEL_ENEMY2			"data/model/Enemy/Range/Range.fbx"	// "data/model/helicopter000.fbx"
+#define MODEL_ENEMY2			"data/model/Range/Range.fbx"	// "data/model/helicopter000.fbx"
 #define MAX_ENEMYRANGE2			(10)		// 敵機最大数
 #define SEARCH_RANGE2			(200)		// 探索範囲
 #define ENEMY_TIMER2				(5)			// 制限時間
@@ -91,7 +71,7 @@ static TEnemyRange2	g_ERange2[MAX_ENEMYRANGE2];	// 敵機情報
 //**************************************************************
 // 初期化処理
 //**************************************************************
-HRESULT CEnemyRange::InitEnemyRange()
+HRESULT InitEnemyRange(void)
 {
 	HRESULT hr = S_OK;
 	ID3D11Device* pDevice = GetDevice();
@@ -162,7 +142,7 @@ HRESULT CEnemyRange::InitEnemyRange()
 //**************************************************************
 // 終了処理
 //**************************************************************
-void CEnemyRange::UninitEnemyRange()
+void UninitEnemyRange(void)
 {
 	// モデルの解放
 	g_model.Release();
@@ -179,7 +159,7 @@ void CEnemyRange::UninitEnemyRange()
 //**************************************************************
 // 更新処理
 //**************************************************************
-void CEnemyRange::UpdateEnemyRange()
+void UpdateEnemyRange(void)
 {
 	XMMATRIX mtxWorld, mtxRot, mtxTranslate, mtxSize, mtxScale;
 	ID3D11DeviceContext* pDC = GetDeviceContext();
@@ -408,7 +388,7 @@ void CEnemyRange::UpdateEnemyRange()
 //**************************************************************
 // 描画処理
 //**************************************************************
-void CEnemyRange::DrawEnemyRange()
+void DrawEnemyRange(void)
 {
 
 	ID3D11DeviceContext* pDC = GetDeviceContext();

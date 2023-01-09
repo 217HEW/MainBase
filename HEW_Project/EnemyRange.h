@@ -6,13 +6,6 @@
 //--------------------------------------------------------------
 //	製作者：上月大地
 //--------------------------------------------------------------
-//	開発履歴
-//	2021/12/14	EnemyBaseからコピーして作成
-//	編集者：??
-//--------------------------------------------------------------
-//	2022/01/22	構造体定義の場所を.cppから.hに移動
-//	編集者：柴山凜太郎
-//--------------------------------------------------------------
 //**************************************************************
 #pragma once
 
@@ -58,29 +51,10 @@ struct TEnemyRange2 {
 //**************************************************************
 // プロトタイプ宣言
 //**************************************************************
-class CEnemyRange
-{
-public:
-	CEnemyRange();
-	~CEnemyRange();
-
-	virtual HRESULT InitEnemyRange();	// 初期化
-	virtual void UninitEnemyRange();	// 終了
-	virtual void UpdateEnemyRange();	// 更新
-	virtual void DrawEnemyRange();		// 描画
-
-private:
-
-};
-
-CEnemyRange::CEnemyRange()
-{
-}
-
-CEnemyRange::~CEnemyRange()
-{
-}
-
+HRESULT InitEnemyRange(void);	// 初期化
+void UninitEnemyRange(void);	// 終了
+void UpdateEnemyRange(void);	// 更新
+void DrawEnemyRange(void);		// 描画
 
 int SetEnemyRange(XMFLOAT3 pos,int id);	// 遠隔敵設置
 TEnemyRange* GetEnemyRange();		// 遠隔敵情報取得

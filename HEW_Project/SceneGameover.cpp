@@ -9,30 +9,6 @@
 //**************************************************************
 
 //**************************************************************
-//	開発履歴
-//	2021/12/06	小嶋悟君のプログラムを元に作成
-//--------------------------------------------------------------
-//	2021/12/21	GetDevice関数格納用ポインタ変数を作成し、適所の変更
-//				フェード中に別のフェード処理をしないよう補正
-//				ポリゴン4大処理消去(描画処理以外)
-//	変更者：柴山凜太郎
-//--------------------------------------------------------------
-//	2021/12/22	コメントの追加&編集
-//				フェードインの挙動がおかしかったためDraw関数に
-//				Zバッファの処理を追加
-//				ゲームオーバーからタイトルに行く正規ボタンの実装
-//				「Enter」「Space」
-//	編集者：柴山凜太郎
-//--------------------------------------------------------------
-//	2021/12/28	デバッグ操作で遷移できるシーンの追加(AREA2,3,BOSS)
-//	編集者：柴山凜太郎
-//--------------------------------------------------------------
-//	2022/1/5	ゲームオーバージングルを追加しました。
-//	編集者：上月大地
-//--------------------------------------------------------------
-//**************************************************************
-
-//**************************************************************
 // インクルード部
 //**************************************************************
 #include "SceneGameover.h"
@@ -56,8 +32,6 @@
 //**************************************************************
 static ID3D11ShaderResourceView* g_pTexture;	// テクスチャ用変数
 static DWORD	Joycon;		// コントローラー情報
-CSceneManager* g_SManager;
-CFade* g_fade;
 //**************************************************************
 // 初期化処理
 //**************************************************************
@@ -70,8 +44,7 @@ HRESULT InitGameover()
 	hr = CreateTextureFromFile(pDevice, PATH_BGTEXTURE, &g_pTexture);
 	if (FAILED(hr))
 		return hr;
-	g_SManager = GetSManager();
-	g_fade = g_SManager->GetCFade();
+
 	CSound::SetPlayVol(SE_GAMEOVER, 0.1f);
 
 	return hr;
@@ -96,37 +69,37 @@ void UpdateGameover()
 	GetJoyState(Joycon);
 
 	// フェード処理していなかったら
-	if (g_fade->GetFadeState() == FADE_NONE)
+	if (GetFadeState() == FADE_NONE)
 	{
 		if (GetKeyRelease(VK_1) || GetKeyTrigger(VK_RETURN) || GetKeyTrigger(VK_SPACE)||GetJoyTrigger(Joycon, JOYSTICKID1))
 		{
 			// タイトルへ
-			g_fade->StartFadeOut(SCENE_TITLE);
+			StartFadeOut(SCENE_TITLE);
 		}
 		else if (GetKeyRelease(VK_2))
 		{
 			// ゲームシーンへ
-			g_fade->StartFadeOut(SCENE_GAME);
+			StartFadeOut(SCENE_GAME);
 		}
 		else if (GetKeyRelease(VK_3))
 		{
-			g_fade->StartFadeOut(SCENE_STAGE2);
+			StartFadeOut(SCENE_AREA2);
 		}
 		else if (GetKeyRelease(VK_4))
 		{
-			g_fade->StartFadeOut(SCENE_STAGE3);
+			StartFadeOut(SCENE_AREA3);
 		}
 		//else if (GetKeyRelease(VK_5))
 		//{
-		//	StartFadeOut(SCENE_STAGE_DEBUG);
+		//	StartFadeOut(SCENE_AREA_DEBUG);
 		//}
 		else if (GetKeyRelease(VK_6))
 		{
-			g_fade->StartFadeOut(SCENE_GAMEOVER);
+			StartFadeOut(SCENE_GAMEOVER);
 		}
 		else if (GetKeyRelease(VK_7))
 		{
-			g_fade->StartFadeOut(SCENE_GAMECLEAR);
+			StartFadeOut(SCENE_GAMECLEAR);
 		}
 	}
 }

@@ -8,20 +8,6 @@
 //--------------------------------------------------------------
 //**************************************************************
 
-//**************************************************************
-//	開発履歴
-//	2022/01/21	計10ステージのセレクトボタンの配置とシーン遷移の実装
-//	2022/01/23	タイトルに戻るボタンの設置
-//	2022/01/24	選択中の画像の差し替えと大きさの調整
-//--------------------------------------------------------------
-//	2021/1/24	コントローラーの制御を追加、選択待機時間を追加
-//				必要最低限の音を追加しました
-//	編集者：上月大地
-//--------------------------------------------------------------
-//	2021/1/25	コントローラーが無い場合に起きる不具合を無くしました
-//	編集者：上月大地
-//**************************************************************
-
 #include "StageSelect.h"
 #include "input.h"
 #include "fade.h"
@@ -46,13 +32,13 @@ typedef enum {
 	RIGHT,		// 右
 	LEFT,		// 左
 
-	CROSS_MAX	
+	CROSS_MAX
 } CROSS;
 
 //*****************************************************************************
 // マクロ定義
 //*****************************************************************************
-#define PATH_BGTEXTURE	L"data/texture/StageSelect/SelectBG.png"	// 背景テクスチャ
+#define PATH_BGTEXTURE	L"data/texture/SelectBG.png"	// 背景テクスチャ
 #define BG_POS_X		(0.0f)	// 背景X座標
 #define BG_POS_Y		(0.0f)	// 背景Y座標
 #define BG_WIDTH		SCREEN_WIDTH	// テクスチャの横幅
@@ -80,7 +66,7 @@ static ID3D11ShaderResourceView*	g_pBGTexture; // 背景
 
 static DWORD	Joystate;	// 接続確認用
 static DWORD	Joycon;		// コントローラー情報
-static SELECT_MENU g_nSelectMenu = S_STAGE_1;		// 選択中のメニューNo.
+static SELECT_MENU g_nSelectMenu = STAGE_1;		// 選択中のメニューNo.
 float g_fCurve = 0.0f;
 float g_fCol = 0.0f;
 
@@ -91,22 +77,21 @@ int g_bJoySelect;	// コントローラ選択用
 
 // 待機タイマーカウントダウン
 int g_nTime;
-CFade* g_fade;	// フェード取得変数
-CSceneManager* g_SManager;	// フェード取得変数
+
 static LPCWSTR c_aFileNameStageMenu[NUM_SELECT_MENU] =
 {
-	L"data/texture/StageSelect/hero002.jpg",// hero001 → 選択中
-	L"data/texture/StageSelect/hero002.jpg",// hero002 → 選択できない
-	L"data/texture/StageSelect/hero002.jpg",// hero003 → 選択できるが選択していない
-	L"data/texture/StageSelect/hero002.jpg",
-	L"data/texture/StageSelect/hero002.jpg",
-	L"data/texture/StageSelect/hero002.jpg",
-	L"data/texture/StageSelect/hero002.jpg",
-	L"data/texture/StageSelect/hero002.jpg",
-	L"data/texture/StageSelect/hero002.jpg",
-	L"data/texture/StageSelect/hero002.jpg",
-	L"data/texture/StageSelect/STitle.png",	// タイトルに戻る
-	L"data/texture/StageSelect/hero001.jpg",
+	L"data/texture/hero002.jpg",// hero001 → 選択中
+	L"data/texture/hero002.jpg",// hero002 → 選択できない
+	L"data/texture/hero002.jpg",// hero003 → 選択できるが選択していない
+	L"data/texture/hero002.jpg",
+	L"data/texture/hero002.jpg",
+	L"data/texture/hero002.jpg",
+	L"data/texture/hero002.jpg",
+	L"data/texture/hero002.jpg",
+	L"data/texture/hero002.jpg",
+	L"data/texture/hero002.jpg",
+	L"data/texture/STitle.png",// タイトルに戻る
+	L"data/texture/hero001.jpg",
 };
 
 //=============================================================================
@@ -117,8 +102,7 @@ HRESULT InitSelect(void)
 	ID3D11Device* pDevice = GetDevice();
 	HRESULT hr = S_OK;
 	InitNumber();
-	g_SManager = GetSManager();
-	g_fade = g_SManager->GetCFade();
+
 	for (int nCntStageMenu = 0; nCntStageMenu < NUM_SELECT_MENU; ++nCntStageMenu) {
 		// テクスチャの読み込み
 		hr = CreateTextureFromFile(pDevice,			// デバイスへのポインタ
@@ -126,7 +110,7 @@ HRESULT InitSelect(void)
 			&g_pTextures[nCntStageMenu]);			// 読み込むメモリー
 	}
 
-	g_nSelectMenu = S_STAGE_1;
+	g_nSelectMenu = STAGE_1;
 	g_fCurve = 0.0f;
 	g_bTime = false;
 	g_nTime = WAIT_TIME;
@@ -226,9 +210,9 @@ void UpdateSelect(void)
 		}
 		else if (GetKeyRepeat(VK_LEFT) || (g_bJoySelect == LEFT))
 		{
-			if (g_nSelectMenu == S_STAGE_1)
+			if (g_nSelectMenu == STAGE_1)
 			{
-				g_nSelectMenu = S_SELECT;
+				g_nSelectMenu = SELECT;
 			}
 			// カーソル音
 			CSound::SetPlayVol(SE_SELECT, 0.3f);
@@ -258,47 +242,47 @@ void UpdateSelect(void)
 			//選択中のメニュー項目により分岐
 			switch (GetSelectMenu())
 			{
-			case S_STAGE_1:	// スレージ1
-				g_fade->StartFadeOut(SCENE_GAME);
+			case STAGE_1:	// スレージ1
+				StartFadeOut(SCENE_GAME);
 				break;
-			case S_STAGE_2:	// ステージ2
+			case STAGE_2:	// ステージ2
 				if (g_StageClear >= 1)
-					g_fade->StartFadeOut(SCENE_STAGE2);
+					StartFadeOut(SCENE_AREA2);
 				break;
-			case S_STAGE_3:	// ステージ3
+			case STAGE_3:	// ステージ3
 				if (g_StageClear >= 2)
-					g_fade->StartFadeOut(SCENE_STAGE3);
+					StartFadeOut(SCENE_AREA3);
 				break;
-			case S_STAGE_4:	// ステージ4
+			case STAGE_4:	// ステージ4
 				if (g_StageClear >= 3)
-					g_fade->StartFadeOut(SCENE_STAGE4);
+					StartFadeOut(SCENE_AREA4);
 				break;
-			case S_STAGE_5:	// ステージ5
+			case STAGE_5:	// ステージ5
 				if (g_StageClear >= 4)
-					g_fade->StartFadeOut(SCENE_STAGE5);
+					StartFadeOut(SCENE_AREA5);
 				break;
-			case S_STAGE_6:	// ステージ6
+			case STAGE_6:	// ステージ6
 				if (g_StageClear >= 5)
-					g_fade->StartFadeOut(SCENE_STAGE6);
+					StartFadeOut(SCENE_AREA6);
 				break;
-			case S_STAGE_7:	// ステージ7
+			case STAGE_7:	// ステージ7
 				if (g_StageClear >= 6)
-					g_fade->StartFadeOut(SCENE_STAGE7);
+					StartFadeOut(SCENE_AREA7);
 				break;
-			case S_STAGE_8:	// ステージ8
+			case STAGE_8:	// ステージ8
 				if (g_StageClear >= 7)
-					g_fade->StartFadeOut(SCENE_STAGE8);
+					StartFadeOut(SCENE_AREA8);
 				break;
-			case S_STAGE_9:	// ステージ9
+			case STAGE_9:	// ステージ9
 				if (g_StageClear >= 8)
-					g_fade->StartFadeOut(SCENE_STAGE9);
+					StartFadeOut(SCENE_AREA9);
 				break;
-			case S_STAGE_10:	// ステージ10
+			case STAGE_10:	// ステージ10
 				if (g_StageClear >= 9)
-					g_fade->StartFadeOut(SCENE_STAGE10);
+					StartFadeOut(SCENE_AREA10);
 				break;
-			case S_SELECT_TITLE:
-				g_fade->StartFadeOut(SCENE_TITLE); // タイトルへ
+			case SELECT_TITLE:
+				StartFadeOut(SCENE_TITLE); // タイトルへ
 				break;
 			}
 		}
@@ -325,15 +309,6 @@ void DrawSelect(void)
 
 	ID3D11DeviceContext* pDeviceContext = GetDeviceContext();
 
-	// プレート
-	/*SetPolygonTexture(nullptr);
-	SetPolygonSize(PLATE_WIDTH, PLATE_HEIGHT);
-	SetPolygonPos(PLATE_POS_X, PLATE_POS_Y);
-	SetPolygonFrameSize(1.0f, 1.0f);
-	SetPolygonUV(0.0f, 0.0f);
-	SetPolygonColor(g_fCol, g_fCol, g_fCol);
-	SetPolygonAlpha(1.0f);
-	DrawPolygon(pDeviceContext);*/
 
 	// ｽﾃｰｼﾞ1～10
 	for (nCntStageMenu = 0; nCntStageMenu < NUM_SELECT_MENU - 2; ++nCntStageMenu)
@@ -354,7 +329,7 @@ void DrawSelect(void)
 		// 選ばれているステージの画像の入れ替え
 		if (nCntStageMenu == g_nSelectMenu) {
 			if (g_StageClear >= GetSelectMenu())
-				SetPolygonTexture(g_pTextures[S_SELECT]);
+				SetPolygonTexture(g_pTextures[SELECT]);
 			else
 				SetPolygonTexture(g_pTextures[nCntStageMenu]);
 
@@ -384,13 +359,13 @@ void DrawSelect(void)
 	// タイトル
 	SetPolygonSize(SELECT_MENU_WIDTH / 2, SELECT_MENU_HEIGHT);
 	SetPolygonPos(-500.0f, 0.0f);
-	if (g_nSelectMenu == S_SELECT_TITLE) {
+	if (g_nSelectMenu == SELECT_TITLE) {
 		SetPolygonColor(1.0f, 1.0f, 0.1f);
 	}
 	else {
 		SetPolygonColor(0.3f, 0.3f, 0.3f);
 	}
-	SetPolygonTexture(g_pTextures[S_SELECT_TITLE]);
+	SetPolygonTexture(g_pTextures[SELECT_TITLE]);
 	DrawPolygon(pDeviceContext);
 
 	// Zバッファ有効(Zチェック有&Z更新有)
@@ -420,6 +395,6 @@ SELECT_MENU GetSelectMenu(void)
 //=============================================================================
 void ResetSelectMenu(void)
 {
-	g_nSelectMenu = S_STAGE_1;
+	g_nSelectMenu = STAGE_1;
 	SetSelectMenu();
 }

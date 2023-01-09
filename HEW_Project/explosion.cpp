@@ -9,12 +9,6 @@
 //**************************************************************
 
 //**************************************************************
-//	開発履歴
-//	2021/12/22	コメントの編集&追加
-//	編集者：柴山凜太郎
-//**************************************************************
-
-//**************************************************************
 // インクルード部
 //**************************************************************
 #include "explosion.h"
@@ -26,7 +20,7 @@
 //**************************************************************
 // マクロ定義
 //**************************************************************
-#define	TEXTURE_FILENAME		L"data/texture/effect/explosion000.png"
+#define	TEXTURE_FILENAME		L"data/texture/explosion000.png"
 
 #define M_DIFFUSE				XMFLOAT4(1.0f,1.0f,1.0f,1.0f)
 #define M_SPECULAR				XMFLOAT4(0.0f,0.0f,0.0f,1.0f)
@@ -67,7 +61,7 @@ static HRESULT MakeVertexExplosion(ID3D11Device* pDevice);
 //**************************************************************
 // 初期化
 //**************************************************************
-HRESULT CExplosion::InitExplosion(void)
+HRESULT InitExplosion(void)
 {
 	ID3D11Device* pDevice = GetDevice();
 	HRESULT hr = S_OK;
@@ -112,7 +106,7 @@ HRESULT CExplosion::InitExplosion(void)
 //**************************************************************
 // 終了処理
 //**************************************************************
-void CExplosion::UninitExplosion(void)
+void UninitExplosion(void)
 {
 	ReleaseMesh(&g_mesh);
 }
@@ -120,7 +114,7 @@ void CExplosion::UninitExplosion(void)
 //**************************************************************
 // 更新処理
 //**************************************************************
-void CExplosion::UpdateExplosion(void)
+void UpdateExplosion(void)
 {
 	TExplosion* pExplosion = g_explosion;
 	for (int i = 0; i < MAX_EXPLOSION; ++i, ++pExplosion) {
@@ -146,7 +140,7 @@ void CExplosion::UpdateExplosion(void)
 //**************************************************************
 // 描画処理
 //**************************************************************
-void CExplosion::DrawExplosion(void)
+void DrawExplosion(void)
 {
 	ID3D11DeviceContext* pDC = GetDeviceContext();
 

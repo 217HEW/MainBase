@@ -56,7 +56,7 @@ static MATERIAL						g_material;				// マテリアル
 //=============================================================================
 // 初期化処理
 //=============================================================================
-HRESULT CMesh::InitMesh(void)
+HRESULT InitMesh(void)
 {
 	ID3D11Device* pDevice = GetDevice();
 	HRESULT hr;
@@ -111,7 +111,7 @@ HRESULT CMesh::InitMesh(void)
 //=============================================================================
 // 終了処理
 //=============================================================================
-void CMesh::UninitMesh(void)
+void UninitMesh(void)
 {
 	// テクスチャ サンプラの開放
 	SAFE_RELEASE(g_pSamplerState);
@@ -130,7 +130,7 @@ void CMesh::UninitMesh(void)
 //=============================================================================
 // 更新処理
 //=============================================================================
-void CMesh::UpdateMesh(MESH* pMesh)
+void UpdateMesh(MESH* pMesh)
 {
 	XMMATRIX mtxWorld, mtxRot, mtxTranslate;
 
@@ -155,7 +155,7 @@ void CMesh::UpdateMesh(MESH* pMesh)
 //=============================================================================
 // 描画処理
 //=============================================================================
-void CMesh::DrawMesh(ID3D11DeviceContext* pDeviceContext, MESH* pMesh, int nTranslucntType)
+void DrawMesh(ID3D11DeviceContext* pDeviceContext, MESH* pMesh, int nTranslucntType)
 {
 	MATERIAL* pMaterial = pMesh->pMaterial;
 	if (!pMaterial) pMaterial = &g_material;

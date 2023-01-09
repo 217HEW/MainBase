@@ -9,12 +9,6 @@
 //**************************************************************
 
 //**************************************************************
-//	開発履歴
-//	2021/12/	
-//	編集者：??
-//**************************************************************
-
-//**************************************************************
 // インクルード部
 //**************************************************************
 #include "Reticle.h"
@@ -27,7 +21,7 @@
 //*****************************************************************************
 // マクロ定義
 //*****************************************************************************
-#define	TEXTURE_RETICLE			L"data/texture/effect/reticle000.png"	// 読み込むテクスチャファイル名
+#define	TEXTURE_RETICLE			L"data/texture/reticle000.png"	// 読み込むテクスチャファイル名
 
 #define	RETICLE_SIZE_X			(10.0f)							// ビルボードの幅
 #define	RETICLE_SIZE_Y			(10.0f)							// ビルボードの高さ
@@ -76,7 +70,7 @@ static TReticle		g_effect[MAX_RETICLE];	// エフェクト情報
 //=============================================================================
 // 初期化処理
 //=============================================================================
-HRESULT CReticle::InitReticle(void)
+HRESULT InitReticle(void)
 {
 	ID3D11Device* pDevice = GetDevice();
 
@@ -110,7 +104,7 @@ HRESULT CReticle::InitReticle(void)
 //=============================================================================
 // 終了処理
 //=============================================================================
-void CReticle::UninitReticle(void)
+void UninitReticle(void)
 {
 	// メッシュの開放
 	ReleaseMesh(&g_mesh);
@@ -119,7 +113,7 @@ void CReticle::UninitReticle(void)
 //=============================================================================
 // 更新処理
 //=============================================================================
-void CReticle::UpdateReticle(void)
+void UpdateReticle(void)
 {
 	for (int nCntEffect = 0; nCntEffect < MAX_RETICLE; ++nCntEffect) {
 		if (g_effect[nCntEffect].use) {
@@ -143,7 +137,7 @@ void CReticle::UpdateReticle(void)
 //=============================================================================
 // 描画処理
 //=============================================================================
-void CReticle::DrawReticle(void)
+void DrawReticle(void)
 {
 	ID3D11DeviceContext* pDC = GetDeviceContext();
 	XMMATRIX mtxWorld, mtxScale, mtxTranslate;

@@ -7,10 +7,6 @@
 //	製作者：小嶋悟
 //--------------------------------------------------------------
 //**************************************************************
-//	開発履歴
-//	2021/12/22	コメントの編集&追加
-//	編集者：小嶋悟
-//**************************************************************
 //**************************************************************
 // インクルード部
 //**************************************************************
@@ -28,7 +24,7 @@
 // マクロ定義
 //**************************************************************
 // タイマー枠
-#define PATH_CountEnemyFRAMETEXTURE L"data/texture/GameScene/frame_CountEnemy.png"		//カウンター枠テクスチャ
+#define PATH_CountEnemyFRAMETEXTURE L"data/texture/frame_CountEnemy.png"		//カウンター枠テクスチャ
 #define CountEnemyFRAME_WIDTH (399.0f)		//カウンター枠横幅
 #define CountEnemyFRAME_HEIGHT (80.0f)		//カウンター枠縦幅
 #define CountEnemyFRAME_POS_X (400.0f)			//カウンター枠横軸座標
@@ -56,7 +52,7 @@ int g_nMaxCountEnemy;	//そのエリアのエネミーの最大数を保管する
 //**************************************************************
 // 初期化処理
 //**************************************************************
-HRESULT CCountEnemy::InitCountEnemy()
+HRESULT InitCountEnemy()
 {
 	HRESULT hr = S_OK;
 
@@ -76,7 +72,7 @@ HRESULT CCountEnemy::InitCountEnemy()
 //**************************************************************
 // 終了処理
 //**************************************************************
-void CCountEnemy::UninitCountEnemy()
+void UninitCountEnemy()
 {
 	// テクスチャ解放
 	SAFE_RELEASE(g_pTexture);
@@ -84,13 +80,13 @@ void CCountEnemy::UninitCountEnemy()
 //**************************************************************
 // 更新処理
 //**************************************************************
-void CCountEnemy::UpdateCountEnemy()
+void UpdateCountEnemy()
 {
 }
 //**************************************************************
 // 描画処理
 //**************************************************************
-void CCountEnemy::DrawCountEnemy()
+void DrawCountEnemy()
 {
 	ID3D11DeviceContext* pDC = GetDeviceContext();
 	

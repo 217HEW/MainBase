@@ -19,22 +19,10 @@ typedef enum {
 //*****************************************************************************
 // プロトタイプ宣言
 //*****************************************************************************
-class CClearPause
-{
-public:
-	/*CClearPause();
-	~CClearPause();*/
-
-	virtual HRESULT InitC_Pause(void);
-	virtual void UninitC_Pause(void);
-	virtual void UpdateC_Pause(void);
-	virtual void DrawC_Pause(void);
-
-private:
-
-};
-
-
+HRESULT InitC_Pause(void);
+void UninitC_Pause(void);
+void UpdateC_Pause(void);
+void DrawC_Pause(void);
 
 void SetC_PauseMenu(void);
 C_PAUSE_MENU GetC_PauseMenu(void);

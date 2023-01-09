@@ -8,21 +8,9 @@
 //--------------------------------------------------------------
 //**************************************************************
 
-//**************************************************************
-//	開発履歴
-//	2021/12/30	ポーズ画面デザイン変更及び画像追加
-//	編集者：??
-//--------------------------------------------------------------
-//	2021/12/27	音データを追加したので実装(セレクト＆キャンセル音)
-//														変更者：上月大地
-//--------------------------------------------------------------
-//	2022/01/31	コントローラ操作を追加しました
-//														変更者：上月大地
-//**************************************************************
 
 #include "Pause.h"
 #include "input.h"
-//#include "fade.h"
 #include "polygon.h"
 #include "Texture.h"
 #include "Sound.h"
@@ -59,7 +47,7 @@ typedef enum {
 #define WAIT_PTIME			(15)			// 選択待機時間
 
 //説明用
-#define PATH_STEXTURE "data/texture/Pause/pause003.png"//説明画像
+#define PATH_STEXTURE "data/texture/pause003.png"//説明画像
 #define S_POS_X 200.0f
 #define S_POS_Y 0.0f
 #define S_WIDTH 809
@@ -83,16 +71,16 @@ int g_npTime;
 
 static LPCWSTR c_aFileNamePauseMenu[NUM_PAUSE_MENU] =
 {
-	L"data/texture/Pause/pause000.png",	// コンティニュー
-	L"data/texture/Pause/pause001.png",	// リトライ
-	L"data/texture/Pause/pause002.png",	// クイット
+	L"data/texture/pause000.png",	// コンティニュー
+	L"data/texture/pause001.png",	// リトライ
+	L"data/texture/pause002.png",	// クイット
 };
 
 static ID3D11ShaderResourceView* g_pSTexture;//説明用
 //=============================================================================
 // 初期化処理
 //=============================================================================
-HRESULT CPause::InitPause(void)
+HRESULT InitPause(void)
 {
 	ID3D11Device* pDevice = GetDevice();
 	HRESULT hr = S_OK;
@@ -123,7 +111,7 @@ HRESULT CPause::InitPause(void)
 //=============================================================================
 // 終了処理
 //=============================================================================
-void CPause::UninitPause(void)
+void UninitPause(void)
 {
 	// テクスチャの開放
 	for (int nCntPauseMenu = 0; nCntPauseMenu < NUM_PAUSE_MENU; ++nCntPauseMenu)
@@ -137,7 +125,7 @@ void CPause::UninitPause(void)
 //=============================================================================
 // 更新処理
 //=============================================================================
-void CPause::UpdatePause(void)
+void UpdatePause(void)
 {
 	//ゲームパッドの状態を取得
 	XINPUT_STATE state;
@@ -199,7 +187,7 @@ void CPause::UpdatePause(void)
 //=============================================================================
 // 描画処理
 //=============================================================================
-void CPause::DrawPause(void)
+void DrawPause(void)
 {
 	// Zバッファ無効(Zチェック無&Z更新無)
 	SetZBuffer(false);

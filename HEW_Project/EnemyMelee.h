@@ -6,12 +6,6 @@
 //--------------------------------------------------------------
 //	製作者：上月大地
 //--------------------------------------------------------------
-//	開発履歴
-//	2021/12/14	EnemyBaseからコピーして作成
-//	編集者：??
-//--------------------------------------------------------------
-//	2022/01/22	構造体の宣言場所を.cppから.hに移動
-//	編集者：柴山凜太郎
 //**************************************************************
 #pragma once
 
@@ -59,22 +53,12 @@ struct TEnemyMelee2 {
 //**************************************************************
 // プロトタイプ宣言
 //**************************************************************
-class CEnemyMelee
-{
-public:
-	virtual HRESULT InitEnemyMelee();	// 初期化
-	virtual void UninitEnemyMelee();	// 終了
-	virtual void UpdateEnemyMelee();	// 更新
-	virtual void DrawEnemyMelee();		// 描画
-
-private:
-
-
-};
-
-
+HRESULT InitEnemyMelee(void);	// 初期化
+void UninitEnemyMelee(void);	// 終了
+void UpdateEnemyMelee(void);	// 更新
+void DrawEnemyMelee(void);		// 描画
 
 int SetEnemyMelee(XMFLOAT3 pos, int id);	 // 近接敵設置
 TEnemyMelee* GetEnemyMelee();		// 近接敵情報取得
 // 近接敵との当たり判定処理
-//bool CollisionEnemyMelee(XMFLOAT3 pos, float radius);
+bool CollisionEnemyMelee(XMFLOAT3 pos, float radius);

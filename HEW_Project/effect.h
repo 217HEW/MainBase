@@ -1,7 +1,7 @@
 //=============================================================================
 //
 // エフェクト処理 [effect.h]
-// Author : HIROHIKO HAMAYA
+// Author : 上月大地
 //
 //=============================================================================
 #pragma once
@@ -11,20 +11,9 @@
 //*****************************************************************************
 // プロトタイプ宣言
 //*****************************************************************************
-class CEffect
-{
-public:
-	/*CEffect();
-	~CEffect();*/
-
-	virtual HRESULT InitEffect(void);
-	virtual void UninitEffect(void);
-	virtual void UpdateEffect(void);
-	virtual void DrawEffect(void);
-
-private:
-
-};
-
+HRESULT InitEffect(void);
+void UninitEffect(void);
+void UpdateEffect(void);
+void DrawEffect(void);
 
 int SetEffect(XMFLOAT3 pos, XMFLOAT3 move, XMFLOAT4 col, XMFLOAT2 size, int timer);

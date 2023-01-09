@@ -62,21 +62,10 @@ typedef struct {
 //*****************************************************************************
 // プロトタイプ宣言
 //*****************************************************************************
-class CMesh
-{
-public:
-	/*CMesh();
-	~CMesh();*/
-	virtual HRESULT InitMesh(void);
-	virtual void UninitMesh(void);
-	virtual void UpdateMesh(MESH* pMesh);
-	virtual void DrawMesh(ID3D11DeviceContext* pDeviceContext, MESH* pMesh, int nTranslucntType = TT_NOAFFECT);
-
-private:
-
-};
-
-
+HRESULT InitMesh(void);
+void UninitMesh(void);
+void UpdateMesh(MESH* pMesh);
+void DrawMesh(ID3D11DeviceContext* pDeviceContext, MESH* pMesh, int nTranslucntType = TT_NOAFFECT);
 HRESULT MakeMeshVertex(ID3D11Device* pDevice, MESH* pMesh, VERTEX_3D vertexWk[], int indexWk[]);
 void ReleaseMesh(MESH* pMesh);
 HRESULT UpdateMeshVertex(ID3D11DeviceContext* pDeviceContext, MESH* pMesh, VERTEX_3D vertex[]);

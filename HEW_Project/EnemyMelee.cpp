@@ -6,16 +6,6 @@
 //--------------------------------------------------------------
 //	製作者：小嶋悟
 //--------------------------------------------------------------
-//	開発履歴
-//	2021/12/15 プレイヤーを追従する動きの実装
-//	2021/12/18 敵同士、壁、プレイヤーとの当たり判定の実装
-//	2021/12/21 壁と当たったら止まる(全方位)処理の実装
-//	2021/12/13	エネミーベースを元に追加
-//	編集者：??
-//--------------------------------------------------------------
-//　2021/12/30	プレイヤーの境界球半径を取得する関数名の変更
-//	編集者：柴山凜太郎
-//
 //**************************************************************
 
 //**************************************************************
@@ -37,7 +27,7 @@
 //**************************************************************
 // マクロ定義
 //**************************************************************
-#define MODEL_ENEMY			"data/model/Enemy/Melee/Melee.fbx"//
+#define MODEL_ENEMY			"data/model/Melee/Melee.fbx"//
 #define	VALUE_MOVE_ENEMY		(0.5f)		// 移動速度
 #define	VALUE_SCALE_ENEMY		4.0f, 8.0f, 4.0f
 #define MAX_ENEMYMELEE			(10)		// 敵機最大数
@@ -49,7 +39,7 @@
 #define COLLAR_ENEMY		(XMFLOAT4(1.0f, 0.5f, 0.0f,1.0f))	//橙 プレイヤーカラー(仮)ここをいじるとカラーが変わります
 
 ////////////////////////////////////////////////////////////////
-#define MODEL_ENEMY1			"data/model/Enemy/Melee/Melee.fbx"//
+#define MODEL_ENEMY1			"data/model/Melee/Melee.fbx"//
 #define	VALUE_MOVE_ENEMY1		(1.0f)		// 移動速度
 #define	VALUE_SCALE_ENEMY1		4.0f, 8.0f, 4.0f
 #define MAX_ENEMYMELEE1			(10)		// 敵機最大数
@@ -61,7 +51,7 @@
 #define COLLAR_ENEMY1		(XMFLOAT4(10.0f, 10.0f, 10.0f,1.0f))	//白 プレイヤーカラー(仮)ここをいじるとカラーが変わります
 
 ////////////////////////////////////////////////////////////////
-#define MODEL_ENEMY2			"data/model/Enemy/Melee/Melee.fbx"
+#define MODEL_ENEMY2			"data/model/Melee/Melee.fbx"
 #define	VALUE_MOVE_ENEMY2		(1.0f)		// 移動速度
 #define	VALUE_SCALE_ENEMY2		4.0f, 8.0f, 4.0f
 #define MAX_ENEMYMELEE2			(10)		// 敵機最大数
@@ -95,12 +85,11 @@ Effect g_MeleeEffect2[MAX_ENEMYMELEE2];
 static int g_EffectTimer2 = 0;		// エフェクト制御用タイマー
 
 static XMFLOAT3			Blocksize;
-float	g_I_Rad;
-float	g_J_Rad;
+
 //**************************************************************
 // 初期化処理
 //**************************************************************
-HRESULT CEnemyMelee::InitEnemyMelee()
+HRESULT InitEnemyMelee(void)
 {
 	HRESULT hr = S_OK;
 	ID3D11Device* pDevice = GetDevice();
@@ -166,7 +155,7 @@ HRESULT CEnemyMelee::InitEnemyMelee()
 //**************************************************************
 // 終了処理
 //**************************************************************
-void CEnemyMelee::UninitEnemyMelee()
+void UninitEnemyMelee(void)
 {
 	// モデルの解放
 	g_model.Release();
@@ -181,7 +170,7 @@ void CEnemyMelee::UninitEnemyMelee()
 //**************************************************************
 // 更新処理
 //**************************************************************
-void CEnemyMelee::UpdateEnemyMelee()
+void UpdateEnemyMelee(void)
 {
 	// カメラの向き取得
 	XMFLOAT3 rotCamera = CCamera::Get()->GetAngle();
@@ -194,8 +183,6 @@ void CEnemyMelee::UpdateEnemyMelee()
 	//プレイヤーの座標・サイズ取得
 	XMFLOAT3 posPlayer = GetPlayerPos();
 	float sizePlayer = GetPlayerRadSize();
-
-	
 
 	for (int i = 0; i < MAX_ENEMYMELEE; ++i)
 	{
@@ -247,11 +234,6 @@ void CEnemyMelee::UpdateEnemyMelee()
 
 			}
 
-			
-
-
-
-
 			//**************************************************************************************
 			//		当たり判定
 			//**************************************************************************************
@@ -259,10 +241,6 @@ void CEnemyMelee::UpdateEnemyMelee()
 			// 敵同士の当たり判定
 			for (int j = 0; j < MAX_ENEMYMELEE; ++j)
 			{
-				//敵キャラクターの半径の値取得
-				//g_I_Rad = (g_EMelee[i].m_pos.x + g_EMelee[i].m_size.x) / 2;
-				//g_J_Rad = (g_EMelee[j].m_pos.x + g_EMelee[j].m_size.x) / 2;
-
 				if (!g_EMelee[j].m_use)
 				{//未使用なら次へ
 					continue;
@@ -273,22 +251,8 @@ void CEnemyMelee::UpdateEnemyMelee()
 					{//同じ敵ならとばす
 						continue;
 					}
+					//敵同士が重ならない処理
 				}
-			//***************************
-			// 敵同士が重ならない処理(座標)
-			//***************************
-				//if (g_I_Rad == g_J_Rad)
-				//{
-				//	if (i == j)
-				//	{//同じ敵ならとばす
-				//		continue;
-				//	}
-				//	else
-				//	{
-				//		//ヘリコプター参照？
-				//	}
-
-				//}
 			}
 
 			// 敵と壁の当たり判定
@@ -738,7 +702,7 @@ void CEnemyMelee::UpdateEnemyMelee()
 //**************************************************************
 // 描画処理
 //**************************************************************
-void CEnemyMelee::DrawEnemyMelee()
+void DrawEnemyMelee(void)
 {
 
 	ID3D11DeviceContext* pDC = GetDeviceContext();

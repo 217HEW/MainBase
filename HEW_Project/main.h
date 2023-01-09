@@ -74,7 +74,7 @@ enum ECullMode {
 
 	MAX_CULLMODE
 };
-class CSceneManager;
+
 //*****************************************************************************
 // ç\ë¢ëÃíËã`
 //*****************************************************************************
@@ -104,5 +104,3 @@ void SetZBuffer(bool bEnable);
 void SetZWrite(bool bEnable);
 void SetBlendState(int nBlendState);
 void SetCullMode(int nCullMode);
-
-CSceneManager* GetSManager();

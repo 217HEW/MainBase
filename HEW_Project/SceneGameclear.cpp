@@ -4,24 +4,7 @@
 //	ゲームクリアシーン
 //
 //--------------------------------------------------------------
-//	製作者：小嶋悟
-//**************************************************************
-
-//**************************************************************
-//	開発履歴
-//	2021/12/22	ゲームクリアシーンの実装
-//	編集者：小嶋悟
-//				ゲームオーバーからタイトルに行く正規ボタンの実装
-//				「Enter」「Space」
-//				コメントの編集&追加
-//	編集者：柴山凜太郎
-//--------------------------------------------------------------
-//	2021/12/28	デバッグ操作で遷移できるシーンの追加(AREA2,3,BOSS)
-//	編集者：柴山凜太郎
-//--------------------------------------------------------------
-//　2022/1/31	クリア時ポーズ破棄
-//	編集者：澤村瑠人
-//
+//	製作者：澤村瑠人
 //**************************************************************
 
 //**************************************************************
@@ -51,8 +34,6 @@ static ID3D11ShaderResourceView* g_pTexture;	// テクスチャ用変数
 int SceneClearFlag = 0;
 //int g_nNowScene;
 bool ClearFlag;//trueだとCLEAR
-CSceneManager* g_SManager;
-CFade* g_fade;
 //**************************************************************
 // 初期化処理
 //**************************************************************
@@ -64,12 +45,8 @@ HRESULT InitGameclear()
 	hr = CreateTextureFromFile(pDevice, PATH_BGTEXTURE, &g_pTexture);
 	if (FAILED(hr))
 		return hr;
-	g_SManager = GetSManager();
-	g_fade = g_SManager->GetCFade();
-	//InitC_Pause();
-
-	//g_nNowScene = GetScene();
-	//g_nNowScene++;
+	
+	
 
 	return hr;
 }
@@ -90,11 +67,13 @@ void UninitGameclear()
 //**************************************************************
 void UpdateGameclear()
 {
-	if (g_fade->GetFadeState() == FADE_NONE)
+	if (GetFadeState() == FADE_NONE)
 	{
 		if (GetKeyRelease(VK_1))// || GetKeyTrigger(VK_RETURN) || GetKeyTrigger(VK_SPACE))
 		{
-			g_fade->StartFadeOut(SCENE_TITLE);
+
+			
+			StartFadeOut(SCENE_TITLE);
 		}
 		/*else if (GetKeyRelease(VK_2))
 		{
@@ -102,15 +81,15 @@ void UpdateGameclear()
 		}
 		else if (GetKeyRelease(VK_3))
 		{
-			StartFadeOut(SCENE_STAGE2);
+			StartFadeOut(SCENE_AREA2);
 		}
 		else if (GetKeyRelease(VK_4))
 		{
-			StartFadeOut(SCENE_STAGE3);
+			StartFadeOut(SCENE_AREA3);
 		}*/
 	//	else if (GetKeyRelease(VK_5))
 	//	{
-	//		StartFadeOut(SCENE_STAGE_DEBUG);
+	//		StartFadeOut(SCENE_AREA_DEBUG);
 	//	}
 		/*else if (GetKeyRelease(VK_6))
 		{
@@ -143,10 +122,7 @@ void DrawGameclear()
 	SetPolygonTexture(g_pTexture);
 	DrawPolygon(pDC);
 
-	//if (ClearFlag == true)
-	//{
-		//DrawC_Pause();
-	//}
+	
 
 }
 
@@ -155,36 +131,36 @@ void DrawGameclear()
 //**************************************************************
 void GameclearFlag()
 {
-	switch (g_SManager->Get())
+	switch (GetScene())
 	{
 	case SCENE_GAME:  // ゲーム画面エリア1
 		SceneClearFlag = 1;
 		break;
-	case SCENE_STAGE2: // ゲーム画面エリア2
+	case SCENE_AREA2: // ゲーム画面エリア2
 		SceneClearFlag = 2;
 		break;
-	case SCENE_STAGE3: // ゲーム画面エリア3
+	case SCENE_AREA3: // ゲーム画面エリア3
 		SceneClearFlag = 3;
 		break;
-	case SCENE_STAGE4: // ゲーム画面エリア4
+	case SCENE_AREA4: // ゲーム画面エリア4
 		SceneClearFlag = 4;
 		break;
-	case SCENE_STAGE5: // ゲーム画面エリア5
+	case SCENE_AREA5: // ゲーム画面エリア5
 		SceneClearFlag = 5;
 		break;
-	case SCENE_STAGE6: // ゲーム画面エリア6
+	case SCENE_AREA6: // ゲーム画面エリア6
 		SceneClearFlag = 6;
 		break;
-	case SCENE_STAGE7: // ゲーム画面エリア7
+	case SCENE_AREA7: // ゲーム画面エリア7
 		SceneClearFlag = 7;
 		break;
-	case SCENE_STAGE8: // ゲーム画面エリア8
+	case SCENE_AREA8: // ゲーム画面エリア8
 		SceneClearFlag = 8;
 		break;
-	case SCENE_STAGE9: // ゲーム画面エリア9
+	case SCENE_AREA9: // ゲーム画面エリア9
 		SceneClearFlag = 9;
 		break;
-	case SCENE_STAGE10: // ゲーム画面エリア10
+	case SCENE_AREA10: // ゲーム画面エリア10
 		SceneClearFlag = 10;
 		break;
 	}

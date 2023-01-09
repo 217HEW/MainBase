@@ -8,18 +8,8 @@
 //--------------------------------------------------------------
 //**************************************************************
 
-//**************************************************************
-//	開発履歴
-//	2021/01/30	
-//	編集者：澤村瑠人
-//--------------------------------------------------------------
-//	2021/01/30
-//														変更者：澤村瑠人
-//**************************************************************
-
 #include "ClearPause.h"
 #include "input.h"
-//#include "fade.h"
 #include "polygon.h"
 #include "Texture.h"
 #include "Sound.h"
@@ -57,12 +47,6 @@ typedef enum {
 
 #define WAIT_CPTIME			(15)			// 選択待機時間
 
-//説明用
-//#define PATH_STEXTURE "data/texture/pause003.png"//説明画像
-//#define S_POS_X 200.0f
-//#define S_POS_Y 0.0f
-//#define S_WIDTH 809
-//#define S_HEIGHT 500
 //*****************************************************************************
 // グローバル変数
 //*****************************************************************************
@@ -71,7 +55,6 @@ static ID3D11ShaderResourceView*	g_pTextures[3] = { nullptr };	// テクスチャへの
 static C_PAUSE_MENU g_nSelectMenu = C_PAUSE_MENU_NEXTSTAGE;		// 選択中のメニューNo.
 static float g_fCurve = 0.0f;
 static float g_fCol = 0.0f;
-//int scene = C_PAUSE_MENU_NEXTSTAGE;
 static DWORD	Joystate;	// 接続確認用
 static DWORD	Joycon;		// コントローラー情報
 
@@ -86,16 +69,16 @@ bool g_SetClearPause;
 
 static LPCWSTR c_aFileNameC_PauseMenu[NUM_C_PAUSE_MENU] =
 {
-	L"data/texture/ClearSelect/ClearNextStage.png",	// ネクステージ
-	L"data/texture/ClearSelect/ClearSelect.png",	// セレクト
-	L"data/texture/ClearSelect/ClearQuit.png",	// クイット
+	L"data/texture/ClearNextStage.png",	// ネクステージ
+	L"data/texture/ClearSelect.png",	// セレクト
+	L"data/texture/ClearQuit.png",	// クイット
 };
 
 static ID3D11ShaderResourceView* g_pSTexture;//説明用
 //=============================================================================
 // 初期化処理
 //=============================================================================
-HRESULT CClearPause::InitC_Pause(void)
+HRESULT InitC_Pause(void)
 {
 	ID3D11Device* pDevice = GetDevice();
 	HRESULT hr = S_OK;
@@ -111,16 +94,6 @@ HRESULT CClearPause::InitC_Pause(void)
 	g_nSelectMenu = C_PAUSE_MENU_NEXTSTAGE;
 	g_fCurve = 0.0f;
 
-	// 効果音初期化
-	//g_pSE_Select = CreateSound(SE_SELECT_PATH);
-
-	// テクスチャ読込
-	//hr = CreateTextureFromFile(pDevice, PATH_STEXTURE, &g_pSTexture);
-	//if (FAILED(hr))
-	//{
-	//	return hr;
-	//}
-
 	g_SetClearPause = false;
 	return hr;
 
@@ -129,21 +102,19 @@ HRESULT CClearPause::InitC_Pause(void)
 //=============================================================================
 // 終了処理
 //=============================================================================
-void CClearPause::UninitC_Pause(void)
+void UninitC_Pause(void)
 {
 	// テクスチャの開放
 	for (int nCntC_PauseMenu = 0; nCntC_PauseMenu < NUM_C_PAUSE_MENU; ++nCntC_PauseMenu)
 	{
 		SAFE_RELEASE(g_pTextures[nCntC_PauseMenu]);
 	}
-	// テクスチャ解放
-	//SAFE_RELEASE(g_pSTexture);
 }
 
 //=============================================================================
 // 更新処理
 //=============================================================================
-void CClearPause::UpdateC_Pause(void)
+void UpdateC_Pause(void)
 {
 	//ゲームパッドの状態を取得
 	XINPUT_STATE state;
@@ -202,7 +173,7 @@ void CClearPause::UpdateC_Pause(void)
 //=============================================================================
 // 描画処理
 //=============================================================================
-void CClearPause::DrawC_Pause(void)
+void DrawC_Pause(void)
 {
 	// Zバッファ無効(Zチェック無&Z更新無)
 	SetZBuffer(false);
@@ -242,7 +213,6 @@ void CClearPause::DrawC_Pause(void)
 	// Zバッファ有効(Zチェック有&Z更新有)
 	SetZBuffer(true);
 	SetBlendState(BS_NONE);
-	//SetPolygonColor(1.0f, 1.0f, 1.0f);
 }
 
 //=============================================================================
