@@ -84,13 +84,10 @@ public:
 	void StartFadeOut(int eNext);
 	//フェード状態取得
 	E_FADE_STATE GetFadeState();
-
-	static CFade* Get() { return m_pFade; };
 private:
 	Color m_color;		// 色
 	static ID3D11ShaderResourceView* g_pTexture[FADE_TEX_MAX];	// フェード用テクスチャ
 	static E_FADE_STATE m_eState;	// フェード状態
 	static int m_nNext;			// 次のシーン
-	static CFade* m_pFade;
 	CSceneManager* m_SManager;
 };

@@ -58,7 +58,7 @@ struct TExplosion {
 static MESH			g_mesh;						// メッシュ情報
 static MATERIAL		g_material;					// マテリアル
 static TExplosion	g_explosion[MAX_EXPLOSION];	// 爆発情報
-CMesh* g_pMesh = nullptr;
+
 //**************************************************************
 // プロトタイプ宣言
 //**************************************************************
@@ -77,7 +77,7 @@ HRESULT CExplosion::InitExplosion(void)
 	if (FAILED(hr)) {
 		return hr;
 	}
-	g_pMesh = new CMesh();
+
 	// マテリアルの設定
 	g_material.Diffuse = M_DIFFUSE;
 	g_material.Ambient = M_AMBIENT;
@@ -115,7 +115,6 @@ HRESULT CExplosion::InitExplosion(void)
 void CExplosion::UninitExplosion(void)
 {
 	ReleaseMesh(&g_mesh);
-	delete g_pMesh;
 }
 
 //**************************************************************
@@ -190,7 +189,7 @@ void CExplosion::DrawExplosion(void)
 		// 色を反映
 		g_material.Diffuse = pExplosion->color;
 		// 描画
-		g_pMesh->DrawMesh(pDC, &g_mesh);
+		DrawMesh(pDC, &g_mesh);
 	}
 	SetBlendState(BS_NONE);		// αブレンディング無効
 	CLight::Get()->SetEnable();	// 光源有効

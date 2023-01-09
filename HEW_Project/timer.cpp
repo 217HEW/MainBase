@@ -48,7 +48,7 @@
 //**************************************************************
 static ID3D11ShaderResourceView* g_pTexture;	// テクスチャ用変数
 int g_nTimer;		// 時間をカウントする
-CNumber* g_pNumber = nullptr;
+
 //**************************************************************
 // 初期化処理
 //**************************************************************
@@ -63,7 +63,6 @@ HRESULT CTimer::InitTimer()
 	{
 		return hr;
 	}
-	g_pNumber = new CNumber();
 	// 変数初期化
 	g_nTimer = TIMER_START * 60 + 59;
 	return hr;
@@ -76,7 +75,6 @@ void CTimer::UninitTimer()
 {
 	// テクスチャ解放
 	SAFE_RELEASE(g_pTexture);
-	delete g_pNumber;
 }
 //**************************************************************
 // 更新処理
@@ -114,7 +112,7 @@ void CTimer::DrawTimer()
 	DrawPolygon(pDC);
 
 	// タイマー表示
-	g_pNumber->DrawNumber(XMFLOAT2(TIMER_POS_X, TIMER_POS_Y),(unsigned)(g_nTimer / 60), TIMER_CHRCNT, NUMBER_SIZE_X, NUMBER_SIZE_Y);
+	DrawNumber(XMFLOAT2(TIMER_POS_X, TIMER_POS_Y),(unsigned)(g_nTimer / 60), TIMER_CHRCNT, NUMBER_SIZE_X, NUMBER_SIZE_Y);
 	// 元に戻す
 	SetPolygonColor(1.0f, 1.0f, 1.0f);
 }

@@ -72,7 +72,6 @@ static MESH				g_Rmesh;					// メッシュ情報
 static MATERIAL			g_material;				// マテリアル情報
 static MATERIAL			g_Rmaterial;				// マテリアル情報
 static TEffect			g_effect[MAX_EFFECT];	// エフェクト情報
-CMesh* g_pMesh = nullptr;
 //=============================================================================
 // 初期化処理
 //=============================================================================
@@ -96,7 +95,7 @@ HRESULT CEffect::InitEffect(void)
 	g_material.Emissive = MATERIAL_EMISSIVE;
 	g_material.Power = MATERIAL_POWER;
 	g_mesh.pMaterial = &g_material;
-	g_pMesh = new CMesh();
+
 	for (int nCntEffect = 0; nCntEffect < MAX_EFFECT; ++nCntEffect) {
 		g_effect[nCntEffect].pos = XMFLOAT3(0.0f, 0.0f, 0.0f);
 		g_effect[nCntEffect].move = XMFLOAT3(1.0f, 1.0f, 1.0f);
@@ -114,7 +113,6 @@ void CEffect::UninitEffect(void)
 {
 	// メッシュの開放
 	ReleaseMesh(&g_mesh);
-	delete g_pMesh;
 }
 
 //=============================================================================
@@ -189,7 +187,7 @@ void CEffect::DrawEffect(void)
 			g_material.Diffuse = g_effect[nCntEffect].col;
 
 			// メッシュの描画
-			g_pMesh->DrawMesh(pDC, &g_mesh);
+			DrawMesh(pDC, &g_mesh);
 		}
 	}
 
